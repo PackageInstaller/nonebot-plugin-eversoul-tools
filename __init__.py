@@ -41,23 +41,18 @@ async def init_plugin():
     """插件启动时初始化"""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     
-    # 强制将配置文件中的所有键转换为字符串
     if DATA_SOURCE_CONFIG.exists():
         try:
             with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
                 config = yaml.safe_load(f)
             
-            if config:  # 确保配置不为空
-                # 确保所有键都是字符串
+            if config:
                 new_config = {}
                 for k, v in config.items():
                     new_config[str(k)] = v
                 
-                # 重新保存标准化的配置
                 with open(DATA_SOURCE_CONFIG, "w", encoding="utf-8") as f:
                     yaml.dump(new_config, f, allow_unicode=True)
-                
-                logger.info(f"已标准化配置文件键，配置内容: {new_config}")
             else:
                 logger.warning("配置文件存在但内容为空")
         except Exception as e:
@@ -65,13 +60,12 @@ async def init_plugin():
     else:
         logger.info("配置文件不存在，将创建默认配置")
     
-    # 确保加载配置
     from .libraries.es_utils import load_data_source_config
     load_data_source_config()
-    
-    # 验证配置是否正确加载
-    from .config import CURRENT_DATA_SOURCE
-    logger.info(f"插件初始化完成，当前配置: {list(CURRENT_DATA_SOURCE.keys())}")
+    try:
+        generate_aliases()
+    except Exception as e:
+        logger.error(f"生成别名文件时出错: {e}")
 
 # 导入命令
 from .commands import *

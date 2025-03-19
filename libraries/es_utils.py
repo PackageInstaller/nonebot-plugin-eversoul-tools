@@ -863,7 +863,7 @@ def get_town_object_info(data: dict, hero_id: int, is_test=False) -> list:
                             # 构建图片路径
                             img_path = None
                             if prefab:
-                                img_path = os.path.join(os.path.dirname(__file__), "town", f"{prefab}.png")
+                                img_path = TOWN_DIR / f"{prefab}.png"
                                 if not os.path.exists(img_path):
                                     img_path = None
                             
@@ -2941,3 +2941,186 @@ def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -
             keyword_msgs.append(msg)
     
     return "\n".join(keyword_msgs)
+
+
+def generate_aliases() -> None:
+    """生成别名文件"""
+    live_json_path = Path(plugin_config.eversoul_live_path)
+    review_json_path = Path(plugin_config.eversoul_review_path)
+    
+    try:
+        live_hero_aliases = DATA_DIR / "live_hero_aliases.yaml"
+        live_monster_aliases = DATA_DIR / "live_monster_aliases.yaml"
+        live_hero_count, live_monster_count = process_json_files(live_json_path, live_hero_aliases, live_monster_aliases)
+        logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个英雄条目, {live_monster_count} 个怪物条目")
+    except Exception as e:
+        logger.error(f"处理live别名文件时出错: {e}")
+    
+    try:
+        review_hero_aliases = DATA_DIR / "review_hero_aliases.yaml"
+        review_monster_aliases = DATA_DIR / "review_monster_aliases.yaml"
+        review_hero_count, review_monster_count = process_json_files(review_json_path, review_hero_aliases, review_monster_aliases)
+        logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个英雄条目, {review_monster_count} 个怪物条目")
+    except Exception as e:
+        logger.error(f"处理review别名文件时出错: {e}")
+
+
+def process_json_files(json_path: Path, hero_output_file: Path, monster_output_file: Path) -> Tuple[int, int]:
+    """处理JSON文件生成别名文件
+    
+    Args:
+        json_path: JSON文件目录
+        hero_output_file: 英雄别名输出文件
+        monster_output_file: 怪物别名输出文件
+    
+    Returns:
+        Tuple[int, int]: 生成的英雄数量和怪物数量
+    """
+    if not json_path.exists():
+        logger.error(f"JSON路径不存在: {json_path}")
+        return 0, 0
+    
+    try:
+        with open(json_path / "Hero.json", "r", encoding="utf-8") as f:
+            hero_data = json.load(f)
+        
+        with open(json_path / "StringCharacter.json", "r", encoding="utf-8") as f:
+            string_char_data = json.load(f)
+    except Exception as e:
+        logger.error(f"加载JSON文件失败: {e}")
+        return 0, 0
+    
+    hero_names = {}
+    for string in string_char_data["json"]:
+        if "no" in string:
+            if string["no"] not in hero_names:
+                hero_names[string["no"]] = {
+                    "zh_tw": string.get("zh_tw", ""),
+                    "zh_cn": string.get("zh_cn", ""),
+                    "kr": string.get("kr", ""),
+                    "en": string.get("en", "")
+                }
+
+    seen_hero_ids = set()
+    
+    existing_data = {}
+    if hero_output_file.exists():
+        try:
+            with open(hero_output_file, "r", encoding="utf-8") as f:
+                existing_data = yaml.safe_load(f)
+    
+            existing_aliases = {}
+            existing_zh_cn_names = {}
+            if existing_data and "names" in existing_data:
+                for hero in existing_data["names"]:
+                    if "hero_id" in hero:
+                        hero_id = hero["hero_id"]
+                        if "aliases" in hero:
+                            existing_aliases[hero_id] = hero.get("aliases", [])
+                        if "zh_cn_name" in hero and hero["zh_cn_name"]:
+                            existing_zh_cn_names[hero_id] = hero["zh_cn_name"]
+        except Exception as e:
+            logger.error(f"读取现有别名文件时出错: {e}")
+            existing_aliases = {}
+            existing_zh_cn_names = {}
+    else:
+        existing_aliases = {}
+        existing_zh_cn_names = {}
+    
+    name_to_min_id = {}
+    
+    for hero in hero_data["json"]:
+        if ("hero_id" in hero and 
+            "name_sno" in hero and 
+            hero["hero_id"] >= 7000):
+            
+            name_data = hero_names.get(hero["name_sno"], {
+                "zh_tw": "未知",
+                "zh_cn": "",
+                "kr": "",
+                "en": ""
+            })
+            current_id = hero["hero_id"]
+            
+            zh_tw_name = name_data["zh_tw"]
+            if zh_tw_name in name_to_min_id:
+                name_to_min_id[zh_tw_name] = min(name_to_min_id[zh_tw_name], current_id)
+            else:
+                name_to_min_id[zh_tw_name] = current_id
+
+    new_data = {"names": []}
+    monster_data = {"names": []}
+    monster_name_count = {}
+    
+    for hero in hero_data["json"]:
+        if ("hero_id" in hero and 
+            "name_sno" in hero and 
+            hero["hero_id"] not in seen_hero_ids):
+            
+            hero_id = hero["hero_id"]
+            name_data = hero_names.get(hero["name_sno"], {
+                "zh_tw": "未知",
+                "zh_cn": "",
+                "kr": "",
+                "en": ""
+            })
+            zh_cn_name = name_data["zh_cn"]
+            if not zh_cn_name and hero_id in existing_zh_cn_names:
+                zh_cn_name = existing_zh_cn_names[hero_id]
+            
+            hero_entry = {
+                "zh_tw_name": name_data["zh_tw"],
+                "zh_cn_name": zh_cn_name,
+                "kr_name": name_data["kr"],
+                "en_name": name_data["en"],
+                "aliases": existing_aliases.get(hero_id, []), 
+                "hero_id": hero_id
+            }
+            
+            if hero_id >= 7000:
+                if name_data["zh_tw"] in monster_name_count:
+                    monster_name_count[name_data["zh_tw"]] += 1
+                    hero_entry["zh_tw_name"] = f"{name_data['zh_tw']}{monster_name_count[name_data['zh_tw']]}"
+                else:
+                    monster_name_count[name_data["zh_tw"]] = 0
+                
+                monster_data["names"].append(hero_entry)
+            else:
+                new_data["names"].append(hero_entry)
+            
+            seen_hero_ids.add(hero_id)
+    
+    class CustomDumper(yaml.SafeDumper):
+        def increase_indent(self, flow=False, indentless=False):
+            return super().increase_indent(flow, False)
+
+        def represent_scalar(self, tag, value, style=None):
+            if isinstance(value, str):
+                style = None
+            return super().represent_scalar(tag, value, style)
+
+        def represent_sequence(self, tag, sequence, flow_style=None):
+            """对于字符串列表使用flow风格（单行）"""
+            if len(sequence) > 0 and isinstance(sequence[0], str):
+                flow_style = True
+            return super().represent_sequence(tag, sequence, flow_style=flow_style)
+    
+    hero_output_file.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(hero_output_file, "w", encoding="utf-8") as f:
+        yaml.dump(new_data, f, 
+                 Dumper=CustomDumper,
+                 allow_unicode=True, 
+                 sort_keys=False,
+                 default_flow_style=False,
+                 indent=2)
+    
+    with open(monster_output_file, "w", encoding="utf-8") as f:
+        yaml.dump(monster_data, f, 
+                 Dumper=CustomDumper,
+                 allow_unicode=True, 
+                 sort_keys=False,
+                 default_flow_style=False,
+                 indent=2)
+    
+    return len(new_data['names']), len(monster_data['names']) 

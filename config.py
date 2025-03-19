@@ -86,11 +86,10 @@ CURRENT_DATA_SOURCE = {
 FONT_DIR = RESOURCES_DIR / "font" / "Sarasa-Regular.ttc"
 CUSTOM_FONT = FontProperties(fname=FONT_DIR)
 
-
-CG_DIR = RESOURCES_DIR / "images" / "cg"
-EVERTALK_DIR = RESOURCES_DIR / "images" / "evertalk"
-HERO_DIR = RESOURCES_DIR / "images" / "hero"
-ICON_DIR = RESOURCES_DIR / "images" / "icon"
-SIGNATURE_DIR = RESOURCES_DIR / "images" / "signature"
-TIER_DIR = RESOURCES_DIR / "images" / "tier"
-TOWN_DIR = RESOURCES_DIR / "images" / "town"
+CG_DIR = RESOURCES_DIR / "image" / "cg"
+EVERTALK_DIR = RESOURCES_DIR / "image" / "evertalk"
+HERO_DIR = RESOURCES_DIR / "image" / "hero"
+ICON_DIR = RESOURCES_DIR / "image" / "icon"
+SIGNATURE_DIR = RESOURCES_DIR / "image" / "signature"
+TIER_DIR = RESOURCES_DIR / "image" / "tier"
+TOWN_DIR = RESOURCES_DIR / "image" / "town"
