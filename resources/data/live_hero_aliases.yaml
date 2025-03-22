@@ -468,13 +468,13 @@ names:
     en_name: Weiss
     aliases: [薇丝]
     hero_id: 4150
-  - zh_tw_name: 未知4
+  - zh_tw_name: 未知
     zh_cn_name: ''
     kr_name: ''
     en_name: ''
     aliases: []
     hero_id: 4160
-  - zh_tw_name: 未知5
+  - zh_tw_name: 未知
     zh_cn_name: ''
     kr_name: ''
     en_name: ''
@@ -510,7 +510,7 @@ names:
     en_name: Brigid
     aliases: [大帝]
     hero_id: 5050
-  - zh_tw_name: 未知6
+  - zh_tw_name: 未知
     zh_cn_name: ''
     kr_name: ''
     en_name: ''
