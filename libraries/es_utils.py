@@ -3074,7 +3074,8 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
                     "zh_tw": string.get("zh_tw", ""),
                     "zh_cn": string.get("zh_cn", ""),
                     "kr": string.get("kr", ""),
-                    "en": string.get("en", "")
+                    "en": string.get("en", ""),
+                    "ja": string.get("ja", "")
                 }
 
     seen_hero_ids = set()
@@ -3111,10 +3112,11 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
             hero["hero_id"] >= 7000):
             
             name_data = hero_names.get(hero["name_sno"], {
-                "zh_tw": "未知",
+                "zh_tw": "",
                 "zh_cn": "",
                 "kr": "",
-                "en": ""
+                "en": "",
+                "ja": ""
             })
             current_id = hero["hero_id"]
             
@@ -3135,10 +3137,11 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
             
             hero_id = hero["hero_id"]
             name_data = hero_names.get(hero["name_sno"], {
-                "zh_tw": "未知",
+                "zh_tw": "",
                 "zh_cn": "",
                 "kr": "",
-                "en": ""
+                "en": "",
+                "ja": ""
             })
             zh_cn_name = name_data["zh_cn"]
             if not zh_cn_name and hero_id in existing_zh_cn_names:
@@ -3149,6 +3152,7 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
                 "zh_cn_name": zh_cn_name,
                 "kr_name": name_data["kr"],
                 "en_name": name_data["en"],
+                "ja_name": name_data["ja"],
                 "aliases": existing_aliases.get(hero_id, []), 
                 "hero_id": hero_id
             }
@@ -3185,18 +3189,18 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
     
     with open(hero_output_file, "w", encoding="utf-8") as f:
         yaml.dump(new_data, f, 
-                 Dumper=CustomDumper,
-                 allow_unicode=True, 
-                 sort_keys=False,
-                 default_flow_style=False,
-                 indent=2)
+                Dumper=CustomDumper,
+                allow_unicode=True, 
+                sort_keys=False,
+                default_flow_style=False,
+                indent=4)
     
     with open(monster_output_file, "w", encoding="utf-8") as f:
         yaml.dump(monster_data, f, 
-                 Dumper=CustomDumper,
-                 allow_unicode=True, 
-                 sort_keys=False,
-                 default_flow_style=False,
-                 indent=2)
+                Dumper=CustomDumper,
+                allow_unicode=True, 
+                sort_keys=False,
+                default_flow_style=False,
+                indent=4)
     
     return len(new_data['names']), len(monster_data['names']) 

@@ -1,584 +1,681 @@
 names:
-  - zh_tw_name: 艾琳
-    zh_cn_name: 艾琳
-    kr_name: 아이린
-    en_name: Irene
-    aliases: [小艾琳]
-    hero_id: 10
-  - zh_tw_name: 凱尼
-    zh_cn_name: 凯尼
-    kr_name: 캐니
-    en_name: Canney
-    aliases: []
-    hero_id: 20
-  - zh_tw_name: 比希
-    zh_cn_name: 比希
-    kr_name: 픽시
-    en_name: Pixie
-    aliases: []
-    hero_id: 30
-  - zh_tw_name: 卡斯珀
-    zh_cn_name: 卡斯珀
-    kr_name: 캐스퍼
-    en_name: Casper
-    aliases: []
-    hero_id: 40
-  - zh_tw_name: 麗塔
-    zh_cn_name: 丽塔
-    kr_name: 리타
-    en_name: Rita
-    aliases: []
-    hero_id: 110
-  - zh_tw_name: 蘿絲
-    zh_cn_name: 萝丝
-    kr_name: 로제
-    en_name: Rose
-    aliases: [小萝丝, 螺絲, 羅斯, 肉絲, 小蘿絲]
-    hero_id: 120
-  - zh_tw_name: 夏琳
-    zh_cn_name: 夏琳
-    kr_name: 샤링
-    en_name: Sharinne
-    aliases: []
-    hero_id: 210
-  - zh_tw_name: 魯莉
-    zh_cn_name: 鲁莉
-    kr_name: 루리
-    en_name: Ruri
-    aliases: []
-    hero_id: 220
-  - zh_tw_name: 艾麗西雅
-    zh_cn_name: 艾丽西雅
-    kr_name: 알리샤
-    en_name: Alisha
-    aliases: []
-    hero_id: 310
-  - zh_tw_name: 樂溫
-    zh_cn_name: 乐温
-    kr_name: 르웨인
-    en_name: Lewayne
-    aliases: []
-    hero_id: 320
-  - zh_tw_name: 無名
-    zh_cn_name: 无名
-    kr_name: 무명
-    en_name: Nameless
-    aliases: []
-    hero_id: 410
-  - zh_tw_name: 卡倫
-    zh_cn_name: 卡伦
-    kr_name: 카렌
-    en_name: Karen
-    aliases: [凱倫]
-    hero_id: 420
-  - zh_tw_name: 梅菲斯托佩萊斯
-    zh_cn_name: 梅菲斯托佩莱斯
-    kr_name: 메피스토펠레스
-    en_name: Mephistopheles
-    aliases: [梅菲, 梅妃, 太空人, 一號]
-    hero_id: 1010
-  - zh_tw_name: 貝萊德
-    zh_cn_name: 贝莱德
-    kr_name: 벨레드
-    en_name: Beleth
-    aliases: [贝贝, 五号, 女仆, 貝貝, 五號, 女僕]
-    hero_id: 1020
-  - zh_tw_name: 克萊兒
-    zh_cn_name: 克莱儿
-    kr_name: 클레르
-    en_name: Claire
-    aliases: [克莱尔, 团长, 人t, 克萊爾, 團長, 人盾]
-    hero_id: 1030
-  - zh_tw_name: 秋
-    zh_cn_name: 秋
-    kr_name: 아키
-    en_name: Aki
-    aliases: [aki, 刀妹]
-    hero_id: 1040
-  - zh_tw_name: 潔依德
-    zh_cn_name: 洁依德
-    kr_name: 제이드
-    en_name: Jade
-    aliases: [洁伊德, 贪财女, 潔伊德, 貪財女]
-    hero_id: 1050
-  - zh_tw_name: 琳賽
-    zh_cn_name: 琳赛
-    kr_name: 린지
-    en_name: Linzy
-    aliases: [林赛, 林賽]
-    hero_id: 1060
-  - zh_tw_name: 直美
-    zh_cn_name: 直美
-    kr_name: 나오미
-    en_name: Naomi
-    aliases: []
-    hero_id: 1070
-  - zh_tw_name: 莉莉絲
-    zh_cn_name: 莉莉丝
-    kr_name: 릴리트
-    en_name: Lilith
-    aliases: [九号, 九號]
-    hero_id: 1080
-  - zh_tw_name: 凱瑟琳
-    zh_cn_name: 凯瑟琳
-    kr_name: 캐서린
-    en_name: Catherine
-    aliases: [凯色琳, 凱色琳, 小凱]
-    hero_id: 1090
-  - zh_tw_name: 雪莉
-    zh_cn_name: 雪莉
-    kr_name: 셰리
-    en_name: Cherrie
-    aliases: [雪梨, 酒鬼]
-    hero_id: 1100
-  - zh_tw_name: 朵菈
-    zh_cn_name: 朵菈
-    kr_name: 도라
-    en_name: Dora
-    aliases: [熊熊]
-    hero_id: 1110
-  - zh_tw_name: 智河
-    zh_cn_name: 智河
-    kr_name: 지호
-    en_name: Jiho
-    aliases: [纸盒, 紙盒]
-    hero_id: 1120
-  - zh_tw_name: 黑伊茲爾
-    zh_cn_name: 黑伊兹尔
-    kr_name: 헤이즐
-    en_name: Hazel
-    aliases: [黑椅子, 黑ez, 海伊斯]
-    hero_id: 1130
-  - zh_tw_name: 艾琳
-    zh_cn_name: 艾琳
-    kr_name: 에일린
-    en_name: Eileen
-    aliases: [大艾琳, 小偷, 竊賊]
-    hero_id: 1140
-  - zh_tw_name: 蘿絲（紅焰）
-    zh_cn_name: 萝丝（红焰）
-    kr_name: 로제(홍염)
-    en_name: Rose (Prominence)
-    aliases: [大萝丝, 大螺丝, 打螺丝, 红萝, 大肉丝, 光萝, 大罗斯, 大月氏, 界萝丝, 大羅斯, 大螺絲, 打螺絲, 火螺絲, 光蘿, 大肉絲,
-      大蘿絲, 紅蘿, 火蘿]
-    hero_id: 1150
-  - zh_tw_name: 未知
-    zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    aliases: []
-    hero_id: 1160
-  - zh_tw_name: 紅蘭
-    zh_cn_name: 红兰
-    kr_name: 홍란
-    en_name: Honglan
-    aliases: [龍女, 冰龍]
-    hero_id: 2010
-  - zh_tw_name: 順伊
-    zh_cn_name: 顺伊
-    kr_name: 순이
-    en_name: Soonie
-    aliases: [兔兔, 兔子]
-    hero_id: 2020
-  - zh_tw_name: 艾拉
-    zh_cn_name: 艾拉
-    kr_name: 아이라
-    en_name: Aira
-    aliases: [狮子, 獅子]
-    hero_id: 2030
-  - zh_tw_name: 西荷
-    zh_cn_name: 西荷
-    kr_name: 시하
-    en_name: Seeha
-    aliases: [西河]
-    hero_id: 2040
-  - zh_tw_name: 米卡
-    zh_cn_name: 米卡
-    kr_name: 미카
-    en_name: Mica
-    aliases: [mika]
-    hero_id: 2050
-  - zh_tw_name: 梅莉兒
-    zh_cn_name: 梅莉儿
-    kr_name: 메릴
-    en_name: Meryl
-    aliases: [梅莉尔, 梅莉爾]
-    hero_id: 2060
-  - zh_tw_name: 弗林
-    zh_cn_name: 弗林
-    kr_name: 플린
-    en_name: Flynn
-    aliases: [鼠鼠, 爆彈]
-    hero_id: 2070
-  - zh_tw_name: 塔莎
-    zh_cn_name: 塔莎
-    kr_name: 타샤
-    en_name: Tasha
-    aliases: [妖后]
-    hero_id: 2080
-  - zh_tw_name: 河路
-    zh_cn_name: 河路
-    kr_name: 하루
-    en_name: Haru
-    aliases: []
-    hero_id: 2090
-  - zh_tw_name: 魯特
-    zh_cn_name: 鲁特
-    kr_name: 루테
-    en_name: Lute
-    aliases: [羊羊, 綿羊]
-    hero_id: 2100
-  - zh_tw_name: 克拉拉
-    zh_cn_name: 克拉拉
-    kr_name: 클라라
-    en_name: Clara
-    aliases: []
-    hero_id: 2110
-  - zh_tw_name: 小蓮
-    zh_cn_name: 小莲
-    kr_name: 소연
-    en_name: Xiaolian
-    aliases: [猴子, 猿神]
-    hero_id: 2120
-  - zh_tw_name: 櫻世
-    zh_cn_name: 樱世
-    kr_name: 사쿠요
-    en_name: Sakuyo
-    aliases: [小樱世, 小猫, 小櫻世, 小貓]
-    hero_id: 2130
-  - zh_tw_name: 歐妮絲
-    zh_cn_name: 欧妮丝
-    kr_name: 오닉스
-    en_name: Onyx
-    aliases: [章鱼, 哔波, 章魚, 嗶波]
-    hero_id: 2140
-  - zh_tw_name: 櫻世（業火）
-    zh_cn_name: 樱世（业火）
-    kr_name: 사쿠요(업화)
-    en_name: Sakuyo (Inferno)
-    aliases: [大樱世, 大猫, 大櫻世, 大貓]
-    hero_id: 2150
-  - zh_tw_name: 紅蘭（無雙）
-    zh_cn_name: ''
-    kr_name: 홍란(무쌍)
-    en_name: Honglan (Peerless)
-    aliases: [大红兰]
-    hero_id: 2160
-  - zh_tw_name: 未知
-    zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    aliases: []
-    hero_id: 2170
-  - zh_tw_name: 艾麗卡
-    zh_cn_name: 艾丽卡
-    kr_name: 에리카
-    en_name: Erika
-    aliases: [炼金, 鍊金]
-    hero_id: 3010
-  - zh_tw_name: 伊娜
-    zh_cn_name: 伊娜
-    kr_name: 이나
-    en_name: Ina
-    aliases: []
-    hero_id: 3020
-  - zh_tw_name: 勒內
-    zh_cn_name: 勒内
-    kr_name: 르네
-    en_name: Renee
-    aliases: [蕾妮, 劲夫, 弟弟]
-    hero_id: 3030
-  - zh_tw_name: 塔利亞
-    zh_cn_name: 塔利亚
-    kr_name: 탈리아
-    en_name: Talia
-    aliases: [星星]
-    hero_id: 3040
-  - zh_tw_name: 坎納
-    zh_cn_name: 坎纳
-    kr_name: 칸나
-    en_name: Kanna
-    aliases: [坎那]
-    hero_id: 3050
-  - zh_tw_name: 伊迪絲
-    zh_cn_name: 伊迪丝
-    kr_name: 이디스
-    en_name: Edith
-    aliases: [伊迪斯, eds]
-    hero_id: 3060
-  - zh_tw_name: 妮可
-    zh_cn_name: 妮可
-    kr_name: 니콜
-    en_name: Nicole
-    aliases: [弓女]
-    hero_id: 3070
-  - zh_tw_name: 薇薇安
-    zh_cn_name: 薇薇安
-    kr_name: 비비안
-    en_name: Vivienne
-    aliases: [vva, 女巫]
-    hero_id: 3080
-  - zh_tw_name: 米里昂
-    zh_cn_name: 米里昂
-    kr_name: 미리암
-    en_name: Miriam
-    aliases: [米粒]
-    hero_id: 3090
-  - zh_tw_name: 克羅伊
-    zh_cn_name: 克罗伊
-    kr_name: 클로이
-    en_name: Chloe
-    aliases: [克洛伊, 塞尔达, 塞爾達]
-    hero_id: 3100
-  - zh_tw_name: 娜伊雅
-    zh_cn_name: 娜伊雅
-    kr_name: 나이아
-    en_name: Naiah
-    aliases: [睡法, 夢蝶]
-    hero_id: 3110
-  - zh_tw_name: 瑪儂
-    zh_cn_name: 玛侬
-    kr_name: 마농
-    en_name: Manon
-    aliases: [码农, 碼農]
-    hero_id: 3120
-  - zh_tw_name: 達芙妮
-    zh_cn_name: 达芙妮
-    kr_name: 다프네
-    en_name: Daphne
-    aliases: [达神, 大锤, 達神, 大錘, 鐵匠]
-    hero_id: 3130
-  - zh_tw_name: 多米尼克
-    zh_cn_name: 多米尼克
-    kr_name: 도미니크
-    en_name: Dominique
-    aliases: [多米]
-    hero_id: 3140
-  - zh_tw_name: 威里
-    zh_cn_name: 威里
-    kr_name: 웨리
-    en_name: Wheri
-    aliases: [蜘蛛]
-    hero_id: 3150
-  - zh_tw_name: 勒內（白銀）
-    zh_cn_name: ''
-    kr_name: 르네(백은)
-    en_name: Renee (Argent)
-    aliases: [大勒内]
-    hero_id: 3160
-  - zh_tw_name: 未知
-    zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    aliases: []
-    hero_id: 3170
-  - zh_tw_name: 蘿拉
-    zh_cn_name: 萝拉
-    kr_name: 라우라
-    en_name: Laura
-    aliases: [勞拉, 騾拉]
-    hero_id: 3180
-  - zh_tw_name: 薇奧蕾特
-    zh_cn_name: 薇奥蕾特
-    kr_name: 비올레트
-    en_name: Violette
-    aliases: [薇奥, vo, 哇哦]
-    hero_id: 4010
-  - zh_tw_name: 佳妮特
-    zh_cn_name: 佳妮特
-    kr_name: 가넷
-    en_name: Garnet
-    aliases: [佳尼特, 病娇, 病嬌]
-    hero_id: 4020
-  - zh_tw_name: 瑞貝卡
-    zh_cn_name: 瑞贝卡
-    kr_name: 레베카
-    en_name: Rebecca
-    aliases: [轮椅, 輪椅]
-    hero_id: 4030
-  - zh_tw_name: 梅爾菲斯
-    zh_cn_name: 梅尔菲斯
-    kr_name: 멜피스
-    en_name: Melfice
-    aliases: [不死姐姐, 雙胞胎大]
-    hero_id: 4040
-  - zh_tw_name: 布萊斯
-    zh_cn_name: 布莱斯
-    kr_name: 브라이스
-    en_name: Bryce
-    aliases: [不死妹妹, 雙胞胎小]
-    hero_id: 4050
-  - zh_tw_name: 弗里姆
-    zh_cn_name: 弗里姆
-    kr_name: 프림
-    en_name: Prim
-    aliases: [弗立姆, 不死奶]
-    hero_id: 4060
-  - zh_tw_name: 潔克琳
-    zh_cn_name: 洁克琳
-    kr_name: 재클린
-    en_name: Jacqueline
-    aliases: [jk0, 機器人]
-    hero_id: 4070
-  - zh_tw_name: 貝拉納
-    zh_cn_name: 贝拉纳
-    kr_name: 벨라나
-    en_name: Velanna
-    aliases: [贝姐, 貝姐, 蛇女]
-    hero_id: 4080
-  - zh_tw_name: 艾魯莎
-    zh_cn_name: 艾鲁莎
-    kr_name: 에루샤
-    en_name: Erusha
-    aliases: [艾露沙, 舞娘]
-    hero_id: 4090
-  - zh_tw_name: 佩特拉
-    zh_cn_name: 佩特拉
-    kr_name: 페트라
-    en_name: Petra
-    aliases: [佩佩, 棺材]
-    hero_id: 4100
-  - zh_tw_name: 妮妮
-    zh_cn_name: 妮妮
-    kr_name: 니니
-    en_name: Nini
-    aliases: [殭屍]
-    hero_id: 4110
-  - zh_tw_name: 乙葉
-    zh_cn_name: 乙叶
-    kr_name: 오토하
-    en_name: Otoha
-    aliases: [电锯, 電鋸]
-    hero_id: 4120
-  - zh_tw_name: 瓊
-    zh_cn_name: 琼
-    kr_name: 조앤
-    en_name: Joanne
-    aliases: [醫生]
-    hero_id: 4130
-  - zh_tw_name: 希格莉德
-    zh_cn_name: 希格莉德
-    kr_name: 시그리드
-    en_name: Sigrid
-    aliases: [希格, 不死大姐, 大姐, 犀利]
-    hero_id: 4140
-  - zh_tw_name: 拜斯
-    zh_cn_name: 拜斯
-    kr_name: 바이스
-    en_name: Weiss
-    aliases: []
-    hero_id: 4150
-  - zh_tw_name: 未知
-    zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    aliases: []
-    hero_id: 4160
-  - zh_tw_name: 未知
-    zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    aliases: []
-    hero_id: 4170
-  - zh_tw_name: 克勞迪婭
-    zh_cn_name: 克劳迪娅
-    kr_name: 클라우디아
-    en_name: Claudia
-    aliases: [克劳, 牢克, 克勞]
-    hero_id: 5010
-  - zh_tw_name: 阿德里安
-    zh_cn_name: 阿德里安
-    kr_name: 아드리안
-    en_name: Adrianne
-    aliases: [阿德, 牢德]
-    hero_id: 5020
-  - zh_tw_name: 尤里婭
-    zh_cn_name: 尤里娅
-    kr_name: 유리아
-    en_name: Yuria
-    aliases: [女王, 王女, 尤利娅, 尤莉婭]
-    hero_id: 5030
-  - zh_tw_name: 韓羽
-    zh_cn_name: 韩羽
-    kr_name: 한울
-    en_name: Hanul
-    aliases: []
-    hero_id: 5040
-  - zh_tw_name: 布利基特
-    zh_cn_name: 布利基特
-    kr_name: 브리기트
-    en_name: Brigid
-    aliases: [大帝]
-    hero_id: 5050
-  - zh_tw_name: 未知
-    zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    aliases: []
-    hero_id: 5060
-  - zh_tw_name: 拉利瑪
-    zh_cn_name: 拉利玛
-    kr_name: 라리마
-    en_name: Larimar
-    aliases: [拉力玛, 天空龙, 拉你吗, 拉你妈, 拉力馬, 拉你媽, 拉你嗎, 天空龍]
-    hero_id: 6010
-  - zh_tw_name: 莉澤洛特
-    zh_cn_name: 莉泽洛特
-    kr_name: 리젤로테
-    en_name: Lizelotte
-    aliases: [莉泽, 丽泽, 麗則, 莉澤, 莉洛]
-    hero_id: 6020
-  - zh_tw_name: 綾織
-    zh_cn_name: 绫织
-    kr_name: 아야메
-    en_name: Ayame
-    aliases: [灵芝, 靈芝]
-    hero_id: 6030
-  - zh_tw_name: 夏娃
-    zh_cn_name: 太古精灵
-    kr_name: 이브
-    en_name: Eve
-    aliases: []
-    hero_id: 6050
-  - zh_tw_name: 二亞
-    zh_cn_name: ''
-    kr_name: 니아
-    en_name: Nia
-    aliases: [尼亚]
-    hero_id: 6060
-  - zh_tw_name: 異次元精髓
-    zh_cn_name: 异次元精髓
-    kr_name: 이차원의 정수
-    en_name: Essence of Another Dimension
-    aliases: [异精, 異精, 紫球]
-    hero_id: 6500
-  - zh_tw_name: 凱瑟琳（光輝）
-    zh_cn_name: 凯瑟琳（光辉）
-    kr_name: 캐서린(광휘)
-    en_name: Catherine (Radiance)
-    aliases: [光凯, 光凱, 光輝凱瑟琳, 大凱, 火凱, 光輝凱色琳]
-    hero_id: 6510
-  - zh_tw_name: 琳賽（桑納托斯）
-    zh_cn_name: 琳赛（桑纳托斯）
-    kr_name: 린지(타나토스)
-    en_name: Linzy (Thanatos)
-    aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽]
-    hero_id: 6520
-  - zh_tw_name: 梅菲斯托佩萊斯（黎明）
-    zh_cn_name: ''
-    kr_name: 메피스토펠레스(여명)
-    en_name: Mephistopheles (Dawn)
-    aliases: [菲姬, 牢梅, 黎梅, 飞机, 黎梅菲, 暗梅菲, 界梅菲, 李梅, 大梅妃, 飛機]
-    hero_id: 6530
-  - zh_tw_name: 時崎狂三
-    zh_cn_name: 时崎狂三
-    kr_name: 토키사키 쿠루미
-    en_name: Kurumi Tokisaki
-    aliases: [三三, 狂三]
-    hero_id: 6980
-  - zh_tw_name: 夜刀神十香
-    zh_cn_name: 夜刀神十香
-    kr_name: 야토가미 토카
-    en_name: Tohka Yatogami
-    aliases: [十香]
-    hero_id: 6990
+    -   zh_tw_name: 艾琳
+        zh_cn_name: 艾琳
+        kr_name: 아이린
+        en_name: Irene
+        ja_name: アイリーン
+        aliases: [小艾琳]
+        hero_id: 10
+    -   zh_tw_name: 凱尼
+        zh_cn_name: 凯尼
+        kr_name: 캐니
+        en_name: Canney
+        ja_name: ケニー
+        aliases: []
+        hero_id: 20
+    -   zh_tw_name: 比希
+        zh_cn_name: 比希
+        kr_name: 픽시
+        en_name: Pixie
+        ja_name: ピクシィ
+        aliases: []
+        hero_id: 30
+    -   zh_tw_name: 卡斯珀
+        zh_cn_name: 卡斯珀
+        kr_name: 캐스퍼
+        en_name: Casper
+        ja_name: キャスパー
+        aliases: []
+        hero_id: 40
+    -   zh_tw_name: 麗塔
+        zh_cn_name: 丽塔
+        kr_name: 리타
+        en_name: Rita
+        ja_name: リタ
+        aliases: []
+        hero_id: 110
+    -   zh_tw_name: 蘿絲
+        zh_cn_name: 萝丝
+        kr_name: 로제
+        en_name: Rose
+        ja_name: ロゼ
+        aliases: [小萝丝, 螺絲, 羅斯, 肉絲, 小蘿絲]
+        hero_id: 120
+    -   zh_tw_name: 夏琳
+        zh_cn_name: 夏琳
+        kr_name: 샤링
+        en_name: Sharinne
+        ja_name: シャーリン
+        aliases: []
+        hero_id: 210
+    -   zh_tw_name: 魯莉
+        zh_cn_name: 鲁莉
+        kr_name: 루리
+        en_name: Ruri
+        ja_name: ルリ
+        aliases: []
+        hero_id: 220
+    -   zh_tw_name: 艾麗西雅
+        zh_cn_name: 艾丽西雅
+        kr_name: 알리샤
+        en_name: Alisha
+        ja_name: アリーシャ
+        aliases: []
+        hero_id: 310
+    -   zh_tw_name: 樂溫
+        zh_cn_name: 乐温
+        kr_name: 르웨인
+        en_name: Lewayne
+        ja_name: ルウェイン
+        aliases: []
+        hero_id: 320
+    -   zh_tw_name: 無名
+        zh_cn_name: 无名
+        kr_name: 무명
+        en_name: Nameless
+        ja_name: ナナシ
+        aliases: []
+        hero_id: 410
+    -   zh_tw_name: 卡倫
+        zh_cn_name: 卡伦
+        kr_name: 카렌
+        en_name: Karen
+        ja_name: カレン
+        aliases: [凱倫]
+        hero_id: 420
+    -   zh_tw_name: 梅菲斯托佩萊斯
+        zh_cn_name: 梅菲斯托佩莱斯
+        kr_name: 메피스토펠레스
+        en_name: Mephistopheles
+        ja_name: メフィストフェレス
+        aliases: [梅菲, 梅妃, 太空人, 一號]
+        hero_id: 1010
+    -   zh_tw_name: 貝萊德
+        zh_cn_name: 贝莱德
+        kr_name: 벨레드
+        en_name: Beleth
+        ja_name: ベレス
+        aliases: [贝贝, 五号, 女仆, 貝貝, 五號, 女僕]
+        hero_id: 1020
+    -   zh_tw_name: 克萊兒
+        zh_cn_name: 克莱儿
+        kr_name: 클레르
+        en_name: Claire
+        ja_name: クレール
+        aliases: [克莱尔, 团长, 人t, 克萊爾, 團長, 人盾]
+        hero_id: 1030
+    -   zh_tw_name: 秋
+        zh_cn_name: 秋
+        kr_name: 아키
+        en_name: Aki
+        ja_name: アキ
+        aliases: [aki, 刀妹]
+        hero_id: 1040
+    -   zh_tw_name: 潔依德
+        zh_cn_name: 洁依德
+        kr_name: 제이드
+        en_name: Jade
+        ja_name: ジェイド
+        aliases: [洁伊德, 贪财女, 潔伊德, 貪財女]
+        hero_id: 1050
+    -   zh_tw_name: 琳賽
+        zh_cn_name: 琳赛
+        kr_name: 린지
+        en_name: Linzy
+        ja_name: リンジー
+        aliases: [林赛, 林賽]
+        hero_id: 1060
+    -   zh_tw_name: 直美
+        zh_cn_name: 直美
+        kr_name: 나오미
+        en_name: Naomi
+        ja_name: ナオミ
+        aliases: []
+        hero_id: 1070
+    -   zh_tw_name: 莉莉絲
+        zh_cn_name: 莉莉丝
+        kr_name: 릴리트
+        en_name: Lilith
+        ja_name: リリス
+        aliases: [九号, 九號]
+        hero_id: 1080
+    -   zh_tw_name: 凱瑟琳
+        zh_cn_name: 凯瑟琳
+        kr_name: 캐서린
+        en_name: Catherine
+        ja_name: キャサリン
+        aliases: [凯色琳, 凱色琳, 小凱]
+        hero_id: 1090
+    -   zh_tw_name: 雪莉
+        zh_cn_name: 雪莉
+        kr_name: 셰리
+        en_name: Cherrie
+        ja_name: シェリー
+        aliases: [雪梨, 酒鬼]
+        hero_id: 1100
+    -   zh_tw_name: 朵菈
+        zh_cn_name: 朵拉
+        kr_name: 도라
+        en_name: Dora
+        ja_name: ドーラ
+        aliases: [熊熊]
+        hero_id: 1110
+    -   zh_tw_name: 智河
+        zh_cn_name: 智河
+        kr_name: 지호
+        en_name: Jiho
+        ja_name: ジホ
+        aliases: [纸盒, 紙盒]
+        hero_id: 1120
+    -   zh_tw_name: 黑伊茲爾
+        zh_cn_name: 黑伊兹尔
+        kr_name: 헤이즐
+        en_name: Hazel
+        ja_name: ヘーゼル
+        aliases: [黑椅子, 黑ez, 海伊斯]
+        hero_id: 1130
+    -   zh_tw_name: 艾琳
+        zh_cn_name: 艾琳
+        kr_name: 에일린
+        en_name: Eileen
+        ja_name: エイリーン
+        aliases: [大艾琳, 小偷, 竊賊]
+        hero_id: 1140
+    -   zh_tw_name: 蘿絲（紅焰）
+        zh_cn_name: 萝丝（红焰）
+        kr_name: 로제(홍염)
+        en_name: Rose (Prominence)
+        ja_name: ロゼ(紅炎)
+        aliases: [大萝丝, 大螺丝, 打螺丝, 红萝, 大肉丝, 光萝, 大罗斯, 大月氏, 界萝丝, 大羅斯, 大螺絲, 打螺絲, 火螺絲, 光蘿,
+            大肉絲, 大蘿絲, 紅蘿, 火蘿]
+        hero_id: 1150
+    -   zh_tw_name: ''
+        zh_cn_name: ''
+        kr_name: 지호(미르)
+        en_name: ''
+        ja_name: ジホ(ミル)
+        aliases: []
+        hero_id: 1160
+    -   zh_tw_name: 紅蘭
+        zh_cn_name: 红兰
+        kr_name: 홍란
+        en_name: Honglan
+        ja_name: ホンラン
+        aliases: [龍女, 冰龍]
+        hero_id: 2010
+    -   zh_tw_name: 順伊
+        zh_cn_name: 顺伊
+        kr_name: 순이
+        en_name: Soonie
+        ja_name: スニ
+        aliases: [兔兔, 兔子]
+        hero_id: 2020
+    -   zh_tw_name: 艾拉
+        zh_cn_name: 艾拉
+        kr_name: 아이라
+        en_name: Aira
+        ja_name: アイラ
+        aliases: [狮子, 獅子]
+        hero_id: 2030
+    -   zh_tw_name: 西荷
+        zh_cn_name: 西荷
+        kr_name: 시하
+        en_name: Seeha
+        ja_name: シハ
+        aliases: [西河]
+        hero_id: 2040
+    -   zh_tw_name: 米卡
+        zh_cn_name: 米卡
+        kr_name: 미카
+        en_name: Mica
+        ja_name: ミカ
+        aliases: [mika]
+        hero_id: 2050
+    -   zh_tw_name: 梅莉兒
+        zh_cn_name: 梅莉儿
+        kr_name: 메릴
+        en_name: Meryl
+        ja_name: メリル
+        aliases: [梅莉尔, 梅莉爾]
+        hero_id: 2060
+    -   zh_tw_name: 弗林
+        zh_cn_name: 弗林
+        kr_name: 플린
+        en_name: Flynn
+        ja_name: フラン
+        aliases: [鼠鼠, 爆彈]
+        hero_id: 2070
+    -   zh_tw_name: 塔莎
+        zh_cn_name: 塔莎
+        kr_name: 타샤
+        en_name: Tasha
+        ja_name: ターシャ
+        aliases: [妖后]
+        hero_id: 2080
+    -   zh_tw_name: 河路
+        zh_cn_name: 河路
+        kr_name: 하루
+        en_name: Haru
+        ja_name: ハル
+        aliases: []
+        hero_id: 2090
+    -   zh_tw_name: 魯特
+        zh_cn_name: 鲁特
+        kr_name: 루테
+        en_name: Lute
+        ja_name: ルーテ
+        aliases: [羊羊, 綿羊]
+        hero_id: 2100
+    -   zh_tw_name: 克拉拉
+        zh_cn_name: 克拉拉
+        kr_name: 클라라
+        en_name: Clara
+        ja_name: クララ
+        aliases: []
+        hero_id: 2110
+    -   zh_tw_name: 小蓮
+        zh_cn_name: 小莲
+        kr_name: 소연
+        en_name: Xiaolian
+        ja_name: シャオリン
+        aliases: [猴子, 猿神]
+        hero_id: 2120
+    -   zh_tw_name: 櫻世
+        zh_cn_name: 樱世
+        kr_name: 사쿠요
+        en_name: Sakuyo
+        ja_name: サクヨ
+        aliases: [小樱世, 小猫, 小櫻世, 小貓]
+        hero_id: 2130
+    -   zh_tw_name: 歐妮絲
+        zh_cn_name: 欧妮丝
+        kr_name: 오닉스
+        en_name: Onyx
+        ja_name: オニキス
+        aliases: [章鱼, 哔波, 章魚, 嗶波]
+        hero_id: 2140
+    -   zh_tw_name: 櫻世（業火）
+        zh_cn_name: 樱世（业火）
+        kr_name: 사쿠요(업화)
+        en_name: Sakuyo (Inferno)
+        ja_name: サクヨ(業火)
+        aliases: [大樱世, 大猫, 大櫻世, 大貓]
+        hero_id: 2150
+    -   zh_tw_name: 紅蘭（無雙）
+        zh_cn_name: ''
+        kr_name: 홍란(무쌍)
+        en_name: Honglan (Peerless)
+        ja_name: ホンラン(無双)
+        aliases: [大红兰]
+        hero_id: 2160
+    -   zh_tw_name: ''
+        zh_cn_name: ''
+        kr_name: 하루(카무이)
+        en_name: ''
+        ja_name: ハル(カムイ)
+        aliases: []
+        hero_id: 2170
+    -   zh_tw_name: 艾麗卡
+        zh_cn_name: 艾丽卡
+        kr_name: 에리카
+        en_name: Erika
+        ja_name: エリカ
+        aliases: [炼金, 鍊金]
+        hero_id: 3010
+    -   zh_tw_name: 伊娜
+        zh_cn_name: 伊娜
+        kr_name: 이나
+        en_name: Ina
+        ja_name: イナ
+        aliases: []
+        hero_id: 3020
+    -   zh_tw_name: 勒內
+        zh_cn_name: 勒内
+        kr_name: 르네
+        en_name: Renee
+        ja_name: ルネ
+        aliases: [蕾妮, 劲夫, 弟弟]
+        hero_id: 3030
+    -   zh_tw_name: 塔利亞
+        zh_cn_name: 塔利亚
+        kr_name: 탈리아
+        en_name: Talia
+        ja_name: タリア
+        aliases: [星星]
+        hero_id: 3040
+    -   zh_tw_name: 坎納
+        zh_cn_name: 坎纳
+        kr_name: 칸나
+        en_name: Kanna
+        ja_name: カンナ
+        aliases: [坎那]
+        hero_id: 3050
+    -   zh_tw_name: 伊迪絲
+        zh_cn_name: 伊迪丝
+        kr_name: 이디스
+        en_name: Edith
+        ja_name: イーディス
+        aliases: [伊迪斯, eds]
+        hero_id: 3060
+    -   zh_tw_name: 妮可
+        zh_cn_name: 妮可
+        kr_name: 니콜
+        en_name: Nicole
+        ja_name: ニコル
+        aliases: [弓女]
+        hero_id: 3070
+    -   zh_tw_name: 薇薇安
+        zh_cn_name: 薇薇安
+        kr_name: 비비안
+        en_name: Vivienne
+        ja_name: ビビアン
+        aliases: [vva, 女巫]
+        hero_id: 3080
+    -   zh_tw_name: 米里昂
+        zh_cn_name: 米里昂
+        kr_name: 미리암
+        en_name: Miriam
+        ja_name: ミリアム
+        aliases: [米粒]
+        hero_id: 3090
+    -   zh_tw_name: 克羅伊
+        zh_cn_name: 克罗伊
+        kr_name: 클로이
+        en_name: Chloe
+        ja_name: クロエ
+        aliases: [克洛伊, 塞尔达, 塞爾達]
+        hero_id: 3100
+    -   zh_tw_name: 娜伊雅
+        zh_cn_name: 娜伊雅
+        kr_name: 나이아
+        en_name: Naiah
+        ja_name: ナイア
+        aliases: [睡法, 夢蝶]
+        hero_id: 3110
+    -   zh_tw_name: 瑪儂
+        zh_cn_name: 玛侬
+        kr_name: 마농
+        en_name: Manon
+        ja_name: マノン
+        aliases: [码农, 碼農]
+        hero_id: 3120
+    -   zh_tw_name: 達芙妮
+        zh_cn_name: 达芙妮
+        kr_name: 다프네
+        en_name: Daphne
+        ja_name: ダフネ
+        aliases: [达神, 大锤, 達神, 大錘, 鐵匠]
+        hero_id: 3130
+    -   zh_tw_name: 多米尼克
+        zh_cn_name: 多米尼克
+        kr_name: 도미니크
+        en_name: Dominique
+        ja_name: ドミニク
+        aliases: [多米]
+        hero_id: 3140
+    -   zh_tw_name: 威里
+        zh_cn_name: 威里
+        kr_name: 웨리
+        en_name: Wheri
+        ja_name: ウェリー
+        aliases: [蜘蛛]
+        hero_id: 3150
+    -   zh_tw_name: 勒內（白銀）
+        zh_cn_name: ''
+        kr_name: 르네(백은)
+        en_name: Renee (Argent)
+        ja_name: ルネ(白銀)
+        aliases: [大勒内]
+        hero_id: 3160
+    -   zh_tw_name: ''
+        zh_cn_name: ''
+        kr_name: 미리암(잔영)
+        en_name: ''
+        ja_name: ミリアム(残影)
+        aliases: []
+        hero_id: 3170
+    -   zh_tw_name: 蘿拉
+        zh_cn_name: 萝拉
+        kr_name: 라우라
+        en_name: Laura
+        ja_name: ラウラ
+        aliases: [勞拉, 騾拉]
+        hero_id: 3180
+    -   zh_tw_name: 薇奧蕾特
+        zh_cn_name: 薇奥蕾特
+        kr_name: 비올레트
+        en_name: Violette
+        ja_name: ヴィオレット
+        aliases: [薇奥, vo, 哇哦]
+        hero_id: 4010
+    -   zh_tw_name: 佳妮特
+        zh_cn_name: 佳妮特
+        kr_name: 가넷
+        en_name: Garnet
+        ja_name: ガーネット
+        aliases: [佳尼特, 病娇, 病嬌]
+        hero_id: 4020
+    -   zh_tw_name: 瑞貝卡
+        zh_cn_name: 瑞贝卡
+        kr_name: 레베카
+        en_name: Rebecca
+        ja_name: レベッカ
+        aliases: [轮椅, 輪椅]
+        hero_id: 4030
+    -   zh_tw_name: 梅爾菲斯
+        zh_cn_name: 梅尔菲斯
+        kr_name: 멜피스
+        en_name: Melfice
+        ja_name: メルフィス
+        aliases: [不死姐姐, 雙胞胎大]
+        hero_id: 4040
+    -   zh_tw_name: 布萊斯
+        zh_cn_name: 布莱斯
+        kr_name: 브라이스
+        en_name: Bryce
+        ja_name: ブライス
+        aliases: [不死妹妹, 雙胞胎小]
+        hero_id: 4050
+    -   zh_tw_name: 弗里姆
+        zh_cn_name: 弗里姆
+        kr_name: 프림
+        en_name: Prim
+        ja_name: プリム
+        aliases: [弗立姆, 不死奶]
+        hero_id: 4060
+    -   zh_tw_name: 潔克琳
+        zh_cn_name: 洁克琳
+        kr_name: 재클린
+        en_name: Jacqueline
+        ja_name: ジャクリーン
+        aliases: [jk0, 機器人]
+        hero_id: 4070
+    -   zh_tw_name: 貝拉納
+        zh_cn_name: 贝拉纳
+        kr_name: 벨라나
+        en_name: Velanna
+        ja_name: ベラナ
+        aliases: [贝姐, 貝姐, 蛇女]
+        hero_id: 4080
+    -   zh_tw_name: 艾魯莎
+        zh_cn_name: 艾鲁莎
+        kr_name: 에루샤
+        en_name: Erusha
+        ja_name: エルーシャ
+        aliases: [艾露沙, 舞娘]
+        hero_id: 4090
+    -   zh_tw_name: 佩特拉
+        zh_cn_name: 佩特拉
+        kr_name: 페트라
+        en_name: Petra
+        ja_name: ペトラ
+        aliases: [佩佩, 棺材]
+        hero_id: 4100
+    -   zh_tw_name: 妮妮
+        zh_cn_name: 妮妮
+        kr_name: 니니
+        en_name: Nini
+        ja_name: メイ
+        aliases: [殭屍]
+        hero_id: 4110
+    -   zh_tw_name: 乙葉
+        zh_cn_name: 乙叶
+        kr_name: 오토하
+        en_name: Otoha
+        ja_name: オトハ
+        aliases: [电锯, 電鋸]
+        hero_id: 4120
+    -   zh_tw_name: 瓊
+        zh_cn_name: 琼
+        kr_name: 조앤
+        en_name: Joanne
+        ja_name: ジョアン
+        aliases: [醫生]
+        hero_id: 4130
+    -   zh_tw_name: 希格莉德
+        zh_cn_name: 希格莉德
+        kr_name: 시그리드
+        en_name: Sigrid
+        ja_name: シグリッド
+        aliases: [希格, 不死大姐, 大姐, 犀利]
+        hero_id: 4140
+    -   zh_tw_name: 拜斯
+        zh_cn_name: 拜斯
+        kr_name: 바이스
+        en_name: Weiss
+        ja_name: ヴァイス
+        aliases: []
+        hero_id: 4150
+    -   zh_tw_name: ''
+        zh_cn_name: ''
+        kr_name: 페트라(이형)
+        en_name: ''
+        ja_name: ペトラ(異形)
+        aliases: []
+        hero_id: 4160
+    -   zh_tw_name: ''
+        zh_cn_name: ''
+        kr_name: 가넷(열락)
+        en_name: ''
+        ja_name: ガーネット(悦楽)
+        aliases: []
+        hero_id: 4170
+    -   zh_tw_name: 克勞迪婭
+        zh_cn_name: 克劳迪娅
+        kr_name: 클라우디아
+        en_name: Claudia
+        ja_name: クラウディア
+        aliases: [克劳, 牢克, 克勞]
+        hero_id: 5010
+    -   zh_tw_name: 阿德里安
+        zh_cn_name: 阿德里安
+        kr_name: 아드리안
+        en_name: Adrianne
+        ja_name: アドリアン
+        aliases: [阿德, 牢德]
+        hero_id: 5020
+    -   zh_tw_name: 尤里婭
+        zh_cn_name: 尤里娅
+        kr_name: 유리아
+        en_name: Yuria
+        ja_name: ユリア
+        aliases: [女王, 王女, 尤利娅, 尤莉婭]
+        hero_id: 5030
+    -   zh_tw_name: 韓羽
+        zh_cn_name: 韩羽
+        kr_name: 한울
+        en_name: Hanul
+        ja_name: ハンウル
+        aliases: []
+        hero_id: 5040
+    -   zh_tw_name: 布利基特
+        zh_cn_name: 布利基特
+        kr_name: 브리기트
+        en_name: Brigid
+        ja_name: ブリギッテ
+        aliases: [大帝]
+        hero_id: 5050
+    -   zh_tw_name: ''
+        zh_cn_name: ''
+        kr_name: 카넬리안
+        en_name: ''
+        ja_name: カーネリアン
+        aliases: []
+        hero_id: 5060
+    -   zh_tw_name: 拉利瑪
+        zh_cn_name: 拉利玛
+        kr_name: 라리마
+        en_name: Larimar
+        ja_name: ラリマー
+        aliases: [拉力玛, 天空龙, 拉你吗, 拉你妈, 拉力馬, 拉你媽, 拉你嗎, 天空龍]
+        hero_id: 6010
+    -   zh_tw_name: 莉澤洛特
+        zh_cn_name: 莉泽洛特
+        kr_name: 리젤로테
+        en_name: Lizelotte
+        ja_name: リゼロッテ
+        aliases: [莉泽, 丽泽, 麗則, 莉澤, 莉洛]
+        hero_id: 6020
+    -   zh_tw_name: 綾織
+        zh_cn_name: 绫织
+        kr_name: 아야메
+        en_name: Ayame
+        ja_name: アヤメ
+        aliases: [灵芝, 靈芝]
+        hero_id: 6030
+    -   zh_tw_name: 夏娃
+        zh_cn_name: 太古精灵
+        kr_name: 이브
+        en_name: Eve
+        ja_name: イブ
+        aliases: []
+        hero_id: 6050
+    -   zh_tw_name: 二亞
+        zh_cn_name: ''
+        kr_name: 니아
+        en_name: Nia
+        ja_name: ニア
+        aliases: [尼亚]
+        hero_id: 6060
+    -   zh_tw_name: 異次元精髓
+        zh_cn_name: 异次元精髓
+        kr_name: 이차원의 정수
+        en_name: Essence of Another Dimension
+        ja_name: 異次元の精髄
+        aliases: [异精, 異精, 紫球]
+        hero_id: 6500
+    -   zh_tw_name: 凱瑟琳（光輝）
+        zh_cn_name: 凯瑟琳（光辉）
+        kr_name: 캐서린(광휘)
+        en_name: Catherine (Radiance)
+        ja_name: キャサリン(光輝)
+        aliases: [光凯, 光凱, 光輝凱瑟琳, 大凱, 火凱, 光輝凱色琳]
+        hero_id: 6510
+    -   zh_tw_name: 琳賽（桑納托斯）
+        zh_cn_name: 琳赛（桑纳托斯）
+        kr_name: 린지(타나토스)
+        en_name: Linzy (Thanatos)
+        ja_name: リンジー(タナトス)
+        aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽]
+        hero_id: 6520
+    -   zh_tw_name: 梅菲斯托佩萊斯（黎明）
+        zh_cn_name: ''
+        kr_name: 메피스토펠레스(여명)
+        en_name: Mephistopheles (Dawn)
+        ja_name: メフィストフェレス(暁)
+        aliases: [菲姬, 牢梅, 黎梅, 飞机, 黎梅菲, 暗梅菲, 界梅菲, 李梅, 大梅妃, 飛機]
+        hero_id: 6530
+    -   zh_tw_name: 時崎狂三
+        zh_cn_name: 时崎狂三
+        kr_name: 토키사키 쿠루미
+        en_name: Kurumi Tokisaki
+        ja_name: 時崎狂三
+        aliases: [三三, 狂三]
+        hero_id: 6980
+    -   zh_tw_name: 夜刀神十香
+        zh_cn_name: 夜刀神十香
+        kr_name: 야토가미 토카
+        en_name: Tohka Yatogami
+        ja_name: 夜刀神十香
+        aliases: [十香]
+        hero_id: 6990

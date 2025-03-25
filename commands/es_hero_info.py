@@ -151,9 +151,9 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         # 构建消息列表
         messages = []
         nickname_tw = ""
-        # nickname_cn = ""
+        nickname_cn = ""
         nickname_kr = ""
-        # nickname_en = ""
+        nickname_en = ""
         if hero_desc and isinstance(hero_desc, dict):
             nick_name_sno = hero_desc.get("nick_name_sno")
             nickname_tw, nickname_cn, nickname_kr, nickname_en = get_string_character(data, nick_name_sno)
@@ -164,7 +164,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         basic_info_msg.append("【基础信息】")
         if portrait_path:
             basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
-        basic_info_tw = f"""{nickname_tw if nickname_tw else "暂無稱號"}・{hero_name_tw}
+        basic_info_tw = f"""{nickname_tw if nickname_tw else nickname_kr}・{hero_name_tw if hero_name_tw else hero_name_kr}
 類型：{race_tw} {hero_class_tw}
 攻擊方式：{sub_class_tw}
 屬性：{stat_tw}
@@ -172,8 +172,9 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
 隸屬：{get_string_character(data, hero_desc.get("union_sno", 0))[0] if hero_desc else "???"}
 身高：{hero_desc.get("height", "???") if hero_desc else "???"}cm
 體重：{hero_desc.get("weight", "???") if hero_desc else "???"}kg
-生日：{str(hero_desc.get("birthday", "???")).zfill(4)[:2] if hero_desc else "???"}.{str(hero_desc.get("birthday", "???")).zfill(4)[2:]\
-                                                    if hero_desc and hero_desc.get("birthday") else "???"}
+生日：{str(hero_desc.get("birthday", "???")).zfill(4)[:2] 
+if hero_desc else "???"}.{str(hero_desc.get("birthday", "???")).zfill(4)[2:]
+if hero_desc and hero_desc.get("birthday") else "???"}
 星座：{get_string_character(data, hero_desc.get("constellation_sno", 0))[0] if hero_desc else "???"}
 興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0))[0] if hero_desc else "???"}
 特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0))[0] if hero_desc else "???"}
@@ -204,8 +205,8 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                     messages.append("\n".join(str(x) for x in image_msg))
                 break
 
-        # 获取灵魂链接信息
-        soullink_info = get_soullink_info(data, hero_id, is_test)
+        # 获取灵魂链接信息，
+        soullink_info = get_soullink_info(data, hero_id, is_test=False)
         if soullink_info:
             for link in soullink_info:
                 link_msg = ["【灵魂链接】"]
@@ -239,7 +240,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                 messages.append(format_story_info(episode_info, endings, is_test))
         
         # 添加角色关键字信息
-        keyword_info = format_character_keywords(data, hero_id, is_test)
+        keyword_info = format_character_keywords(data, hero_id, is_test=False)
         if keyword_info:
             messages.append(keyword_info)
         
@@ -450,7 +451,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
         signature_title_zh_tw, signature_title_zh_cn, signature_title_kr, signature_title_en, \
         signature_desc_tw, signature_desc_cn, signature_desc_kr, signature_desc_en, signature_descriptions,\
         signature_stats, signature_bg_path = get_signature_info(data, hero_id)
-        if signature_name_zh_tw:
+        if signature_name_kr:
             signature_stats, max_level = signature_stats
             signature_img_path = str(SIGNATURE_DIR / signature_bg_path)
 

@@ -22,8 +22,6 @@ async def handle_switch_source(event: GroupMessageEvent):
     
     # 获取群组ID
     group_id = str(event.group_id)
-    logger.info(f"切换数据源: 群组ID = {group_id}")
-    logger.info(f"切换数据源: 目标类型 = {args}")
     
     if not args:
         await es_switch_source.finish("请指定数据源类型：live 或 review")
@@ -49,23 +47,16 @@ async def handle_switch_source(event: GroupMessageEvent):
     try:
         # 保存配置到文件
         save_data_source_config(CURRENT_DATA_SOURCE)
-        logger.info(f"更新后的配置: {CURRENT_DATA_SOURCE}")
-        
-        # 重新加载配置以确保内存中的配置是最新的
-        # 创建文件快照
         current_keys = list(CURRENT_DATA_SOURCE.keys())
         # 重新加载配置
         load_data_source_config()
         # 验证配置是否正确加载
         new_keys = list(CURRENT_DATA_SOURCE.keys())
-        logger.info(f"重新加载后的配置键: {new_keys}")
         
         # 确保群组配置被加载
         if group_id not in CURRENT_DATA_SOURCE:
-            logger.error(f"重新加载后找不到群组 {group_id} 的配置！")
             # 手动添加回配置
             if group_id in current_keys:
-                logger.info(f"手动恢复群组 {group_id} 的配置")
                 with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
                     saved_config = yaml.safe_load(f)
                 if saved_config and group_id in saved_config:
