@@ -3102,7 +3102,10 @@ def generate_aliases() -> None:
         live_hero_aliases = DATA_DIR / "live_hero_aliases.yaml"
         live_monster_aliases = DATA_DIR / "live_monster_aliases.yaml"
         live_hero_count, live_monster_count = process_json_files(live_json_path, live_hero_aliases, live_monster_aliases)
-        logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个英雄条目, {live_monster_count} 个怪物条目")
+        if live_hero_count > 0 or live_monster_count > 0:
+            logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个英雄条目, {live_monster_count} 个怪物条目")
+        else:
+            logger.info("请检查Live版本JSON文件路径配置是否正确")
     except Exception as e:
         logger.error(f"处理live别名文件时出错: {e}")
     
@@ -3110,7 +3113,10 @@ def generate_aliases() -> None:
         review_hero_aliases = DATA_DIR / "review_hero_aliases.yaml"
         review_monster_aliases = DATA_DIR / "review_monster_aliases.yaml"
         review_hero_count, review_monster_count = process_json_files(review_json_path, review_hero_aliases, review_monster_aliases)
-        logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个英雄条目, {review_monster_count} 个怪物条目")
+        if review_hero_count > 0 or review_monster_count > 0:
+            logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个英雄条目, {review_monster_count} 个怪物条目")
+        else:
+            logger.info("请检查Review版本JSON文件路径配置是否正确")
     except Exception as e:
         logger.error(f"处理review别名文件时出错: {e}")
 
