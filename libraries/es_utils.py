@@ -3090,9 +3090,8 @@ def sync_aliases(file1: Path, file2: Path) -> None:
                     sort_keys=False,
                     default_flow_style=False,
                     indent=2)
-        logger.info("别名同步完成")
     except Exception as e:
-        logger.error(f"保存同步后的yaml文件时出错: {e}")
+        logger.error(f"同步出错: {e}")
 
 def generate_aliases() -> None:
     """生成别名文件"""
@@ -3115,7 +3114,6 @@ def generate_aliases() -> None:
     except Exception as e:
         logger.error(f"处理review别名文件时出错: {e}")
 
-    # 同步英雄和怪物的别名
     try:
         sync_aliases(live_hero_aliases, review_hero_aliases)
         sync_aliases(live_monster_aliases, review_monster_aliases)
