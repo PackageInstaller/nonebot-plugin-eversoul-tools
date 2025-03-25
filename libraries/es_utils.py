@@ -3240,12 +3240,7 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
             }
             
             if hero_id >= 7000:
-                if name_data["zh_tw"] in monster_name_count:
-                    monster_name_count[name_data["zh_tw"]] += 1
-                    hero_entry["zh_tw_name"] = f"{name_data['zh_tw']}{monster_name_count[name_data['zh_tw']]}"
-                else:
-                    monster_name_count[name_data["zh_tw"]] = 0
-                
+                monster_name_count[name_data["zh_tw"]] = 0
                 monster_data["names"].append(hero_entry)
             else:
                 new_data["names"].append(hero_entry)
@@ -3275,7 +3270,7 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
                 allow_unicode=True, 
                 sort_keys=False,
                 default_flow_style=False,
-                indent=4)
+                indent=2)
     
     with open(monster_output_file, "w", encoding="utf-8") as f:
         yaml.dump(monster_data, f, 
@@ -3283,6 +3278,6 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
                 allow_unicode=True, 
                 sort_keys=False,
                 default_flow_style=False,
-                indent=4)
+                indent=2)
     
     return len(new_data['names']), len(monster_data['names']) 
