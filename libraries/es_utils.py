@@ -3019,6 +3019,81 @@ def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -
     return "\n".join(keyword_msgs)
 
 
+def sync_aliases(file1: Path, file2: Path) -> None:
+    """同步两个yaml文件中的别名，将别名较多的文件覆盖别名较少的文件
+    
+    Args:
+        file1: 第一个yaml文件路径
+        file2: 第二个yaml文件路径
+    """
+    try:
+        with open(file1, "r", encoding="utf-8") as f:
+            data1 = yaml.safe_load(f)
+        with open(file2, "r", encoding="utf-8") as f:
+            data2 = yaml.safe_load(f)
+    except Exception as e:
+        logger.error(f"读取yaml文件时出错: {e}")
+        return
+
+    if not data1 or not data2 or "names" not in data1 or "names" not in data2:
+        return
+
+    # 创建hero_id到别名的映射
+    aliases1 = {hero["hero_id"]: set(hero.get("aliases", [])) for hero in data1["names"] if "hero_id" in hero}
+    aliases2 = {hero["hero_id"]: set(hero.get("aliases", [])) for hero in data2["names"] if "hero_id" in hero}
+
+    # 找出需要同步的英雄
+    for hero_id in set(aliases1.keys()) & set(aliases2.keys()):
+        if len(aliases1[hero_id]) != len(aliases2[hero_id]):
+            # 如果别名数量不同，使用数量较多的那个
+            if len(aliases1[hero_id]) > len(aliases2[hero_id]):
+                # 更新file2中的别名
+                for hero in data2["names"]:
+                    if hero.get("hero_id") == hero_id:
+                        hero["aliases"] = list(aliases1[hero_id])
+                        break
+            else:
+                # 更新file1中的别名
+                for hero in data1["names"]:
+                    if hero.get("hero_id") == hero_id:
+                        hero["aliases"] = list(aliases2[hero_id])
+                        break
+
+    # 保存更新后的文件
+    class CustomDumper(yaml.SafeDumper):
+        def increase_indent(self, flow=False, indentless=False):
+            return super().increase_indent(flow, False)
+
+        def represent_scalar(self, tag, value, style=None):
+            if isinstance(value, str):
+                style = None
+            return super().represent_scalar(tag, value, style)
+
+        def represent_sequence(self, tag, sequence, flow_style=None):
+            if len(sequence) > 0 and isinstance(sequence[0], str):
+                flow_style = True
+            return super().represent_sequence(tag, sequence, flow_style=flow_style)
+
+    try:
+        # 保持原有的缩进格式
+        with open(file1, "w", encoding="utf-8") as f:
+            yaml.dump(data1, f, 
+                    Dumper=CustomDumper,
+                    allow_unicode=True, 
+                    sort_keys=False,
+                    default_flow_style=False,
+                    indent=2)
+        with open(file2, "w", encoding="utf-8") as f:
+            yaml.dump(data2, f, 
+                    Dumper=CustomDumper,
+                    allow_unicode=True, 
+                    sort_keys=False,
+                    default_flow_style=False,
+                    indent=2)
+        logger.info("别名同步完成")
+    except Exception as e:
+        logger.error(f"保存同步后的yaml文件时出错: {e}")
+
 def generate_aliases() -> None:
     """生成别名文件"""
     live_json_path = Path(plugin_config.eversoul_live_path)
@@ -3039,6 +3114,13 @@ def generate_aliases() -> None:
         logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个英雄条目, {review_monster_count} 个怪物条目")
     except Exception as e:
         logger.error(f"处理review别名文件时出错: {e}")
+
+    # 同步英雄和怪物的别名
+    try:
+        sync_aliases(live_hero_aliases, review_hero_aliases)
+        sync_aliases(live_monster_aliases, review_monster_aliases)
+    except Exception as e:
+        logger.error(f"同步别名时出错: {e}")
 
 
 def process_json_files(json_path: Path, hero_output_file: Path, monster_output_file: Path) -> Tuple[int, int]:
