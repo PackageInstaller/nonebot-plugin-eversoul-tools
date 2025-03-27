@@ -243,7 +243,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                 messages.append(format_story_info(episode_info, endings, is_test))
         
         # 添加角色关键字信息
-        keyword_info = format_character_keywords(data, hero_id, is_test=False)
+        keyword_info = get_character_keywords(data, hero_id, is_test=False)
         if keyword_info:
             messages.append(keyword_info)
         

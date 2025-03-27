@@ -69,6 +69,13 @@ TRAIT_NAME_MAPPING = {
     "handicraft": "才艺"
 }
 
+FORMATION_TYPE_MAPPING = {
+    1: "基本阵型",
+    2: "狙击型",
+    3: "防守阵型",
+    4: "突击型"
+}
+
 # 资源路径
 RESOURCES_DIR = Path(__file__).parent / "resources"
 

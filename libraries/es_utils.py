@@ -443,7 +443,7 @@ def get_keyword_location(data: dict, keyword_get_details: int, is_test: bool = F
     
     # 获取地点名称
     location_name = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_town"]["json"] 
-                         if s["no"] == location.get("location_name_sno")), "")
+                        if s["no"] == location.get("location_name_sno")), "")
     return location_name
 
 
@@ -452,9 +452,9 @@ def get_lost_item_info(data: dict, hero_no: int, keyword_type: int, keyword_get_
     try:
         # 在TownLostItem.json中查找对应条目
         lost_item = next((item for item in data["town_lost_item"]["json"] 
-                         if item.get("hero_no") == hero_no and 
-                         item.get("keyword_type") == keyword_type and 
-                         item.get("keyword_get_details") == keyword_get_details), None)
+                        if item.get("hero_no") == hero_no and 
+                        item.get("keyword_type") == keyword_type and 
+                        item.get("keyword_get_details") == keyword_get_details), None)
         
         if not lost_item:
             return ""
@@ -464,33 +464,30 @@ def get_lost_item_info(data: dict, hero_no: int, keyword_type: int, keyword_get_
         if quest_type == 1: # 归还领地遗失物品
             if group_end := lost_item.get("group_end"):
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
-                # 归还领地的对话是小写的Choice
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
                     action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
-                                 if s.get("no") == choice_talk.get("no")), "")
-                    return f"在领地找到后{action}"
+                                if s.get("no") == choice_talk.get("no")), "")
+                    return f"{action}"
                     
         elif quest_type == 2: # 击杀魔物
             if group_end := lost_item.get("group_end"):
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
-                # 击杀魔物的对话是小写的Choice
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
                     action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
-                                 if s.get("no") == choice_talk.get("no")), "")
-                    return f"击杀魔物后{action}"
+                                if s.get("no") == choice_talk.get("no")), "")
+                    return f"{action}"
                     
         elif quest_type == 3: # 外出获取
             # 获取地点信息
             if group_trip := lost_item.get("group_trip"):
                 # 在Talk.json中查找对应对话
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_trip]
-                # 外出获取的是大写的Choice
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
                     location = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
-                                   if s.get("no") == choice_talk.get("no")), "")
+                                if s.get("no") == choice_talk.get("no")), "")
                     if location:
                         return f"{location}"
         
@@ -2411,14 +2408,14 @@ def get_string_character(data, sno):
     """从StringCharacter.json中获取文本"""
     for string in data["string_character"]["json"]:
         if string["no"] == sno:
-            return string.get("zh_tw", ""), string.get("zh_cn", ""), string.get("kr", ""), string.get("en", "Unknown character")
+            return string.get("zh_tw", ""), string.get("zh_cn", ""), string.get("kr", ""), string.get("en", "")
     return "", "", "", ""
 
 
 def get_system_string(data, sno):
     for string in data["string_system"]["json"]:
         if string["no"] == sno:
-            return string.get("zh_tw", ""), string.get("zh_cn", ""), string.get("kr", ""), string.get("en", "Unknown character")
+            return string.get("zh_tw", ""), string.get("zh_cn", ""), string.get("kr", ""), string.get("en", "")
     return "", "", "", ""
 
 
@@ -2432,27 +2429,21 @@ def get_hero_name(data, hero_no):
                 # 在StringCharacter.json中查找名称
                 for char in data["string_character"]["json"]:
                     if char["no"] == name_sno:
-                        return char.get("zh_tw", "未知角色"), char.get("zh_cn", "未知角色"), char.get("kr", "알수없는캐릭터"), char.get("en", "Unknown character")
-    return "未知角色", "未知角色", "알수없는캐릭터", "Unknown character"
+                        return char.get("zh_tw", ""), char.get("zh_cn", ""), char.get("kr", ""), char.get("en", "")
+    return "", "", "", ""
 
 
 def get_grade_name(data, grade_no):
     """获取阶级名称"""
     for system in data["string_system"]["json"]:
         if system["no"] == grade_no:
-            return system.get("zh_tw", "未知阶级"), system.get("zh_cn", "未知阶级"), system.get("kr", "알수없는등급"), system.get("en", "Unknown grade")
-    return "未知阶级", "未知阶级", "알수없는등급", "Unknown grade"
+            return system.get("zh_tw", ""), system.get("zh_cn", ""), system.get("kr", ""), system.get("en", "")
+    return "", "", "", ""
 
 
 def get_formation_type(formation_no):
     """获取阵型类型"""
-    formation_types = {
-        1: "基本阵型",
-        2: "狙击型",
-        3: "防守阵型",
-        4: "突击型"
-    }
-    return formation_types.get(formation_no, "未知阵型")
+    return FORMATION_TYPE_MAPPING.get(formation_no, "")
 
 
 def get_hero_name_by_id(data, hero_id):
@@ -2949,8 +2940,8 @@ def find_similar_names(query, alias_map):
     return results
 
 
-def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -> str:
-    """格式化角色关键字信息"""
+def get_character_keywords(data: dict, hero_id: int, is_test: bool = False) -> str:
+    """获取角色关键字信息"""
     # 获取所有关键字
     trip_keywords = []
     keyword_msgs = []
@@ -3026,9 +3017,10 @@ def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -
         
         # 添加分隔线
         if normal_keywords and any(k["source"] for k in good_keywords):
-            keyword_msgs.append("-" * 30)
+            if good_keywords:
+                keyword_msgs.append("")
+            keyword_msgs.append("▼ 以下为需要解锁的关键字")
         
-        # 显示需要解锁的关键字
         for keyword in (k for k in good_keywords if k["source"]):
             msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息
