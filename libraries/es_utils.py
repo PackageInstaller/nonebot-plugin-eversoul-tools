@@ -1479,9 +1479,11 @@ def get_skill_value(data, value_id, value_type="VALUE"):
                         if abs_value < 20:
                             # 检查百分比值是否为整数
                             percent_value = abs_value * 100
-                            if percent_value.is_integer():
-                                return f"{int(percent_value)}%"
-                            return f"{percent_value:.1f}%"
+                            # 使用round函数处理浮点数精度问题
+                            rounded_value = round(percent_value, 1)
+                            if rounded_value.is_integer():
+                                return f"{int(rounded_value)}%"
+                            return f"{rounded_value}%"
                         else:
                             # 大于等于20的值按整数处理
                             return str(int(abs_value))
@@ -1494,13 +1496,11 @@ def get_skill_value(data, value_id, value_type="VALUE"):
             if abs_value < 20:
                 # 检查百分比值是否为整数
                 percent_value = abs_value * 100
-                if percent_value.is_integer():
-                    return f"{int(percent_value)}%"
-                # 如果不是整数，检查小数点后是否为0
-                formatted_value = f"{percent_value:.1f}"
-                if formatted_value.endswith('.0'):
-                    return f"{int(percent_value)}%"
-                return f"{formatted_value}%"
+                # 使用round函数处理浮点数精度问题
+                rounded_value = round(percent_value, 1)
+                if rounded_value.is_integer():
+                    return f"{int(rounded_value)}%"
+                return f"{rounded_value}%"
             # 大于20的值按整数处理
             return str(int(abs_value))
     return "???"
