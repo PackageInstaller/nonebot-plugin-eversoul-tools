@@ -1374,7 +1374,7 @@ def get_affection_cgs(data, hero_id):
         hero_id: 角色ID
     
     Returns:
-        list: [(图片路径, CG编号)] 的列表
+        list: [(图片路径, CG编号, 章节标题)] 的列表
     """
     cg_path = CG_DIR
     if not cg_path.exists():
@@ -1383,28 +1383,43 @@ def get_affection_cgs(data, hero_id):
     # 将hero_id转换为act格式
     act = hero_id
     
-    # 收集所有相关的故事编号
-    story_nos = set()
+    # 收集所有相关的故事编号和章节信息
+    story_info = {}  # 使用字典存储故事编号和章节信息的映射
     for story in data["story_info"]["json"]:
         if "act" in story and story["act"] == act:
-            story_nos.add(story["no"])
+            story_nos = story_info.get(story["no"], [])
+            story_nos.append({
+                "episode": story["episode"],
+                "episode_name_sno": story.get("episode_name_sno")
+            })
+            story_info[story["no"]] = story_nos
     
     # 从Illust.json中获取CG信息
     cg_info = []
     for illust in data["illust"]["json"]:
         if ("open_condition" in illust and 
-            illust["open_condition"] in story_nos and 
+            illust["open_condition"] in story_info and 
             "bg_movie_path" in illust):
             # 从路径中提取CG名称
             path_parts = illust["bg_movie_path"].split('/')
             cg_name = path_parts[-1]
-            cg_info.append((illust["no"], cg_name))
+            # 获取对应的章节信息
+            story_no = illust["open_condition"]
+            episode_info = story_info[story_no][0]  # 取第一个匹配的章节信息
+            cg_info.append((illust["no"], cg_name, episode_info))
     
     # 查找匹配的CG图片
     images = []
-    for no, cg_name in sorted(cg_info):  # 按编号排序
+    for no, cg_name, episode_info in sorted(cg_info):  # 按编号排序
         for file in Path(cg_path).glob(f"{cg_name}.*"):
-            images.append((file, f"CG_{no}"))
+            # 获取章节标题
+            episode_title = ""
+            if episode_info["episode_name_sno"]:
+                for string in data["string_talk"]["json"]:
+                    if string["no"] == episode_info["episode_name_sno"]:
+                        episode_title = string.get("zh_tw", "")
+                        break
+            images.append((file, f"CG_{no}", episode_info["episode"], episode_title))
             break  # 找到一个匹配的文件就跳出
     
     return images
@@ -2755,10 +2770,8 @@ def format_story_info(episode_info, endings, is_test=False):
                 choice_info = {
                     "talk_index": talk_index,
                     "choice_group": choice["choice_group"],
-                    # 清理选项文本中的effect标签
-                    "text": f"（{choice['choice_group']}）
-                    {clean_tags(choice['kr_text' if is_test else 'zh_tw_text'])}
-                    ({affinity_str})",
+                    # 清理好感选项里面的富文本标签
+                    "text": f"（{choice['choice_group']}）{clean_tags(choice['kr_text' if is_test else 'zh_tw_text'])}({affinity_str})",
                     "affinity": affinity,
                     "position_type": position_type,
                     "group_no": choice.get("group_no"),

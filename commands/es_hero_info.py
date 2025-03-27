@@ -249,9 +249,14 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
         if cg_images:
             cg_msg = []
             cg_msg.append("【好感CG】")
-            for img_path, cg_no in cg_images:
+            current_episode = None
+            for img_path, cg_no, episode, episode_title in cg_images:
+                # 如果章节号变化，添加章节标题
+                if episode != current_episode:
+                    cg_msg.append(f"\nEP{episode}：{episode_title}")
+                    current_episode = episode
                 cg_msg.append(MessageSegment.image(f"file:///{img_path}"))
-            messages.append("".join(str(x) for x in cg_msg))
+            messages.append("\n".join(str(x) for x in cg_msg))
 
         # EverPhone插图
         evertalk_illusts = get_evertalk_illustrations(data, hero_id)
