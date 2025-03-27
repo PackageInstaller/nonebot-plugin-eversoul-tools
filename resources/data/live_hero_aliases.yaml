@@ -185,15 +185,15 @@ names:
     zh_cn_name: 萝丝（红焰）
     kr_name: 로제(홍염)
     en_name: Rose (Prominence)
-    ja_name: ''
+    ja_name: ロゼ(紅炎)
     aliases: [大萝丝, 大螺丝, 打螺丝, 红萝, 大肉丝, 光萝, 大罗斯, 大月氏, 界萝丝, 大羅斯, 大螺絲, 打螺絲, 火螺絲, 光蘿, 大肉絲,
       大蘿絲, 紅蘿, 火蘿]
     hero_id: 1150
-  - zh_tw_name: ''
+  - zh_tw_name: 智河（米爾）
     zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    ja_name: ''
+    kr_name: 지호(미르)
+    en_name: Jiho (Mir)
+    ja_name: ジホ(ミル)
     aliases: []
     hero_id: 1160
   - zh_tw_name: 紅蘭
@@ -305,14 +305,14 @@ names:
     zh_cn_name: 红兰（无双）
     kr_name: 홍란(무쌍)
     en_name: Honglan (Peerless)
-    ja_name: ''
+    ja_name: ホンラン(無双)
     aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰, 标红兰]
     hero_id: 2160
-  - zh_tw_name: ''
+  - zh_tw_name: 河路（神威）
     zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    ja_name: ''
+    kr_name: 하루(카무이)
+    en_name: Haru (Kamuy)
+    ja_name: ハル(カムイ)
     aliases: []
     hero_id: 2170
   - zh_tw_name: 艾麗卡
@@ -424,14 +424,14 @@ names:
     zh_cn_name: ''
     kr_name: 르네(백은)
     en_name: Renee (Argent)
-    ja_name: ''
+    ja_name: ルネ(白銀)
     aliases: [大勒內, 界勒内, 大蕾妮, 界蕾妮, 长发勒内]
     hero_id: 3160
-  - zh_tw_name: ''
+  - zh_tw_name: 米里昂（殘影）
     zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    ja_name: ''
+    kr_name: 미리암(잔영)
+    en_name: Miriam (Afterimage)
+    ja_name: ミリアム(残影)
     aliases: []
     hero_id: 3170
   - zh_tw_name: 蘿拉
@@ -548,16 +548,16 @@ names:
     hero_id: 4150
   - zh_tw_name: ''
     zh_cn_name: ''
-    kr_name: ''
+    kr_name: 페트라(각혼)
     en_name: ''
     ja_name: ''
     aliases: []
     hero_id: 4160
-  - zh_tw_name: ''
+  - zh_tw_name: 佳妮特（悅樂）
     zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    ja_name: ''
+    kr_name: 가넷(열락)
+    en_name: Garnet (Rapture)
+    ja_name: ガーネット(悦楽)
     aliases: []
     hero_id: 4170
   - zh_tw_name: 克勞迪婭
@@ -595,11 +595,11 @@ names:
     ja_name: ブリギッテ
     aliases: [大帝]
     hero_id: 5050
-  - zh_tw_name: ''
+  - zh_tw_name: 卡內莉安
     zh_cn_name: ''
-    kr_name: ''
-    en_name: ''
-    ja_name: ''
+    kr_name: 카넬리안
+    en_name: Carnelian
+    ja_name: カーネリアン
     aliases: []
     hero_id: 5060
   - zh_tw_name: 拉利瑪
@@ -634,7 +634,7 @@ names:
     zh_cn_name: 二亚
     kr_name: 니아
     en_name: Nia
-    ja_name: ''
+    ja_name: ニア
     aliases: [尼亚]
     hero_id: 6060
   - zh_tw_name: 異次元精髓

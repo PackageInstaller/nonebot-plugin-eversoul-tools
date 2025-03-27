@@ -363,8 +363,9 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                         skill_text.extend(support_effects)
                 else:
                     # 非支援技能保持原有格式
+                    # 只在第一级显示技能类型和名称
+                    skill_text.append(f"【{skill_type_kr}】{skill_name_kr}")
                     for i, (desc_zh_tw, desc_zh_cn, desc_kr, desc_en, hero_level) in enumerate(skill_descriptions):
-                        skill_text.append(f"【{skill_type_kr}】{skill_name_kr}")
                         unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
                         skill_text.append(f"等级{i+1}：{desc_kr}{unlock_text}\n")
                 
@@ -438,10 +439,11 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                         skill_text.extend(support_effects)
                 else:
                     # 非支援技能保持原有格式
-                    for i, (desc_tw, desc_cn, desc_kr, desc_en, hero_level) in enumerate(skill_descriptions):
-                        skill_text.append(f"【{skill_type_zh_tw}】{skill_name_zh_tw}")
+                    # 只在第一级显示技能类型和名称
+                    skill_text.append(f"【{skill_type_zh_tw}】{skill_name_zh_tw}")
+                    for i, (desc_zh_tw, desc_zh_cn, desc_kr, desc_en, hero_level) in enumerate(skill_descriptions):
                         unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
-                        skill_text.append(f"等级{i+1}：{desc_tw}{unlock_text}\n")
+                        skill_text.append(f"等级{i+1}：{desc_zh_tw}{unlock_text}\n")
                 
                 messages.append("\n".join(str(x) for x in skill_text))
 
