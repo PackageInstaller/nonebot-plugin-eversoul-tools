@@ -429,7 +429,7 @@ def get_keyword_source(data: dict, source_sno: int, details: int, hero_no: int =
 
 
 def get_keyword_location(data: dict, keyword_get_details: int, is_test: bool = False) -> str:
-    """获取关键字对应的地点"""    
+    """获取非遗失物品关键字对应的地点"""    
     # 如果没有keyword_get_details或为0，返回"通用"
     if not keyword_get_details:
         return "通用"
@@ -439,12 +439,12 @@ def get_keyword_location(data: dict, keyword_get_details: int, is_test: bool = F
                     if loc["no"] == keyword_get_details), None)
     
     if not location:
-        return "通用"
+        return ""
     
     # 获取地点名称
     location_name = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_town"]["json"] 
                          if s["no"] == location.get("location_name_sno")), "")
-    return location_name or "通用"  # 如果获取不到地点名称，也返回"通用"
+    return location_name
 
 
 def get_lost_item_info(data: dict, hero_no: int, keyword_type: int, keyword_get_details: int, is_test: bool = False) -> str:
@@ -453,39 +453,49 @@ def get_lost_item_info(data: dict, hero_no: int, keyword_type: int, keyword_get_
         # 在TownLostItem.json中查找对应条目
         lost_item = next((item for item in data["town_lost_item"]["json"] 
                          if item.get("hero_no") == hero_no and 
-                         item.get("keyword_type") == keyword_type), None)
+                         item.get("keyword_type") == keyword_type and 
+                         item.get("keyword_get_details") == keyword_get_details), None)
         
         if not lost_item:
             return ""
             
         quest_type = lost_item.get("quest_type")
         
-        if quest_type == 3:  # 特定场景遗失
+        if quest_type == 1: # 归还领地遗失物品
+            if group_end := lost_item.get("group_end"):
+                talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
+                # 归还领地的对话是小写的Choice
+                choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
+                if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
+                    action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
+                                 if s.get("no") == choice_talk.get("no")), "")
+                    return f"在领地找到后{action}"
+                    
+        elif quest_type == 2: # 击杀魔物
+            if group_end := lost_item.get("group_end"):
+                talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
+                # 击杀魔物的对话是小写的Choice
+                choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
+                if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
+                    action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
+                                 if s.get("no") == choice_talk.get("no")), "")
+                    return f"击杀魔物后{action}"
+                    
+        elif quest_type == 3: # 外出获取
             # 获取地点信息
             if group_trip := lost_item.get("group_trip"):
                 # 在Talk.json中查找对应对话
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_trip]
-                # 找到最后一个带choice的对话
-                choice_talk = next((t for t in reversed(talks) if t.get("ui_type") == "choice"), None)
+                # 外出获取的是大写的Choice
+                choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
                     location = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
                                    if s.get("no") == choice_talk.get("no")), "")
                     if location:
-                        return f"需要{location}"
-        else:  # 领地遗失或击杀魔物
-            if group_end := lost_item.get("group_end"):
-                talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
-                choice_talk = next((t for t in reversed(talks) if t.get("ui_type") == "choice"), None)
-                if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
-                    action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
-                                 if s.get("no") == choice_talk.get("no")), "")
-                    if quest_type == 4 and keyword_get_details == 1:
-                        return f"需要击杀魔物"
-                    elif action:
-                        return f"需要{action}"
+                        return f"{location}"
         
         return ""
-        
+
     except Exception as e:
         logger.error(f"处理遗失物品信息时发生错误: {e}, hero_no={hero_no}, keyword_type={keyword_type}, details={keyword_get_details}")
         return ""
@@ -2947,20 +2957,21 @@ def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -
     
     for trip in data["trip_hero"]["json"]:
         if trip.get("hero_no") == hero_id:
+            # 这里是先处理30个通用的关键字
             keyword_info = next((k for k in data["trip_keyword"]["json"] 
                                if k["no"] == trip.get("keyword_no")), None)
             if keyword_info:
                 # 确定关键字类型和好感度
-                keyword_type = "normal"
-                if not trip.get("favor_point"):
+                keyword_type = "normal" # 粉心
+                if not trip.get("favor_point"): # 没这个键的话就是黄心
                     keyword_type = "bad"
-                elif trip.get("favor_point") == 2:
+                elif trip.get("favor_point") == 2: # 红心
                     keyword_type = "good"
                 
                 # 获取好感度加成
                 points = get_keyword_points(data, keyword_type)
                 grade_sno = keyword_info.get("keyword_grade")
-                grade_index = 0
+                grade_index = 0 # 一般
                 if grade_sno == 110012:  # 稀有
                     grade_index = 1
                 elif grade_sno == 110014:  # 史诗
@@ -2994,7 +3005,7 @@ def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -
     if bad_keywords:
         keyword_msgs.append("▼ 讨厌的话题")
         for keyword in bad_keywords:
-            msg = f"・{keyword['name']}（{keyword['grade']}，好感度 +{keyword['favor_point']}）"
+            msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息
             if location := get_keyword_location(data, keyword.get("keyword_get_details"), is_test):
                 msg += f"\n  地点：{location}"
@@ -3007,7 +3018,7 @@ def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -
         # 先显示没有获取条件的关键字
         normal_keywords = [k for k in good_keywords if not k["source"]]
         for keyword in normal_keywords:
-            msg = f"・{keyword['name']}（{keyword['grade']}，好感度 +{keyword['favor_point']}）"
+            msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息
             if location := get_keyword_location(data, keyword.get("keyword_get_details"), is_test):
                 msg += f"\n  地点：{location}"
@@ -3019,7 +3030,7 @@ def format_character_keywords(data: dict, hero_id: int, is_test: bool = False) -
         
         # 显示需要解锁的关键字
         for keyword in (k for k in good_keywords if k["source"]):
-            msg = f"・{keyword['name']}（{keyword['grade']}，好感度 +{keyword['favor_point']}）"
+            msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息
             if location := get_keyword_location(data, keyword.get("keyword_get_details"), is_test):
                 msg += f"\n  地点：{location}"
