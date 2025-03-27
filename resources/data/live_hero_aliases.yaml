@@ -194,7 +194,7 @@ names:
     kr_name: 지호(미르)
     en_name: Jiho (Mir)
     ja_name: ジホ(ミル)
-    aliases: []
+    aliases: [大智河]
     hero_id: 1160
   - zh_tw_name: 紅蘭
     zh_cn_name: 红兰
@@ -313,7 +313,7 @@ names:
     kr_name: 하루(카무이)
     en_name: Haru (Kamuy)
     ja_name: ハル(カムイ)
-    aliases: []
+    aliases: [大河路]
     hero_id: 2170
   - zh_tw_name: 艾麗卡
     zh_cn_name: 艾丽卡
@@ -425,14 +425,14 @@ names:
     kr_name: 르네(백은)
     en_name: Renee (Argent)
     ja_name: ルネ(白銀)
-    aliases: [大勒內, 界勒内, 大蕾妮, 界蕾妮, 长发勒内]
+    aliases: [大勒內, 界勒内, 大蕾妮, 界蕾妮, 长发勒内, 大贤者]
     hero_id: 3160
   - zh_tw_name: 米里昂（殘影）
     zh_cn_name: ''
     kr_name: 미리암(잔영)
     en_name: Miriam (Afterimage)
     ja_name: ミリアム(残影)
-    aliases: []
+    aliases: [大米]
     hero_id: 3170
   - zh_tw_name: 蘿拉
     zh_cn_name: 萝拉
@@ -551,14 +551,14 @@ names:
     kr_name: 페트라(각혼)
     en_name: ''
     ja_name: ''
-    aliases: []
+    aliases: [大佩特拉]
     hero_id: 4160
   - zh_tw_name: 佳妮特（悅樂）
     zh_cn_name: ''
     kr_name: 가넷(열락)
     en_name: Garnet (Rapture)
     ja_name: ガーネット(悦楽)
-    aliases: []
+    aliases: [大佳妮特]
     hero_id: 4170
   - zh_tw_name: 克勞迪婭
     zh_cn_name: 克劳迪娅
@@ -586,7 +586,7 @@ names:
     kr_name: 한울
     en_name: Hanul
     ja_name: ハンウル
-    aliases: []
+    aliases: [白虎, 女飞剑, 大秋秋, 墨剑, 天剑, 厉飞雨, 越女剑, 倚天剑, 哈吉羽]
     hero_id: 5040
   - zh_tw_name: 布利基特
     zh_cn_name: 布利基特
@@ -596,7 +596,7 @@ names:
     aliases: [大帝]
     hero_id: 5050
   - zh_tw_name: 卡內莉安
-    zh_cn_name: ''
+    zh_cn_name: 卡内莉安
     kr_name: 카넬리안
     en_name: Carnelian
     ja_name: カーネリアン
@@ -635,7 +635,7 @@ names:
     kr_name: 니아
     en_name: Nia
     ja_name: ニア
-    aliases: [尼亚]
+    aliases: []
     hero_id: 6060
   - zh_tw_name: 異次元精髓
     zh_cn_name: 异次元精髓

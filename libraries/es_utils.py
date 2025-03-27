@@ -334,7 +334,7 @@ def format_number(num):
     return f"{round(num, 1)}{units[level]}"
 
 
-def clean_color_tags(text):
+def clean_tags(text):
     """清理颜色标签"""
     # 处理 <color=#XXXXXX> 格式
     text = re.sub(r'<color=#[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
@@ -353,6 +353,9 @@ def clean_color_tags(text):
     # 处理 <color="#XXXXXX"> 格式（带引号的情况）
     text = re.sub(r'<color="[#A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
     text = re.sub(r'<COLOR="[#A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
+    
+    # 处理 <effect:none> 标签
+    text = re.sub(r'<effect:none>', '', text, flags=re.IGNORECASE)
     
     return text
 
@@ -898,7 +901,7 @@ def get_town_object_info(data: dict, hero_id: int, is_test=False) -> list:
                         if desc_sno:
                             for string in data["string_item"]["json"]:
                                 if string.get("no") == desc_sno:
-                                    desc = clean_color_tags(string.get("kr", "") if is_test else string.get("zh_tw", ""))
+                                    desc = clean_tags(string.get("kr", "") if is_test else string.get("zh_tw", ""))
                                     break
                         
                         if name:  # 只添加有名称的物品
@@ -1582,10 +1585,10 @@ def get_skill_info(data, skill_no, is_support=False, hero_data=None):
                     desc_kr = string.get("kr", "")
                     desc_en = string.get("en", "")
                     # 清理颜色标签
-                    desc_tw = clean_color_tags(desc_tw)
-                    desc_cn = clean_color_tags(desc_cn)
-                    desc_kr = clean_color_tags(desc_kr)
-                    desc_en = clean_color_tags(desc_en)
+                    desc_tw = clean_tags(desc_tw)
+                    desc_cn = clean_tags(desc_cn)
+                    desc_kr = clean_tags(desc_kr)
+                    desc_en = clean_tags(desc_en)
                     # 处理数值标签
                     desc_tw = process_skill_description(data, desc_tw)
                     desc_cn = process_skill_description(data, desc_cn)
@@ -1667,10 +1670,10 @@ def get_skill_info(data, skill_no, is_support=False, hero_data=None):
                         desc_kr = string.get("kr", "")
                         desc_en = string.get("en", "")
                         # 清理颜色标签
-                        desc_tw = clean_color_tags(desc_tw)
-                        desc_cn = clean_color_tags(desc_cn)
-                        desc_kr = clean_color_tags(desc_kr)
-                        desc_en = clean_color_tags(desc_en)
+                        desc_tw = clean_tags(desc_tw)
+                        desc_cn = clean_tags(desc_cn)
+                        desc_kr = clean_tags(desc_kr)
+                        desc_en = clean_tags(desc_en)
                         # 处理数值标签
                         desc_tw = process_skill_description(data, desc_tw)
                         desc_cn = process_skill_description(data, desc_cn)
@@ -2345,10 +2348,10 @@ def get_signature_info(data, hero_id):
                         desc_kr = string.get("kr", "")
                         desc_en = string.get("en", "")
                         # 先清理颜色标签
-                        desc_tw = clean_color_tags(desc_tw)
-                        desc_cn = clean_color_tags(desc_cn)
-                        desc_kr = clean_color_tags(desc_kr)
-                        desc_en = clean_color_tags(desc_en)
+                        desc_tw = clean_tags(desc_tw)
+                        desc_cn = clean_tags(desc_cn)
+                        desc_kr = clean_tags(desc_kr)
+                        desc_en = clean_tags(desc_en)
                         # 处理数值标签
                         desc_tw = process_skill_description(data, desc_tw)
                         desc_cn = process_skill_description(data, desc_cn)
@@ -2752,7 +2755,10 @@ def format_story_info(episode_info, endings, is_test=False):
                 choice_info = {
                     "talk_index": talk_index,
                     "choice_group": choice["choice_group"],
-                    "text": f"（{choice['choice_group']}）{choice['kr_text' if is_test else 'zh_tw_text']}({affinity_str})",
+                    # 清理选项文本中的effect标签
+                    "text": f"（{choice['choice_group']}）
+                    {clean_tags(choice['kr_text' if is_test else 'zh_tw_text'])}
+                    ({affinity_str})",
                     "affinity": affinity,
                     "position_type": position_type,
                     "group_no": choice.get("group_no"),
