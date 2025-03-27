@@ -172,22 +172,25 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
 隸屬：{get_string_character(data, hero_desc.get("union_sno", 0))[0] if hero_desc else "???"}
 身高：{hero_desc.get("height", "???") if hero_desc else "???"}cm
 體重：{hero_desc.get("weight", "???") if hero_desc else "???"}kg
-生日：{str(hero_desc.get("birthday", "???")).zfill(4)[:2] 
-if hero_desc else "???"}.{str(hero_desc.get("birthday", "???")).zfill(4)[2:]
+生日：{str(hero_desc.get("birthday", "???")).zfill(4)[:2]\
+if hero_desc else "???"}.{str(hero_desc.get("birthday", "???")).zfill(4)[2:]\
 if hero_desc and hero_desc.get("birthday") else "???"}
 星座：{get_string_character(data, hero_desc.get("constellation_sno", 0))[0] if hero_desc else "???"}
 興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0))[0] if hero_desc else "???"}
 特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0))[0] if hero_desc else "???"}
 喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0))[0] if hero_desc else "???"}
 討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0))[0] if hero_desc else "???"}
+喜好禮物：{get_preferred_gifts(data, hero_id)}
+初始打工屬性：{get_arbeit_traits(data, hero_id)[0]}
+滿級打工屬性：{get_arbeit_traits(data, hero_id)[1]}
 CV：{get_string_character(data, hero_desc.get("cv_sno", 0))[0] if hero_desc else "???"}
 CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_desc else "???"}
 {date_info}
-攻击力：{int(hero_data.get('attack', 0))}+{int(hero_data.get('inc_attack', 0))}/级
-防御力：{int(hero_data.get('defence', 0))}+{int(hero_data.get('inc_defence', 0))}/级
-生命值：{int(hero_data.get('max_hp', 0))}+{int(hero_data.get('inc_max_hp', 0))}/级
-暴击率：{hero_data.get('critical_rate', 0)*100:.1f}%+{hero_data.get('inc_critical_rate', 0)*100:.3f}%/级
-暴击威力：{hero_data.get('critical_power', 0)*100:.1f}%+{hero_data.get('inc_critical_power', 0)*100:.3f}%/级"""
+攻擊力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
+防禦力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
+生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
+暴擊率：{hero_data.get('critical_rate', 0)*100:.1f}% + {hero_data.get('inc_critical_rate', 0)*100:.3f}%/级
+暴擊威力：{hero_data.get('critical_power', 0)*100:.1f}% + {hero_data.get('inc_critical_power', 0)*100:.3f}%/级"""
         basic_info_msg.append(basic_info_tw)
         messages.append("\n".join(str(x) for x in basic_info_msg))
 

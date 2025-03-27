@@ -59,6 +59,16 @@ EFFECT_TYPE_MAPPING = {
     "加速": 14111
 }
 
+# 打工属性名称映射
+TRAIT_NAME_MAPPING = {
+    "conversation": "口才",
+    "culture": "教养",
+    "courage": "胆量",
+    "knowledge": "知识",
+    "guts": "毅力",
+    "handicraft": "才艺"
+}
+
 # 资源路径
 RESOURCES_DIR = Path(__file__).parent / "resources"
 

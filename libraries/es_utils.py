@@ -76,6 +76,7 @@ def load_json_data(group_id=None):
     json_files = {
         "hero": "Hero.json", # 角色
         "hero_option": "HeroOption.json", # 角色潜能
+        "hero_gift": "HeroGift.json", # 角色喜好礼物
         "string_character": "StringCharacter.json", # 角色文本
         "string_system": "StringSystem.json", # 系统文本
         "skill": "Skill.json", # 技能
@@ -122,6 +123,7 @@ def load_json_data(group_id=None):
         "town_object": "TownObjet.json", # 专属领地物品
         "string_town": "StringTown.json", # 地点文本
         "town_lost_item": "TownLostItem.json", # 遗失物品
+        "arbeit_fairy_level": "ArbeitFairyLevel.json", # 打工等级
         "tower": "Tower.json", # 起源塔
         "contents_buff": "ContentsBuff.json", # buff数值内容
         "world_raid_partner_buff": "WorldRaidPartnerBuff.json", # 支援伙伴buff
@@ -934,16 +936,6 @@ def get_town_object_tasks(data: dict, obj_no: int, is_test=False) -> list:
     try:
         tasks_info = []
         
-        # 特性名称映射
-        trait_names = {
-            "conversation": "口才",
-            "culture": "教养",
-            "courage": "胆量",
-            "knowledge": "知识",
-            "guts": "毅力",
-            "handicraft": "才艺"
-        }
-        
         # 在ArbeitChoice中查找对应物品的任务
         for choice in data["arbeit_choice"]["json"]:
             if choice.get("objet_no") == obj_no:
@@ -977,7 +969,7 @@ def get_town_object_tasks(data: dict, obj_no: int, is_test=False) -> list:
                         
                         # 获取要求特性
                         traits = []
-                        for trait, zh_name in trait_names.items():
+                        for trait, zh_name in TRAIT_NAME_MAPPING.items():
                             if stars := arbeit.get(trait):
                                 traits.append(f"{zh_name}{stars}★")
                         
@@ -3304,3 +3296,84 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
                 indent=2)
     
     return len(new_data['names']), len(monster_data['names']) 
+
+
+def get_arbeit_traits(data, hero_id):
+    """获取角色的打工属性信息
+    
+    Args:
+        data: JSON数据字典
+        hero_id: 角色ID
+    
+    Returns:
+        tuple: (初始属性文本, 满级属性文本)
+    """
+    # 收集所有相关等级的数据
+    level_data = []
+    for level in data["arbeit_fairy_level"]["json"]:
+        if level.get("hero_no") == hero_id:
+            level_data.append(level)
+    
+    if not level_data:
+        return "???", "???"
+    
+    # 按等级排序
+    level_data.sort(key=lambda x: x.get("level", 0))
+    
+    # 获取初始等级和满级数据
+    initial_level = level_data[0]
+    max_level = level_data[-1]
+    
+    # 获取初始属性
+    initial_traits = []
+    for trait, value in initial_level.items():
+        if trait in TRAIT_NAME_MAPPING and value > 0:
+            initial_traits.append(f"{TRAIT_NAME_MAPPING[trait]}{value}⭐")
+    
+    # 获取满级属性
+    max_traits = []
+    for trait, value in max_level.items():
+        if trait in TRAIT_NAME_MAPPING and value > 0:
+            max_traits.append(f"{TRAIT_NAME_MAPPING[trait]}{value}⭐")
+    
+    # 格式化文本
+    initial_text = "、".join(initial_traits)
+    max_text = "、".join(max_traits)
+    
+    return initial_text, max_text
+
+
+def get_preferred_gifts(data, hero_id):
+    """获取角色的喜好礼物信息
+    
+    Args:
+        data: JSON数据字典
+        hero_id: 角色ID
+    
+    Returns:
+        str: 喜好礼物名称列表，用顿号分隔
+    """
+    # 在HeroGift.json中查找角色的喜好礼物
+    gift_items = []
+    for gift in data["hero_gift"]["json"]:
+        if gift.get("hero_no") == hero_id:
+            # 获取prefer_gift_items字符串并分割成列表
+            prefer_items = gift.get("prefer_gift_items", "").split(",")
+            prefer_items = [item.strip() for item in prefer_items if item.strip()]
+            
+            # 对每个物品ID进行处理
+            for item_no in prefer_items:
+                # 在Item.json中查找物品信息
+                for item in data["item"]["json"]:
+                    if str(item.get("no")) == item_no:
+                        # 获取物品名称
+                        name_sno = item.get("name_sno")
+                        if name_sno:
+                            # 在StringItem.json中查找物品名称
+                            for string in data["string_item"]["json"]:
+                                if string.get("no") == name_sno:
+                                    gift_items.append(string.get("zh_tw", ""))
+                                    break
+                        break
+    
+    return "、".join(gift_items) if gift_items else "???"
