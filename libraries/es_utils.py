@@ -458,34 +458,34 @@ def get_lost_item_info(data: dict, hero_no: int, keyword_type: int, keyword_get_
         
         if not lost_item:
             return ""
-            
+
         quest_type = lost_item.get("quest_type")
-        
+
         if quest_type == 1: # 归还领地遗失物品
             if group_end := lost_item.get("group_end"):
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
-                if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
+                if choice_talk and choice_talk.get("no"):
                     action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
                                 if s.get("no") == choice_talk.get("no")), "")
                     return f"{action}"
-                    
+
         elif quest_type == 2: # 击杀魔物
             if group_end := lost_item.get("group_end"):
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
-                if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
+                if choice_talk and choice_talk.get("no"):
                     action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
                                 if s.get("no") == choice_talk.get("no")), "")
                     return f"{action}"
-                    
+
         elif quest_type == 3: # 外出获取
             # 获取地点信息
             if group_trip := lost_item.get("group_trip"):
                 # 在Talk.json中查找对应对话
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_trip]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
-                if choice_talk and choice_talk.get("no"):  # 确保choice_talk存在且有no字段
+                if choice_talk and choice_talk.get("no"):
                     location = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
                                 if s.get("no") == choice_talk.get("no")), "")
                     if location:
