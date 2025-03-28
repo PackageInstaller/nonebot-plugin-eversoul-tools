@@ -69,11 +69,27 @@ TRAIT_NAME_MAPPING = {
     "handicraft": "才艺"
 }
 
+# 阵型类型映射
 FORMATION_TYPE_MAPPING = {
     1: "基本阵型",
     2: "狙击型",
     3: "防守阵型",
     4: "突击型"
+}
+
+# 角色名称映射
+HERO_NAME_MAPPING = {
+    "Naiah": "Nyah",
+    "Catherine (Radiance)": "CatherineBrave",
+    "Haru": "Mia",
+    "Claire": "Beatrice",
+    "Cherrie": "Catarina",
+    "Rose (Prominence)": "RoseCrimson",
+    "Sakuyo (Inferno)": "SakuyoShin",
+    "Garnet": "Olivia",
+    "Renee": "Leah",
+    "Violette": "Amelia",
+    "Bryce": "Blyce"
 }
 
 # 资源路径
