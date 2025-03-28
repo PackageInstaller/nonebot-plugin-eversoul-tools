@@ -678,6 +678,36 @@ def get_schedule_events(data, target_month, current_year, schedule_prefix, event
                         if banner_raw:
                             banner_path = f"{banner_raw}_ZH_TW.png"
                         break
+        # 联合作战类型，从schedule_key提取英雄名生成徽章路径
+        elif schedule_key.startswith("Calender_EdenAlliance_"):
+            # 从schedule_key中提取英雄名称：Calender_EdenAlliance_HeroName
+            parts = schedule_key.split('_')
+            if len(parts) > 2:
+                hero_name = parts[-1].lower()  # 获取最后一部分并转为小写
+                
+                # 寻找最大tier值的贴纸
+                max_tier = 0
+                found_sticker = None
+                # 查找基础贴纸（不带_1后缀）
+                for tier in range(1, 20):  # 假设tier最多到20
+                    sticker_name = f"sticker_eas_{hero_name}_tier_{tier}.png"
+                    sticker_path = STICKER_DIR / sticker_name
+                    if sticker_path.exists():
+                        max_tier = tier
+                        found_sticker = sticker_name
+                
+                # 如果找到了基础贴纸，尝试查找带_1后缀的贴纸
+                if found_sticker:
+                    variant_sticker = f"sticker_eas_{hero_name}_tier_{max_tier}_1.png"
+                    variant_path = STICKER_DIR / variant_sticker
+                    if variant_path.exists():
+                        banner_path = variant_sticker
+                    else:
+                        banner_path = found_sticker
+                else:
+                    # 如果什么都没找到，使用默认的徽章图片
+                    emblem_path = f"emblem_alliance_{hero_name}.png"
+                    banner_path = emblem_path
         # 其他类型，从EventInfo中获取banner路径
         elif name_sno:
             for event_info in data["event_info"]["json"]:
@@ -1788,7 +1818,11 @@ def generate_event_html(event, event_type):
         
         # 如果有banner，添加到HTML中
         if event_data["banner"]:
-            banner_path = str(BANNER_DIR / event_data["banner"])
+            # 检查是否是联合作战的sticker图片
+            if event_data["banner"].startswith("sticker_eas_"):
+                banner_path = str(STICKER_DIR / event_data["banner"])
+            else:
+                banner_path = str(BANNER_DIR / event_data["banner"])
             html += f'<img class="event-banner" src="{banner_path}" alt="活动Banner">'
         else:
             # 如果没有找到banner图片，显示默认图片
@@ -1843,6 +1877,7 @@ async def generate_timeline_html(month: int, events: list) -> str:
     special_events_with_date.sort(key=lambda x: x[0])
     mail_events_with_date.sort(key=lambda x: x[0])
     special_events = [event for _, event in special_events_with_date]
+    print(special_events)
     mail_events = [event for _, event in mail_events_with_date]
     
     html = f"""
