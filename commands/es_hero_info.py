@@ -259,7 +259,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                     cg_msg.append(f"EP{episode}：{episode_title}")
                     current_episode = episode
                 cg_msg.append(MessageSegment.image(f"file:///{img_path}"))
-            messages.append("\n".join(str(x) for x in cg_msg))
+            messages.append("".join(str(x) for x in cg_msg))
 
         # EverPhone插图
         evertalk_illusts = get_evertalk_illustrations(data, hero_id)
