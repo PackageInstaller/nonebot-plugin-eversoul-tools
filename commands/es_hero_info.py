@@ -251,12 +251,12 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
         cg_images = get_affection_cgs(data, hero_id)
         if cg_images:
             cg_msg = []
-            cg_msg.append("【好感CG】")
+            cg_msg.append("【好感CG】\n")
             current_episode = None
             for img_path, cg_no, episode, episode_title in cg_images:
                 # 如果章节号变化，添加章节标题
                 if episode != current_episode:
-                    cg_msg.append(f"\nEP{episode}：{episode_title}")
+                    cg_msg.append(f"EP{episode}：{episode_title}")
                     current_episode = episode
                 cg_msg.append(MessageSegment.image(f"file:///{img_path}"))
             messages.append("\n".join(str(x) for x in cg_msg))

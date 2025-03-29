@@ -89,7 +89,8 @@ HERO_NAME_MAPPING = {
     "Garnet": "Olivia",
     "Renee": "Leah",
     "Violette": "Amelia",
-    "Bryce": "Blyce"
+    "Bryce": "Blyce",
+    "Mephistopheles (Dawn)": "MephistoDawn"
 }
 
 # 资源路径
