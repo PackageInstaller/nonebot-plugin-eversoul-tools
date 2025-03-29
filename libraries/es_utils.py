@@ -2782,7 +2782,7 @@ def calculate_normal_ending_choices(all_episodes_choices, bad_threshold, normal_
 
 
 def format_story_info(episode_info, endings, is_test=False):
-    """格式化好感故事信息"""
+    """格式化好感故事攻略"""
     # 创建三个结局的信息列表
     good_end = ["好结局攻略："]
     normal_end = ["一般结局攻略："]
@@ -2942,7 +2942,7 @@ def format_story_info(episode_info, endings, is_test=False):
     
     # 合并所有结局信息
     result = ["【好感故事攻略】"]
-    result.extend([""] + good_end)
+    result.extend(good_end)
     result.extend([""] + normal_end)
     result.extend([""] + bad_end)
     
@@ -3042,7 +3042,7 @@ def get_character_keywords(data: dict, hero_id: int, is_test: bool = False) -> s
     if not (bad_keywords or good_keywords):
         return ""
         
-    keyword_msgs.append("【角色关键字】\n")
+    keyword_msgs.append("【角色关键字】")
     if bad_keywords:
         keyword_msgs.append("▼ 讨厌的话题")
         for keyword in bad_keywords:

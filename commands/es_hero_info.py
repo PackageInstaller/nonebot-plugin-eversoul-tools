@@ -236,7 +236,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                     else:
                         messages.append("【自我介绍】\n" + intro_zh_tw)
         
-        # 添加好感故事信息
+        # 添加好感故事攻略
         has_story, episode_info, endings = get_story_info(data, hero_id)
         if has_story:
                 messages.append(format_story_info(episode_info, endings, is_test))
