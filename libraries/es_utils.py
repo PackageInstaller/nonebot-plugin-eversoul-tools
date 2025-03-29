@@ -1608,6 +1608,7 @@ def get_skill_info(data, skill_no, is_support=False, hero_data=None):
             # 只在第一次找到技能时获取图标信息
             if not skill_icon_info:
                 icon_prefab = skill.get("icon_prefab")
+                # 这里是适配数据表里面没有的转变形态技能的着色(光凯)
                 if icon_prefab == 14:
                     skill_icon_info = {
                         "icon": "Icon_Sub_Change",

@@ -11,7 +11,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from ..libraries.es_utils import *
 
-es_stage_info = on_command("es主线信息", priority=5, block=True)
+es_stage_info = on_command("es主线信息", priority=0, block=True)
 
 
 @es_stage_info.handle()

@@ -10,7 +10,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from ..libraries.es_utils import *
 
-es_level_cost = on_regex(r"^es升级消耗(\d+)$", priority=5, block=True)
+es_level_cost = on_regex(r"^es升级消耗(\d+)$", priority=0, block=True)
 
 
 @es_level_cost.handle()

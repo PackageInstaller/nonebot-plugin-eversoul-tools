@@ -10,7 +10,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from ..libraries.es_utils import *
 
-es_ark_info = on_regex(r"^es方舟等级信息(\d+)$", priority=5, block=True)
+es_ark_info = on_regex(r"^es方舟等级信息(\d+)$", priority=0, block=True)
 
 
 @es_ark_info.handle()

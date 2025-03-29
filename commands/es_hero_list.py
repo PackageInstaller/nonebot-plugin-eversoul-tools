@@ -9,7 +9,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from ..libraries.es_utils import *
 
-es_hero_list = on_command("es角色列表", priority=5, block=True)
+es_hero_list = on_command("es角色列表", priority=0, block=True)
 
 
 @es_hero_list.handle()

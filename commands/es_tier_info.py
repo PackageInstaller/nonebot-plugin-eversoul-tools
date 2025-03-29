@@ -13,7 +13,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from ..libraries.es_utils import *
 
-es_tier_info = on_command("es礼品信息", priority=5, block=True)
+es_tier_info = on_command("es礼品信息", priority=0, block=True)
 
 
 @es_tier_info.handle()

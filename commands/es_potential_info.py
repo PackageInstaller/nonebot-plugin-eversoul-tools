@@ -11,7 +11,7 @@ require("nonebot_plugin_htmlrender")
 from nonebot_plugin_htmlrender import html_to_pic
 from ..libraries.es_utils import *
 
-es_potential_info = on_command("es潜能信息", priority=5, block=True)
+es_potential_info = on_command("es潜能信息", priority=0, block=True)
 
 
 @es_potential_info.handle()

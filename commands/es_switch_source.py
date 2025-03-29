@@ -11,7 +11,7 @@ from nonebot.adapters.onebot.v11 import (
 from ..libraries.es_utils import *
 from ..config import *
 
-es_switch_source = on_command("es数据源切换", priority=5, permission=(SUPERUSER | GROUP_ADMIN | GROUP_OWNER), block=True)
+es_switch_source = on_command("es数据源切换", priority=0, permission=(SUPERUSER | GROUP_ADMIN | GROUP_OWNER), block=True)
 
 
 @es_switch_source.handle()

@@ -8,7 +8,7 @@ require("nonebot_plugin_htmlrender")
 from nonebot_plugin_htmlrender import html_to_pic
 
 
-es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, priority=5, block=True)
+es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, priority=0, block=True)
 
 
 @es_help.handle()

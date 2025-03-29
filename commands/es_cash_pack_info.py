@@ -11,7 +11,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from ..libraries.es_utils import *
 
-es_cash_pack_info = on_command("es突发礼包信息", priority=5, block=True)
+es_cash_pack_info = on_command("es突发礼包信息", priority=0, block=True)
 
 
 @es_cash_pack_info.handle()

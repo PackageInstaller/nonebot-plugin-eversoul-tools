@@ -13,7 +13,7 @@ from nonebot_plugin_htmlrender import html_to_pic
 from ..libraries.es_utils import *
 
 
-es_month = on_regex(r"^es(\d{1,2})月事件$", priority=5, block=True)
+es_month = on_regex(r"^es(\d{1,2})月事件$", priority=0, block=True)
 
 
 @es_month.handle()

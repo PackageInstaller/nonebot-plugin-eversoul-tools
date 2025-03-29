@@ -9,7 +9,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from ..libraries.es_utils import *
 
-es_stats = on_regex(r"^es(身高|体重)排行$", priority=5, block=True)
+es_stats = on_regex(r"^es(身高|体重)排行$", priority=0, block=True)
 
 
 @es_stats.handle()

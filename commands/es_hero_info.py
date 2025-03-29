@@ -16,7 +16,7 @@ from nonebot.adapters.onebot.v11 import (
 from ..libraries.es_utils import *
 from ..config import *
 
-es_hero_info = on_command("es角色信息", priority=5, block=True)
+es_hero_info = on_command("es角色信息", priority=0, block=True)
 
 
 @es_hero_info.handle()
