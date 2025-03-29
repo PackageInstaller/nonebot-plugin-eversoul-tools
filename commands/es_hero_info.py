@@ -1,6 +1,5 @@
 import os
 import yaml
-from pathlib import Path
 from nonebot import on_command
 from nonebot.exception import FinishedException
 from difflib import get_close_matches
