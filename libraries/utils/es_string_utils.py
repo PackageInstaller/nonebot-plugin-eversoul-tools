@@ -221,7 +221,7 @@ def get_character_arbeit(data, hero_id):
         hero_id: 角色ID
     
     Returns:
-        tuple: (初始属性文本, 满级属性文本)
+        dict: 包含初始和满级属性的字典，键为'initial', 'max'
     """
     # 收集所有相关等级的数据
     level_data = []
@@ -230,7 +230,7 @@ def get_character_arbeit(data, hero_id):
             level_data.append(level)
     
     if not level_data:
-        return "???", "???"
+        return {"initial": "???", "max": "???"}
     
     # 按等级排序
     level_data.sort(key=lambda x: x.get("level", 0))
@@ -255,7 +255,7 @@ def get_character_arbeit(data, hero_id):
     initial_text = "、".join(initial_traits)
     max_text = "、".join(max_traits)
     
-    return initial_text, max_text
+    return {"initial": initial_text, "max": max_text}
 
 
 def get_character_prefer_gift(data, hero_id):

@@ -167,6 +167,10 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         # 繁体中文版本
         basic_info_msg = []
         portrait_path = get_character_portrait(data, hero_id, hero_name_en) # 获取立绘路径
+        # 配音演员信息
+        cv_kr = get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "???"
+        cv_temp = get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "???"
+        cv_ja = cv_temp if cv_temp != cv_kr else "???"
         basic_info_msg.append("【基础信息】")
         if portrait_path:
             basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
@@ -187,10 +191,10 @@ if hero_desc and hero_desc.get("birthday") else "???"}
 喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0))["zh_tw"] if hero_desc else "???"}
 討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0))["zh_tw"] if hero_desc else "???"}
 喜好禮物：{get_character_prefer_gift(data, hero_id)}
-初始打工屬性：{get_character_arbeit(data, hero_id)[0]}
-滿級打工屬性：{get_character_arbeit(data, hero_id)[1]}
-CV：{get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "???"}
-CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "???"}
+初始打工屬性：{get_character_arbeit(data, hero_id)["initial"]}
+滿級打工屬性：{get_character_arbeit(data, hero_id)["max"]}
+CV_KR：{cv_kr}
+CV_JP：{cv_ja}
 {date_info}
 攻擊力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防禦力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级

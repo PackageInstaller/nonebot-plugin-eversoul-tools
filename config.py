@@ -5,7 +5,7 @@ from nonebot import get_driver, get_plugin_config
 driver = get_driver()
 
 class Config(BaseModel):
-    # Eversoul相关配置项
+    # Eversoul相关配置项，live和review数据源
     eversoul_live_path: str
     eversoul_review_path: str
 
