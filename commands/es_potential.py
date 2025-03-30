@@ -1,17 +1,4 @@
-from nonebot import require, on_command
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    MessageSegment,
-    GroupMessageEvent
-)
-require("nonebot_plugin_htmlrender")
-from nonebot_plugin_htmlrender import html_to_pic
-from ..libraries.es_utils import *
-
-es_potential_info = on_command("es潜能信息", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_potential_info.handle()

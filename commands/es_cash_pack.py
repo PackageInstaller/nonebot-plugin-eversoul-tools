@@ -1,17 +1,4 @@
-import re
-from nonebot import on_command
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    Message,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_cash_pack_info = on_command("es突发礼包信息", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_cash_pack_info.handle()
@@ -65,9 +52,9 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                     if stage_no_id:
                         # 构建一个包含no的字典
                         stage_info = {"no": stage_no_id}
-                        package_msgs = get_cash_item_info(data, "stage", stage_info)
+                        package_msgs = get_cash_pack(data, "stage", stage_info)
                         if package_msgs:
-                            messages.append(f"\n主线关卡 {area_no}-{stage_no}:")
+                            messages.append(f"主线关卡 {area_no}-{stage_no}:")
                             messages.extend(package_msgs)
             
             if not messages:
@@ -93,7 +80,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                 # 获取传送门名称
                 gate_name = next((s.get("zh_tw", "未知") for s in data["string_stage"]["json"] 
                                 if s["no"] == barrier_info.get("text_name_sno")), "未知")
-                messages.append(f"\n{gate_name}:")
+                messages.append(f"{gate_name}:")
                 
                 # 获取所有对应类型的关卡
                 for stage in data["stage"]["json"]:
@@ -109,9 +96,9 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                                 break
                         
                         # 获取通关礼包信息
-                        package_msgs = get_cash_item_info(data, "barrier", stage)  # 直接传入stage对象
+                        package_msgs = get_cash_pack(data, "barrier", stage)  # 直接传入stage对象
                         if package_msgs:
-                            messages.append(f"\n{stage_name}:")
+                            messages.append(f"{stage_name}:")
                             messages.extend(package_msgs)
             
             if len(messages) <= 1:  # 只有标题没有实际内容
@@ -154,7 +141,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                         original_type_value = package["type_value"]
                         # 修改type_value以匹配get_cash_item_info的处理逻辑
                         package["type_value"] = str(tower_no)
-                        package_msgs = get_cash_item_info(data, "tower", dummy_info)
+                        package_msgs = get_cash_pack(data, "tower", dummy_info)
                         # 还原原始type_value
                         package["type_value"] = original_type_value
                         messages.extend(package_msgs)
@@ -165,7 +152,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                 if shop_item.get("type") == "grade_eternal":
                     # 构建一个简单的字典来匹配get_cash_item_info的参数要求
                     dummy_info = {"no": shop_item.get("type_value")}
-                    package_msgs = get_cash_item_info(data, "grade_eternal", dummy_info)
+                    package_msgs = get_cash_pack(data, "grade_eternal", dummy_info)
                     if package_msgs:
                         messages.extend(package_msgs)
         

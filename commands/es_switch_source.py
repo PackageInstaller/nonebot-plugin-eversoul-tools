@@ -1,17 +1,4 @@
-from pathlib import Path
-from nonebot import on_command
-from nonebot.exception import FinishedException
-from nonebot.permission import SUPERUSER
-from zhenxun.services.log import logger
-from nonebot.adapters.onebot.v11 import (
-    GROUP_ADMIN,
-    GROUP_OWNER,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-from ..config import *
-
-es_switch_source = on_command("es数据源切换", priority=0, permission=(SUPERUSER | GROUP_ADMIN | GROUP_OWNER), block=True)
+from ..libraries.utils import *
 
 
 @es_switch_source.handle()

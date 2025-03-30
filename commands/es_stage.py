@@ -1,17 +1,4 @@
-import re
-from nonebot import on_command
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    Message,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_stage_info = on_command("es主线信息", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_stage_info.handle()
@@ -58,7 +45,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         basic_info.append(f"关卡 {area_no}-{stage_no} 信息：")
         
         # 获取关卡类型
-        level_type = "未知类型"
+        level_type = ""
         for system in data["string_system"]["json"]:
             if system["no"] == stage_data.get("level_type"):
                 level_type = system.get("zh_tw", "未知类型")
@@ -72,7 +59,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             item_key = f"item_no{i}"
             amount_key = f"amount{i}"
             if item_no := stage_data.get(item_key):
-                item_name = get_item_name(data, item_no)
+                item_name = get_string_item(data, item_no)
                 amount = stage_data.get(amount_key, 0)
                 messages.append(f"固定掉落物品{i}：\n{item_name} x{amount}")
 
@@ -80,7 +67,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         stage_no = stage_data["no"]
 
         # 获取主线突发礼包信息
-        cash_item_messages = get_cash_item_info(data, "stage", stage_data)
+        cash_item_messages = get_cash_pack(data, "stage", stage_data)
         messages.extend(cash_item_messages)
 
         # 查找敌方队伍信息
@@ -95,7 +82,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             battle_teams.sort(key=lambda x: x.get("team_no", 0))
             
             for team in battle_teams:
-                team_info = [f"\n敌方队伍 {team.get('team_no', '?')}："]
+                team_info = [f"敌方队伍 {team.get('team_no', '?')}："]
                 team_info.append(f"阵型：{get_formation_type(team.get('formation_type'))}")
                 
                 # 添加每个角色的信息
@@ -105,8 +92,12 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                     level_key = f"level{i}"
                     
                     if hero_no := team.get(hero_key):
-                        hero_name_zh_tw, hero_name_zh_cn, hero_name_kr, hero_name_en = get_hero_name(data, hero_no)
-                        grade_name_zh_tw, grade_name_zh_cn, grade_name_kr, grade_name_en = get_grade_name(data, team.get(grade_key))
+                        hero_name_data = get_string_character(data, hero_no, special=True)
+                        hero_name_zh_tw = hero_name_data["zh_tw"]
+                        
+                        grade_data = get_string_system(data, team.get(grade_key))
+                        grade_name_zh_tw = grade_data["zh_tw"]
+                        
                         level = team.get(level_key, 0)
                         
                         team_info.append(f"位置{i}：{hero_name_zh_tw} {grade_name_zh_tw} {level}级")

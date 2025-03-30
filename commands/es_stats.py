@@ -1,15 +1,4 @@
-import yaml
-from nonebot import on_regex
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_stats = on_regex(r"^es(身高|体重)排行$", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_stats.handle()
@@ -24,7 +13,6 @@ async def handle_es_stats(bot: Bot, event: Event):
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         data = load_json_data(group_id)
-        logger.info("数据加载完成")
         
         # 收集角色信息
         stats_info = []
@@ -45,7 +33,11 @@ async def handle_es_stats(bot: Bot, event: Event):
                     continue
                 
                 # 获取角色名称
-                char_name_tw, char_name_cn, char_name_kr, char_name_en = get_hero_name_by_id(data, hero_id)
+                char_name_data = get_string_character(data, hero_id, special=True)
+                char_name_zh_tw = char_name_data["zh_tw"]
+                char_name_zh_cn = char_name_data["zh_cn"]
+                char_name_kr = char_name_data["kr"]
+                char_name_en = char_name_data["en"]
                 
                 # 查找英雄描述数据
                 hero_desc = None
@@ -59,9 +51,9 @@ async def handle_es_stats(bot: Bot, event: Event):
                 stat_value = hero_desc.get(stat_key, "???") if hero_desc else "???"
                 
                 if stat_value != "???":
-                    stats_info.append((char_name_tw, stat_value))
+                    stats_info.append((char_name_zh_tw, stat_value))
                 else:
-                    unknown_stats.append(char_name_tw)
+                    unknown_stats.append(char_name_zh_tw)
         
         # 按身高/体重从大到小排序
         stats_info.sort(key=lambda x: x[1], reverse=True)

@@ -1,14 +1,4 @@
-from nonebot import require, on_command
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    MessageSegment
-)
-require("nonebot_plugin_htmlrender")
-from nonebot_plugin_htmlrender import html_to_pic
-
-
-es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_help.handle()
@@ -114,7 +104,7 @@ async def handle_es_help(bot: Bot, event: Event):
             <div class="command">
                 <div class="command-name">10. es礼品信息[品质][类型][种类]</div>
                 <div class="usage">用途：查询礼品信息</div>
-                <div class="example">示例：es礼品信息白1智力加速</div>
+                <div class="example">示例：es礼品信息粉1智力加速</div>
             </div>
             <div class="command">
                 <div class="command-name">11. es潜能信息</div>

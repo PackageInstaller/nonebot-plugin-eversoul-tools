@@ -1,16 +1,4 @@
-from typing import Any
-from nonebot import on_regex
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.params import RegexGroup
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_ark_info = on_regex(r"^es方舟等级信息(\d+)$", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_ark_info.handle()
@@ -47,7 +35,7 @@ async def handle_ark_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Reg
         messages = []
         # 添加标题信息
         title_msg = [f"方舟等级 {target_level} 信息："]
-        messages.append("\n".join(title_msg))
+        messages.append("".join(title_msg))
         
         # 处理每种类型的方舟
         for core_type, arks in ark_types.items():
@@ -58,8 +46,11 @@ async def handle_ark_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Reg
             type_name = next((s.get("zh_tw", "未知类型") for s in data["string_system"]["json"] 
                             if s["no"] == core_type), "未知类型")
             
+            # 主方舟名称适配
+            if type_name == "所有":
+                type_name = "主要"
             ark_msg = []
-            ark_msg.append(f"\n【{type_name}】")
+            ark_msg.append(f"【{type_name}】")
             
             for ark in arks:
                 # 获取升级材料信息

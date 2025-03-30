@@ -1,15 +1,4 @@
-import yaml
-from nonebot import on_command
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_hero_list = on_command("es角色列表", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_hero_list.handle()
@@ -49,7 +38,8 @@ async def handle_hero_list(bot: Bot, event: Event):
                 continue
                 
             # 获取种族名称
-            race_tw, _, _, _ = get_system_string(data, hero_data["race_sno"])
+            race_data = get_string_system(data, hero_data["race_sno"])
+            race_tw = race_data["zh_tw"]
             if not race_tw:
                 continue
                 

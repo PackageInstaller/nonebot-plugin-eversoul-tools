@@ -1,21 +1,4 @@
-import os
-import yaml
-from nonebot import on_command
-from nonebot.exception import FinishedException
-from difflib import get_close_matches
-from zhenxun.services.log import logger
-from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    Message,
-    MessageSegment,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-from ..config import *
-
-es_hero_info = on_command("es角色信息", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_hero_info.handle()
@@ -124,38 +107,62 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
             return
             
         # 获取英雄名称
-        hero_name_tw = ""
-        hero_name_cn = ""
+        hero_name_zh_tw = ""
+        hero_name_zh_cn = ""
         hero_name_kr = ""
         hero_name_en = ""
-        for char in data["string_character"]["json"]:
-            if char["no"] == hero_data["name_sno"]:
-                hero_name_tw = char.get("zh_tw", "")
-                hero_name_cn = char.get("zh_cn", "")
-                hero_name_kr = char.get("kr", "")
-                hero_name_en = char.get("en", "")
-                break
+        if hero_data["name_sno"]:
+            name_data = get_string_character(data, hero_data["name_sno"])
+            hero_name_zh_tw = name_data["zh_tw"]
+            hero_name_zh_cn = name_data["zh_cn"]
+            hero_name_kr = name_data["kr"]
+            hero_name_en = name_data["en"]
 
         # 获取实装信息
         release_date = get_character_release_date(data, hero_id)
-        date_info = format_date_info(release_date)
+        date_info = format_character_release_date(release_date)
         
         # 获取双语版本的基础信息
-        race_tw, race_cn, race_kr, race_en = get_system_string(data, hero_data["race_sno"])
-        hero_class_tw, hero_class_cn, hero_class_kr, hero_class_en = get_system_string(data, hero_data["class_sno"])
-        sub_class_tw, sub_class_cn, sub_class_kr, sub_class_en = get_system_string(data, hero_data["sub_class_sno"])
-        stat_tw, stat_cn, stat_kr, stat_en = get_system_string(data, hero_data["stat_sno"])
-        grade_tw, grade_cn, grade_kr, grade_en = get_system_string(data, hero_data["grade_sno"])
+        race_data = get_string_system(data, hero_data["race_sno"])
+        race_zh_tw, race_zh_cn, race_kr, race_en = race_data["zh_tw"], race_data["zh_cn"], race_data["kr"], race_data["en"]
+
+        hero_class_data = get_string_system(data, hero_data["class_sno"])
+        hero_class_zh_tw = hero_class_data["zh_tw"]
+        hero_class_zh_cn = hero_class_data["zh_cn"]
+        hero_class_kr = hero_class_data["kr"]
+        hero_class_en = hero_class_data["en"]
+
+        sub_class_data = get_string_system(data, hero_data["sub_class_sno"])
+        sub_class_zh_tw = sub_class_data["zh_tw"]
+        sub_class_zh_cn = sub_class_data["zh_cn"]
+        sub_class_kr = sub_class_data["kr"]
+        sub_class_en = sub_class_data["en"]
+
+        stat_data = get_string_system(data, hero_data["stat_sno"])
+        stat_zh_tw = stat_data["zh_tw"]
+        stat_zh_cn = stat_data["zh_cn"]
+        stat_kr = stat_data["kr"]
+        stat_en = stat_data["en"]
+
+        grade_data = get_string_system(data, hero_data["grade_sno"])
+        grade_zh_tw = grade_data["zh_tw"]
+        grade_zh_cn = grade_data["zh_cn"]
+        grade_kr = grade_data["kr"]
+        grade_en = grade_data["en"]
         
         # 构建消息列表
         messages = []
-        nickname_tw = ""
-        nickname_cn = ""
+        nickname_zh_tw = ""
+        nickname_zh_cn = ""
         nickname_kr = ""
         nickname_en = ""
         if hero_desc and isinstance(hero_desc, dict):
             nick_name_sno = hero_desc.get("nick_name_sno")
-            nickname_tw, nickname_cn, nickname_kr, nickname_en = get_string_character(data, nick_name_sno)
+            nickname_data = get_string_character(data, nick_name_sno)
+            nickname_zh_tw = nickname_data["zh_tw"]
+            nickname_zh_cn = nickname_data["zh_cn"]
+            nickname_kr = nickname_data["kr"]
+            nickname_en = nickname_data["en"]
         
         # 繁体中文版本
         basic_info_msg = []
@@ -163,34 +170,34 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         basic_info_msg.append("【基础信息】")
         if portrait_path:
             basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
-        basic_info_tw = f"""{nickname_tw if nickname_tw else nickname_kr}・{hero_name_tw if hero_name_tw else hero_name_kr}
-類型：{race_tw} {hero_class_tw}
-攻擊方式：{sub_class_tw}
-屬性：{stat_tw}
-品質：{grade_tw}
-隸屬：{get_string_character(data, hero_desc.get("union_sno", 0))[0] if hero_desc else "???"}
+        basic_info_zh_tw = f"""{nickname_zh_tw if nickname_zh_tw else nickname_kr}・{hero_name_zh_tw if hero_name_zh_tw else hero_name_kr}
+類型：{race_zh_tw} {hero_class_zh_tw}
+攻擊方式：{sub_class_zh_tw}
+屬性：{stat_zh_tw}
+品質：{grade_zh_tw}
+隸屬：{get_string_character(data, hero_desc.get("union_sno", 0))["zh_tw"] if hero_desc else "???"}
 身高：{hero_desc.get("height", "???") if hero_desc else "???"}cm
 體重：{hero_desc.get("weight", "???") if hero_desc else "???"}kg
 生日：{str(hero_desc.get("birthday", "???")).zfill(4)[:2]\
 if hero_desc else "???"}.{str(hero_desc.get("birthday", "???")).zfill(4)[2:]\
 if hero_desc and hero_desc.get("birthday") else "???"}
-星座：{get_string_character(data, hero_desc.get("constellation_sno", 0))[0] if hero_desc else "???"}
-興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0))[0] if hero_desc else "???"}
-特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0))[0] if hero_desc else "???"}
-喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0))[0] if hero_desc else "???"}
-討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0))[0] if hero_desc else "???"}
-喜好禮物：{get_preferred_gifts(data, hero_id)}
-初始打工屬性：{get_arbeit_traits(data, hero_id)[0]}
-滿級打工屬性：{get_arbeit_traits(data, hero_id)[1]}
-CV：{get_string_character(data, hero_desc.get("cv_sno", 0))[0] if hero_desc else "???"}
-CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_desc else "???"}
+星座：{get_string_character(data, hero_desc.get("constellation_sno", 0))["zh_tw"] if hero_desc else "???"}
+興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0))["zh_tw"] if hero_desc else "???"}
+特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0))["zh_tw"] if hero_desc else "???"}
+喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0))["zh_tw"] if hero_desc else "???"}
+討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0))["zh_tw"] if hero_desc else "???"}
+喜好禮物：{get_character_prefer_gift(data, hero_id)}
+初始打工屬性：{get_character_arbeit(data, hero_id)[0]}
+滿級打工屬性：{get_character_arbeit(data, hero_id)[1]}
+CV：{get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "???"}
+CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "???"}
 {date_info}
 攻擊力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防禦力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
 暴擊率：{hero_data.get('critical_rate', 0)*100:.1f}% + {hero_data.get('inc_critical_rate', 0)*100:.3f}%/级
 暴擊威力：{hero_data.get('critical_power', 0)*100:.1f}% + {hero_data.get('inc_critical_power', 0)*100:.3f}%/级"""
-        basic_info_msg.append(basic_info_tw)
+        basic_info_msg.append(basic_info_zh_tw)
         messages.append("\n".join(str(x) for x in basic_info_msg))
 
         # 添加立绘
@@ -208,7 +215,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                 break
 
         # 获取灵魂链接信息，
-        soullink_info = get_soullink_info(data, hero_id, is_test=False)
+        soullink_info = get_character_soullink(data, hero_id, is_test=False)
         if soullink_info:
             for link in soullink_info:
                 link_msg = ["【灵魂链接】"]
@@ -229,7 +236,11 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
         if hero_desc and isinstance(hero_desc, dict):
             intro_sno = hero_desc.get("introduction_sno")
             if intro_sno:
-                intro_zh_tw, intro_zh_cn, intro_kr, intro_en = get_string_character(data, intro_sno)
+                intro_data = get_string_character(data, intro_sno)
+                intro_zh_tw = intro_data["zh_tw"]
+                intro_zh_cn = intro_data["zh_cn"]
+                intro_kr = intro_data["kr"]
+                intro_en = intro_data["en"]
                 if intro_zh_tw or intro_kr:
                     if is_test:
                         messages.append("【自我介绍】\n" + intro_kr)
@@ -237,17 +248,17 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                         messages.append("【自我介绍】\n" + intro_zh_tw)
         
         # 添加好感故事攻略
-        has_story, episode_info, endings = get_story_info(data, hero_id)
+        has_story, episode_info, endings = get_character_story(data, hero_id)
         if has_story:
-                messages.append(format_story_info(episode_info, endings, is_test))
+                messages.append(format_character_story(episode_info, endings, is_test))
         
         # 添加角色关键字信息
-        keyword_info = get_character_keywords(data, hero_id, is_test=False)
+        keyword_info = get_character_keyword(data, hero_id, is_test=False)
         if keyword_info:
             messages.append(keyword_info)
         
         # 好感故事CG
-        cg_images = get_affection_cgs(data, hero_id)
+        cg_images = get_character_affection_cg(data, hero_id)
         if cg_images:
             cg_msg = []
             cg_msg.append("【好感CG】\n")
@@ -261,7 +272,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
             messages.append("".join(str(x) for x in cg_msg))
 
         # EverPhone插图
-        evertalk_illusts = get_evertalk_illustrations(data, hero_id)
+        evertalk_illusts = get_character_evertalk_cg(data, hero_id)
         if evertalk_illusts:
             illust_msg = []
             illust_msg.append("【EverPhone插图】")
@@ -270,7 +281,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
             messages.append("".join(str(x) for x in illust_msg))
 
         # 添加专属领地物品信息
-        town_objects = get_town_object_info(data, hero_id, is_test)
+        town_objects = get_character_town_object(data, hero_id, is_test)
         if town_objects:
             objects_msg = ["【专属领地物品】"]
             for obj_no, name, grade, slot_type, desc, img_path in town_objects:
@@ -285,7 +296,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                     objects_msg.append(f"描述：{desc}")
                 
                 # 添加可进行的任务信息
-                tasks = get_town_object_tasks(data, obj_no, is_test)
+                tasks = get_character_town_object_task(data, obj_no, is_test)
                 if tasks:
                     objects_msg.append("\n可进行的打工：")
                     for task in tasks:
@@ -312,10 +323,14 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                 if skill_no := hero_data.get(skill_key):
                     for skill in data["skill"]["json"]:
                         if skill["no"] == skill_no:
-                            skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, skill_type_en = get_skill_type(data, skill["type"])
+                            skill_type_data = get_character_skill_type(data, skill["type"])
+                            skill_type_zh_tw = skill_type_data["zh_tw"]
+                            skill_type_zh_cn = skill_type_data["zh_cn"]
+                            skill_type_kr = skill_type_data["kr"]
+                            skill_type_en = skill_type_data["en"]
                             # 判断是否为支援技能
                             is_support = (skill_key == "support_skill_no")
-                            skill_name_zh_tw, skill_name_zh_cn, skill_name_kr, skill_name_en, skill_descriptions, skill_icon_info, is_support = get_skill_info(data, skill_no, is_support, hero_data)
+                            skill_name_zh_tw, skill_name_zh_cn, skill_name_kr, skill_name_en, skill_descriptions, skill_icon_info, is_support = get_character_skill(data, skill_no, is_support, hero_data)
                             skill_types.append((skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, skill_type_en, skill_name_zh_tw, skill_name_zh_cn, skill_name_kr, skill_name_en, skill_descriptions, skill_icon_info, is_support))
                             break
             
@@ -386,11 +401,15 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
                 if skill_no := hero_data.get(skill_key):
                     for skill in data["skill"]["json"]:
                         if skill["no"] == skill_no:
-                            skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, skill_type_en = get_skill_type(data, skill["type"])
+                            skill_type_data = get_character_skill_type(data, skill["type"])
+                            skill_type_zh_tw = skill_type_data["zh_tw"]
+                            skill_type_zh_cn = skill_type_data["zh_cn"]
+                            skill_type_kr = skill_type_data["kr"]
+                            skill_type_en = skill_type_data["en"]
                             # 判断是否为支援技能
                             is_support = (skill_key == "support_skill_no")
                             skill_name_zh_tw, skill_name_zh_cn, skill_name_kr,\
-                            skill_name_en, skill_descriptions, skill_icon_info, is_support = get_skill_info(data, skill_no, is_support, hero_data)
+                            skill_name_en, skill_descriptions, skill_icon_info, is_support = get_character_skill(data, skill_no, is_support, hero_data)
                             skill_types.append((skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, skill_type_en, skill_name_zh_tw,\
                                                 skill_name_zh_cn, skill_name_kr, skill_name_en, skill_descriptions, skill_icon_info, is_support))
                             break
@@ -459,7 +478,7 @@ CV_JP：{get_string_character(data, hero_desc.get("cv_jp_sno", 0))[0] if hero_de
         signature_name_zh_tw, signature_name_zh_cn, signature_name_kr, signature_name_en,\
         signature_title_zh_tw, signature_title_zh_cn, signature_title_kr, signature_title_en, \
         signature_desc_tw, signature_desc_cn, signature_desc_kr, signature_desc_en, signature_descriptions,\
-        signature_stats, signature_bg_path = get_signature_info(data, hero_id)
+        signature_stats, signature_bg_path = get_character_signature(data, hero_id)
         if signature_name_kr:
             signature_stats, max_level = signature_stats
             signature_img_path = str(SIGNATURE_DIR / signature_bg_path)

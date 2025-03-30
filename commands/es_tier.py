@@ -1,19 +1,4 @@
-import re
-from pathlib import Path
-from nonebot import on_command
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.params import CommandArg
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    Message,
-    MessageSegment,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_tier_info = on_command("es礼品信息", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_tier_info.handle()

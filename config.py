@@ -93,6 +93,14 @@ HERO_NAME_MAPPING = {
     "Mephistopheles (Dawn)": "MephistoDawn"
 }
 
+# 礼包类型映射
+PACKAGE_TYPES = {
+    'barrier': '通关礼包',
+    'stage': '主线礼包',
+    'tower': '起源之塔礼包',
+    'grade_eternal': '角色升阶礼包'
+}
+
 # 资源路径
 RESOURCES_DIR = Path(__file__).parent / "resources"
 

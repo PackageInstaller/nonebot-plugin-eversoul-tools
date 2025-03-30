@@ -1,16 +1,4 @@
-from typing import Tuple, Any
-from nonebot import on_regex
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.params import RegexGroup
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_gate = on_regex(r"es(自由|人类|野兽|妖精|不死)传送门信息(\d+)", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_gate.handle()
@@ -89,7 +77,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                 item_no = gate_info.get(f"item_no{i}")
                 amount = gate_info.get(f"amount{i}")
                 if item_no and amount:
-                    item_name = get_item_name(data, item_no)
+                    item_name = get_string_item(data, item_no)
                     rewards.append(f"・ {item_name} x{amount}")
             
             if rewards:
@@ -97,7 +85,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                 messages.extend(rewards)
             
             # 获取通关礼包信息
-            cash_item_messages = get_cash_item_info(data, "barrier", gate_info)
+            cash_item_messages = get_cash_pack(data, "barrier", gate_info)
             messages.extend(cash_item_messages)
             
             # 获取敌方队伍信息
@@ -118,8 +106,12 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                         if not hero_no:
                             continue
                             
-                        hero_name_zh_tw, hero_name_zh_cn, hero_name_kr, hero_name_en = get_hero_name(data, hero_no)
-                        grade_name_zh_tw, grade_name_zh_cn, grade_name_kr, grade_name_en = get_grade_name(data, team.get(f"hero_grade{i}"))
+                        hero_name_data = get_string_character(data, hero_no, special=True)
+                        hero_name_zh_tw = hero_name_data["zh_tw"]
+                        
+                        grade_data = get_string_system(data, team.get(f"hero_grade{i}"))
+                        grade_name_zh_tw = grade_data["zh_tw"]
+                        
                         level = team.get(f"level{i}", 0)
                         
                         messages.append(f"\n位置{i}：{hero_name_zh_tw}")
@@ -133,7 +125,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                                 messages.append("・ 装备：")
                                 for slot in range(1, 5):
                                     if item_no := equip_data.get(f"slot{slot}"):
-                                        item_name = get_item_name(data, item_no)
+                                        item_name = get_string_item(data, item_no)
                                         level = equip_data.get(f"level{slot}", 0)
                                         messages.append(f"  - {item_name} Lv.{level}")
                         

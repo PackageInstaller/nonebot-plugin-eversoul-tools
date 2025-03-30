@@ -1,19 +1,4 @@
-import re
-from nonebot import require, on_regex
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    MessageSegment,
-    GroupMessageEvent
-)
-require("nonebot_plugin_htmlrender")
-from nonebot_plugin_htmlrender import html_to_pic
-from ..libraries.es_utils import *
-
-
-es_month = on_regex(r"^es(\d{1,2})月事件$", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_month.handle()
@@ -46,27 +31,27 @@ async def handle_es_month(bot: Bot, event: Event):
             schedule_key = schedule.get("schedule_key", "")
             if schedule_key.startswith("Calender_") and schedule_key.endswith("_Main"):
                 prefix = schedule_key
-                main_events.extend(get_schedule_events(data, target_month, current_year,
+                main_events.extend(get_schedule_event(data, target_month, current_year,
                                                     prefix, "主要活动"))
         month_events.extend(main_events)
         
-        month_events.extend(get_schedule_events(data, target_month, current_year,
+        month_events.extend(get_schedule_event(data, target_month, current_year,
                                              "Calender_PickUp_", "Pickup"))
-        month_events.extend(get_schedule_events(data, target_month, current_year, 
+        month_events.extend(get_schedule_event(data, target_month, current_year, 
                                              "Calender_SingleRaid_", "恶灵讨伐"))
-        month_events.extend(get_schedule_events(data, target_month, current_year,
+        month_events.extend(get_schedule_event(data, target_month, current_year,
                                              "Calender_EdenAlliance_", "联合作战"))
-        month_events.extend(get_schedule_events(data, target_month, current_year,
+        month_events.extend(get_schedule_event(data, target_month, current_year,
                                              "Calender_WorldBoss_", "世界Boss"))
-        month_events.extend(get_schedule_events(data, target_month, current_year,
+        month_events.extend(get_schedule_event(data, target_month, current_year,
                                              "Calender_GuildRaid_", "工会突袭"))
 
         # 获取一般活动事件
-        calendar_events = get_calendar_events(data, target_month, current_year)
+        calendar_events = get_calendar_event(data, target_month, current_year)
         month_events.extend(calendar_events)
 
         # 获取邮箱事件
-        mail_events = get_mail_events(data, target_month, current_year)
+        mail_events = get_mail_event(data, target_month, current_year)
         month_events.extend(mail_events)
         
         if month_events:

@@ -1,16 +1,4 @@
-from typing import Any
-from nonebot import on_regex
-from nonebot.exception import FinishedException
-from zhenxun.services.log import logger
-from nonebot.params import RegexGroup
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Event,
-    GroupMessageEvent
-)
-from ..libraries.es_utils import *
-
-es_level_cost = on_regex(r"^es升级消耗(\d+)$", priority=0, block=True)
+from ..libraries.utils import *
 
 
 @es_level_cost.handle()
