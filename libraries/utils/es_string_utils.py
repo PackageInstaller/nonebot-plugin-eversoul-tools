@@ -13,18 +13,6 @@ from ...config import (
 )
 
 
-def format_character_release_date(release_date):
-    """格式化日期
-    
-    Args:
-        release_date: 日期字符串
-        
-    Returns:
-        str: 格式化后的日期
-    """
-    return f"实装日期：{release_date}" if release_date else "实装日期：2023-01-05"
-
-
 def format_number(num):
     '''
     递归实现，精确为最大单位值 + 小数点后一位
@@ -132,7 +120,7 @@ def get_string_character(data, hero_no, special=False):
     Args:
         data: JSON数据字典
         hero_no: 角色编号
-        special: 是否为特殊模式，一般用于主线获取角色名称
+        special: 是否为特殊模式，用于没法直接从string_character中获取文本的情况
     Returns:
         dict: 包含不同语言文本的字典，键为'zh_tw', 'zh_cn', 'kr', 'en'
     """
@@ -194,6 +182,23 @@ def get_string_item(data, item_no):
     return item_name
 
 
+def get_character_cv(data, hero_desc):
+    """获取角色声优信息
+    
+    Args:
+        data: JSON数据字典
+        hero_desc: 角色描述数据
+    
+    Returns:
+        dict: 包含韩语和日语声优信息的字典，键为'kr', 'ja'
+    """
+    cv_kr = get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "???"
+    cv_temp = get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "???"
+    cv_ja = cv_temp if cv_temp != cv_kr and cv_temp != "" else "???"
+    
+    return {"kr": cv_kr, "ja": cv_ja}
+
+
 def get_character_release_date(data, hero_id):
     """获取角色实装日期
     
@@ -202,15 +207,19 @@ def get_character_release_date(data, hero_id):
         hero_id: 角色ID
     
     Returns:
-        str: 实装日期，如果未找到则返回None
+        str: 格式化后的实装日期，如果未找到则返回默认日期（2023-01-05）
     """
+    release_date = None
     for movie in data["promotion_movie"]["json"]:
         if movie.get("hero_check") == hero_id:
             # 只取日期部分，不要时间
             start_date = movie.get("start_date", "").split()[0]
             if start_date and start_date != "2999-12-31":  # 排除默认日期
-                return start_date
-    return None
+                release_date = start_date
+                break
+    
+    # 如果找到日期返回该日期，否则返回默认日期
+    return f"{release_date}" if release_date else "2023-01-05"
 
 
 def get_character_arbeit(data, hero_id):

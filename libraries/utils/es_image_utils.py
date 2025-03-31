@@ -395,7 +395,7 @@ def get_mail_event(data, target_month, current_year):
         sender_name_tw = "未知"
         sender_name_en = "Unknown"
         if sender_sno := mail.get("sender_sno"):
-            sender_data = get_string_character(data, sender_sno)
+            sender_data = get_string_character(data, sender_sno, special=True)
             sender_name_tw = sender_data["zh_tw"]
             sender_name_en = sender_data["en"]
         
@@ -428,7 +428,7 @@ def get_mail_event(data, target_month, current_year):
         
         # 添加贴纸作为banner
         if sender_name_en and sender_name_en != "Unknown":
-            sender_name_en = HERO_NAME_MAPPING.get(sender_name_en, sender_name_en)  # 如果不在映射表中，使用原名
+            sender_name_en = HERO_NAME_MAPPING.get(sender_name_en, sender_name_en)
             sticker_path = f"sticker_love_{sender_name_en}01.png"
             # 检查文件是否存在
             if (STICKER_DIR / sticker_path).exists():

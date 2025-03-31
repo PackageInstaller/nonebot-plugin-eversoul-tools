@@ -118,59 +118,33 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
             hero_name_kr = name_data["kr"]
             hero_name_en = name_data["en"]
 
-        # 获取实装信息
-        release_date = get_character_release_date(data, hero_id)
-        date_info = format_character_release_date(release_date)
-        
-        # 获取双语版本的基础信息
-        race_data = get_string_system(data, hero_data["race_sno"])
-        race_zh_tw, race_zh_cn, race_kr, race_en = race_data["zh_tw"], race_data["zh_cn"], race_data["kr"], race_data["en"]
-
-        hero_class_data = get_string_system(data, hero_data["class_sno"])
-        hero_class_zh_tw = hero_class_data["zh_tw"]
-        hero_class_zh_cn = hero_class_data["zh_cn"]
-        hero_class_kr = hero_class_data["kr"]
-        hero_class_en = hero_class_data["en"]
-
-        sub_class_data = get_string_system(data, hero_data["sub_class_sno"])
-        sub_class_zh_tw = sub_class_data["zh_tw"]
-        sub_class_zh_cn = sub_class_data["zh_cn"]
-        sub_class_kr = sub_class_data["kr"]
-        sub_class_en = sub_class_data["en"]
-
-        stat_data = get_string_system(data, hero_data["stat_sno"])
-        stat_zh_tw = stat_data["zh_tw"]
-        stat_zh_cn = stat_data["zh_cn"]
-        stat_kr = stat_data["kr"]
-        stat_en = stat_data["en"]
-
-        grade_data = get_string_system(data, hero_data["grade_sno"])
-        grade_zh_tw = grade_data["zh_tw"]
-        grade_zh_cn = grade_data["zh_cn"]
-        grade_kr = grade_data["kr"]
-        grade_en = grade_data["en"]
+        # 实装日期
+        character_release_date = get_character_release_date(data, hero_id)
+        # 类型
+        race_zh_tw = get_string_system(data, hero_data["race_sno"])["zh_tw"]
+        # 职业
+        hero_class_zh_tw = get_string_system(data, hero_data["class_sno"])["zh_tw"]
+        # 攻击方式
+        sub_class_zh_tw = get_string_system(data, hero_data["sub_class_sno"])["zh_tw"]
+        # 属性
+        stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_tw"]
+        # 品质
+        grade_zh_tw = get_string_system(data, hero_data["grade_sno"])["zh_tw"]
         
         # 构建消息列表
         messages = []
         nickname_zh_tw = ""
-        nickname_zh_cn = ""
         nickname_kr = ""
-        nickname_en = ""
         if hero_desc and isinstance(hero_desc, dict):
             nick_name_sno = hero_desc.get("nick_name_sno")
             nickname_data = get_string_character(data, nick_name_sno)
             nickname_zh_tw = nickname_data["zh_tw"]
-            nickname_zh_cn = nickname_data["zh_cn"]
             nickname_kr = nickname_data["kr"]
-            nickname_en = nickname_data["en"]
         
         # 繁体中文版本
         basic_info_msg = []
-        portrait_path = get_character_portrait(data, hero_id, hero_name_en) # 获取立绘路径
-        # 配音演员信息
-        cv_kr = get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "???"
-        cv_temp = get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "???"
-        cv_ja = cv_temp if cv_temp != cv_kr else "???"
+        # 立绘
+        portrait_path = get_character_portrait(data, hero_id, hero_name_en) 
         basic_info_msg.append("【基础信息】")
         if portrait_path:
             basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
@@ -193,9 +167,9 @@ if hero_desc and hero_desc.get("birthday") else "???"}
 喜好禮物：{get_character_prefer_gift(data, hero_id)}
 初始打工屬性：{get_character_arbeit(data, hero_id)["initial"]}
 滿級打工屬性：{get_character_arbeit(data, hero_id)["max"]}
-CV_KR：{cv_kr}
-CV_JP：{cv_ja}
-{date_info}
+CV_KR：{get_character_cv(data, hero_desc)["kr"]}
+CV_JP：{get_character_cv(data, hero_desc)["ja"]}
+实装日期：{character_release_date}
 攻擊力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防禦力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
