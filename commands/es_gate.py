@@ -78,7 +78,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                 amount = gate_info.get(f"amount{i}")
                 if item_no and amount:
                     item_name = get_string_item(data, item_no)
-                    rewards.append(f"・ {item_name} x{amount}")
+                    rewards.append(f"・ {item_name['zh_tw']} x{amount}")
             
             if rewards:
                 messages.append("\n【通关奖励】")
@@ -127,7 +127,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                                     if item_no := equip_data.get(f"slot{slot}"):
                                         item_name = get_string_item(data, item_no)
                                         level = equip_data.get(f"level{slot}", 0)
-                                        messages.append(f"  - {item_name} Lv.{level}")
+                                        messages.append(f"  - {item_name['zh_tw']} Lv.{level}")
                         
                         # 检查终极技能优先级
                         if ult_priority := team.get(f"ultimate_autosetting{i}"):

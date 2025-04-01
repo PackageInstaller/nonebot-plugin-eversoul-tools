@@ -61,7 +61,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             if item_no := stage_data.get(item_key):
                 item_name = get_string_item(data, item_no)
                 amount = stage_data.get(amount_key, 0)
-                messages.append(f"固定掉落物品{i}：\n{item_name} x{amount}")
+                messages.append(f"固定掉落物品{i}：\n{item_name['zh_tw']} x{amount}")
 
         # 获取关卡编号
         stage_no = stage_data["no"]

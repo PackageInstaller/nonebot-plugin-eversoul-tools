@@ -28,6 +28,7 @@ from ...config import *
 es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, priority=5, block=True)
 es_ark_info = on_regex(r"^es方舟等级信息(\d+)$", priority=5, block=True)
 es_cash_pack_info = on_command("es突发礼包信息", priority=5, block=True)
+es_single_raid = on_command("es恶灵信息", priority=5, block=True)
 es_gate = on_regex(r"es(自由|人类|野兽|妖精|不死)传送门信息(\d+)", priority=5, block=True)
 es_hero_info = on_command("es角色信息", priority=5, block=True)
 es_hero_list = on_command("es角色列表", priority=5, block=True)
@@ -66,7 +67,7 @@ from .es_string_utils import (
     get_character_lost_item, format_character_story, get_cash_pack, get_string_item, 
     get_formation_type, get_character_skill, get_character_skill_value,
     get_character_similar_name, get_character_release_date, get_character_cv,
-    get_character_keyword_point, get_character_prefer_gift,
+    get_character_keyword_point, get_character_prefer_gift, get_string_ui,
     get_character_keyword_source, get_character_keyword_location,
     get_character_arbeit, get_character_soullink, get_character_story,
     get_character_keyword, get_character_town_object, get_character_town_object_task,

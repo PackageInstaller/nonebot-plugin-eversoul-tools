@@ -55,18 +55,22 @@ def apply_color_to_icon(icon_path: str, color: str) -> bytes:
         return output.getvalue()
     
 
-def get_character_portrait(data, hero_id, hero_name_en):
+def get_character_portrait(data, hero_id, hero_name_en, raid=False):
     """获取角色头像
     
     Args:
         data: JSON数据字典
         hero_id: 角色ID
         hero_name_en: 角色英文名称
+        raid: 是否为恶灵讨伐
     Returns:
         Path: 头像图片路径或None
     """
     # 头像路径
-    portrait_path = str(HERO_DIR / f"{hero_name_en}_512.png")
+    if raid:
+        portrait_path = str(HERO_DIR / f"{HERO_NAME_MAPPING.get(hero_name_en, hero_name_en)}_Raid_512.png")
+    else:
+        portrait_path = str(HERO_DIR / f"{hero_name_en}_512.png")
     if Path(portrait_path).exists():
         return portrait_path
     
@@ -80,7 +84,6 @@ def get_character_portrait(data, hero_id, hero_name_en):
                 if Path(portrait_file).exists():
                     return portrait_file
                 break
-    
     return None
 
 
@@ -416,7 +419,7 @@ def get_mail_event(data, target_month, current_year):
                 amount = mail.get(reward_amount_key, 0)
                 item_name = get_string_item(data, reward_no)
                 if item_name and amount:
-                    rewards.append(f"{item_name} x{amount}")
+                    rewards.append(f"{item_name['zh_tw']} x{amount}")
         
         # 构建事件信息
         event_info = []

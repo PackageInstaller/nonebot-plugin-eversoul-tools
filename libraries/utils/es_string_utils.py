@@ -168,8 +168,16 @@ def get_character_skill_type(data, type_no):
 
 
 def get_string_item(data, item_no):
-    """获取物品名称"""
-    item_name = "未知物品"
+    """
+    获取物品名称
+
+    Args:
+        data: JSON数据字典
+        item_no: 物品编号
+    
+    Returns:
+        dict: 包含不同语言文本的字典，键为'zh_tw', 'zh_cn', 'kr', 'en'
+    """
     # 在Item.json中查找物品
     for item in data["item"]["json"]:
         if item["no"] == item_no:
@@ -178,8 +186,13 @@ def get_string_item(data, item_no):
                 # 在StringItem.json中查找物品名称
                 for string in data["string_item"]["json"]:
                     if string["no"] == name_sno:
-                        return string.get("zh_tw", "未知物品")
-    return item_name
+                        return {
+                            "zh_tw": string.get("zh_tw", ""),
+                            "zh_cn": string.get("zh_cn", ""),
+                            "kr": string.get("kr", ""),
+                            "en": string.get("en", "")
+                        }
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_character_cv(data, hero_desc):
@@ -1048,7 +1061,7 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
                     content_info.append("\n礼包内容：")
                     for item_no, amount in items:
                         item_name = get_string_item(data, item_no)
-                        content_info.append(f"・{item_name} x{amount}")
+                        content_info.append(f"・{item_name['zh_tw']} x{amount}")
                 except Exception as e:
                     logger.error(f"解析礼包内容时发生错误：{e}")
             if content_info:
@@ -1069,48 +1082,6 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
             messages.append("\n".join(package_info))
     
     return messages
-
-
-def get_drop_item(data, group_no):
-    """获取掉落物品信息，并去重保留最高概率
-    
-    Args:
-        data: JSON数据字典
-        group_no: 掉落组编号
-    
-    Returns:
-        list: [(物品名称, 数量, 掉落率)] 的列表
-    """
-    drop_items_dict = {}  # 用字典存储物品信息，键为物品名称
-    
-    # 获取所有符合条件的掉落组
-    for drop_group in data["item_drop_group"]["json"]:
-        if drop_group["no"] <= group_no:
-            item_no = drop_group.get("item_no")
-            amount = drop_group.get("amount", 0)
-            drop_rate = drop_group.get("drop_rate", 0)
-            
-            if item_no:
-                item_name = get_string_item(data, item_no)
-                # 转换掉落率 (1 = 0.001%)
-                rate_percent = drop_rate * 0.001
-                
-                # 如果物品已存在，比较掉落率
-                if item_name in drop_items_dict:
-                    old_amount, old_rate = drop_items_dict[item_name]
-                    # 只有当新的掉落率更高时才更新
-                    if rate_percent > old_rate:
-                        drop_items_dict[item_name] = (amount, rate_percent)
-                else:
-                    # 新物品直接添加
-                    drop_items_dict[item_name] = (amount, rate_percent)
-    
-    # 将字典转换为列表
-    drop_items = [(name, amount, rate) 
-                  for name, (amount, rate) in drop_items_dict.items()]
-    
-    # 按掉落率从高到低排序
-    return sorted(drop_items, key=lambda x: (-x[2], x[0]))
 
 
 def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> list:

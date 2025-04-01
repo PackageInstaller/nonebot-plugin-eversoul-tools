@@ -425,6 +425,9 @@ def load_json_data(group_id=None):
         "soullink": "Soullink.json", # 灵魂链接文本相关
         "soullink_collection": "SoullinkCollection.json", # 灵魂链接数值相关
         "gacha": "Gacha.json", # 抽卡相关
+        "single_raid_boss": "SingleRaidBoss.json", # 恶灵讨伐BOSS
+        "single_raid": "SingleRaid.json", # 恶灵讨伐
+        "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json", # 恶灵讨伐BOSS等级
     }
     
     data = {}

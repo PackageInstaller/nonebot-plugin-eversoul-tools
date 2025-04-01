@@ -112,6 +112,11 @@ async def handle_es_help(bot: Bot, event: Event):
                 <div class="example">示例：es潜能信息</div>
             </div>
             <div class="command">
+                <div class="command-name">12. es恶灵信息 + 恶灵ID</div>
+                <div class="usage">用途：查询恶灵讨伐BOSS的详细信息</div>
+                <div class="example">示例：es恶灵信息66009</div>
+            </div>
+            <div class="command">
                 <div class="command-name">13. es数据源切换 + [review/live]</div>
                 <div class="usage">用途：切换数据源，仅限超管，群主以及管理员可用</div>
                 <div class="example">示例：es数据源切换review</div>
