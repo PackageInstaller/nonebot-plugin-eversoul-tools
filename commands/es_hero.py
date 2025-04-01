@@ -88,7 +88,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                 await es_hero_info.finish(f"未找到角色 {hero_name}")
                 return
         
-        # 查找英雄数据
+        # 查找角色数据
         hero_data = None
         hero_desc = None
         for hero in data["hero"]["json"]:
@@ -96,7 +96,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                 hero_data = hero
                 break
         
-        # 查找英雄描述数据
+        # 查找角色描述数据
         for desc in data["hero_desc"]["json"]:
             if desc["hero_no"] == hero_id:
                 hero_desc = desc
@@ -106,7 +106,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
             await es_hero_info.finish("未找到该角色信息")
             return
             
-        # 获取英雄名称
+        # 获取角色名称
         hero_name_zh_tw = ""
         hero_name_zh_cn = ""
         hero_name_kr = ""

@@ -24,7 +24,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         # 加载数据
         data = load_json_data(group_id)
         
-        # 查找英雄数据
+        # 查找角色数据
         hero_data = None
         for hero in data["hero"]["json"]:
             if hero["hero_id"] == hero_id:
@@ -55,7 +55,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                 raid_data = raid
                 break
         
-        # 获取英雄名称
+        # 获取角色名称
         hero_name_zh_tw = ""
         hero_name_zh_cn = ""
         hero_name_kr = ""

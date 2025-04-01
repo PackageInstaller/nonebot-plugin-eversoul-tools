@@ -310,9 +310,9 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
                         if banner_raw:
                             banner_path = f"{banner_raw}_ZH_TW.png"
                         break
-        # 恶灵讨伐类型，从schedule_key提取英雄名生成贴纸路径                        
+        # 恶灵讨伐类型，从schedule_key提取角色名生成贴纸路径                        
         elif schedule_key.startswith("Calender_SingleRaid_"):
-            # 从schedule_key中提取英雄名称：Calender_SingleRaid_HeroName
+            # 从schedule_key中提取角色名称：Calender_SingleRaid_HeroName
             parts = schedule_key.split('_')
             if len(parts) > 2:
                 hero_name = parts[-1]  # 获取最后一部分，保持原始大小写
@@ -322,9 +322,9 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
                 # 检查文件是否存在
                 if (STICKER_DIR / sticker_path).exists():
                     banner_path = sticker_path
-        # 联合作战类型，从schedule_key提取英雄名生成徽章路径
+        # 联合作战类型，从schedule_key提取角色名生成徽章路径
         elif schedule_key.startswith("Calender_EdenAlliance_"):
-            # 从schedule_key中提取英雄名称：Calender_EdenAlliance_HeroName
+            # 从schedule_key中提取角色名称：Calender_EdenAlliance_HeroName
             parts = schedule_key.split('_')
             if len(parts) > 2:
                 hero_name = parts[-1].lower()  # 获取最后一部分并转为小写

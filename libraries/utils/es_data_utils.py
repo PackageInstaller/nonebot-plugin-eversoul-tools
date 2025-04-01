@@ -64,7 +64,7 @@ def sync_aliases(file1: Path, file2: Path) -> None:
     aliases1 = {hero["hero_id"]: set(hero.get("aliases", [])) for hero in data1["names"] if "hero_id" in hero}
     aliases2 = {hero["hero_id"]: set(hero.get("aliases", [])) for hero in data2["names"] if "hero_id" in hero}
 
-    # 找出需要同步的英雄
+    # 找出需要同步的角色
     for hero_id in set(aliases1.keys()) & set(aliases2.keys()):
         if len(aliases1[hero_id]) != len(aliases2[hero_id]):
             # 如果别名数量不同，使用数量较多的那个
@@ -125,7 +125,7 @@ def generate_aliases() -> None:
         live_monster_aliases = DATA_DIR / "live_monster_aliases.yaml"
         live_hero_count, live_monster_count = process_json_files(live_json_path, live_hero_aliases, live_monster_aliases)
         if live_hero_count > 0 or live_monster_count > 0:
-            logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个英雄条目, {live_monster_count} 个怪物条目")
+            logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_monster_count} 个怪物条目")
         else:
             logger.info("请检查Live版本JSON文件路径配置是否正确")
     except Exception as e:
@@ -136,7 +136,7 @@ def generate_aliases() -> None:
         review_monster_aliases = DATA_DIR / "review_monster_aliases.yaml"
         review_hero_count, review_monster_count = process_json_files(review_json_path, review_hero_aliases, review_monster_aliases)
         if review_hero_count > 0 or review_monster_count > 0:
-            logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个英雄条目, {review_monster_count} 个怪物条目")
+            logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_monster_count} 个怪物条目")
         else:
             logger.info("请检查Review版本JSON文件路径配置是否正确")
     except Exception as e:
@@ -154,11 +154,11 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
     
     Args:
         json_path: JSON文件目录
-        hero_output_file: 英雄别名输出文件
+        hero_output_file: 角色别名输出文件
         monster_output_file: 怪物别名输出文件
     
     Returns:
-        Tuple[int, int]: 生成的英雄数量和怪物数量
+        Tuple[int, int]: 生成的角色数量和怪物数量
     """
     if not json_path.exists():
         logger.error(f"JSON路径不存在: {json_path}")

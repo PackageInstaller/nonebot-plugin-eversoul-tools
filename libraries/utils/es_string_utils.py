@@ -445,7 +445,7 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
         data: JSON数据字典
         skill_no: 技能编号
         is_support: 是否为支援技能
-        hero_data: 英雄数据（用于获取辅助伙伴技能信息）
+        hero_data: 角色数据（用于获取辅助伙伴技能信息）
     
     Returns:
         tuple: (技能名称, 技能描述列表, 技能图标信息, 是否为支援技能)
@@ -1096,7 +1096,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
         if not hero_keys:
             continue  # 如果没有找到包含目标角色的槽位，跳过此链接
         
-        # 收集所有英雄ID
+        # 收集所有角色ID
         hero_ids = []
         for key in link.keys():
             if key.startswith("group_hero") and link[key] > 0:
@@ -1223,7 +1223,7 @@ def get_character_signature(data, hero_id):
     
     Args:
         data: JSON数据字典
-        hero_id: 英雄ID
+        hero_id: 角色ID
     
     Returns:
         tuple: (遗物名称, 遗物技能名称, 遗物简介, 遗物技能描述列表)
@@ -1247,7 +1247,7 @@ def get_character_signature(data, hero_id):
     skill_descriptions = []
     signature_bg_path = ""
     
-    # 在Signature.json中查找对应英雄的遗物
+    # 在Signature.json中查找对应角色的遗物
     for signature in data["signature"]["json"]:
         if signature["hero_sno"] == hero_id:
             signature_data = signature

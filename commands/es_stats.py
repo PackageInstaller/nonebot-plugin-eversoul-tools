@@ -39,7 +39,7 @@ async def handle_es_stats(bot: Bot, event: Event):
                 char_name_kr = char_name_data["kr"]
                 char_name_en = char_name_data["en"]
                 
-                # 查找英雄描述数据
+                # 查找角色描述数据
                 hero_desc = None
                 for desc in data["hero_desc"]["json"]:
                     if desc["hero_no"] == hero_id:
