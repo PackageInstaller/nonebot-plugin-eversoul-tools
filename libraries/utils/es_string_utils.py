@@ -205,10 +205,10 @@ def get_character_cv(data, hero_desc):
     Returns:
         dict: 包含韩语和日语声优信息的字典，键为'kr', 'ja'
     """
-    cv_kr = get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "???"
-    cv_temp = get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "???"
-    cv_ja = cv_temp if cv_temp != cv_kr and cv_temp != "" else "???"
-    
+    cv_kr = get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "？？？"
+    cv_ja = get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "？？？"
+    cv_ja = cv_ja if cv_ja != cv_kr and cv_ja != "" else "？？？"
+
     return {"kr": cv_kr, "ja": cv_ja}
 
 
@@ -252,7 +252,7 @@ def get_character_arbeit(data, hero_id):
             level_data.append(level)
     
     if not level_data:
-        return {"initial": "???", "max": "???"}
+        return {"initial": "？？？", "max": "？？？"}
     
     # 按等级排序
     level_data.sort(key=lambda x: x.get("level", 0))
@@ -313,7 +313,7 @@ def get_character_prefer_gift(data, hero_id):
                                     break
                         break
     
-    return "、".join(gift_items) if gift_items else "???"
+    return "、".join(gift_items) if gift_items else "？？？"
 
 
 def get_character_similar_name(query, alias_map):
@@ -380,7 +380,7 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
         for buff in data["skill_buff"]["json"]:
             if buff["no"] == value_id:
                 return str(int(abs(buff["duration"])))  # 取绝对值
-        return "???"
+        return "？？？"
 
     # 从SkillCode.json中查找数值
     for code in data["skill_code"]["json"]:
@@ -423,7 +423,7 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
                 return f"{rounded_value}%"
             # 大于20的值按整数处理
             return str(int(abs_value))
-    return "???"
+    return "？？？"
 
 
 def process_skill_description(data, description):

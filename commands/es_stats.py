@@ -48,9 +48,9 @@ async def handle_es_stats(bot: Bot, event: Event):
                 
                 # 获取身高或体重信息
                 stat_key = "height" if stat_type == "身高" else "weight"
-                stat_value = hero_desc.get(stat_key, "???") if hero_desc else "???"
+                stat_value = hero_desc.get(stat_key, "？？？") if hero_desc else "？？？"
                 
-                if stat_value != "???":
+                if stat_value != "？？？":
                     stats_info.append((char_name_zh_tw, stat_value))
                 else:
                     unknown_stats.append(char_name_zh_tw)

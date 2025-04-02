@@ -153,17 +153,17 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
 攻擊方式：{sub_class_zh_tw}
 屬性：{stat_zh_tw}
 品質：{grade_zh_tw}
-隸屬：{get_string_character(data, hero_desc.get("union_sno", 0))["zh_tw"] if hero_desc else "???"}
-身高：{hero_desc.get("height", "???") if hero_desc else "???"}cm
-體重：{hero_desc.get("weight", "???") if hero_desc else "???"}kg
-生日：{str(hero_desc.get("birthday", "???")).zfill(4)[:2]\
-if hero_desc else "???"}.{str(hero_desc.get("birthday", "???")).zfill(4)[2:]\
-if hero_desc and hero_desc.get("birthday") else "???"}
-星座：{get_string_character(data, hero_desc.get("constellation_sno", 0))["zh_tw"] if hero_desc else "???"}
-興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0))["zh_tw"] if hero_desc else "???"}
-特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0))["zh_tw"] if hero_desc else "???"}
-喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0))["zh_tw"] if hero_desc else "???"}
-討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0))["zh_tw"] if hero_desc else "???"}
+隸屬：{get_string_character(data, hero_desc.get("union_sno", 0))["zh_tw"] if hero_desc else "？？？"}
+身高：{hero_desc.get("height", "？？？") if hero_desc else "？？？"}cm
+體重：{hero_desc.get("weight", "？？？") if hero_desc else "？？？"}kg
+生日：{str(hero_desc.get("birthday", "？？？")).zfill(4)[:2]\
+if hero_desc else "？？？"}.{str(hero_desc.get("birthday", "？？？")).zfill(4)[2:]\
+if hero_desc and hero_desc.get("birthday") else "？？？"}
+星座：{get_string_character(data, hero_desc.get("constellation_sno", 0))["zh_tw"] if hero_desc else "？？？"}
+興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0))["zh_tw"] if hero_desc else "？？？"}
+特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0))["zh_tw"] if hero_desc else "？？？"}
+喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0))["zh_tw"] if hero_desc else "？？？"}
+討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0))["zh_tw"] if hero_desc else "？？？"}
 喜好禮物：{get_character_prefer_gift(data, hero_id)}
 初始打工屬性：{get_character_arbeit(data, hero_id)["initial"]}
 滿級打工屬性：{get_character_arbeit(data, hero_id)["max"]}

@@ -327,7 +327,7 @@ names:
     kr_name: 이나
     en_name: Ina
     ja_name: イナ
-    aliases: []
+    aliases: [依娜]
     hero_id: 3020
   - zh_tw_name: 勒內
     zh_cn_name: 勒内
@@ -586,7 +586,7 @@ names:
     kr_name: 한울
     en_name: Hanul
     ja_name: ハンウル
-    aliases: [大秋秋, 倚天剑, 越女剑, 墨剑, 白虎, 哈吉羽, 天剑, 厉飞雨, 女飞剑]
+    aliases: [大秋秋, 天剑, 越女剑, 哈吉羽, 白虎, 厉飞雨, 倚天剑, 墨剑, 历飞雨, 女飞剑]
     hero_id: 5040
   - zh_tw_name: 布利基特
     zh_cn_name: 布利基特
