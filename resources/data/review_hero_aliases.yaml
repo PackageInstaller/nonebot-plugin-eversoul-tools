@@ -586,7 +586,7 @@ names:
     kr_name: 한울
     en_name: Hanul
     ja_name: ハンウル
-    aliases: [大秋秋, 天剑, 越女剑, 哈吉羽, 白虎, 厉飞雨, 倚天剑, 墨剑, 历飞雨, 女飞剑]
+    aliases: [越女剑, 大秋秋, 天剑, 女飞剑, 韩语, 厉飞雨, 历飞雨, 白虎, 哈吉羽, 倚天剑, 墨剑]
     hero_id: 5040
   - zh_tw_name: 布利基特
     zh_cn_name: 布利基特
@@ -642,7 +642,7 @@ names:
     kr_name: 이차원의 정수
     en_name: Essence of Another Dimension
     ja_name: 異次元の精髄
-    aliases: [异精, 異精, 紫球]
+    aliases: [紫球, 遗精, 异精, 異精]
     hero_id: 6500
   - zh_tw_name: 凱瑟琳（光輝）
     zh_cn_name: 凯瑟琳（光辉）
