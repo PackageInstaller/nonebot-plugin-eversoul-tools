@@ -117,6 +117,17 @@ def sync_aliases(file1: Path, file2: Path) -> None:
 
 def generate_aliases() -> None:
     """生成别名文件"""
+    # 检查配置是否存在
+    if plugin_config.eversoul_live_path is None:
+        logger.error("未配置 eversoul_live_path，无法生成Live版本别名文件")
+        logger.error("请在 .env 文件中添加配置项：eversoul_live_path=\"数据文件路径\"")
+        return
+        
+    if plugin_config.eversoul_review_path is None:
+        logger.error("未配置 eversoul_review_path，无法生成Review版本别名文件")
+        logger.error("请在 .env 文件中添加配置项：eversoul_review_path=\"数据文件路径\"")
+        return
+
     live_json_path = Path(plugin_config.eversoul_live_path)
     review_json_path = Path(plugin_config.eversoul_review_path)
     
@@ -361,10 +372,22 @@ def load_json_data(group_id=None):
     config = get_group_data_source(group_id)
     json_path = config["json_path"]
     
+    # 检查json_path是否有效
+    if not json_path:
+        logger.error("数据源路径未配置，无法加载游戏数据")
+        logger.error("请在配置文件中设置正确的eversoul_live_path和eversoul_review_path")
+        return {"hero": {"json": []}}  # 返回空数据
+    
     # 确保json_path是Path对象
     if not isinstance(json_path, Path):
         json_path = Path(json_path)
-
+    
+    # 检查路径是否存在
+    if not json_path.exists():
+        logger.error(f"数据源路径不存在: {json_path}")
+        logger.error("请检查配置的路径是否正确")
+        return {"hero": {"json": []}}  # 返回空数据
+    
     json_files = {
         "hero": "Hero.json", # 角色
         "hero_option": "HeroOption.json", # 角色潜能
@@ -447,8 +470,20 @@ def load_data_source_config():
     
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     
+    # 检查配置
+    has_live_path = plugin_config.eversoul_live_path is not None
+    has_review_path = plugin_config.eversoul_review_path is not None
+    live_path = plugin_config.eversoul_live_path or ""
+    review_path = plugin_config.eversoul_review_path or ""
+    
+    # 检查是否有路径变更
+    config_updated = False
+    
     # 重置配置为默认值
-    CURRENT_DATA_SOURCE = {"default": DEFAULT_CONFIG.copy()}
+    default_config = DEFAULT_CONFIG.copy()
+    # 确保json_path为字符串而不是Path对象，避免None值错误
+    default_config["json_path"] = live_path if has_live_path else ""
+    CURRENT_DATA_SOURCE = {"default": default_config}
     
     file_config_loaded = False
     if DATA_SOURCE_CONFIG.exists():
@@ -459,17 +494,37 @@ def load_data_source_config():
             if config:
                 # 确保配置中有default键
                 if "default" not in config:
-                    config["default"] = DEFAULT_CONFIG.copy()
+                    config["default"] = default_config.copy()
+                    config_updated = True
+                elif has_live_path and (not config["default"].get("json_path") or config["default"].get("json_path") == ""):
+                    # 如果配置文件中的路径为空，但现在有了配置路径，则更新
+                    if config["default"].get("type") == "live":
+                        config["default"]["json_path"] = live_path
+                        config_updated = True
+                    elif config["default"].get("type") == "review":
+                        config["default"]["json_path"] = review_path
+                        config_updated = True
                 
                 # 明确转换路径字符串为Path对象
                 for group_id, group_config in config.items():
                     # 确保group_id是字符串
                     group_id_str = str(group_id)
                     
+                    # 检查并可能更新路径
+                    if (not group_config.get("json_path") or group_config.get("json_path") == ""):
+                        if group_config.get("type") == "live" and has_live_path:
+                            group_config["json_path"] = live_path
+                            config_updated = True
+                        elif group_config.get("type") == "review" and has_review_path:
+                            group_config["json_path"] = review_path
+                            config_updated = True
+                    
                     if "json_path" in group_config:
                         # 确保json_path是Path对象
                         if not isinstance(group_config["json_path"], Path):
-                            group_config["json_path"] = Path(group_config["json_path"])
+                            # 如果json_path为空字符串，保持为空字符串
+                            if group_config["json_path"]:
+                                group_config["json_path"] = Path(group_config["json_path"])
                     
                     if "hero_alias_file" in group_config:
                         # 确保hero_alias_file是Path对象
@@ -484,6 +539,15 @@ def load_data_source_config():
                     CURRENT_DATA_SOURCE[group_id_str] = group_config
                 
                 file_config_loaded = True
+                
+                # 如果有更新，保存配置
+                if config_updated:
+                    try:
+                        save_data_source_config(CURRENT_DATA_SOURCE)
+                        logger.info("检测到配置路径更新，已更新配置文件")
+                    except Exception as e:
+                        logger.error(f"更新配置文件失败: {e}")
+                
         except Exception as e:
             logger.error(f"加载数据源配置文件出错: {e}")
     
@@ -501,21 +565,23 @@ def load_data_source_config():
             if "type" in group_settings:
                 CURRENT_DATA_SOURCE[group_id]["type"] = group_settings["type"]
             
+            # 处理json_path
+            json_path = ""
             if CURRENT_DATA_SOURCE[group_id]["type"] == "live":
-                if hasattr(plugin_config, 'eversoul_live_path'):
-                    json_path = plugin_config.eversoul_live_path
-                else:
-                    json_path = str(CURRENT_DATA_SOURCE["default"]["json_path"])
+                if has_live_path:
+                    json_path = live_path
             else:  # review
-                if hasattr(plugin_config, 'eversoul_review_path'):
-                    json_path = plugin_config.eversoul_review_path
-                else:
-                    json_path = str(CURRENT_DATA_SOURCE["default"]["json_path"]).replace("live_jsons", "review_jsons")
+                if has_review_path:
+                    json_path = review_path
                 
             if "json_path" in group_settings:
                 json_path = group_settings["json_path"]
                 
-            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(json_path)
+            # 只有在json_path不为空时才转换为Path对象
+            if json_path:
+                CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(json_path)
+            else:
+                CURRENT_DATA_SOURCE[group_id]["json_path"] = ""
             
             alias_type = CURRENT_DATA_SOURCE[group_id]["type"]
             CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = DATA_DIR / f"{alias_type}_hero_aliases.yaml"

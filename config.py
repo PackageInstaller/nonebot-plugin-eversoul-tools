@@ -1,13 +1,35 @@
 from matplotlib.font_manager import FontProperties
 from pathlib import Path
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
+from typing import ClassVar
 from nonebot import get_driver, get_plugin_config
+from nonebot.log import logger
+import sys
+
 driver = get_driver()
 
 class Config(BaseModel):
     # Eversoul相关配置项，live和review数据源
-    eversoul_live_path: str
-    eversoul_review_path: str
+    eversoul_live_path: str | None = None
+    eversoul_review_path: str | None = None
+    _warned: ClassVar[bool] = False
+    
+    @model_validator(mode='after')
+    def check_paths(self):
+        if not Config._warned:
+            if self.eversoul_live_path is None:
+                logger.error("eversoul_live_path 未配置，这会导致功能无法正常使用。")
+                logger.error("请在配置文件中添加 eversoul_live_path 配置项。")
+            
+            if self.eversoul_review_path is None:
+                logger.warning("eversoul_review_path 未配置，这会导致部分功能无法正常使用。")
+                logger.warning("请在配置文件中添加 eversoul_review_path 配置项。")
+            
+            Config._warned = True
+        
+        return self
+
+
 
 plugin_config = get_plugin_config(Config)
 
@@ -108,18 +130,18 @@ RESOURCES_DIR = Path(__file__).parent / "resources"
 DATA_DIR = RESOURCES_DIR / "data"
 DATA_SOURCE_CONFIG = DATA_DIR / "data_source_config.yaml"
 
-# 默认配置 - 使用配置文件中的路径
+# 默认配置 - 安全处理None值
 DEFAULT_CONFIG = {
     "type": "live",
-    "json_path": str(Path(plugin_config.eversoul_live_path)),  # 使用配置文件中的路径
+    "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
     "hero_alias_file": DATA_DIR / "live_hero_aliases.yaml"
 }
 
-# 全局变量来存储当前数据源配置
+# 全局变量来存储当前数据源配置 - 安全处理None值
 CURRENT_DATA_SOURCE = {
     "default": {
         "type": "live", 
-        "json_path": Path(plugin_config.eversoul_live_path),  # 使用配置文件中的路径
+        "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
         "hero_alias_file": DATA_DIR / "live_hero_aliases.yaml"
     }
 }

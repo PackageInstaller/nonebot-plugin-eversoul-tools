@@ -1,0 +1,2 @@
+matplotlib
+nonebot_plugin_htmlrender
