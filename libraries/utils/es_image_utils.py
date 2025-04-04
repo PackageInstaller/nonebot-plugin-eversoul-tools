@@ -134,20 +134,104 @@ def get_character_illustration(data, hero_id):
     
     # 查找匹配的图片
     images = []
-    for file in Path(image_path).glob('*_2048.*'):
-        base_name = file.stem[:-5]  # 移除 _2048 后缀
-        if base_name in costume_info:
-            # 构建 "角色名_立绘名" 的格式
-            costume_name_zh_tw, costume_name_zh_cn, costume_name_kr, costume_name_en, condition_tw,\
-            condition_cn, condition_kr, condition_en = costume_info[base_name]
-            display_name_tw = f"{costume_name_zh_tw}"
-            display_name_cn = f"{costume_name_zh_cn}"
-            display_name_kr = f"{costume_name_kr}"
-            display_name_en = f"{costume_name_en}"
-            images.append((file, display_name_tw, display_name_cn, display_name_kr, display_name_en,\
-                            condition_tw, condition_cn, condition_kr, condition_en))
+    result_dict = {} 
+    old_design_suffix = " (1)"  # 旧设立绘的后缀
     
-    return sorted(images)  # 排序以保持顺序一致
+    # 列出所有可能的立绘文件
+    all_files = list(Path(image_path).glob('*_2048*.*'))
+    
+    # 先处理常规立绘
+    for file in all_files:
+        file_stem = file.stem
+        
+        # 跳过旧设文件，稍后处理
+        if " (1)" in file_stem:
+            continue
+            
+        # 提取基础名称，移除_2048后缀
+        if "_2048" in file_stem:
+            base_name = file_stem.split("_2048")[0]
+            
+            # 处理常规立绘
+            if base_name in costume_info:
+                # 构建 "角色名_立绘名" 的格式
+                costume_name_zh_tw, costume_name_zh_cn, costume_name_kr, costume_name_en, condition_tw,\
+                condition_cn, condition_kr, condition_en = costume_info[base_name]
+                display_name_tw = f"{costume_name_zh_tw}"
+                display_name_cn = f"{costume_name_zh_cn}"
+                display_name_kr = f"{costume_name_kr}"
+                display_name_en = f"{costume_name_en}"
+                
+                # 添加到结果字典，键为立绘基础名称
+                if base_name not in result_dict:
+                    result_dict[base_name] = []
+                
+                # 添加原始立绘
+                result_dict[base_name].append((file, display_name_tw, display_name_cn, display_name_kr, display_name_en,\
+                                condition_tw, condition_cn, condition_kr, condition_en))
+                
+                # 检查是否存在对应的旧设立绘 (格式: 基础名称_2048 (1).后缀)
+                old_design_file = file.parent / f"{base_name}_2048{old_design_suffix}{file.suffix}"
+                
+                if old_design_file.exists():
+                    # 添加旧设立绘
+                    display_name_tw = f"{costume_name_zh_tw}_旧设"
+                    display_name_cn = f"{costume_name_zh_cn}_旧设"
+                    display_name_kr = f"{costume_name_kr}_旧设"
+                    display_name_en = f"{costume_name_en}_old"
+                    
+                    # 解锁条件设置为"尽请期待"
+                    old_condition_tw = "敬請期待"
+                    old_condition_cn = "尽请期待"
+                    old_condition_kr = "기대해 주세요"
+                    old_condition_en = "Stay tuned"
+                    
+                    # 将旧设立绘添加到结果列表中（在原始立绘后面）
+                    result_dict[base_name].append((old_design_file, display_name_tw, display_name_cn, display_name_kr, display_name_en,\
+                                    old_condition_tw, old_condition_cn, old_condition_kr, old_condition_en))
+    
+    # 处理独立的旧设立绘文件（没有对应的常规立绘）
+    for file in all_files:
+        file_stem = file.stem
+        # 检查是否是旧设立绘
+        if " (1)" in file_stem and "_2048" in file_stem:
+            # 提取原始基础名称，要去掉_2048和 (1)
+            original_base_name = file_stem.split("_2048")[0]
+            
+            # 如果这个基础名称已经处理过，跳过
+            if original_base_name in result_dict:
+                continue
+                
+            # 查找原始立绘的信息
+            if original_base_name in costume_info:
+                costume_name_zh_tw, costume_name_zh_cn, costume_name_kr, costume_name_en, _, _, _, _ = costume_info[original_base_name]
+                
+                # 添加"_旧设"标记
+                display_name_tw = f"{costume_name_zh_tw}_旧设"
+                display_name_cn = f"{costume_name_zh_cn}_旧设"
+                display_name_kr = f"{costume_name_kr}_旧设"
+                display_name_en = f"{costume_name_en}_old"
+                
+                # 解锁条件设置为"尽请期待"
+                condition_tw = "敬請期待"
+                condition_cn = "尽请期待"
+                condition_kr = "기대해 주세요"
+                condition_en = "Stay tuned"
+                
+                # 创建新的结果条目
+                if original_base_name not in result_dict:
+                    result_dict[original_base_name] = []
+                    
+                # 添加旧设立绘
+                result_dict[original_base_name].append((file, display_name_tw, display_name_cn, display_name_kr, display_name_en,\
+                                condition_tw, condition_cn, condition_kr, condition_en))
+    
+    # 将结果字典转换为列表，按基础名称排序，但保持每个基础名称内的顺序
+    result_dict_sorted = dict(sorted(result_dict.items()))
+    for base_name, entries in result_dict_sorted.items():
+        images.extend(entries)
+    
+    return images  # 不对整个列表进行排序，保持原始立绘在前，旧设立绘在后
 
 
 def get_character_affection_cg(data, hero_id):
