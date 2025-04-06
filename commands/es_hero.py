@@ -71,7 +71,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                                     aliases.append(name)
                 
                 # 构建响应消息
-                response_parts = ["未找到角色 " + hero_name + "\n您是否想查询："]
+                response_parts = ["未找到角色 " + "\n您是否想查询："]
                 
                 # 添加各语言名称
                 for lang, name in main_names.items():
@@ -85,7 +85,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                 await es_hero_info.finish("\n".join(response_parts))
                 return
             else:
-                await es_hero_info.finish(f"未找到角色 {hero_name}")
+                await es_hero_info.finish(f"未找到角色")
                 return
         
         # 查找角色数据

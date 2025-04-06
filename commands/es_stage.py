@@ -3,6 +3,10 @@ from ..libraries.utils import *
 
 @es_stage_info.handle()
 async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()):
+    # 创建图像资源
+    fig = None
+    buf = None
+    
     try:
         # 获取参数文本
         stage_text = args.extract_plain_text().strip()
@@ -34,8 +38,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         stage_data = main_stage
         
         if not main_stage:
-            await es_stage_info.finish(f"未找到关卡 {area_no}-{stage_no} 的信息")
-            return
+            await es_stage_info.finish(f"未找到对应的关卡信息")
         
         # 构建消息
         messages = []
@@ -66,10 +69,6 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         # 获取关卡编号
         stage_no = stage_data["no"]
 
-        # 获取主线突发礼包信息
-        cash_item_messages = get_cash_pack(data, "stage", stage_data)
-        messages.extend(cash_item_messages)
-
         # 查找敌方队伍信息
         battle_teams = []
         for battle in data["stage_battle"]["json"]:
@@ -81,11 +80,30 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             # 按team_no排序
             battle_teams.sort(key=lambda x: x.get("team_no", 0))
             
+            # 首先收集所有队伍中所有角色的名称，找出最长的名称长度
+            max_name_length = 0
+            hero_infos = []
+            
+            # 计算字符串的显示宽度，中文字符算两个宽度
+            def get_display_width(s):
+                width = 0
+                for char in s:
+                    if '\u4e00' <= char <= '\u9fff':  # 中文字符范围
+                        width += 2
+                    else:
+                        width += 1
+                return width
+            
+            # 使用显示宽度填充字符串到指定宽度
+            def pad_string(s, width):
+                current_width = get_display_width(s)
+                if current_width < width:
+                    return s + ' ' * (width - current_width)
+                return s
+            
+            # 收集所有角色信息
             for team in battle_teams:
-                team_info = [f"敌方队伍 {team.get('team_no', '?')}："]
-                team_info.append(f"阵型：{get_formation_type(team.get('formation_type'))}")
-                
-                # 添加每个角色的信息
+                team_heroes = []
                 for i in range(1, 6):  # 检查5个角色位置
                     hero_key = f"hero_no{i}"
                     grade_key = f"hero_grade{i}"
@@ -100,35 +118,127 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                         
                         level = team.get(level_key, 0)
                         
-                        team_info.append(f"位置{i}：{hero_name_zh_tw} {grade_name_zh_tw} {level}级")
-                
-                messages.append("\n".join(team_info))
-
-        # 发送合并转发消息
-        forward_msgs = []
-        for msg in messages:
-            forward_msgs.append({
-                "type": "node",
-                "data": {
-                    "name": "Stage Info",
-                    "uin": bot.self_id,
-                    "content": msg
-                }
-            })
-        
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.user_id,
-                messages=forward_msgs
-            )
+                        # 获取显示宽度
+                        display_width = get_display_width(hero_name_zh_tw)
+                        
+                        # 更新最长名称显示宽度
+                        max_name_length = max(max_name_length, display_width)
+                        
+                        # 保存角色信息
+                        team_heroes.append({
+                            "position": i,
+                            "name": hero_name_zh_tw,
+                            "grade": grade_name_zh_tw,
+                            "level": level,
+                            "name_width": display_width
+                        })
+                hero_infos.append({"team_no": team.get("team_no", "?"), "formation": get_formation_type(team.get("formation_type")), "heroes": team_heroes})
             
+            for team_info in hero_infos:
+                team_text = [f"敌方队伍 {team_info['team_no']}："]
+                team_text.append(f"阵型：{team_info['formation']}")
+                
+                for hero in team_info["heroes"]:
+                    # 使用固定宽度的角色名栏位
+                    pos_text = f"位置{hero['position']}："
+                    name_column_width = max_name_length + 2  # 额外添加空间确保对齐
+                    
+                    # 计算需要的空格数
+                    spaces_needed = name_column_width - hero["name_width"]
+                    spacer = " " * spaces_needed
+                    
+                    # 构建对齐的文本行
+                    team_text.append(f"{pos_text}{hero['name']}{spacer}{hero['grade']}  LV.{hero['level']}")
+                
+                messages.append("\n".join(team_text))
+
+        # 使用matplotlib绘制图片
+        all_text = "\n\n".join(messages)
+        
+        # 设置字体
+        font_prop = CUSTOM_FONT
+        
+        # 计算图像大小
+        text_lines = all_text.split('\n')
+        max_length = max(len(line) for line in text_lines)
+        fig_width = max(max_length * 0.12, 8)  # 确保最小宽度
+        fig_height = max(len(text_lines) * 0.25, 5)  # 确保最小高度
+        
+        # 创建图像
+        fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+        ax.axis('off')  # 隐藏坐标轴
+        fig.patch.set_facecolor('white')  # 设置背景颜色为白色
+        
+        # 尝试渲染每行文本，确保对齐
+        y_position = 0.95
+        line_height = 0.025  # 行高
+        
+        # 找出每队中的最大位置文本长度
+        for message in messages:
+            lines = message.split('\n')
+            ax.text(0.05, y_position, lines[0], fontsize=14, ha='left', va='top', 
+                   fontproperties=font_prop, transform=ax.transAxes)
+            y_position -= line_height
+            
+            if len(lines) > 1:
+                ax.text(0.05, y_position, lines[1], fontsize=14, ha='left', va='top', 
+                       fontproperties=font_prop, transform=ax.transAxes)
+                y_position -= line_height
+            
+            # 处理位置行，确保对齐
+            position_x = 0.05   # 初始位置
+            name_x = 0.15       # 名称开始位置
+            attr_x = 0.35       # 属性开始位置 - 减少与名称的距离
+            
+            for i in range(2, len(lines)):
+                line = lines[i]
+                parts = line.split('：', 1)
+                
+                if len(parts) == 2 and parts[0].startswith('位置'):
+                    # 绘制位置标签
+                    ax.text(position_x, y_position, parts[0] + '：', fontsize=14, ha='left', va='top', 
+                           fontproperties=font_prop, transform=ax.transAxes)
+                    
+                    # 分解名称和属性
+                    name_attr = parts[1].strip()
+                    name_end_idx = 0
+                    # 找出名称结束的位置（连续空格开始的地方）
+                    for j in range(len(name_attr)):
+                        if name_attr[j] == ' ' and j < len(name_attr)-1 and name_attr[j+1] == ' ':
+                            name_end_idx = j
+                            break
+                    
+                    if name_end_idx > 0:
+                        name = name_attr[:name_end_idx].strip()
+                        attr = name_attr[name_end_idx:].strip()
+                        
+                        # 绘制名称和属性，分开放置以确保对齐
+                        ax.text(name_x, y_position, name, fontsize=14, ha='left', va='top', 
+                               fontproperties=font_prop, transform=ax.transAxes)
+                        ax.text(attr_x, y_position, attr, fontsize=14, ha='left', va='top', 
+                               fontproperties=font_prop, transform=ax.transAxes)
+                    else:
+                        # 如果无法分解，则直接放置整行
+                        ax.text(name_x, y_position, name_attr, fontsize=14, ha='left', va='top', 
+                               fontproperties=font_prop, transform=ax.transAxes)
+                else:
+                    # 非位置行，直接放置
+                    ax.text(position_x, y_position, line, fontsize=14, ha='left', va='top', 
+                           fontproperties=font_prop, transform=ax.transAxes)
+                
+                y_position -= line_height
+            
+            # 每个队伍之间增加额外间距
+            y_position -= line_height
+        
+        # 保存图像到内存
+        buf = io.BytesIO()
+        plt.savefig(buf, format='webp', dpi=100, bbox_inches='tight', transparent=False, 
+                   pil_kwargs={'quality': 30})
+        buf.seek(0)
+        
+        # 发送图片
+        await es_stage_info.finish(MessageSegment.image(buf))
 
     except Exception as e:
         if not isinstance(e, FinishedException):
@@ -142,4 +252,20 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_stage_info.finish(f"处理关卡信息时发生错误: {str(e)}")
+            await es_stage_info.finish(f"处理关卡信息时发生错误: {str(e)}\n请联系机器人开发者反馈")
+    finally:
+        # 在finally块中安全释放资源
+        if buf:
+            try:
+                buf.close()
+            except:
+                pass
+        if fig:
+            try:
+                plt.close(fig)
+            except:
+                pass
+        try:
+            plt.close('all')
+        except:
+            pass

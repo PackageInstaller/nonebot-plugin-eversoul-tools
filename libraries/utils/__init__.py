@@ -3,7 +3,9 @@ Eversoul工具模块 - 功能集合
 """
 import re
 import os
+import io
 import yaml
+import matplotlib.pyplot as plt
 from typing import Any, Tuple
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
