@@ -62,9 +62,15 @@ async def handle_es_help(bot: Bot, event: Event):
             </div>
             
             <div class="command">
-                <div class="command-name">es身高/体重排行</div>
-                <div class="usage">用途：查询身高/体重排行</div>
+                <div class="command-name">es身高排行</div>
+                <div class="usage">用途：查询身高排行</div>
                 <div class="example">示例：es身高排行</div>
+            </div>
+
+            <div class="command">
+                <div class="command-name">es体重排行</div>
+                <div class="usage">用途：查询体重排行</div>
+                <div class="example">示例：es体重排行</div>
             </div>
             
             <div class="command">

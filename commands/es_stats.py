@@ -1,8 +1,14 @@
 from ..libraries.utils import *
+import matplotlib.pyplot as plt
+import io
 
 
 @es_stats.handle()
 async def handle_es_stats(bot: Bot, event: Event):
+    # 创建图像资源
+    fig = None
+    buf = None
+    
     try:
         # 获取匹配的类型（身高或体重）
         stat_type = event.get_plaintext()[2:4]  # 获取"身高"或"体重"
@@ -59,46 +65,68 @@ async def handle_es_stats(bot: Bot, event: Event):
         stats_info.sort(key=lambda x: x[1], reverse=True)
         
         # 构建消息
-        messages = [f"EverSoul 角色{stat_type}排行：\n"]
+        text_lines = []
+        text_lines.append(f"永魂灵魂角色{stat_type}排行")
         
         # 添加已知数据的角色
         if stats_info:
-            messages.append(f"【已知{stat_type}】")
+            text_lines.append(f"【已知{stat_type}】")
             for i, (name, value) in enumerate(stats_info, 1):
                 unit = "cm" if stat_type == "身高" else "kg"
-                messages.append(f"{i}. {name}: {value}{unit}")
+                text_lines.append(f"{i}. {name}: {value}{unit}")
         else:
-            messages.append(f"【已知{stat_type}】\n暂无数据")
+            text_lines.append(f"【已知{stat_type}】")
+            text_lines.append("暂无数据")
         
         # 添加未知数据的角色
         if unknown_stats:
-            messages.append(f"\n【未知{stat_type}】")
+            text_lines.append(f"【未知{stat_type}】")
             for i, name in enumerate(unknown_stats, 1):
-                messages.append(f"{i}. {name}")
+                text_lines.append(f"{i}. {name}")
         
-        # 发送合并转发消息
-        forward_msgs = [{
-            "type": "node",
-            "data": {
-                "name": f"EverSoul {stat_type} Ranking",
-                "uin": bot.self_id,
-                "content": "\n".join(messages)
-            }
-        }]
+        # 设置字体
+        font_prop = CUSTOM_FONT
         
-        # 发送消息
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.user_id,
-                messages=forward_msgs
-            )
+        # 计算图像大小
+        max_length = max(len(line) for line in text_lines)
+        fig_width = max(max_length * 0.10, 8)  # 确保最小宽度
+        fig_height = max(len(text_lines) * 0.2, 5)  # 确保最小高度
+        
+        # 创建图像
+        fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+        ax.axis('off')  # 隐藏坐标轴
+        fig.patch.set_facecolor('white')  # 设置背景颜色为白色
+        
+        # 添加标题
+        ax.text(0.5, 0.98, text_lines[0], fontsize=16, ha='center', va='top', 
+                fontproperties=font_prop, transform=ax.transAxes, fontweight='bold')
+        
+        # 逐行渲染文本
+        y_position = 0.94
+        line_height = 0.02  # 行高
+        
+        for line in text_lines[1:]:  # 跳过标题
+            # 检查是否是分类标题（以【】括起来的）
+            if line.startswith('【') and line.endswith('】'):
+                # 为标题添加上方空间
+                y_position -= line_height * 0.5
+                ax.text(0.05, y_position, line, fontsize=14, ha='left', va='top', 
+                       fontproperties=font_prop, transform=ax.transAxes, fontweight='bold')
+            else:
+                ax.text(0.05, y_position, line, fontsize=12, ha='left', va='top', 
+                       fontproperties=font_prop, transform=ax.transAxes)
+            
+            # 更新y位置
+            y_position -= line_height * 1.5
+        
+        # 保存图像到内存
+        buf = io.BytesIO()
+        plt.savefig(buf, format='webp', dpi=100, bbox_inches='tight', transparent=False, 
+                   pil_kwargs={'quality': 70})
+        buf.seek(0)
+        
+        # 发送图片
+        await es_stats.finish(MessageSegment.image(buf))
             
     except Exception as e:
         if not isinstance(e, FinishedException):
@@ -113,3 +141,19 @@ async def handle_es_stats(bot: Bot, event: Event):
                 f"错误行号: {error_location.lineno}\n"
             )
             await es_stats.finish(f"处理{stat_type}排行时发生错误: {str(e)}")
+    finally:
+        # 在finally块中安全释放资源
+        if buf:
+            try:
+                buf.close()
+            except:
+                pass
+        if fig:
+            try:
+                plt.close(fig)
+            except:
+                pass
+        try:
+            plt.close('all')
+        except:
+            pass

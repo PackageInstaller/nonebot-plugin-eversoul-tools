@@ -2,11 +2,17 @@ from ..libraries.utils import *
 
 
 @es_level_cost.handle()
-async def handle_level_cost(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()):
+async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
-        # 获取目标等级
-        target_level = int(matched[0])
-        
+        # 获取参数文本
+        args_text = args.extract_plain_text().strip()
+    
+        target_level = re.match(r'^(\d+)$', args_text)
+        if target_level:
+            target_level = int(target_level.group(1))
+        else:
+            await es_level_cost.finish("请确保带上正确的等级参数！例如：es升级消耗1000")
+
         # 加载数据
         # 获取群组ID
         group_id = None
@@ -20,9 +26,9 @@ async def handle_level_cost(bot: Bot, event: Event, matched: Tuple[Any, ...] = R
             if level := item.get("level_"):
                 max_level = max(max_level, level)
         
-        # 如果目标等级超过最大等级，使用最大等级
+        # 目标等级超过最大等级
         if target_level > max_level:
-            target_level = max_level
+            await es_level_cost.finish(f"目标等级超过最大等级，最大等级为{max_level}级")
         
         # 查找目标等级的数据
         level_data = None
@@ -35,12 +41,10 @@ async def handle_level_cost(bot: Bot, event: Event, matched: Tuple[Any, ...] = R
             if level_data and next_level_data:
                 break
         
-        # 构建消息列表
-        messages = []
         
         # 添加文字信息
-        text_msg = [f"等级 {target_level} (最大等级) 升级消耗统计：\n" if target_level == max_level 
-                   else f"等级 {target_level} 升级消耗统计：\n"]
+        text_msg = [f"\n等级 {target_level} (最大等级) 升级消耗统计：\n" if target_level == max_level 
+                   else f"\n等级 {target_level} 升级消耗统计：\n"]
         
         # 添加累计消耗信息
         text_msg.append("【累计消耗】")
@@ -57,40 +61,9 @@ async def handle_level_cost(bot: Bot, event: Event, matched: Tuple[Any, ...] = R
             if 'mana_crystal' in next_level_data:
                 text_msg.append(f"魔力水晶：{format_number(next_level_data.get('mana_crystal', 0))}")
         
-        messages.append({
-            "type": "node",
-            "data": {
-                "name": "EverSoul Level Cost",
-                "uin": bot.self_id,
-                "content": "\n".join(text_msg)
-            }
-        })
-        
-        # 添加统计图
-        chart = await generate_level_cost_chart(data)
-        messages.append({
-            "type": "node",
-            "data": {
-                "name": "EverSoul Level Cost Chart",
-                "uin": bot.self_id,
-                "content": chart
-            }
-        })
-        
         # 发送消息
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=messages
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.user_id,
-                messages=messages
-            )
-            
+        await es_level_cost.finish("\n".join(text_msg))
+        
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
