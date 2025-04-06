@@ -148,7 +148,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                     spacer = " " * spaces_needed
                     
                     # 构建对齐的文本行
-                    team_text.append(f"{pos_text}{hero['name']}{spacer}{hero['grade']}  LV.{hero['level']}")
+                    team_text.append(f"{pos_text}{hero['name']}{spacer}{hero['grade']}  Lv.{hero['level']}")
                 
                 messages.append("\n".join(team_text))
 

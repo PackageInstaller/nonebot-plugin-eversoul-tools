@@ -1,9 +1,14 @@
 from ..libraries.utils import *
 
 
+
 @es_hero_list.handle()
 async def handle_hero_list(bot: Bot, event: Event):
     """处理角色列表查询"""
+    # 创建图像资源
+    fig = None
+    buf = None
+    
     try:
         # 加载数据
         # 获取群组ID
@@ -48,42 +53,112 @@ async def handle_hero_list(bot: Bot, event: Event):
                 hero_categories[race_tw] = []
             
             # 添加别名信息
-            aliases = hero.get("aliases", [])
-            alias_text = f"（{', '.join(aliases)}）" if aliases else ""
+            # aliases = hero.get("aliases", [])
+            # alias_text = f"（{', '.join(aliases)}）" if aliases else ""
             
             # 添加角色信息
-            hero_info = f"{name}{alias_text}"
+            hero_info = f"{name}"
             hero_categories[race_tw].append(hero_info)
         
-        # 生成转发消息
-        forward_msgs = []
-        for category, heroes in hero_categories.items():
-            if heroes:  # 只显示有角色的分类
-                msg = f"【{category}】\n"
-                msg += "\n".join(f"・ {hero}" for hero in sorted(heroes))  # 按名称排序
-                
-                forward_msgs.append({
-                    "type": "node",
-                    "data": {
-                        "name": "Character List",
-                        "uin": bot.self_id,
-                        "content": msg
-                    }
-                })
+        # 设置字体
+        font_prop = CUSTOM_FONT
         
-        # 发送合并转发消息
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.user_id,
-                messages=forward_msgs
-            )
+        # 计算布局
+        # 对种族类型进行排序 
+        sorted_categories = sorted([(category, sorted(heroes)) for category, heroes in hero_categories.items()])
+        
+        # 设定列数 - 可以根据需要调整
+        num_columns = min(4, len(sorted_categories))  # 最多4列，或者更少
+        
+        # 计算每列应该包含的种族数量
+        races_per_column = math.ceil(len(sorted_categories) / num_columns)
+        
+        # 划分列 - 简单平均分配
+        columns = []
+        for i in range(0, len(sorted_categories), races_per_column):
+            columns.append(sorted_categories[i:i+races_per_column])
+        
+        # 确保列数正确
+        num_columns = len(columns)
+        
+        # 计算每列最大宽度和高度
+        column_widths = []
+        column_heights = []
+        
+        for column in columns:
+            # 计算这一列中所有行的最大宽度
+            max_width = 0
+            total_height = 0
+            
+            for category, heroes in column:
+                # 计算标题和各行的最大宽度
+                category_width = len(f"【{category}】")
+                hero_widths = [len(f"・ {hero}") for hero in heroes]
+                max_width = max(max_width, category_width, *hero_widths if hero_widths else [0])
+                
+                # 统计该种族的总高度 (标题 + 所有角色)
+                total_height += 1 + len(heroes)
+            
+            column_widths.append(max_width)
+            column_heights.append(total_height)
+        
+        # 计算图像尺寸
+        # 宽度 = 所有列宽度和 * 字符宽度系数 + 列间距
+        char_width = 0.08  # 每个字符的宽度
+        column_spacing = 1.5  # 列间距（图像单位）
+        fig_width = sum(w * char_width for w in column_widths) + (num_columns - 1) * column_spacing
+        fig_width = max(fig_width, 10)  # 确保最小宽度
+        
+        # 高度 = 最高列的高度 * 行高
+        line_height = 0.35  # 每行高度
+        fig_height = max(column_heights) * line_height
+        fig_height = max(fig_height, 6)  # 确保最小高度
+        
+        # 创建图像
+        fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+        ax.axis('off')  # 隐藏坐标轴
+        fig.patch.set_facecolor('white')  # 设置背景颜色为白色
+        
+        # 添加标题
+        ax.text(0.5, 0.98, "永魂灵魂角色列表", fontsize=16, ha='center', va='top', 
+                fontproperties=font_prop, transform=ax.transAxes, fontweight='bold')
+        
+        # 计算每列的起始x位置
+        x_positions = []
+        x_pos = 0.05  # 初始x位置（左边距）
+        
+        for width in column_widths:
+            x_positions.append(x_pos)
+            x_pos += (width * char_width + column_spacing) / fig_width
+        
+        # 开始渲染每列内容
+        for col_idx, column in enumerate(columns):
+            y_pos = 0.94  # 初始y位置（顶部空间）
+            x_pos = x_positions[col_idx]
+            
+            for category, heroes in column:
+                # 渲染种族标题
+                ax.text(x_pos, y_pos, f"【{category}】", fontsize=14, ha='left', va='top', 
+                       fontproperties=font_prop, transform=ax.transAxes, fontweight='bold')
+                y_pos -= line_height * 0.08  # 标题后的间距
+                
+                # 渲染角色名称
+                for hero in heroes:
+                    y_pos -= line_height * 0.05  # 角色之间的间距
+                    ax.text(x_pos, y_pos, f"・ {hero}", fontsize=12, ha='left', va='top', 
+                           fontproperties=font_prop, transform=ax.transAxes)
+                
+                # 种族之间的间距
+                y_pos -= line_height * 0.12
+        
+        # 保存图像到内存
+        buf = io.BytesIO()
+        plt.savefig(buf, format='webp', dpi=100, bbox_inches='tight', transparent=False, 
+                   pil_kwargs={'quality': 30})
+        buf.seek(0)
+        
+        # 发送图片
+        await es_hero_list.finish(MessageSegment.image(buf))
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
@@ -97,3 +172,19 @@ async def handle_hero_list(bot: Bot, event: Event):
                 f"错误行号: {error_location.lineno}\n"
             )
             await es_hero_list.finish(f"处理角色列表时发生错误: {str(e)}")
+    finally:
+        # 在finally块中安全释放资源
+        if buf:
+            try:
+                buf.close()
+            except:
+                pass
+        if fig:
+            try:
+                plt.close(fig)
+            except:
+                pass
+        try:
+            plt.close('all')
+        except:
+            pass
