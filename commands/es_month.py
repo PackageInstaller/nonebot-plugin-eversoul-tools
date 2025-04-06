@@ -10,7 +10,6 @@ async def handle_es_month(bot: Bot, event: Event):
             target_month = int(month_match.group(1))
             if not 1 <= target_month <= 12:
                 await es_month.finish("请输入正确的月份(1-12)")
-                return
         else:
             # 如果是其他别名触发，使用当前月份
             target_month = datetime.now().month

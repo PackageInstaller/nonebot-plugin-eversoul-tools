@@ -21,10 +21,8 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
         else:
             if args_text == "主线":
                 await es_cash_pack_info.finish("请带上主线章节参数！例如：es突发礼包信息主线21")
-                return
             elif args_text == "传送门":
                 await es_cash_pack_info.finish("请带上传送门类型参数！例如：es突发礼包信息自由传送门")
-                return
             item_type = args_text
             chapter = None
             gate_type = None
@@ -60,14 +58,12 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
             if not messages:
                 chapter_text = f"第{chapter}章" if chapter else "所有章节"
                 await es_cash_pack_info.finish(f"当前{chapter_text}没有主线相关的突发礼包")
-                return
         
         elif item_type == "传送门":
             # 获取传送门类型对应的stage_type
             stage_type = GATE_TYPES.get(gate_type)
             if not stage_type:
                 await es_cash_pack_info.finish(f"未知的传送门类型：{gate_type}")
-                return
             
             # 从Barrier.json获取传送门基本信息
             barrier_info = None
@@ -103,7 +99,6 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
             
             if len(messages) <= 1:  # 只有标题没有实际内容
                 await es_cash_pack_info.finish(f"当前没有{gate_type}型传送门相关的突发礼包")
-                return
         
         elif item_type == "起源塔":
             # 获取所有起源之塔信息
@@ -158,11 +153,9 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
         
         else:
             await es_cash_pack_info.finish("请输入正确的类型：主线/传送门/起源塔/升阶")
-            return
         
         if not messages:
             await es_cash_pack_info.finish(f"当前没有{item_type}相关的突发礼包")
-            return
         
         # 发送合并转发消息
         forward_msgs = [{

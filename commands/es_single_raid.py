@@ -8,13 +8,11 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         hero_id_text = args.extract_plain_text().strip()
         if not hero_id_text:
             await es_single_raid.finish("请输入正确的恶灵ID")
-            return
         
         try:
             hero_id = int(hero_id_text)
         except ValueError:
             await es_single_raid.finish("恶灵ID必须是数字")
-            return
         
         # 获取群组ID
         group_id = None
@@ -33,7 +31,6 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         
         if not hero_data:
             await es_single_raid.finish(f"未找到ID为{hero_id}的恶灵信息")
-            return
         
         # 查找SingleRaidBoss数据，获取boss_max_level最大的那个
         boss_data = None
@@ -45,7 +42,6 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         
         if not boss_data:
             await es_single_raid.finish(f"未找到ID为{hero_id}的恶灵讨伐信息")
-            return
         
         # 根据level_group找到SingleRaid数据
         level_group = boss_data.get("level_group")

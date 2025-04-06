@@ -7,7 +7,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         # 获取输入的文本并提取角色名
         hero_name = args.extract_plain_text().strip()
         if not hero_name:
-            return
+            await es_hero_info.finish("请输入角色名！")
         
         # 获取群组ID
         group_id = None
@@ -83,10 +83,8 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                     response_parts.append(f"别名：{', '.join(aliases)}")
                 
                 await es_hero_info.finish("\n".join(response_parts))
-                return
             else:
                 await es_hero_info.finish(f"未找到角色 {hero_name}")
-                return
         
         # 查找角色数据
         hero_data = None
@@ -104,7 +102,6 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         
         if not hero_data:
             await es_hero_info.finish("未找到该角色信息")
-            return
             
         # 获取角色名称
         hero_name_zh_tw = ""

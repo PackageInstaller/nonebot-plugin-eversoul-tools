@@ -19,8 +19,7 @@ async def handle_hero_list(bot: Bot, event: Event):
             aliases_data = yaml.safe_load(f)
         
         if not aliases_data or "names" not in aliases_data:
-            await es_hero_list.finish("角色数据加载失败")
-            return
+            await es_hero_list.finish("角色数据加载失败")   
             
         # 使用字典存储不同种族的角色
         hero_categories = {}

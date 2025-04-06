@@ -24,8 +24,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
         
         if not barrier_info:
             await es_gate.finish(f"未找到{gate_type}型传送门信息")
-            return
-            
+
         # 获取传送门名称和限制
         gate_name = next((s.get("zh_tw", "未知") for s in data["string_stage"]["json"] 
                          if s["no"] == barrier_info.get("text_name_sno")), "未知")
@@ -45,7 +44,6 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
         
         if not gate_infos:
             await es_gate.finish(f"未找到编号为 {stage_no} 的{gate_type}传送门")
-            return
         
         # 对每个传送门生成信息
         all_messages = []
