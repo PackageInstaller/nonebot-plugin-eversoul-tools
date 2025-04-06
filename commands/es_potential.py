@@ -5,11 +5,15 @@ from ..libraries.utils import *
 async def handle_potential_info(bot: Bot, event: Event):
     """处理潜能信息查询"""
     try:
+        await bot.send(event, message="请稍等，正在生成潜能信息图标...")
+
         # 获取群组ID
         group_id = None
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         data = load_json_data(group_id)
+
+        
         # 生成潜能信息HTML
         html = await generate_potential_html(data)
         # 转换为图片

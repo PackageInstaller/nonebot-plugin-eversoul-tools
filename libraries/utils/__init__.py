@@ -7,6 +7,7 @@ import io
 import yaml
 import math
 import matplotlib.pyplot as plt
+from PIL import Image
 from typing import Any, Tuple
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER

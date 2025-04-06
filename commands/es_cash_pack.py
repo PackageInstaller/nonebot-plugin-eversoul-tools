@@ -1,8 +1,14 @@
 from ..libraries.utils import *
+import matplotlib.pyplot as plt
+import io
 
 
 @es_cash_pack_info.handle()
 async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandArg()):
+    # 创建图像资源
+    fig = None
+    buf = None
+    
     try:
         # 获取参数文本
         args_text = args.extract_plain_text().strip()
@@ -20,10 +26,10 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
             gate_type = match_gate.group(1)
         else:
             if args_text == "主线":
-                await es_cash_pack_info.finish("请带上主线章节参数！例如：es突发礼包信息主线21")
+                await es_cash_pack_info.finish("请带上主线章节参数！例如：es突发礼包信息主线32")
                 return
             elif args_text == "传送门":
-                await es_cash_pack_info.finish("请带上传送门类型参数！例如：es突发礼包信息自由传送门")
+                await es_cash_pack_info.finish("请带上传送门类型参数！例如：es突发礼包信息(自由|人类|野兽|妖精|不死)传送门")
                 return
             item_type = args_text
             chapter = None
@@ -163,32 +169,63 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
         if not messages:
             await es_cash_pack_info.finish(f"当前没有{item_type}相关的突发礼包")
             return
-        
-        # 发送合并转发消息
-        forward_msgs = [{
-            "type": "node",
-            "data": {
-                "name": "EverSoul Overclock Cost",
-                "uin": bot.self_id,
-                "content": "\n".join(messages)
-            }
-        }]
-        
-        # 发送消息
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.user_id,
-                messages=forward_msgs
-            )
             
-
+        # 设置字体
+        font_prop = CUSTOM_FONT
+        
+        # 生成图片标题
+        title = f"永魂灵魂{item_type}突发礼包"
+        if item_type == "主线" and chapter:
+            title += f" 第{chapter}章"
+        elif item_type == "传送门" and gate_type:
+            title += f" {gate_type}型"
+        
+        # 计算图像大小
+        text_lines = "\n".join(messages).split('\n')
+        max_length = max(len(line) for line in text_lines)
+        fig_width = max(max_length * 0.10, 8)  # 确保最小宽度
+        fig_height = max(len(text_lines) * 0.2, 5)  # 确保最小高度
+        
+        # 创建图像
+        fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+        ax.axis('off')  # 隐藏坐标轴
+        fig.patch.set_facecolor('white')  # 设置背景颜色为白色
+        
+        # 添加标题
+        ax.text(0.5, 0.98, title, fontsize=16, ha='center', va='top', 
+                fontproperties=font_prop, transform=ax.transAxes, fontweight='bold')
+        
+        # 逐行渲染文本
+        y_position = 0.94
+        line_height = 0.02  # 行高
+        section_title = None
+        
+        for line in text_lines:
+            # 检查是否是章节标题行（以冒号结尾）
+            if line.endswith(':'):
+                # 标题行添加额外间距
+                if section_title is not None:  # 不是第一个标题
+                    y_position -= line_height * 0.5
+                section_title = line
+                ax.text(0.05, y_position, line, fontsize=14, ha='left', va='top', 
+                       fontproperties=font_prop, transform=ax.transAxes, fontweight='bold')
+            else:
+                # 缩进处理内容行
+                indent = 0.08
+                ax.text(0.05 + indent, y_position, line, fontsize=12, ha='left', va='top', 
+                       fontproperties=font_prop, transform=ax.transAxes)
+            
+            # 更新y位置
+            y_position -= line_height * 1.5
+        
+        # 保存图像到内存
+        buf = io.BytesIO()
+        plt.savefig(buf, format='webp', dpi=100, bbox_inches='tight', transparent=False, 
+                   pil_kwargs={'quality': 30})
+        buf.seek(0)
+        
+        # 发送图片
+        await es_cash_pack_info.finish(MessageSegment.image(buf))
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
@@ -202,3 +239,19 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                 f"错误行号: {error_location.lineno}\n"
             )
             await es_cash_pack_info.finish(f"处理突发礼包信息时发生错误: {str(e)}")
+    finally:
+        # 在finally块中安全释放资源
+        if buf:
+            try:
+                buf.close()
+            except:
+                pass
+        if fig:
+            try:
+                plt.close(fig)
+            except:
+                pass
+        try:
+            plt.close('all')
+        except:
+            pass
