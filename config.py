@@ -116,11 +116,23 @@ HERO_NAME_MAPPING = {
 }
 
 # 礼包类型映射
-PACKAGE_TYPES = {
+PACKAGE_TYPE_MAPPING = {
     'barrier': '通关礼包',
     'stage': '主线礼包',
     'tower': '起源之塔礼包',
     'grade_eternal': '角色升阶礼包'
+}
+
+SERVER_APP_ID_MAPPING = {
+    "asia": "743491",  # 亚服
+    "kr": "743487",    # 韩服
+    "en": "750066"     # 欧美服
+}
+
+SERVER_NAME_MAPPING = {
+    "asia": "亚服",
+    "kr": "韩服",
+    "en": "欧美服"
 }
 
 # 资源路径
@@ -145,6 +157,9 @@ CURRENT_DATA_SOURCE = {
         "hero_alias_file": DATA_DIR / "live_hero_aliases.yaml"
     }
 }
+
+
+
 
 # 字体路径
 FONT_DIR = RESOURCES_DIR / "font" / "Sarasa-Regular.ttc"

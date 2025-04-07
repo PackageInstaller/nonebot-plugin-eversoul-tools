@@ -8,7 +8,7 @@ from nonebot.log import logger
 from difflib import get_close_matches
 from ...config import (
     TOWN_DIR, TRAIT_NAME_MAPPING, 
-    PACKAGE_TYPES, STAT_NAME_MAPPING,
+    PACKAGE_TYPE_MAPPING, STAT_NAME_MAPPING,
     FORMATION_TYPE_MAPPING
 )
 
@@ -1015,7 +1015,7 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
     shop_items = []
     
     # 获取礼包类型显示名称
-    package_type_name = PACKAGE_TYPES.get(item_type, '特殊礼包')
+    package_type_name = PACKAGE_TYPE_MAPPING.get(item_type, '特殊礼包')
     
     # 获取符合条件的商店物品
     for shop_item in data["cash_shop_item"]["json"]:

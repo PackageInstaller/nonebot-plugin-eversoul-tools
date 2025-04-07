@@ -1,2 +1,4 @@
 matplotlib
 nonebot_plugin_htmlrender
+aiosqlite
+aiohttp

@@ -4,16 +4,18 @@ Eversoul工具模块 - 功能集合
 import re
 import os
 import yaml
+import asyncio
 from typing import Any, Tuple
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
-from nonebot import on_regex, on_command, require
+from nonebot import on_regex, on_command, require, on_message
 from nonebot.exception import FinishedException
 from nonebot.params import RegexGroup, CommandArg
 from nonebot.adapters.onebot.v11 import (
     Bot,
     Event,
     Message,
+    MessageEvent,
     GROUP_ADMIN,
     GROUP_OWNER,
     MessageSegment,
@@ -24,6 +26,7 @@ from nonebot_plugin_htmlrender import html_to_pic
 from difflib import get_close_matches
 from datetime import datetime
 from ...config import *
+from ..model import *
 
 es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, priority=5, block=True)
 es_ark_info = on_regex(r"^es方舟等级信息(\d+)$", priority=5, block=True)
@@ -40,6 +43,11 @@ es_stats = on_regex(r"^es(身高|体重)排行$", priority=5, block=True)
 es_switch_source = on_command("es数据源切换", priority=5, permission=\
                             (SUPERUSER | GROUP_ADMIN | GROUP_OWNER), block=True)
 es_tier_info = on_command("es礼品信息", priority=5, block=True)
+es_coupon = on_command("es兑换码", priority=5, block=True)
+es_bind = on_command("es绑定账号", aliases={"es绑定"}, priority=5, block=True)
+es_unbind = on_command("es解绑账号", aliases={"es解绑"}, priority=5, block=True)
+
+
 
 # 数据相关
 from .es_data_utils import (
@@ -72,4 +80,9 @@ from .es_string_utils import (
     get_character_arbeit, get_character_soullink, get_character_story,
     get_character_keyword, get_character_town_object, get_character_town_object_task,
     get_character_signature, get_character_signature_value, get_character_skill_type
+)
+
+# 兑换码相关
+from .es_coupon_utils import (
+    parse_server_id, redeem_coupon
 )
