@@ -11,11 +11,11 @@ async def handle_unbind(bot: Bot, event: Event):
     user_data = await EversoulUser.get_user(int(user_id))
     
     if not user_data:
-        await es_unbind.finish(f"您尚未绑定过账号，请使用 es绑定账号 命令进行绑定")
+        await es_unbind.finish(message="您尚未绑定过账号，请使用 es绑定账号 命令进行绑定", reply_message=True)
     
     success = await EversoulUser.delete_user(int(user_id))
     
     if success:
-        await es_unbind.finish("解绑成功！您可以使用 es绑定账号 命令重新绑定其他账号")
+        await es_unbind.finish(message="解绑成功！您可以使用 es绑定账号 命令重新绑定其他账号", reply_message=True)
     else:
-        await es_unbind.finish("解绑失败，请联系管理员")
+        await es_unbind.finish(message="解绑失败，请联系管理员", reply_message=True )

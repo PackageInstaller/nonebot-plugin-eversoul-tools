@@ -20,7 +20,7 @@ async def handle_bind(bot: Bot, event: Event, args: Message = CommandArg()):
             "en - 欧美服\n\n"
             "ID必须是12位纯数字"
         )
-        await es_bind.finish(help_msg)
+        await es_bind.finish(message=help_msg, reply_message=True)
     
     await handle_binding(bot, event, server_id_text)
         
@@ -34,25 +34,23 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
     
     if not server_code or not player_id:
         await es_bind.finish(
-            "输入格式错误！请按照格式：【地区+ID】\n"
-            "例如：kr123456789012\n"
-            "请重新使用 es绑定账号 命令进行尝试。"
+            message="输入格式错误！请按照格式：【地区+ID】\n例如：kr123456789012进行绑定",
+            reply_message=True
         )
     
     # 获取app_id
     app_id = SERVER_APP_ID_MAPPING.get(server_code)
     if not app_id:
-        await es_bind.finish(f"不支持的服务器代码：{server_code}")
+        await es_bind.finish(message=f"不支持的服务器代码：{server_code}", reply_message=True)
     
     # 保存用户信息
     success = await EversoulUser.add_user(int(user_id), app_id, player_id)
     if not success:
-        await es_bind.finish("数据库操作失败，请联系管理员")
+        await es_bind.finish(message="数据库操作失败，请联系管理员", reply_message=True)
     
     # 绑定成功
     server_name = SERVER_NAME_MAPPING.get(server_code, server_code)
     await es_bind.finish(
-        f"账号绑定成功！\n"
-        f"服务器：{server_name}\n"
-        f"玩家ID：{player_id}"
+        message=f"账号绑定成功！\n服务器：{server_name}\n玩家ID：{player_id}",
+        reply_message=True
     ) 
