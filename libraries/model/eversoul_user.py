@@ -2,7 +2,7 @@
 Eversoul用户数据模型 - 保存用户的游戏数据
 """
 import os
-from typing import Optional,  Dict, Any
+from typing import Optional,  Dict, Any, List
 import aiosqlite
 from nonebot.log import logger
 from datetime import datetime, timezone, timedelta
@@ -27,15 +27,15 @@ class EversoulUser:
         db_exists = os.path.exists(cls._db_path)
         
         if not db_exists:
-            logger.info(f"初始化数据库: {cls._db_path}")
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
                     """
                     CREATE TABLE IF NOT EXISTS eversoul_users (
-                        user_id INTEGER PRIMARY KEY,
+                        user_id INTEGER NOT NULL,
                         app_id TEXT NOT NULL,
                         player_id TEXT NOT NULL,
-                        update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        PRIMARY KEY (user_id, player_id)
                     )
                     """
                 )
@@ -77,7 +77,7 @@ class EversoulUser:
     
     @classmethod
     async def get_user(cls, user_id: int) -> Optional[Dict[str, Any]]:
-        """获取用户数据
+        """获取用户数据，返回第一个找到的账号数据
         
         Args:
             user_id: 用户QQ号
@@ -90,7 +90,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 db.row_factory = aiosqlite.Row
                 cursor = await db.execute(
-                    "SELECT * FROM eversoul_users WHERE user_id = ?",
+                    "SELECT * FROM eversoul_users WHERE user_id = ? LIMIT 1",
                     (user_id,)
                 )
                 row = await cursor.fetchone()
@@ -103,8 +103,34 @@ class EversoulUser:
             return None
     
     @classmethod
+    async def get_all_user_accounts(cls, user_id: int) -> List[Dict[str, Any]]:
+        """获取用户的所有账号数据
+        
+        Args:
+            user_id: 用户QQ号
+            
+        Returns:
+            List[Dict[str, Any]]: 用户的所有账号数据，如果不存在则返回空列表
+        """
+        try:
+            await cls.init_db()
+            async with aiosqlite.connect(cls._db_path) as db:
+                db.row_factory = aiosqlite.Row
+                cursor = await db.execute(
+                    "SELECT * FROM eversoul_users WHERE user_id = ?",
+                    (user_id,)
+                )
+                rows = await cursor.fetchall()
+                if rows:
+                    return [dict(row) for row in rows]
+                return []
+        except Exception as e:
+            logger.error(f"获取用户所有账号数据失败: {e}")
+            return []
+    
+    @classmethod
     async def delete_user(cls, user_id: int) -> bool:
-        """删除用户数据
+        """删除用户所有账号数据
         
         Args:
             user_id: 用户QQ号
@@ -124,4 +150,29 @@ class EversoulUser:
             return True
         except Exception as e:
             logger.error(f"删除用户数据失败: {e}")
+            return False
+            
+    @classmethod
+    async def delete_specific_account(cls, user_id: int, player_id: str) -> bool:
+        """删除用户的特定账号
+        
+        Args:
+            user_id: 用户QQ号
+            player_id: 游戏ID
+            
+        Returns:
+            bool: 是否成功
+        """
+        try:
+            await cls.init_db()
+            async with aiosqlite.connect(cls._db_path) as db:
+                await db.execute(
+                    "DELETE FROM eversoul_users WHERE user_id = ? AND player_id = ?",
+                    (user_id, player_id)
+                )
+                await db.commit()
+                logger.info(f"用户特定账号已删除: user_id={user_id}, player_id={player_id}")
+            return True
+        except Exception as e:
+            logger.error(f"删除用户特定账号失败: {e}")
             return False 

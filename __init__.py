@@ -32,7 +32,6 @@ async def init_database():
             logger.info("正在初始化 Eversoul 用户数据库...")
             # 初始化用户数据库
             await EversoulUser.init_db()
-            logger.info(f"Eversoul 用户数据库初始化成功，位置: {db_path}")
     except Exception as e:
         logger.error(f"初始化 Eversoul 用户数据库时发生错误: {e}")
 

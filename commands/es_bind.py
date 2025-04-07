@@ -18,7 +18,8 @@ async def handle_bind(bot: Bot, event: Event, args: Message = CommandArg()):
             "asia - 亚服\n"
             "kr - 韩服\n"
             "en - 欧美服\n\n"
-            "ID必须是12位纯数字"
+            "ID必须是12位纯数字\n\n"
+            "您可以绑定多个不同的账号，兑换码将为所有账号自动兑换"
         )
         await es_bind.finish(message=help_msg, reply_message=True)
     
@@ -43,6 +44,17 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
     if not app_id:
         await es_bind.finish(message=f"不支持的服务器代码：{server_code}", reply_message=True)
     
+    # 检查用户是否已有绑定的账号
+    existing_accounts = await EversoulUser.get_all_user_accounts(int(user_id))
+    
+    # 检查是否绑定了相同playerID的账号
+    for account in existing_accounts:
+        if account.get("player_id") == player_id:
+            await es_bind.finish(
+                message=f"此账号已经绑定！\n服务器：{SERVER_NAME_MAPPING.get(server_code, server_code)}\n玩家ID：{player_id}",
+                reply_message=True
+            )
+    
     # 保存用户信息
     success = await EversoulUser.add_user(int(user_id), app_id, player_id)
     if not success:
@@ -50,7 +62,21 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
     
     # 绑定成功
     server_name = SERVER_NAME_MAPPING.get(server_code, server_code)
+    
+    # 添加当前账号列表信息
+    total_accounts = len(existing_accounts) + 1
+    message = (
+        f"账号绑定成功！\n"
+        f"服务器：{server_name}\n"
+        f"玩家ID：{player_id}\n\n"
+    )
+    
+    if total_accounts > 1:
+        message += f"您当前已绑定了{total_accounts}个账号，使用es兑换码将会为所有账号兑换"
+    else:
+        message += "您可以继续绑定其他服务器账号，兑换码将会为所有账号兑换"
+    
     await es_bind.finish(
-        message=f"账号绑定成功！\n服务器：{server_name}\n玩家ID：{player_id}",
+        message=message,
         reply_message=True
     ) 
