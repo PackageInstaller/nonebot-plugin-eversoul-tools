@@ -136,6 +136,11 @@ async def handle_es_help(bot: Bot, event: Event):
                 <div class="usage">用途：手动绑定游戏账号，支持重新绑定</div>
                 <div class="example">示例：es绑定账号 kr123456789012</div>
             </div>
+            <div class="command">
+                <div class="command-name">17. es账号信息</div>
+                <div class="usage">用途：查看当前绑定的所有游戏账号信息</div>
+                <div class="example">示例：es账号信息</div>
+            </div>
         </div>
     </body>
     </html>

@@ -1,0 +1,37 @@
+from ..libraries.utils import *
+
+# 注册命令
+es_account_info = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
+
+@es_account_info.handle()
+async def handle_account_info(bot: Bot, event: Event):
+    """处理查询账号信息命令"""
+    user_id = event.get_user_id()
+    
+    # 获取用户所有账号
+    user_accounts = await EversoulUser.get_all_user_accounts(int(user_id))
+    
+    if not user_accounts:
+        await es_account_info.finish(message="您尚未绑定过账号，请使用 es绑定账号 命令进行绑定", reply_message=True)
+    
+    # 创建app_id到服务器名称的反向映射
+    app_id_to_server_code = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
+    
+    # 构建账号信息列表
+    account_info_list = []
+    for i, account in enumerate(user_accounts):
+        server_code = app_id_to_server_code.get(account["app_id"], "未知")
+        server_name = SERVER_NAME_MAPPING.get(server_code, account["app_id"])
+        
+        account_info = f"{i+1}. {server_name} - {account['player_id']}"
+        account_info_list.append(account_info)
+    
+    # 构建回复消息
+    reply_msg = f"您当前绑定的账号信息如下 (共{len(user_accounts)}个):\n\n"
+    reply_msg += "\n".join(account_info_list)
+    reply_msg += "\n\n您可以使用以下命令管理账号:\n"
+    reply_msg += "- es绑定账号 [地区+ID]\n"
+    reply_msg += "- es解绑账号\n"
+    reply_msg += "- es兑换码 [兑换码1] [兑换码2]..."
+    
+    await es_account_info.finish(message=reply_msg, reply_message=True)
