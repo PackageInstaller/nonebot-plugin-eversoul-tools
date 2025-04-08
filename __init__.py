@@ -8,7 +8,7 @@ from .config import *
 from .commands import *
 from .libraries.utils import *
 __plugin_meta__ = PluginMetadata(
-    name='nonebot-plugin-eversoul-tools',
+    name='永恒灵魂工具合集',
     description='基于 nonebot2 的 Eversoul 工具合集',
     usage='请使用 es命令列表 指令查看使用方法',
     type='application',

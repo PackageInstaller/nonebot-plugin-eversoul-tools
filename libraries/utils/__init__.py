@@ -5,10 +5,10 @@ import re
 import os
 import yaml
 import asyncio
-from typing import Any, Tuple
+from typing import Any, Tuple, Dict
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
-from nonebot import on_regex, on_command, require, on_message
+from nonebot import on_regex, on_command, require, on_message, on_notice
 from nonebot.exception import FinishedException
 from nonebot.params import RegexGroup, CommandArg
 from nonebot.adapters.onebot.v11 import (
@@ -19,7 +19,8 @@ from nonebot.adapters.onebot.v11 import (
     GROUP_ADMIN,
     GROUP_OWNER,
     MessageSegment,
-    GroupMessageEvent
+    GroupMessageEvent,
+    NoticeEvent
 )
 require("nonebot_plugin_htmlrender")
 from nonebot_plugin_htmlrender import html_to_pic

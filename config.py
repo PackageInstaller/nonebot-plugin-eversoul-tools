@@ -137,6 +137,9 @@ SERVER_NAME_MAPPING = {
     "jp": "日服"
 }
 
+# app_id到服务器名称的反向映射
+APP_ID_TO_SERVER_NAME = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
+
 # 资源路径
 RESOURCES_DIR = Path(__file__).parent / "resources"
 
