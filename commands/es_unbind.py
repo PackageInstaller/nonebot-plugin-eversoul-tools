@@ -30,7 +30,7 @@ async def handle_unbind(bot: Bot, event: Event):
             server_name = SERVER_NAME_MAPPING.get(server_code, account["app_id"])
             account_list.append(f"{emoji_list[i]} {server_name} {account['player_id']}")
     
-    account_list.append("✅ 确认解绑")
+    account_list.append("✨ 确认解绑")
     account_list.append("❌ 取消操作")
     
     msg = "请选择要解绑的账号：\n\n"
@@ -58,7 +58,7 @@ async def handle_unbind(bot: Bot, event: Event):
     
     # 添加确认和取消表情
     await asyncio.sleep(0.1)
-    await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id="424")  # 确认
+    await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id="10024")  # 确认
     await asyncio.sleep(0.1)
     await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id="10060")  # 取消
     
@@ -98,7 +98,7 @@ async def handle_unbind_emoji(bot: Bot, event: NoticeEvent):
                     return
                 
                 # 处理表情选择
-                if emoji_id == "424":  # 确认
+                if emoji_id == "10024":  # 确认
                     if not vote_data["selected"]:
                         await bot.send(event, "您尚未选择任何账号，请先选择要解绑的账号。", reply_message=True)
                         return
@@ -155,7 +155,7 @@ async def finalize_unbind(bot: Bot, event: Event, vote_data: Dict):
                 unbind_results.append(f"❌ {server_name} {account['player_id']}")
         
         # 构建结果消息
-        result_msg = f"解绑结果：\n成功：{success_count}个，失败：{fail_count}个\n\n"
+        result_msg = f"解绑结果：\n"
         result_msg += "\n".join(unbind_results)
         
         await bot.send(event, result_msg, reply_message=True)
