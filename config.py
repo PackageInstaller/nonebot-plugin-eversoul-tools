@@ -126,13 +126,15 @@ PACKAGE_TYPE_MAPPING = {
 SERVER_APP_ID_MAPPING = {
     "asia": "743491",  # 亚服
     "kr": "743487",    # 韩服
-    "en": "750066"     # 欧美服
+    "en": "750066",     # 欧美服
+    "jp": "981921"     # 日服
 }
 
 SERVER_NAME_MAPPING = {
     "asia": "亚服",
     "kr": "韩服",
-    "en": "欧美服"
+    "en": "欧美服",
+    "jp": "日服"
 }
 
 # 资源路径

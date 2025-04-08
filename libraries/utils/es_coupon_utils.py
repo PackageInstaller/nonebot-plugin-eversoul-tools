@@ -2,9 +2,11 @@
 Eversoul兑换码相关工具函数
 """
 import re
+import json
 import aiohttp
 from typing import Tuple, Optional
 from nonebot.log import logger
+from . import *
 
 
 def parse_server_id(text: str) -> Tuple[Optional[str], Optional[str]]:
@@ -20,7 +22,7 @@ def parse_server_id(text: str) -> Tuple[Optional[str], Optional[str]]:
         return None, None
     
     # 尝试匹配格式: asia/kr/en + 12位数字ID
-    pattern = r"^(asia|kr|en)\s*(\d{12})$"
+    pattern = r"^(asia|kr|en|jp)\s*(\d{12})$"
     match = re.match(pattern, text.lower().strip())
     
     if not match:
@@ -36,7 +38,7 @@ def parse_server_id(text: str) -> Tuple[Optional[str], Optional[str]]:
     return server_code, player_id
 
 
-async def redeem_coupon(app_id: str, player_id: str, coupon_code: str) -> Tuple[bool, str]:
+async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Event) -> Tuple[bool, str]:
     """兑换礼包码
     
     Args:
@@ -66,16 +68,70 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str) -> Tuple[
                 
                 # 处理各种可能的结果
                 if status_code == 200:
-                    if "success" in response_text.lower():
+                    # 尝试解析JSON响应
+                    try:
+                        group_id = None
+                        if isinstance(event, GroupMessageEvent):
+                            group_id = event.group_id
+                        
+                        # 解析响应JSON
+                        response_data = json.loads(response_text)
+                        
+                        # 构建奖励信息
+                        reward_info = []
+                        
+                        # 加载物品数据
+                        data = load_json_data(group_id)
+                        # 处理主要物品
+                        if "item" in response_data:
+                            item = response_data["item"]
+                            item_code = item.get("itemCode")
+                            # 确保item_code是整数
+                            if isinstance(item_code, str):
+                                item_code = int(item_code)
+                            quantity = item.get("quantity", 1)
+                            if item_code:
+                                # 获取物品名称
+                                try:
+                                    item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
+                                    reward_info.append(f"{item_name} x{quantity}")
+                                except Exception as e:
+                                    logger.error(f"获取物品名称失败: {e}")
+                                    reward_info.append(f"未知物品(itemCode:{item_code}) x{quantity}")
+                        
+                        # 处理其他物品
+                        if "others" in response_data and isinstance(response_data["others"], list):
+                            for other_item in response_data["others"]:
+                                item_code = other_item.get("itemCode")
+                                # 确保item_code是整数
+                                if isinstance(item_code, str):
+                                    item_code = int(item_code)
+                                quantity = other_item.get("quantity", 1)
+
+                                if item_code:
+                                    # 获取物品名称
+                                    try:
+                                        item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
+                                        reward_info.append(f"{item_name} x{quantity}")
+                                    except Exception as e:
+                                        logger.error(f"获取物品名称失败: {e}")
+                                        reward_info.append(f"未知物品(itemCode:{item_code}) x{quantity}")
+                        
+                        # 构建成功消息
+                        if reward_info:
+                            rewards = "、".join(reward_info)
+                            return True, f"兑换成功! 获得: {rewards}"
+                    except Exception as e:
+                        logger.error(f"解析奖励信息失败: {e}")
                         return True, f"兑换成功! 服务器响应: {response_text}"
-                    else:
-                        return False, f"兑换请求成功，但服务器返回未知响应: {response_text}"
-                elif status_code == 400:
-                    return False, f"请求错误: {response_text}"
+                elif status_code == 403:
+                    return False, f"兑换码无效。"
+                elif status_code == 462:
+                    return False, f"兑换码已过期。"
                 elif status_code == 463:
-                    return False, f"此帐号已超出兑换码的使用次数限制。"
+                    return False, f"帐号超出兑换次数限制。"
                 elif status_code == 466:
-                    return False, f"兑换码无效。请重新检查。"
+                    return False, f"账号不存在。"
                 else:
                     return False, f"服务器返回错误 (状态码: {status_code}): {response_text}"
                 

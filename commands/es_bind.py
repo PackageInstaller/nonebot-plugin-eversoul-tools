@@ -17,7 +17,8 @@ async def handle_bind(bot: Bot, event: Event, args: Message = CommandArg()):
             "支持的地区代码：\n"
             "asia - 亚服\n"
             "kr - 韩服\n"
-            "en - 欧美服\n\n"
+            "en - 欧美服\n"
+            "jp - 日服\n\n"
             "ID必须是12位纯数字\n\n"
             "您可以绑定多个不同的账号，兑换码将为所有账号自动兑换"
         )

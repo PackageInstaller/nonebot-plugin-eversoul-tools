@@ -33,7 +33,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     # 显示用户信息
     accounts_count = len(user_accounts)
     await es_coupon.send(
-        message=f"开始兑换，请耐心等待...\n为您的{accounts_count}个账号兑换{len(coupon_codes)}个兑换码",
+        message=f"开始为您的{accounts_count}个账号兑换{len(coupon_codes)}个兑换码，请耐心等待...",
         reply_message=True
     )
     
@@ -76,7 +76,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         # 批量兑换所有码
         account_results = []
         for i, code in enumerate(coupon_codes):
-            success, result = await redeem_coupon(app_id, player_id, code)
+            success, result = await redeem_coupon(app_id, player_id, code, event)
             status = "✅成功" if success else "❌失败"
             account_results.append(f"{code}: {status}\n{result}")
         
