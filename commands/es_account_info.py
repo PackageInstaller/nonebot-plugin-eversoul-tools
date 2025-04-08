@@ -27,11 +27,7 @@ async def handle_account_info(bot: Bot, event: Event):
         account_info_list.append(account_info)
     
     # 构建回复消息
-    reply_msg = f"您当前绑定的账号信息如下 (共{len(user_accounts)}个):\n\n"
+    reply_msg = f"您绑定的账号如下 (共{len(user_accounts)}个):\n\n"
     reply_msg += "\n".join(account_info_list)
-    reply_msg += "\n\n您可以使用以下命令管理账号:\n"
-    reply_msg += "- es绑定账号 [地区+ID]\n"
-    reply_msg += "- es解绑账号\n"
-    reply_msg += "- es兑换码 [兑换码1] [兑换码2]..."
     
     await es_account_info.finish(message=reply_msg, reply_message=True)

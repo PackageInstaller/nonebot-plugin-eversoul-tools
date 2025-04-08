@@ -35,7 +35,6 @@ async def handle_unbind(bot: Bot, event: Event):
     
     msg = "请选择要解绑的账号：\n\n"
     msg += "\n".join(account_list)
-    msg += "\n\n请点击对应表情选择要解绑的账号，然后点击确认按钮完成解绑。"
     
     # 发送消息并记录投票状态
     message = await es_unbind.send(message=msg, reply_message=True)
@@ -62,8 +61,7 @@ async def handle_unbind(bot: Bot, event: Event):
     await asyncio.sleep(0.1)
     await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id="10060")  # 取消
     
-    # 30秒
-    asyncio.create_task(unbind_timer(bot, event, message_id, 30))
+    asyncio.create_task(unbind_timer(bot, event, message_id, 60))
 
 async def unbind_timer(bot: Bot, event: Event, message_id: str, timeout: int):
     """解绑投票定时器"""
