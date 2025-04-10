@@ -26,8 +26,7 @@ async def handle_unbind(bot: Bot, event: Event):
     for i, account in enumerate(user_accounts):
         if i < len(emoji_list):
             # 获取服务器名称
-            server_code = APP_ID_TO_SERVER_NAME.get(account["app_id"], "")
-            server_name = SERVER_NAME_MAPPING.get(server_code, account["app_id"])
+            server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
             account_list.append(f"{emoji_list[i]} {server_name} {account['player_id']}")
     
     account_list.append("✨ 确认解绑")
@@ -52,13 +51,13 @@ async def handle_unbind(bot: Bot, event: Event):
     }
     
     for i in range(min(len(user_accounts), len(emoji_ids))):
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.2)
         await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id=emoji_ids[i])
     
     # 添加确认和取消表情
-    await asyncio.sleep(0.1)
+    await asyncio.sleep(0.2)
     await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id="10024")  # 确认
-    await asyncio.sleep(0.1)
+    await asyncio.sleep(0.2)
     await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id="10060")  # 取消
     
     asyncio.create_task(unbind_timer(bot, event, message_id, 60))
@@ -141,15 +140,11 @@ async def finalize_unbind(bot: Bot, event: Event, vote_data: Dict):
             
             if success:
                 success_count += 1
-                # 获取服务器名称
-                server_code = APP_ID_TO_SERVER_NAME.get(account["app_id"], "")
-                server_name = SERVER_NAME_MAPPING.get(server_code, account["app_id"])
+                server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
                 unbind_results.append(f"✅ {server_name} {account['player_id']}")
             else:
                 fail_count += 1
-                # 获取服务器名称
-                server_code = APP_ID_TO_SERVER_NAME.get(account["app_id"], "")
-                server_name = SERVER_NAME_MAPPING.get(server_code, account["app_id"])
+                server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
                 unbind_results.append(f"❌ {server_name} {account['player_id']}")
         
         # 构建结果消息

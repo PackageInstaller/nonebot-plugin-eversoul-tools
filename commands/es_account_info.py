@@ -14,14 +14,11 @@ async def handle_account_info(bot: Bot, event: Event):
     if not user_accounts:
         await es_account_info.finish(message="您尚未绑定过账号，请使用 es绑定账号 命令进行绑定", reply_message=True)
     
-    # 创建app_id到服务器名称的反向映射
-    app_id_to_server_code = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
     
     # 构建账号信息列表
     account_info_list = []
     for i, account in enumerate(user_accounts):
-        server_code = app_id_to_server_code.get(account["app_id"], "未知")
-        server_name = SERVER_NAME_MAPPING.get(server_code, account["app_id"])
+        server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
         
         account_info = f"{i+1}. {server_name} - {account['player_id']}"
         account_info_list.append(account_info)

@@ -1645,7 +1645,7 @@ def format_character_story(episode_info, endings, is_test=False):
                     "talk_index": talk_index,
                     "choice_group": choice["choice_group"],
                     # 清理好感选项里面的富文本标签
-                    "text": f"（{choice['choice_group']}）{clean_tags(choice['kr_text' if is_test else 'zh_tw_text'])}({affinity_str})",
+                    "text": f"（{choice['choice_group']}）{clean_tags(choice['zh_tw_text'] if choice['zh_tw_text'] else (choice['kr_text' if is_test else 'zh_tw_text']))}({affinity_str})",
                     "affinity": affinity,
                     "position_type": position_type,
                     "group_no": choice.get("group_no"),
@@ -1659,12 +1659,12 @@ def format_character_story(episode_info, endings, is_test=False):
         # 保存本章节的所有选项
         all_episodes_choices.append({
             "episode": ep['episode'],
-            "title": ep['kr_title' if is_test else 'zh_tw_title'],
+            "title": ep['zh_tw_title'] if ep['zh_tw_title'] else (ep['kr_title'] if is_test else ep['zh_tw_title']),
             "choices": all_choices
         })
         
         # 为每个结局添加章节标题
-        title = ep['kr_title'] if is_test else ep['zh_tw_title']
+        title = ep['zh_tw_title'] if ep['zh_tw_title'] else (ep['kr_title'] if is_test else ep['zh_tw_title'])
         good_end.append(f"\nEP{ep['episode']}：{title}")
         normal_end.append(f"\nEP{ep['episode']}：{title}")
         bad_end.append(f"\nEP{ep['episode']}：{title}")

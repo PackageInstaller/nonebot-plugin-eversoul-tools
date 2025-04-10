@@ -44,7 +44,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     forward_messages.append({
         "type": "node",
         "data": {
-            "name": "永恒灵魂助手",
+            "name": "Eversoul Helper",
             "uin": event.self_id,
             "content": f"兑换码兑换结果 ({len(coupon_codes)}个兑换码，{accounts_count}个账号)"
         }
@@ -67,7 +67,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         forward_messages.append({
             "type": "node",
             "data": {
-                "name": "永恒灵魂助手",
+                "name": "Eversoul Helper",
                 "uin": event.self_id,
                 "content": f"开始为 {account_info} 兑换"
             }
@@ -85,7 +85,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
             forward_messages.append({
                 "type": "node",
                 "data": {
-                    "name": "永恒灵魂助手",
+                    "name": "Eversoul Helper",
                     "uin": event.self_id,
                     "content": result
                 }
@@ -95,7 +95,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     forward_messages.append({
         "type": "node",
         "data": {
-            "name": "永恒灵魂助手",
+            "name": "Eversoul Helper",
             "uin": event.self_id,
             "content": f"兑换完成！共{accounts_count}个账号，{len(coupon_codes)}个兑换码"
         }

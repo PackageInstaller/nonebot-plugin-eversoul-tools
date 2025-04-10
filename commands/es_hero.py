@@ -217,10 +217,8 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                 intro_kr = intro_data["kr"]
                 intro_en = intro_data["en"]
                 if intro_zh_tw or intro_kr:
-                    if is_test:
-                        messages.append("【自我介绍】\n" + intro_kr)
-                    else:
-                        messages.append("【自我介绍】\n" + intro_zh_tw)
+                    intro_text = intro_zh_tw if intro_zh_tw else (intro_kr if is_test else intro_zh_tw)
+                    messages.append("【自我介绍】\n" + intro_text)
         
         # 添加好感故事攻略
         has_story, episode_info, endings = get_character_story(data, hero_id)
