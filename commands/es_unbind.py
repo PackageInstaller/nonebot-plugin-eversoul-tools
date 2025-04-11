@@ -30,7 +30,7 @@ async def handle_unbind(bot: Bot, event: Event):
             account_list.append(f"{emoji_list[i]} {server_name} {account['player_id']}")
     
     account_list.append("✨ 确认解绑")
-    account_list.append("❌ 取消操作")
+    account_list.append("❎ 取消操作")
     
     msg = "请选择要解绑的账号：\n\n"
     msg += "\n".join(account_list)
@@ -145,7 +145,7 @@ async def finalize_unbind(bot: Bot, event: Event, vote_data: Dict):
             else:
                 fail_count += 1
                 server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
-                unbind_results.append(f"❌ {server_name} {account['player_id']}")
+                unbind_results.append(f"❎ {server_name} {account['player_id']}")
         
         # 构建结果消息
         result_msg = f"解绑结果：\n"
