@@ -85,5 +85,5 @@ from .es_string_utils import (
 
 # 兑换码相关
 from .es_coupon_utils import (
-    parse_server_id, redeem_coupon
+    parse_server_id, redeem_coupon, redeem_coupons_concurrently
 )
