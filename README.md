@@ -15,7 +15,7 @@ Eversoul QQ机器人插件是为永恒灵魂游戏玩家开发的一款多功能
 <details>
 <summary>git</summary>
 
-    `git clone https://github.com/PackageInstaller/nonebot-plugin-eversoul-tools`
+    git clone https://github.com/PackageInstaller/nonebot-plugin-eversoul-tools
 </details>
 
 ## ⚙️ 配置
