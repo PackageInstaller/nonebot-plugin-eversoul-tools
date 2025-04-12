@@ -140,7 +140,8 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                     elif status_code == 462:
                         return False, f"兑换码已过期。"
                     elif status_code == 463:
-                        return False, f"帐号超出兑换次数限制。"
+                        # 将超出兑换次数限制视为"有效"，这样可以更新过期日期
+                        return True, f"帐号超出兑换次数限制。"
                     elif status_code == 466:
                         return False, f"账号不存在。"
                     else:
@@ -220,23 +221,42 @@ async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items:
                 
                 # 检查是否已经兑换过
                 if code in coupon_history:
-                    skipped_count += 1
-                    status = coupon_history[code]["status"]
-                    result = coupon_history[code]["message"]
-                    results.append({
-                        "code": code,
-                        "desc": desc,
-                        "status": "已兑换",
-                        "result": f"{code} ({desc}): ⏭️已兑换\n{result}",
-                        "is_skipped": True
-                    })
-                    queue.task_done()
-                    continue
+                    # 检查是否是因为超出兑换次数限制而失败，且当前兑换码已过期
+                    is_limit_exceeded = "帐号超出兑换次数限制" in coupon_history[code].get("message", "")
+                    is_expired = item.get("is_expired", False)
+                    
+                    # 如果是超出兑换次数限制且已过期的兑换码，我们不跳过，继续尝试兑换
+                    if is_limit_exceeded and is_expired:
+                        # 继续处理兑换，不跳过
+                        pass
+                    else:
+                        # 正常跳过已兑换过的兑换码
+                        skipped_count += 1
+                        status = coupon_history[code]["status"]
+                        result = coupon_history[code]["message"]
+                        results.append({
+                            "code": code,
+                            "desc": desc,
+                            "status": "已兑换",
+                            "result": f"{code} ({desc}): ⏭️已兑换\n{result}",
+                            "is_skipped": True
+                        })
+                        queue.task_done()
+                        continue
                 
                 # 执行兑换
                 success, result = await redeem_coupon(app_id, player_id, code, event)
-                status = "成功" if success else "失败"
-                status_emoji = "✅成功" if success else "❎失败"
+                
+                # 特殊处理超出兑换次数限制的情况
+                is_limit_exceeded = "帐号超出兑换次数限制" in result
+                
+                # 状态文本和表情
+                if is_limit_exceeded:
+                    status = "超出限制"  # 实际上这是成功的识别，但显示为"超出限制"
+                    status_emoji = "⚠️超出限制"
+                else:
+                    status = "成功" if success else "失败"
+                    status_emoji = "✅成功" if success else "❎失败"
                 
                 results.append({
                     "code": code,

@@ -222,10 +222,12 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                 
                 # 检查是否需要更新过期日期
                 for item in all_coupons:
-                    if item["code"] == code and item.get("is_expired", False) and success:
-                        # 如果过期码兑换成功，需要更新日期
-                        if code not in codes_to_update:
-                            codes_to_update.append(code)
+                    if item["code"] == code and item.get("is_expired", False):
+                        # 如果是超出兑换次数限制的情况，也需要更新过期日期
+                        if success or "帐号超出兑换次数限制" in message:
+                            # 如果过期码兑换成功或返回超出限制，需要更新日期
+                            if code not in codes_to_update:
+                                codes_to_update.append(code)
             
             # 添加结果到消息中
             forward_messages.append({
@@ -253,7 +255,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     if codes_to_update:
         for code in codes_to_update:
             # 设置为当前日期
-            future_date = (datetime.now()).strftime("%Y-%m-%d")
+            future_date = datetime.now().strftime("%Y-%m-%d")
             if await update_coupon_expiry_date(code, future_date):
                 updated_codes.append(code)
     

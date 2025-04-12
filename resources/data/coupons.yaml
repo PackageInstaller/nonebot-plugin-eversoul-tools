@@ -1,130 +1,91 @@
-# 永恒灵魂兑换码列表
-
 coupons:
-  # 示例格式：
-  # - code: 兑换码内容
-  #   desc: 兑换码描述/备注
-  #   date: 兑换码过期时间
-
-  - code: "1stAnniv0103"
-    desc: "一周年兑换码"
-    date: "2024-01-29"
-    
-  - code: "2Qgift0325"
-    desc: "Q2前瞻兑换码"
-    date: "2024-04-08"
-    
-  - code: "EVERSOUL4EVER"
-    desc: "不知道是啥的兑换码"
-    date: "2024-04-16"
-  
-  - code: "eversoulmate0704"
-    desc: "不知道是啥的兑换码+1"
-    date: "2024-07-18"
-  
-  - code: "SEXYCUTELARIMAR"
-    desc: "性感可爱拉利玛的兑换码"
-    date: "2024-08-01"
-
-  - code: "SEXYLINZY"
-    desc: "性感琳赛的兑换码"
-    date: "2024-10-11"
-
-  - code: "CUTELINZY"
-    desc: "可爱琳赛的兑换码"
-    date: "2024-10-11"
-
-  - code: "COFFEESTOPHELES"
-    desc: "梅菲咖啡馆联动的兑换码"
-    date: "2024-10-11"
-
-  - code: "1121COLLABO"
-    desc: "合作的兑换码"
-    date: "2024-10-11"
-
-  - code: "1031BUNNYSOUL"
-    desc: "兔女郎的兑换码"
-    date: "2024-10-11"
-
-  - code: "COOLPUNCH"
-    desc: "不知道是啥的兑换码+2"
-    date: "2024-10-11"
-
-  - code: "KIMPDBIRTH0928"
-    desc: "金梅菲生日的兑换码"
-    date: "2024-10-11"
-
-  - code: "EVERTALK1108"
-    desc: "不知道是啥的兑换码+3"
-    date: "2024-11-29"
-
-  - code: "EVERSOULXDAL"
-    desc: "不知道是啥的兑换码+4"
-    date: "2024-11-29"
-
-  - code: "CONTEST1108"
-    desc: "不知道是啥的兑换码+5"
-    date: "2024-11-29"
-    
-  - code: "JPHALFANNIV1115"
-    desc: "日服半周年的兑换码"
-    date: "2024-11-29"
-
-  - code: "THXCONTEST1229"
-    desc: "不知道是啥的兑换码+6"
-    date: "2025-01-23"
-
-  - code: "EVERLASTINGLOVE0102"
-    desc: "永恒的爱的兑换码"
-    date: "2025-01-23"
-
-  - code: "HOLDMYHAND0102"
-    desc: "握住我的手的兑换码"
-    date: "2025-01-23"
-
-  - code: "THX2NDANNIV0105"
-    desc: "感谢二周年的兑换码"
-    date: "2025-01-23"
-    
-  - code: "HOPEFULLUNAR"
-    desc: "希望满满的兑换码"
-    date: "2025-02-02"
-
-  - code: "BLUESNAKEWISDOM"
-    desc: "不知道是啥的兑换码+7"
-    date: "2025-02-02"
-  
-  - code: "NEWBLESSING2025"
-    desc: "新年祝福的兑换码"
-    date: "2025-02-02"
-
-  - code: "VALENTINESOUL0214"
-    desc: "情人节灵魂的兑换码"
-    date: "2025-02-27"
-
-  - code: "LOVELYSOUL0227"
-    desc: "可爱的灵魂的兑换码"
-    date: "2025-03-13"
-    
-  - code: "ANGELHANUL0327"
-    desc: "韩羽登场的兑换码"
-    date: "2025-03-24"
-    
-  - code: "MAIDINMYHOME"
-    desc: "25年Q2前瞻的兑换码"
-    date: "2025-03-24"
-
-  - code: "2QSPECIALLIVE"
-    desc: "25年Q2前瞻的兑换码+1"
-    date: "2025-03-24"
-
-  - code: "THXLOVE1004"
-    desc: "感谢爱的兑换码"
-    date: "2025-03-24"
-    
-  - code: "EDITHINLABYRINTH"
-    desc: "伊迪丝迷宫乱斗的兑换码"
-    date: "2025-04-07"
-
-# 添加新的兑换码时，请按照上面的格式添加
-# 注意保持正确的缩进和格式
+- code: 1stAnniv0103
+  date: '2024-01-29'
+  desc: 一周年兑换码
+- code: 2Qgift0325
+  date: '2024-04-08'
+  desc: Q2前瞻兑换码
+- code: EVERSOUL4EVER
+  date: '2024-04-16'
+  desc: 不知道是啥的兑换码
+- code: eversoulmate0704
+  date: '2024-07-18'
+  desc: 不知道是啥的兑换码+1
+- code: SEXYCUTELARIMAR
+  date: '2024-08-01'
+  desc: 性感可爱拉利玛的兑换码
+- code: SEXYLINZY
+  date: '2024-10-11'
+  desc: 性感琳赛的兑换码
+- code: CUTELINZY
+  date: '2024-10-11'
+  desc: 可爱琳赛的兑换码
+- code: COFFEESTOPHELES
+  date: '2024-10-11'
+  desc: 梅菲咖啡馆联动的兑换码
+- code: 1121COLLABO
+  date: '2024-10-11'
+  desc: 合作的兑换码
+- code: 1031BUNNYSOUL
+  date: '2024-10-11'
+  desc: 兔女郎的兑换码
+- code: COOLPUNCH
+  date: '2024-10-11'
+  desc: 不知道是啥的兑换码+2
+- code: KIMPDBIRTH0928
+  date: '2024-10-11'
+  desc: 金梅菲生日的兑换码
+- code: EVERTALK1108
+  date: '2024-11-29'
+  desc: 不知道是啥的兑换码+3
+- code: EVERSOULXDAL
+  date: '2024-11-29'
+  desc: 不知道是啥的兑换码+4
+- code: CONTEST1108
+  date: '2024-11-29'
+  desc: 不知道是啥的兑换码+5
+- code: JPHALFANNIV1115
+  date: '2024-11-29'
+  desc: 日服半周年的兑换码
+- code: THXCONTEST1229
+  date: '2025-01-23'
+  desc: 不知道是啥的兑换码+6
+- code: EVERLASTINGLOVE0102
+  date: '2025-01-23'
+  desc: 永恒的爱的兑换码
+- code: HOLDMYHAND0102
+  date: '2025-01-23'
+  desc: 握住我的手的兑换码
+- code: THX2NDANNIV0105
+  date: '2025-01-23'
+  desc: 感谢二周年的兑换码
+- code: HOPEFULLUNAR
+  date: '2025-02-02'
+  desc: 希望满满的兑换码
+- code: BLUESNAKEWISDOM
+  date: '2025-02-02'
+  desc: 不知道是啥的兑换码+7
+- code: NEWBLESSING2025
+  date: '2025-02-02'
+  desc: 新年祝福的兑换码
+- code: VALENTINESOUL0214
+  date: '2025-02-27'
+  desc: 情人节灵魂的兑换码
+- code: LOVELYSOUL0227
+  date: '2025-03-13'
+  desc: 可爱的灵魂的兑换码
+- code: ANGELHANUL0327
+  date: '2025-04-12'
+  desc: 韩羽登场的兑换码
+- code: MAIDINMYHOME
+  date: '2025-04-12'
+  desc: 25年Q2前瞻的兑换码
+- code: 2QSPECIALLIVE
+  date: '2025-04-12'
+  desc: 25年Q2前瞻的兑换码+1
+- code: THXLOVE1004
+  date: '2025-04-12'
+  desc: 感谢爱的兑换码
+- code: EDITHINLABYRINTH
+  date: '2025-04-07'
+  desc: 伊迪丝迷宫乱斗的兑换码
