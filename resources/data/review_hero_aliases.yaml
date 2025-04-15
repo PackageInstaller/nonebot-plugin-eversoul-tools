@@ -194,7 +194,7 @@ names:
     kr_name: 지호(미르)
     en_name: Jiho (Mir)
     ja_name: ジホ(ミル)
-    aliases: [大智河]
+    aliases: [谋智河, 米智河, 米河, 界智河, 米纸盒, 界纸盒, 大纸盒, 谋纸盒, 米盒, 大智河]
     hero_id: 1160
   - zh_tw_name: 紅蘭
     zh_cn_name: 红兰
@@ -355,7 +355,7 @@ names:
     kr_name: 이디스
     en_name: Edith
     ja_name: イーディス
-    aliases: [伊迪斯, eds]
+    aliases: [yds, 伊迪斯, eds]
     hero_id: 3060
   - zh_tw_name: 妮可
     zh_cn_name: 妮可

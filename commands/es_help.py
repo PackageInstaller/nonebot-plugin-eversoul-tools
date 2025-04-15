@@ -122,7 +122,7 @@ async def handle_es_help(bot: Bot, event: Event):
                 <div class="example">示例：es数据源切换review</div>
             </div>
             <div class="command">
-                <div class="command-name">14. es兑换码 + [兑换码1] [兑换码2] ...</div>
+                <div class="command-name">14. es兑换码</div>
                 <div class="usage">用途：兑换游戏礼包码，支持多个兑换码同时兑换（空格分隔）</div>
                 <div class="example">示例：es兑换码 CODE1 CODE2 CODE3</div>
             </div>

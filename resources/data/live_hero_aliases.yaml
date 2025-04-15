@@ -190,11 +190,11 @@ names:
       大蘿絲, 紅蘿, 火蘿]
     hero_id: 1150
   - zh_tw_name: 智河（米爾）
-    zh_cn_name: ''
+    zh_cn_name: 智河（米尔）
     kr_name: 지호(미르)
     en_name: Jiho (Mir)
     ja_name: ジホ(ミル)
-    aliases: [大智河]
+    aliases: [大智河, 米河, 米智河, 大纸盒, 米盒, 米纸盒, 界智河, 界纸盒, 谋智河, 谋纸盒]
     hero_id: 1160
   - zh_tw_name: 紅蘭
     zh_cn_name: 红兰
@@ -309,7 +309,7 @@ names:
     aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰, 标红兰]
     hero_id: 2160
   - zh_tw_name: 河路（神威）
-    zh_cn_name: ''
+    zh_cn_name: 河路（神威）
     kr_name: 하루(카무이)
     en_name: Haru (Kamuy)
     ja_name: ハル(カムイ)
@@ -355,7 +355,7 @@ names:
     kr_name: 이디스
     en_name: Edith
     ja_name: イーディス
-    aliases: [伊迪斯, eds]
+    aliases: [伊迪斯, eds, yds]
     hero_id: 3060
   - zh_tw_name: 妮可
     zh_cn_name: 妮可
