@@ -597,9 +597,16 @@ def load_data_source_config():
 def save_data_source_config(config):
     """保存数据源配置"""
     try:
-        save_config = {}
+        # 读取现有配置（如果存在）
+        existing_config = {}
+        if DATA_SOURCE_CONFIG.exists():
+            with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
+                existing_config = yaml.safe_load(f) or {}
+        
+        save_config = existing_config.copy()  # 基于现有配置创建
         plugin_dir = str(Path(__file__).parent)
         
+        # 更新或添加新配置
         for group_id, group_config in config.items():
             save_config[group_id] = group_config.copy()
             if "json_path" in group_config:

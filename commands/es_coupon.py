@@ -24,51 +24,6 @@ def ensure_coupon_file():
         logger.info(f"已创建兑换码文件: {COUPON_YAML_PATH}")
 
 
-# 更新兑换码的过期日期
-async def update_coupon_expiry_date(code: str, new_date: str = None):
-    """更新兑换码的过期日期
-    
-    Args:
-        code: 兑换码
-        new_date: 新的过期日期，如果为None则自动设置为当前日期+30天
-    """
-    try:
-        # 读取当前文件
-        with open(COUPON_YAML_PATH, "r", encoding="utf-8") as f:
-            coupon_data = yaml.safe_load(f)
-            
-        # 如果文件为空或格式不正确，初始化结构
-        if not coupon_data or not isinstance(coupon_data, dict):
-            coupon_data = {"coupons": []}
-        
-        # 查找并更新对应的兑换码
-        updated = False
-        for item in coupon_data.get("coupons", []):
-            if item.get("code") == code:
-                # 如果没有提供新日期，则默认设置为当前日期+30天
-                if new_date is None:
-                    future_date = datetime.now() + timedelta(days=30)
-                    new_date = future_date.strftime("%Y-%m-%d")
-                
-                # 更新日期
-                item["date"] = new_date
-                updated = True
-                logger.info(f"已更新兑换码 {code} 的过期日期为 {new_date}")
-                break
-        
-        # 如果找到并更新了兑换码，保存文件
-        if updated:
-            with open(COUPON_YAML_PATH, "w", encoding="utf-8") as f:
-                yaml.dump(coupon_data, f, allow_unicode=True)
-            
-            return True
-        
-        return False
-    except Exception as e:
-        logger.error(f"更新兑换码过期日期失败: {e}")
-        return False
-
-
 @es_coupon.handle()
 async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     """处理兑换码指令"""
@@ -115,8 +70,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         if not code:
             continue
             
-        # 尽管日期已过期，我们仍然尝试兑换，但在UI中标记为过期
-        # 这样如果官方延长了兑换期限，我们仍然能够兑换成功
+        # 如果日期已过期，标记为过期，但不再尝试兑换
         if expiry_date and expiry_date < current_date:
             item["is_expired"] = True
             expired_coupons.append(item)
@@ -124,18 +78,18 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
             item["is_expired"] = False
             valid_coupons.append(item)
     
-    # 合并有效和过期的兑换码，我们都会尝试兑换
-    all_coupons = valid_coupons + expired_coupons
+    # 现在只使用有效的兑换码，不再尝试过期的
+    all_coupons = valid_coupons
     
     if not all_coupons:
-        await es_coupon.finish(message="没有找到有效的兑换码", reply_message=True)
+        await es_coupon.finish(message="全部兑换码已过期！", reply_message=True)
     
     # 显示用户信息
     accounts_count = len(user_accounts)
-    message_text = f"开始为您的{accounts_count}个账号兑换{len(all_coupons)}个兑换码，请耐心等待..."
+    reply_text = f"开始为您的{accounts_count}个账号兑换{len(all_coupons)}个兑换码，请耐心等待..."
     
     await es_coupon.send(
-        message=message_text,
+        message=reply_text,
         reply_message=True
     )
     
@@ -190,26 +144,12 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
             }
         })
         
-        # 先更新这些特殊兑换码的日期
-        updated_limit_codes = []
         for code in expired_limit_codes:
-            future_date = datetime.now().strftime("%Y-%m-%d")
-            if await update_coupon_expiry_date(code, future_date):
-                updated_limit_codes.append(code)
-                # 同时更新兑换码列表中的状态
-                for item in all_coupons:
-                    if item.get("code") == code:
-                        item["is_expired"] = False
-        
-        if updated_limit_codes:
-            forward_messages.append({
-                "type": "node",
-                "data": {
-                    "name": "Eversoul Helper",
-                    "uin": event.self_id,
-                    "content": f"已预先更新 {len(updated_limit_codes)} 个兑换码的有效期：\n" + "\n".join(updated_limit_codes)
-                }
-            })
+            # 同时更新兑换码列表中的状态
+            for item in all_coupons:
+                if item.get("code") == code:
+                    item["is_expired"] = False
+
     
     # 为每个账号执行兑换
     for account_index, account in enumerate(user_accounts):
@@ -352,26 +292,6 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                             # 如果过期码兑换成功或返回超出限制，需要更新日期
                             if code not in codes_to_update:
                                 codes_to_update.append(code)
-    
-    # 更新过期码的日期
-    updated_codes = []
-    if codes_to_update:
-        for code in codes_to_update:
-            # 设置为当前日期
-            future_date = datetime.now().strftime("%Y-%m-%d")
-            if await update_coupon_expiry_date(code, future_date):
-                updated_codes.append(code)
-    
-    # 添加过期码更新信息
-    if updated_codes:
-        forward_messages.append({
-            "type": "node",
-            "data": {
-                "name": "Eversoul Helper",
-                "uin": event.self_id,
-                "content": f"已更新 {len(updated_codes)} 个过期码的有效期：\n" + "\n".join(updated_codes)
-            }
-        })
     
     # 添加兑换完成信息
     forward_messages.append({

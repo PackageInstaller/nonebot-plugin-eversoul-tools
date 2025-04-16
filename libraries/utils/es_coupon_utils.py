@@ -221,28 +221,28 @@ async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items:
                 
                 # 检查是否已经兑换过
                 if code in coupon_history:
-                    # 检查是否是因为超出兑换次数限制而失败，且当前兑换码已过期
-                    is_limit_exceeded = "帐号超出兑换次数限制" in coupon_history[code].get("message", "")
-                    is_expired = item.get("is_expired", False)
+                    # 不管什么原因，只要在历史记录中存在，就跳过
+                    skipped_count += 1
+                    status = coupon_history[code]["status"]
+                    message = coupon_history[code].get("message", "")
                     
-                    # 如果是超出兑换次数限制且已过期的兑换码，我们不跳过，继续尝试兑换
-                    if is_limit_exceeded and is_expired:
-                        # 继续处理兑换，不跳过
-                        pass
+                    # 根据历史记录中的状态显示不同的图标
+                    if "帐号超出兑换次数限制" in message:
+                        status_emoji = "⚠️超出限制"
+                    elif status == "成功":
+                        status_emoji = "✅已兑换"
                     else:
-                        # 正常跳过已兑换过的兑换码
-                        skipped_count += 1
-                        status = coupon_history[code]["status"]
-                        result = coupon_history[code]["message"]
-                        results.append({
-                            "code": code,
-                            "desc": desc,
-                            "status": "已兑换",
-                            "result": f"{code} ({desc}): ⏭️已兑换\n{result}",
-                            "is_skipped": True
-                        })
-                        queue.task_done()
-                        continue
+                        status_emoji = "⏭️已处理"
+                        
+                    results.append({
+                        "code": code,
+                        "desc": desc,
+                        "status": "已兑换",
+                        "result": f"{code} ({desc}): {status_emoji}\n{message}",
+                        "is_skipped": True
+                    })
+                    queue.task_done()
+                    continue
                 
                 # 执行兑换
                 success, result = await redeem_coupon(app_id, player_id, code, event)

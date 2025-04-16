@@ -34,26 +34,6 @@ async def handle_switch_source(event: GroupMessageEvent):
     try:
         # 保存配置到文件
         save_data_source_config(CURRENT_DATA_SOURCE)
-        current_keys = list(CURRENT_DATA_SOURCE.keys())
-        # 重新加载配置
-        load_data_source_config()
-        # 验证配置是否正确加载
-        new_keys = list(CURRENT_DATA_SOURCE.keys())
-        
-        # 确保群组配置被加载
-        if group_id not in CURRENT_DATA_SOURCE:
-            # 手动添加回配置
-            if group_id in current_keys:
-                with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
-                    saved_config = yaml.safe_load(f)
-                if saved_config and group_id in saved_config:
-                    group_config = saved_config[group_id]
-                    if "json_path" in group_config:
-                        group_config["json_path"] = Path(group_config["json_path"])
-                    if "hero_alias_file" in group_config:
-                        group_config["hero_alias_file"] = Path(group_config["hero_alias_file"])
-                    CURRENT_DATA_SOURCE[group_id] = group_config
-        
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback

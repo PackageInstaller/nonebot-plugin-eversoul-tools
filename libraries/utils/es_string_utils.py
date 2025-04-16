@@ -185,7 +185,7 @@ def get_string_item(data, item_no):
             if name_sno:
                 # 在StringItem.json中查找物品名称
                 for string in data["string_item"]["json"]:
-                    if string["no"] == name_sno:
+                    if string.get("no") == name_sno:
                         return {
                             "zh_tw": string.get("zh_tw", ""),
                             "zh_cn": string.get("zh_cn", ""),
@@ -617,10 +617,14 @@ def get_character_keyword_location(data: dict, keyword_get_details: int, is_test
     if not location:
         return ""
     
-    # 获取地点名称
-    location_name = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_town"]["json"] 
-                        if s["no"] == location.get("location_name_sno")), "")
-    return location_name
+    # 获取地点名称，优先使用zh_tw
+    location_data = next((s for s in data["string_town"]["json"] 
+                      if s["no"] == location.get("location_name_sno")), None)
+    if location_data:
+        zh_tw = location_data.get("zh_tw", "")
+        kr = location_data.get("kr", "")
+        return zh_tw if zh_tw else (kr if is_test else zh_tw)
+    return ""
 
 
 def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword_get_details: int, is_test: bool = False) -> str:
@@ -694,8 +698,14 @@ def get_character_keyword_point(data: dict, keyword_type: str) -> list:
 
 def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int = None, keyword_type: int = None, is_test: bool = False) -> str:
     """获取关键字解锁条件"""
-    source = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_ui"]["json"] 
-                  if s["no"] == source_sno), "")
+    # 优先获取zh_tw，当zh_tw为空时再根据is_test判断
+    source_data = next((s for s in data["string_ui"]["json"] if s["no"] == source_sno), None)
+    if source_data:
+        zh_tw = source_data.get("zh_tw", "")
+        kr = source_data.get("kr", "")
+        source = zh_tw if zh_tw else (kr if is_test else zh_tw)
+    else:
+        source = ""
     
     if not source:
         return ""
@@ -710,8 +720,15 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
         location = next((loc for loc in data["town_location"]["json"] 
                        if loc["no"] == details), None)
         if location:
-            location_name = next((s.get("kr" if is_test else "zh_tw", "未知") for s in data["string_town"]["json"] 
-                                if s["no"] == location.get("location_name_sno")), "未知")
+            # 获取地点名称，优先使用zh_tw
+            location_data = next((s for s in data["string_town"]["json"] 
+                                if s["no"] == location.get("location_name_sno")), None)
+            if location_data:
+                zh_tw = location_data.get("zh_tw", "")
+                kr = location_data.get("kr", "")
+                location_name = zh_tw if zh_tw else (kr if is_test else zh_tw)
+            else:
+                location_name = "未知"
             return f"在{location_name}解锁"
     elif details == 1:
         try:
@@ -868,7 +885,9 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if name_sno:
                             for string in data["string_item"]["json"]:
                                 if string.get("no") == name_sno:
-                                    name = string.get("kr", "") if is_test else string.get("zh_tw", "")
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
+                                    name = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                     break
                         
                         # 获取物品品质
@@ -877,7 +896,9 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if grade_sno:
                             for string in data["string_system"]["json"]:
                                 if string.get("no") == grade_sno:
-                                    grade = string.get("kr", "") if is_test else string.get("zh_tw", "")
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
+                                    grade = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                     break
                         
                         # 获取物品类型
@@ -886,7 +907,9 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if slot_limit_sno:
                             for string in data["string_ui"]["json"]:
                                 if string.get("no") == slot_limit_sno:
-                                    slot_type = string.get("kr", "") if is_test else string.get("zh_tw", "")
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
+                                    slot_type = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                     break
                         
                         # 获取物品描述并清理颜色标签
@@ -895,7 +918,10 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if desc_sno:
                             for string in data["string_item"]["json"]:
                                 if string.get("no") == desc_sno:
-                                    desc = clean_tags(string.get("kr", "") if is_test else string.get("zh_tw", ""))
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
+                                    desc_text = zh_tw if zh_tw else (kr if is_test else zh_tw)
+                                    desc = clean_tags(desc_text)
                                     break
                         
                         if name:  # 只添加有名称的物品
@@ -950,7 +976,9 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                         if rarity_sno:
                             for string in data["string_system"]["json"]:
                                 if string.get("no") == rarity_sno:
-                                    rarity = string.get("kr", "") if is_test else string.get("zh_tw", "")
+                                    rarity_zh_tw = string.get("zh_tw", "")
+                                    rarity_kr = string.get("kr", "")
+                                    rarity = rarity_zh_tw if rarity_zh_tw else (rarity_kr if is_test else rarity_zh_tw)
                                     break
                         
                         # 获取任务名称
@@ -959,9 +987,11 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                         if name_sno:
                             for string in data["string_town"]["json"]:
                                 if string.get("no") == name_sno:
-                                    name = string.get("kr", "") if is_test else string.get("zh_tw", "")
+                                    name_zh_tw = string.get("zh_tw", "")
+                                    name_kr = string.get("kr", "")
+                                    name = name_zh_tw if name_zh_tw else (name_kr if is_test else name_zh_tw)
                                     break
-                        
+                                    
                         # 获取所需时间
                         time_hours = arbeit.get("time", 0) / 3600
                         
@@ -984,7 +1014,9 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                                         if name_sno:
                                             for string in data["string_item"]["json"]:
                                                 if string.get("no") == name_sno:
-                                                    item_name = string.get("kr", "") if is_test else string.get("zh_tw", "")
+                                                    item_name_zh_tw = string.get("zh_tw", "")
+                                                    item_name_kr = string.get("kr", "")
+                                                    item_name = item_name_zh_tw if item_name_zh_tw else (item_name_kr if is_test else item_name_zh_tw)
                                                     rewards.append(f"{item_name} x{item_amount}")
                                                     break
                         
@@ -1112,20 +1144,29 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
             continue
         
         # 获取灵魂链接标题和故事
-        title = next((s.get("kr" if is_test else "zh_tw", "") 
-                    for s in data["string_character"]["json"] 
-                    if s["no"] == link.get("group_title")), "")
-        story = next((s.get("kr" if is_test else "zh_tw", "") 
-                    for s in data["string_character"]["json"] 
-                    if s["no"] == link.get("group_story")), "")
+        # 优先使用zh_tw内容的逻辑
+        title_data = next((s for s in data["string_character"]["json"] 
+                         if s["no"] == link.get("group_title")), {})
+        title_zh_tw = title_data.get("zh_tw", "")
+        title_kr = title_data.get("kr", "")
+        title = title_zh_tw if title_zh_tw else (title_kr if is_test else title_zh_tw)
+        
+        story_data = next((s for s in data["string_character"]["json"] 
+                         if s["no"] == link.get("group_story")), {})
+        story_zh_tw = story_data.get("zh_tw", "")
+        story_kr = story_data.get("kr", "")
+        story = story_zh_tw if story_zh_tw else (story_kr if is_test else story_zh_tw)
         
         # 获取所有角色名称
         hero_names = []
         for hid in hero_ids:
-            name = get_string_character(data, hid)["kr" if is_test else "zh_tw"]  # 使用字典访问
+            name_data = get_string_character(data, hid, special=True)
+            name_zh_tw = name_data["zh_tw"]
+            name_kr = name_data["kr"]
+            name = name_zh_tw if name_zh_tw else (name_kr if is_test else name_zh_tw)
             if name:
                 hero_names.append(name)
-        
+                
         # 获取收集效果
         collection_effects = []
         if collection_id := link.get("collection"):
@@ -1137,12 +1178,24 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
             )
             
             for item in collection_items:
-                # 获取条件文本
-                condition_text = next((s.get("kr" if is_test else "zh_tw", "").format(
-                    item.get("condition_count", 0),
-                    item.get("condition_count", 0)
-                ) for s in data["string_ui"]["json"] 
-                if s["no"] == item.get("condition_string")), "")
+                # 获取条件文本，修改为优先使用zh_tw内容的逻辑
+                condition_string_no = item.get("condition_string")
+                condition_data = next((s for s in data["string_ui"]["json"] 
+                                     if s["no"] == condition_string_no), {})
+                condition_zh_tw = condition_data.get("zh_tw", "")
+                condition_kr = condition_data.get("kr", "")
+                
+                condition_text = ""
+                if condition_zh_tw:
+                    condition_text = condition_zh_tw.format(
+                        item.get("condition_count", 0),
+                        item.get("condition_count", 0)
+                    )
+                elif is_test and condition_kr:
+                    condition_text = condition_kr.format(
+                        item.get("condition_count", 0),
+                        item.get("condition_count", 0)
+                    )
                 
                 # 获取buff效果
                 buff_effects = []
@@ -1152,10 +1205,12 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                     if buff:
                         for key, value in buff.items():
                             if key in STAT_NAME_MAPPING and value != 0:
+                                # 获取属性名称，优先使用zh_tw
+                                stat_name = STAT_NAME_MAPPING[key]
                                 if value < 1:  # 小于1的显示为百分比
-                                    buff_effects.append(f"{STAT_NAME_MAPPING[key]}：{value*100:.1f}%")
+                                    buff_effects.append(f"{stat_name}：{value*100:.1f}%")
                                 else:
-                                    buff_effects.append(f"{STAT_NAME_MAPPING[key]}：{int(value)}")
+                                    buff_effects.append(f"{stat_name}：{int(value)}")
                 
                 if condition_text and buff_effects:
                     collection_effects.append({
