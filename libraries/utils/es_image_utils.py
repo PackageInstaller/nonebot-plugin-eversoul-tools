@@ -370,20 +370,36 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
         name_sno = None
         gacha_no = None
         
-        # 从EventCalender中获取name_sno和gacha_no
-        for event in data["event_calender"]["json"]:
-            if event.get("schedule_key") == schedule_key:
-                name_sno = event.get("name_sno")
-                # 如果是Pickup类型，获取gacha_no
-                if schedule_key.startswith("Calender_PickUp_"):
-                    gacha_no = event.get("gacha_no")
-                if name_sno:
-                    # 从StringUI中获取名称
-                    for string in data["string_ui"]["json"]:
-                        if string["no"] == name_sno:
-                            event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
-                            break
-                break
+        # 对于EventInfo_Side_开头的活动，直接从event_info中获取信息
+        if schedule_key.startswith("EventInfo_Side_") and not (schedule_key.endswith("_Main") or schedule_key.endswith("_Infinity") or schedule_key.endswith("_Minigame") or schedule_key.endswith("_Quest")):
+            for event_info in data["event_info"]["json"]:
+                if event_info.get("schedule_key") == schedule_key:
+                    name_sno = event_info.get("name_sno")
+                    banner_raw = event_info.get("banner_path", "")
+                    if banner_raw:
+                        banner_path = f"{banner_raw}_ZH_TW.png"
+                    # 如果找到name_sno，从StringUI中获取名称
+                    if name_sno:
+                        for string in data["string_ui"]["json"]:
+                            if string["no"] == name_sno:
+                                event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
+                                break
+                    break
+        else:
+            # 从EventCalender中获取name_sno和gacha_no
+            for event in data["event_calender"]["json"]:
+                if event.get("schedule_key") == schedule_key:
+                    name_sno = event.get("name_sno")
+                    # 如果是Pickup类型，获取gacha_no
+                    if schedule_key.startswith("Calender_PickUp_"):
+                        gacha_no = event.get("gacha_no")
+                    if name_sno:
+                        # 从StringUI中获取名称
+                        for string in data["string_ui"]["json"]:
+                            if string["no"] == name_sno:
+                                event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
+                                break
+                    break
         
         # 对于Pickup类型，从Gacha.json中获取banner_path
         if schedule_key.startswith("Calender_PickUp_") and gacha_no:
@@ -449,7 +465,6 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
                 event_info.append(f"banner：{banner_path}")
             # 返回带开始时间的元组
             events.append((start_date, "\n".join(event_info)))
-    
     return events
 
 
@@ -727,21 +742,23 @@ def get_event_name(event: str) -> str:
 
 def get_event_type_class(event: str) -> str:
     """根据事件内容返回对应的CSS类名"""
-    if "主要活动" in event:
+    if "【附属活动】" in event:
+        return "side"
+    elif "【主要活动】" in event:
         return "main"
-    elif "活动" in event:
+    elif "【活动】" in event:
         return "calendar"
-    elif "邮箱事件" in event:
+    elif "【邮箱事件】" in event:
         return "mail"
-    elif "恶灵讨伐" in event:
+    elif "【恶灵讨伐】" in event:
         return "raid"
-    elif "联合作战" in event:
+    elif "【联合作战】" in event:
         return "eden"
-    elif "Pickup" in event:
+    elif "【Pickup】" in event:
         return "pickup"
-    elif "世界Boss" in event:
+    elif "【世界Boss】" in event:
         return "worldboss"
-    elif "工会突袭" in event:
+    elif "【工会突袭】" in event:
         return "guildraid"
     return "calendar"
 
@@ -923,6 +940,15 @@ async def generate_timeline_html(month: int, events: list) -> str:
             .event.calendar .event-type {{
                 background-color: #37474f;
             }}
+            
+            /* 附属活动 - 蓝色 */
+            .event.side::before {{
+                background-color: #007bff;
+            }}
+            .event.side .event-type {{
+                background-color: #007bff;
+            }}
+            
             .event-content {{
                 color: #333;
                 white-space: pre-wrap;

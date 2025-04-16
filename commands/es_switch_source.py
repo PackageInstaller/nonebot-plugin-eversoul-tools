@@ -20,6 +20,9 @@ async def handle_switch_source(event: GroupMessageEvent):
     if "default" not in CURRENT_DATA_SOURCE:
         CURRENT_DATA_SOURCE["default"] = DEFAULT_CONFIG.copy()
     
+    # 记录原始配置
+    logger.info(f"切换前CURRENT_DATA_SOURCE: {CURRENT_DATA_SOURCE}")
+    
     # 更新群组配置
     if group_id not in CURRENT_DATA_SOURCE:
         # 如果群组配置不存在，基于默认配置创建一个
@@ -31,9 +34,13 @@ async def handle_switch_source(event: GroupMessageEvent):
     # 使用DATA_DIR中的别名文件
     CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = DATA_DIR / f"{args}_hero_aliases.yaml"
     
+    # 记录更新后的配置
+    logger.info(f"切换后CURRENT_DATA_SOURCE: {CURRENT_DATA_SOURCE}")
+    
     try:
         # 保存配置到文件
         save_data_source_config(CURRENT_DATA_SOURCE)
+        logger.info(f"保存后CURRENT_DATA_SOURCE: {CURRENT_DATA_SOURCE}")
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback

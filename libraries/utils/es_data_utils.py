@@ -479,11 +479,21 @@ def load_data_source_config():
     # 检查是否有路径变更
     config_updated = False
     
-    # 重置配置为默认值
+    # 保存当前的配置
+    current_config = CURRENT_DATA_SOURCE.copy() if CURRENT_DATA_SOURCE else {}
+    
+    # 确保有默认配置
     default_config = DEFAULT_CONFIG.copy()
     # 确保json_path为字符串而不是Path对象，避免None值错误
     default_config["json_path"] = live_path if has_live_path else ""
-    CURRENT_DATA_SOURCE = {"default": default_config}
+    
+    # 如果没有任何配置或者没有default配置，则初始化
+    if not current_config or "default" not in current_config:
+        CURRENT_DATA_SOURCE = {"default": default_config}
+    else:
+        # 确保default配置存在
+        if "default" not in CURRENT_DATA_SOURCE:
+            CURRENT_DATA_SOURCE["default"] = default_config
     
     file_config_loaded = False
     if DATA_SOURCE_CONFIG.exists():
@@ -634,14 +644,44 @@ def get_group_data_source(group_id):
     Returns:
         dict: 数据源配置
     """
+    logger.info(f"获取群组 {group_id} 的数据源配置")
+    logger.info(f"当前CURRENT_DATA_SOURCE中的键: {list(CURRENT_DATA_SOURCE.keys())}")
+    
+    # 先检查是否需要从文件刷新数据
+    try:
+        if DATA_SOURCE_CONFIG.exists():
+            with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
+                file_config = yaml.safe_load(f) or {}
+            
+            # 检查是否有新的群组配置在文件中但不在内存中
+            for group_id_str, config in file_config.items():
+                if group_id_str not in CURRENT_DATA_SOURCE:
+                    # 处理路径
+                    if "json_path" in config and config["json_path"]:
+                        config["json_path"] = Path(config["json_path"])
+                    if "hero_alias_file" in config and config["hero_alias_file"]:
+                        config["hero_alias_file"] = Path(config["hero_alias_file"])
+                    
+                    # 将配置添加到内存中
+                    CURRENT_DATA_SOURCE[group_id_str] = config
+                    logger.info(f"从文件加载群组 {group_id_str} 的配置: {config}")
+    except Exception as e:
+        logger.error(f"尝试从文件刷新配置时出错: {e}")
+    
     if group_id is not None:
         group_id_str = str(group_id)
+        logger.info(f"查找的group_id_str: {group_id_str}")
 
         if group_id_str in CURRENT_DATA_SOURCE:
+            logger.info(f"找到群组 {group_id_str} 配置: type={CURRENT_DATA_SOURCE[group_id_str]['type']}")
             return CURRENT_DATA_SOURCE[group_id_str]
         else:
             keys_match = [k for k in CURRENT_DATA_SOURCE.keys() if str(k) == group_id_str]
             if keys_match:
+                logger.info(f"通过keys_match找到群组 {group_id_str} 配置: type={CURRENT_DATA_SOURCE[keys_match[0]]['type']}")
                 return CURRENT_DATA_SOURCE[keys_match[0]]
+            logger.info(f"未找到群组 {group_id_str} 的配置，使用默认配置")
+    else:
+        logger.info("群组ID为None，使用默认配置")
     
     return CURRENT_DATA_SOURCE["default"]

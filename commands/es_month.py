@@ -44,6 +44,8 @@ async def handle_es_month(bot: Bot, event: Event):
                                              "Calender_WorldBoss_", "世界Boss"))
         month_events.extend(get_schedule_event(data, target_month, current_year,
                                              "Calender_GuildRaid_", "工会突袭"))
+        month_events.extend(get_schedule_event(data, target_month, current_year,
+                                             "EventInfo_Side_", "附属活动"))
 
         # 获取一般活动事件
         calendar_events = get_calendar_event(data, target_month, current_year)
