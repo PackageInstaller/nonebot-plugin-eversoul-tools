@@ -1,4 +1,4 @@
-from ..libraries.utils import *
+from ..library.utils import *
 
 # 注册命令
 es_account_info = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)

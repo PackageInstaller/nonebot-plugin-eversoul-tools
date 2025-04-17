@@ -1,4 +1,4 @@
-from ..libraries.utils import *
+from ..library.utils import *
 
 
 emoji_vote = on_notice(priority=1, block=False)

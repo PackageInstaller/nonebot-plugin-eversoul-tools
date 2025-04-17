@@ -5,8 +5,8 @@ from nonebot import get_driver
 from pathlib import Path
 import os
 from .config import *
-from .commands import *
-from .libraries.utils import *
+from .command import *
+from .library.utils import *
 __plugin_meta__ = PluginMetadata(
     name='永恒灵魂工具合集',
     description='基于 nonebot2 的 Eversoul 工具合集',

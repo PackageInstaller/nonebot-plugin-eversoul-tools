@@ -1,8 +1,7 @@
 import yaml
 import os
-import time
 from datetime import datetime, timedelta
-from ..libraries.utils import *
+from ..library.utils import *
 
 # 保存当前正在等待绑定的用户
 # 键是用户ID，值是绑定过期时间和其他信息

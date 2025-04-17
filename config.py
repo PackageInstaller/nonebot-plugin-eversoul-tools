@@ -141,10 +141,10 @@ SERVER_NAME_MAPPING = {
 APP_ID_TO_SERVER_NAME = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
 
 # 资源路径
-RESOURCES_DIR = Path(__file__).parent / "resources"
+RESOURCE_DIR = Path(__file__).parent / "resource"
 
 # 添加数据源配置文件路径
-DATA_DIR = RESOURCES_DIR / "data"
+DATA_DIR = Path(__file__).parent / "data"
 DATA_SOURCE_CONFIG = DATA_DIR / "data_source_config.yaml"
 
 # 默认配置 - 安全处理None值
@@ -167,15 +167,15 @@ CURRENT_DATA_SOURCE = {
 
 
 # 字体路径
-FONT_DIR = RESOURCES_DIR / "font" / "Sarasa-Regular.ttc"
+FONT_DIR = RESOURCE_DIR / "font" / "Sarasa-Regular.ttc"
 CUSTOM_FONT = FontProperties(fname=FONT_DIR)
 
-CG_DIR = RESOURCES_DIR / "image" / "cg"
-EVERTALK_DIR = RESOURCES_DIR / "image" / "evertalk"
-HERO_DIR = RESOURCES_DIR / "image" / "hero"
-ICON_DIR = RESOURCES_DIR / "image" / "icon"
-SIGNATURE_DIR = RESOURCES_DIR / "image" / "signature"
-TIER_DIR = RESOURCES_DIR / "image" / "tier"
-TOWN_DIR = RESOURCES_DIR / "image" / "town"
-BANNER_DIR = RESOURCES_DIR / "image" / "banner"
-STICKER_DIR = RESOURCES_DIR / "image" / "sticker"
+CG_DIR = RESOURCE_DIR / "image" / "cg"
+EVERTALK_DIR = RESOURCE_DIR / "image" / "evertalk"
+HERO_DIR = RESOURCE_DIR / "image" / "hero"
+ICON_DIR = RESOURCE_DIR / "image" / "icon"
+SIGNATURE_DIR = RESOURCE_DIR / "image" / "signature"
+TIER_DIR = RESOURCE_DIR / "image" / "tier"
+TOWN_DIR = RESOURCE_DIR / "image" / "town"
+BANNER_DIR = RESOURCE_DIR / "image" / "banner"
+STICKER_DIR = RESOURCE_DIR / "image" / "sticker"
