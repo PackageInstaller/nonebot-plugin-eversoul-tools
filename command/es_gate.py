@@ -18,7 +18,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
         # 从Barrier.json获取传送门基本信息
         barrier_info = None
         for barrier in data["barrier"]["json"]:
-            if barrier.get("stage_type") == GATE_TYPES[gate_type]:
+            if barrier.get("stage_type") == GATE_TYPE_MAPPING[gate_type]:
                 barrier_info = barrier
                 break
         
@@ -39,7 +39,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
         # 查找所有对应的传送门信息
         gate_infos = []
         for stage in data["stage"]["json"]:
-            if stage.get("stage_type") == GATE_TYPES[gate_type] and stage.get("stage_no") == stage_no:
+            if stage.get("stage_type") == GATE_TYPE_MAPPING[gate_type] and stage.get("stage_no") == stage_no:
                 gate_infos.append(stage)
         
         if not gate_infos:

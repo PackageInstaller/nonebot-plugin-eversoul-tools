@@ -61,7 +61,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
         
         elif item_type == "传送门":
             # 获取传送门类型对应的stage_type
-            stage_type = GATE_TYPES.get(gate_type)
+            stage_type = GATE_TYPE_MAPPING.get(gate_type)
             if not stage_type:
                 await es_cash_pack_info.finish(f"未知的传送门类型：{gate_type}")
             

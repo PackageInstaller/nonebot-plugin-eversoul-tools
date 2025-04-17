@@ -34,7 +34,7 @@ class Config(BaseModel):
 plugin_config = get_plugin_config(Config)
 
 # 传送门类型
-GATE_TYPES = {
+GATE_TYPE_MAPPING = {
     "自由": 4,
     "人类": 5,
     "野兽": 6,
