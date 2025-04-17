@@ -101,19 +101,15 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                 break
         
         if not hero_data:
-            await es_hero_info.finish("未找到该角色信息")
-            
+            await es_hero_info.finish("未找到该角色信息")     
         # 获取角色名称
-        hero_name_zh_tw = ""
-        hero_name_zh_cn = ""
-        hero_name_kr = ""
-        hero_name_en = ""
         if hero_data["name_sno"]:
             name_data = get_string_character(data, hero_data["name_sno"])
             hero_name_zh_tw = name_data["zh_tw"]
             hero_name_zh_cn = name_data["zh_cn"]
             hero_name_kr = name_data["kr"]
             hero_name_en = name_data["en"]
+            
 
         # 实装日期
         character_release_date = get_character_release_date(data, hero_id)
@@ -145,12 +141,18 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         basic_info_msg.append("【基础信息】")
         if portrait_path:
             basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
-        basic_info_zh_tw = f"""{nickname_zh_tw if nickname_zh_tw else nickname_kr}・{hero_name_zh_tw if hero_name_zh_tw else hero_name_kr}
+        basic_info_zh_tw = f"""{nickname_zh_tw if nickname_zh_tw != "" else nickname_kr}・{hero_name_zh_tw if hero_name_zh_tw != "" else hero_name_kr}
 類型：{race_zh_tw} {hero_class_zh_tw}
 攻擊方式：{sub_class_zh_tw}
 屬性：{stat_zh_tw}
 品質：{grade_zh_tw}
-隸屬：{get_string_character(data, hero_desc.get("union_sno", 0), special=True)["zh_tw"] if get_string_character(data, hero_desc.get("union_sno", 0), special=True)["zh_tw"] != "" else "？？？"}
+隸屬：{
+    get_string_character(data, hero_desc.get("union_sno", 0), special=True)["zh_tw"] 
+    if hero_desc is not None and hero_desc.get("union_sno") is not None and 
+       get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
+       get_string_character(data, hero_desc.get("union_sno", 0), special=True).get("zh_tw", "") != ""
+    else "？？？"
+}
 身高：{hero_desc.get("height", "？？？") if hero_desc else "？？？"}cm
 體重：{hero_desc.get("weight", "？？？") if hero_desc else "？？？"}kg
 生日：{str(hero_desc.get("birthday", "？？？")).zfill(4)[:2]\

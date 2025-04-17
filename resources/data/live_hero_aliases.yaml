@@ -630,12 +630,12 @@ names:
     ja_name: イブ
     aliases: []
     hero_id: 6050
-  - zh_tw_name: 二亞
-    zh_cn_name: 二亚
+  - zh_tw_name: 妮亞
+    zh_cn_name: 妮亚
     kr_name: 니아
     en_name: Nia
     ja_name: ニア
-    aliases: []
+    aliases: [你呀, 尼亚]
     hero_id: 6060
   - zh_tw_name: 異次元精髓
     zh_cn_name: 异次元精髓

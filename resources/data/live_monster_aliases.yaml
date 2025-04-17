@@ -3772,6 +3772,20 @@ names:
     ja_name: 土の戦士
     aliases: []
     hero_id: 32117
+  - zh_tw_name: 考驗的幻影
+    zh_cn_name: ''
+    kr_name: 시련의 환영
+    en_name: Illusion of Ordeal
+    ja_name: ''
+    aliases: []
+    hero_id: 32118
+  - zh_tw_name: 考驗的幻影
+    zh_cn_name: ''
+    kr_name: 시련의 환영
+    en_name: Illusion of Ordeal
+    ja_name: ''
+    aliases: []
+    hero_id: 32119
   - zh_tw_name: 起司
     zh_cn_name: ''
     kr_name: 치즈
@@ -4031,6 +4045,13 @@ names:
     ja_name: アキ
     aliases: []
     hero_id: 66007
+  - zh_tw_name: 莉澤洛特
+    zh_cn_name: ''
+    kr_name: 리젤로테
+    en_name: Lizelotte
+    ja_name: リゼロッテ
+    aliases: []
+    hero_id: 66008
   - zh_tw_name: 娜伊雅
     zh_cn_name: ''
     kr_name: 나이아
@@ -4059,6 +4080,13 @@ names:
     ja_name: アヤメ
     aliases: []
     hero_id: 66107
+  - zh_tw_name: 潔克琳
+    zh_cn_name: ''
+    kr_name: 재클린
+    en_name: Jacqueline
+    ja_name: ジャクリーン
+    aliases: []
+    hero_id: 66108
   - zh_tw_name: 威里
     zh_cn_name: ''
     kr_name: 웨리
@@ -4094,6 +4122,13 @@ names:
     ja_name: アヤメ
     aliases: []
     hero_id: 66207
+  - zh_tw_name: 潔克琳
+    zh_cn_name: ''
+    kr_name: 재클린
+    en_name: Jacqueline
+    ja_name: ジャクリーン
+    aliases: []
+    hero_id: 66208
   - zh_tw_name: 藤草普萊西亞
     zh_cn_name: ''
     kr_name: 덩굴 플레시아
@@ -4129,6 +4164,13 @@ names:
     ja_name: アヤメ
     aliases: []
     hero_id: 66307
+  - zh_tw_name: 潔克琳
+    zh_cn_name: ''
+    kr_name: 재클린
+    en_name: Jacqueline
+    ja_name: ジャクリーン
+    aliases: []
+    hero_id: 66308
   - zh_tw_name: 監視者之眼
     zh_cn_name: ''
     kr_name: 감시자의 눈

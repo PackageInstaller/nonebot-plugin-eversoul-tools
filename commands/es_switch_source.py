@@ -20,9 +20,6 @@ async def handle_switch_source(event: GroupMessageEvent):
     if "default" not in CURRENT_DATA_SOURCE:
         CURRENT_DATA_SOURCE["default"] = DEFAULT_CONFIG.copy()
     
-    # 记录原始配置
-    logger.info(f"切换前CURRENT_DATA_SOURCE: {CURRENT_DATA_SOURCE}")
-    
     # 更新群组配置
     if group_id not in CURRENT_DATA_SOURCE:
         # 如果群组配置不存在，基于默认配置创建一个
@@ -30,17 +27,25 @@ async def handle_switch_source(event: GroupMessageEvent):
     
     # 更新群组的数据源类型
     CURRENT_DATA_SOURCE[group_id]["type"] = args
-    CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(f"/home/rikka/Eversoul/{args}_jsons")
+    
+    # 根据类型选择对应的路径配置
+    if args == "live":
+        if plugin_config.eversoul_live_path:
+            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(plugin_config.eversoul_live_path)
+        else:
+            await es_switch_source.finish("未配置live数据源路径，请在env中设置eversoul_live_path")
+    else:  # review
+        if plugin_config.eversoul_review_path:
+            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(plugin_config.eversoul_review_path)
+        else:
+            await es_switch_source.finish("未配置review数据源路径，请在env中设置eversoul_review_path")
+    
     # 使用DATA_DIR中的别名文件
     CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = DATA_DIR / f"{args}_hero_aliases.yaml"
-    
-    # 记录更新后的配置
-    logger.info(f"切换后CURRENT_DATA_SOURCE: {CURRENT_DATA_SOURCE}")
     
     try:
         # 保存配置到文件
         save_data_source_config(CURRENT_DATA_SOURCE)
-        logger.info(f"保存后CURRENT_DATA_SOURCE: {CURRENT_DATA_SOURCE}")
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback

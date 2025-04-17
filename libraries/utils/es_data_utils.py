@@ -14,7 +14,12 @@ driver = get_driver()
 @driver.on_startup
 async def init_plugin():
     """插件启动时初始化"""
+    global DEFAULT_CONFIG
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # 根据env更新默认配置
+    if plugin_config.eversoul_live_path:
+        DEFAULT_CONFIG["json_path"] = str(Path(plugin_config.eversoul_live_path))
     
     if DATA_SOURCE_CONFIG.exists():
         try:
@@ -476,6 +481,12 @@ def load_data_source_config():
     live_path = plugin_config.eversoul_live_path or ""
     review_path = plugin_config.eversoul_review_path or ""
     
+    # 确保路径是字符串形式，方便比较
+    if has_live_path and isinstance(live_path, Path):
+        live_path = str(live_path)
+    if has_review_path and isinstance(review_path, Path):
+        review_path = str(review_path)
+        
     # 检查是否有路径变更
     config_updated = False
     
@@ -506,14 +517,18 @@ def load_data_source_config():
                 if "default" not in config:
                     config["default"] = default_config.copy()
                     config_updated = True
-                elif has_live_path and (not config["default"].get("json_path") or config["default"].get("json_path") == ""):
-                    # 如果配置文件中的路径为空，但现在有了配置路径，则更新
-                    if config["default"].get("type") == "live":
+                elif config["default"].get("type") == "live" and has_live_path:
+                    # 检查live路径是否变更
+                    if str(config["default"].get("json_path")) != live_path:
                         config["default"]["json_path"] = live_path
                         config_updated = True
-                    elif config["default"].get("type") == "review":
+                        logger.info(f"检测到live路径变更: {live_path}")
+                elif config["default"].get("type") == "review" and has_review_path:
+                    # 检查review路径是否变更
+                    if str(config["default"].get("json_path")) != review_path:
                         config["default"]["json_path"] = review_path
                         config_updated = True
+                        logger.info(f"检测到review路径变更: {review_path}")
                 
                 # 明确转换路径字符串为Path对象
                 for group_id, group_config in config.items():
@@ -521,11 +536,12 @@ def load_data_source_config():
                     group_id_str = str(group_id)
                     
                     # 检查并可能更新路径
-                    if (not group_config.get("json_path") or group_config.get("json_path") == ""):
-                        if group_config.get("type") == "live" and has_live_path:
+                    if group_config.get("type") == "live" and has_live_path:
+                        if str(group_config.get("json_path")) != live_path:
                             group_config["json_path"] = live_path
                             config_updated = True
-                        elif group_config.get("type") == "review" and has_review_path:
+                    elif group_config.get("type") == "review" and has_review_path:
+                        if str(group_config.get("json_path")) != review_path:
                             group_config["json_path"] = review_path
                             config_updated = True
                     
@@ -620,7 +636,11 @@ def save_data_source_config(config):
         for group_id, group_config in config.items():
             save_config[group_id] = group_config.copy()
             if "json_path" in group_config:
-                save_config[group_id]["json_path"] = str(group_config["json_path"])
+                # 确保json_path是字符串而不是Path对象
+                if isinstance(group_config["json_path"], Path):
+                    save_config[group_id]["json_path"] = str(group_config["json_path"])
+                else:
+                    save_config[group_id]["json_path"] = group_config["json_path"]
             if "hero_alias_file" in group_config:
                 hero_alias_path = str(group_config["hero_alias_file"])
                 if hero_alias_path.startswith(plugin_dir):
@@ -644,8 +664,6 @@ def get_group_data_source(group_id):
     Returns:
         dict: 数据源配置
     """
-    logger.info(f"获取群组 {group_id} 的数据源配置")
-    logger.info(f"当前CURRENT_DATA_SOURCE中的键: {list(CURRENT_DATA_SOURCE.keys())}")
     
     # 先检查是否需要从文件刷新数据
     try:
@@ -664,24 +682,17 @@ def get_group_data_source(group_id):
                     
                     # 将配置添加到内存中
                     CURRENT_DATA_SOURCE[group_id_str] = config
-                    logger.info(f"从文件加载群组 {group_id_str} 的配置: {config}")
     except Exception as e:
         logger.error(f"尝试从文件刷新配置时出错: {e}")
     
     if group_id is not None:
         group_id_str = str(group_id)
-        logger.info(f"查找的group_id_str: {group_id_str}")
 
         if group_id_str in CURRENT_DATA_SOURCE:
-            logger.info(f"找到群组 {group_id_str} 配置: type={CURRENT_DATA_SOURCE[group_id_str]['type']}")
             return CURRENT_DATA_SOURCE[group_id_str]
         else:
             keys_match = [k for k in CURRENT_DATA_SOURCE.keys() if str(k) == group_id_str]
             if keys_match:
-                logger.info(f"通过keys_match找到群组 {group_id_str} 配置: type={CURRENT_DATA_SOURCE[keys_match[0]]['type']}")
                 return CURRENT_DATA_SOURCE[keys_match[0]]
-            logger.info(f"未找到群组 {group_id_str} 的配置，使用默认配置")
     else:
-        logger.info("群组ID为None，使用默认配置")
-    
-    return CURRENT_DATA_SOURCE["default"]
+        return CURRENT_DATA_SOURCE["default"]
