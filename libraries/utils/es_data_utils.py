@@ -375,6 +375,7 @@ def load_aliases(group_id=None):
 # 加载所需的JSON文件
 def load_json_data(group_id=None):
     config = get_group_data_source(group_id)
+    logger.info(f"当前使用的数据源配置: {config}")
     json_path = config["json_path"]
     
     # 检查json_path是否有效
@@ -537,13 +538,15 @@ def load_data_source_config():
                     
                     # 检查并可能更新路径
                     if group_config.get("type") == "live" and has_live_path:
-                        if str(group_config.get("json_path")) != live_path:
+                        if str(group_config.get("json_path", "")) != live_path:
                             group_config["json_path"] = live_path
                             config_updated = True
+                            logger.info(f"群组{group_id}的live路径已更新: {live_path}")
                     elif group_config.get("type") == "review" and has_review_path:
-                        if str(group_config.get("json_path")) != review_path:
+                        if str(group_config.get("json_path", "")) != review_path:
                             group_config["json_path"] = review_path
                             config_updated = True
+                            logger.info(f"群组{group_id}的review路径已更新: {review_path}")
                     
                     if "json_path" in group_config:
                         # 确保json_path是Path对象
@@ -685,14 +688,43 @@ def get_group_data_source(group_id):
     except Exception as e:
         logger.error(f"尝试从文件刷新配置时出错: {e}")
     
+    result_config = None
+    
     if group_id is not None:
         group_id_str = str(group_id)
 
         if group_id_str in CURRENT_DATA_SOURCE:
-            return CURRENT_DATA_SOURCE[group_id_str]
+            result_config = CURRENT_DATA_SOURCE[group_id_str]
         else:
             keys_match = [k for k in CURRENT_DATA_SOURCE.keys() if str(k) == group_id_str]
             if keys_match:
-                return CURRENT_DATA_SOURCE[keys_match[0]]
-    else:
-        return CURRENT_DATA_SOURCE["default"]
+                result_config = CURRENT_DATA_SOURCE[keys_match[0]]
+    
+    if result_config is None:
+        result_config = CURRENT_DATA_SOURCE.get("default", DEFAULT_CONFIG.copy())
+    
+    # 确保json_path有值
+    if "json_path" not in result_config or not result_config["json_path"]:
+        # 根据类型选择路径
+        if result_config.get("type") == "live" and plugin_config.eversoul_live_path:
+            result_config["json_path"] = Path(plugin_config.eversoul_live_path)
+        elif result_config.get("type") == "review" and plugin_config.eversoul_review_path:
+            result_config["json_path"] = Path(plugin_config.eversoul_review_path)
+        else:
+            # 默认使用live路径
+            if plugin_config.eversoul_live_path:
+                result_config["json_path"] = Path(plugin_config.eversoul_live_path)
+                result_config["type"] = "live"
+            elif plugin_config.eversoul_review_path:
+                result_config["json_path"] = Path(plugin_config.eversoul_review_path)
+                result_config["type"] = "review"
+            else:
+                # 如果都没有配置，使用空字符串
+                result_config["json_path"] = ""
+                logger.error("未配置数据源路径，请在env中设置eversoul_live_path或eversoul_review_path")
+    
+    # 确保hero_alias_file有值
+    if "hero_alias_file" not in result_config or not result_config["hero_alias_file"]:
+        result_config["hero_alias_file"] = DATA_DIR / f"{result_config.get('type', 'live')}_hero_aliases.yaml"
+    
+    return result_config
