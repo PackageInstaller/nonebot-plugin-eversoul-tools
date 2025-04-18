@@ -1,20 +1,20 @@
 """
-Eversoul用户数据模型 - 保存用户的游戏数据
+Eversoul群组数据模型 - 管理群组通知记录
 """
 import os
 import json
-from typing import Optional,  Dict, Any, List
+from typing import Optional, Dict, Any, List, Set
 import aiosqlite
 from nonebot.log import logger
 from datetime import datetime, timezone, timedelta
 
-from ...config import DATA_DIR
+from ..utils import *
 
 
 class EversoulUser:
     """永恒灵魂用户数据模型"""
     
-    _db_path = DATA_DIR / "eversoul_user.db"
+    _db_path = DATABASE_DIR / "eversoul.db"
     
     @classmethod
     async def init_db(cls):
@@ -63,6 +63,7 @@ class EversoulUser:
                         logger.info("数据库表 eversoul_users 已更新，添加了 coupon_history 列")
             except Exception as e:
                 logger.error(f"升级数据库结构失败: {e}")
+        logger.info("数据库初始化完成")
     
     @classmethod
     async def add_user(cls, user_id: int, app_id: str, player_id: str) -> bool:

@@ -15,7 +15,7 @@ driver = get_driver()
 async def init_plugin():
     """插件启动时初始化"""
     global DEFAULT_CONFIG
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     
     # 根据env更新默认配置
     if plugin_config.eversoul_live_path:
@@ -137,8 +137,8 @@ def generate_aliases() -> None:
     review_json_path = Path(plugin_config.eversoul_review_path)
     
     try:
-        live_hero_aliases = DATA_DIR / "live_hero_aliases.yaml"
-        live_monster_aliases = DATA_DIR / "live_monster_aliases.yaml"
+        live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
+        live_monster_aliases = CONFIG_DIR / "live_monster_aliases.yaml"
         live_hero_count, live_monster_count = process_json_files(live_json_path, live_hero_aliases, live_monster_aliases)
         if live_hero_count > 0 or live_monster_count > 0:
             logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_monster_count} 个怪物条目")
@@ -148,8 +148,8 @@ def generate_aliases() -> None:
         logger.error(f"处理live别名文件时出错: {e}")
     
     try:
-        review_hero_aliases = DATA_DIR / "review_hero_aliases.yaml"
-        review_monster_aliases = DATA_DIR / "review_monster_aliases.yaml"
+        review_hero_aliases = CONFIG_DIR / "review_hero_aliases.yaml"
+        review_monster_aliases = CONFIG_DIR / "review_monster_aliases.yaml"
         review_hero_count, review_monster_count = process_json_files(review_json_path, review_hero_aliases, review_monster_aliases)
         if review_hero_count > 0 or review_monster_count > 0:
             logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_monster_count} 个怪物条目")
@@ -474,7 +474,7 @@ def load_data_source_config():
     """加载数据源配置文件"""
     global CURRENT_DATA_SOURCE
     
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     
     # 检查配置
     has_live_path = plugin_config.eversoul_live_path is not None
@@ -613,7 +613,7 @@ def load_data_source_config():
                 CURRENT_DATA_SOURCE[group_id]["json_path"] = ""
             
             alias_type = CURRENT_DATA_SOURCE[group_id]["type"]
-            CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = DATA_DIR / f"{alias_type}_hero_aliases.yaml"
+            CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = CONFIG_DIR / f"{alias_type}_hero_aliases.yaml"
             if "hero_alias_file" in group_settings:
                 CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = Path(group_settings["hero_alias_file"])
         
@@ -725,6 +725,6 @@ def get_group_data_source(group_id):
     
     # 确保hero_alias_file有值
     if "hero_alias_file" not in result_config or not result_config["hero_alias_file"]:
-        result_config["hero_alias_file"] = DATA_DIR / f"{result_config.get('type', 'live')}_hero_aliases.yaml"
+        result_config["hero_alias_file"] = CONFIG_DIR / f"{result_config.get('type', 'live')}_hero_aliases.yaml"
     
     return result_config

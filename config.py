@@ -145,21 +145,22 @@ RESOURCE_DIR = Path(__file__).parent / "resource"
 
 # 添加数据源配置文件路径
 DATA_DIR = Path(__file__).parent / "data"
-DATA_SOURCE_CONFIG = DATA_DIR / "data_source_config.yaml"
+CONFIG_DIR = DATA_DIR / "config"
+DATABASE_DIR = DATA_DIR / "database"
+DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"
 
-# 默认配置 - 安全处理None值
+# 默认配置
 DEFAULT_CONFIG = {
     "type": "live",
     "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
-    "hero_alias_file": DATA_DIR / "live_hero_aliases.yaml"
+    "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml"
 }
 
-# 全局变量来存储当前数据源配置 - 安全处理None值
 CURRENT_DATA_SOURCE = {
     "default": {
         "type": "live", 
         "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
-        "hero_alias_file": DATA_DIR / "live_hero_aliases.yaml"
+        "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml"
     }
 }
 

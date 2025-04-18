@@ -5,10 +5,12 @@ import re
 import os
 import yaml
 import asyncio
+import nonebot
+import aiohttp
 from typing import Any, Tuple, Dict
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
-from nonebot import on_regex, on_command, require, on_message, on_notice
+from nonebot import on_regex, on_command, require, on_message, on_notice, get_bot
 from nonebot.exception import FinishedException
 from nonebot.params import RegexGroup, CommandArg
 from nonebot.adapters.onebot.v11 import (
@@ -23,7 +25,10 @@ from nonebot.adapters.onebot.v11 import (
     NoticeEvent
 )
 require("nonebot_plugin_htmlrender")
+require("nonebot_plugin_apscheduler")
+from nonebot_plugin_apscheduler import scheduler
 from nonebot_plugin_htmlrender import html_to_pic
+from google_play_scraper import app as playstore_app
 from difflib import get_close_matches
 from datetime import datetime
 from ...config import *
@@ -47,7 +52,6 @@ es_tier_info = on_command("es礼品信息", priority=5, block=True)
 es_coupon = on_command("es兑换码", priority=5, block=True)
 es_bind = on_command("es绑定账号", aliases={"es绑定"}, priority=5, block=True)
 es_unbind = on_command("es解绑账号", aliases={"es解绑"}, priority=5, block=True)
-
 
 
 # 数据相关
