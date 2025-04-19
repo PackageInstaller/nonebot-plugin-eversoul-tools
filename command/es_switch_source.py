@@ -41,7 +41,7 @@ async def handle_switch_source(event: GroupMessageEvent):
             await es_switch_source.finish("未配置review数据源路径，请在env中设置eversoul_review_path")
     
     # 使用DATA_DIR中的别名文件
-    CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = DATA_DIR / f"{args}_hero_aliases.yaml"
+    CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = CONFIG_DIR/ f"{args}_hero_aliases.yaml"
     
     try:
         # 保存配置到文件
