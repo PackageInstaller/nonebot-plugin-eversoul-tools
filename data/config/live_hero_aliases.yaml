@@ -313,7 +313,7 @@ names:
     kr_name: 하루(카무이)
     en_name: Haru (Kamuy)
     ja_name: ハル(カムイ)
-    aliases: [大河路]
+    aliases: [大河路, 界河路]
     hero_id: 2170
   - zh_tw_name: 艾麗卡
     zh_cn_name: 艾丽卡
@@ -421,18 +421,18 @@ names:
     aliases: [蜘蛛, 威力]
     hero_id: 3150
   - zh_tw_name: 勒內（白銀）
-    zh_cn_name: ''
+    zh_cn_name: 勒内（白银）
     kr_name: 르네(백은)
     en_name: Renee (Argent)
     ja_name: ルネ(白銀)
     aliases: [大勒内, 界勒内, 大蕾妮, 界蕾妮, 长发勒内, 大贤者]
     hero_id: 3160
   - zh_tw_name: 米里昂（殘影）
-    zh_cn_name: ''
+    zh_cn_name: 米里昂（残影）
     kr_name: 미리암(잔영)
     en_name: Miriam (Afterimage)
     ja_name: ミリアム(残影)
-    aliases: [大米]
+    aliases: [大米, 界米里昂]
     hero_id: 3170
   - zh_tw_name: 蘿拉
     zh_cn_name: 萝拉
@@ -547,18 +547,18 @@ names:
     aliases: [薇丝]
     hero_id: 4150
   - zh_tw_name: 佩特拉（覺魂）
-    zh_cn_name: ''
+    zh_cn_name: 佩特拉（觉魂）
     kr_name: 페트라(각혼)
     en_name: Petra (Awakened Soul)
     ja_name: ''
-    aliases: [大佩特拉]
+    aliases: [大佩特拉, 界佩特拉]
     hero_id: 4160
   - zh_tw_name: 佳妮特（悅樂）
-    zh_cn_name: ''
+    zh_cn_name: 佳妮特（悦乐）
     kr_name: 가넷(열락)
     en_name: Garnet (Rapture)
     ja_name: ガーネット(悦楽)
-    aliases: [大佳妮特]
+    aliases: [大佳妮特, 界佳妮特]
     hero_id: 4170
   - zh_tw_name: 克勞迪婭
     zh_cn_name: 克劳迪娅
@@ -579,7 +579,7 @@ names:
     kr_name: 유리아
     en_name: Yuria
     ja_name: ユリア
-    aliases: [女王, 王女, 尤利娅, 尤莉婭]
+    aliases: [女王, 王女, 尤利娅, 尤莉娅]
     hero_id: 5030
   - zh_tw_name: 韓羽
     zh_cn_name: 韩羽
@@ -649,14 +649,14 @@ names:
     kr_name: 캐서린(광휘)
     en_name: Catherine (Radiance)
     ja_name: キャサリン(光輝)
-    aliases: [光凯, 光凱, 光輝凱瑟琳, 大凱, 火凱, 光輝凱色琳]
+    aliases: [光凯, 光凱, 光輝凱瑟琳, 大凱, 火凱, 光輝凱色琳, 界凯瑟琳]
     hero_id: 6510
   - zh_tw_name: 琳賽（桑納托斯）
     zh_cn_name: 琳赛（桑纳托斯）
     kr_name: 린지(타나토스)
     en_name: Linzy (Thanatos)
     ja_name: リンジー(タナトス)
-    aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽]
+    aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽, 界琳赛]
     hero_id: 6520
   - zh_tw_name: 梅菲斯托佩萊斯（黎明）
     zh_cn_name: ''

@@ -47,11 +47,11 @@ async def init_plugin():
 
 
 def sync_aliases(file1: Path, file2: Path) -> None:
-    """同步两个yaml文件中的别名，将别名较多的文件覆盖别名较少的文件
+    """同步两个yaml文件中的别名，将file1中的别名完全同步到file2
     
     Args:
-        file1: 第一个yaml文件路径
-        file2: 第二个yaml文件路径
+        file1: 源yaml文件路径
+        file2: 目标yaml文件路径
     """
     try:
         with open(file1, "r", encoding="utf-8") as f:
@@ -66,25 +66,14 @@ def sync_aliases(file1: Path, file2: Path) -> None:
         return
 
     # 创建hero_id到别名的映射
-    aliases1 = {hero["hero_id"]: set(hero.get("aliases", [])) for hero in data1["names"] if "hero_id" in hero}
-    aliases2 = {hero["hero_id"]: set(hero.get("aliases", [])) for hero in data2["names"] if "hero_id" in hero}
+    aliases1 = {hero["hero_id"]: hero.get("aliases", []) for hero in data1["names"] if "hero_id" in hero}
 
-    # 找出需要同步的角色
-    for hero_id in set(aliases1.keys()) & set(aliases2.keys()):
-        if len(aliases1[hero_id]) != len(aliases2[hero_id]):
-            # 如果别名数量不同，使用数量较多的那个
-            if len(aliases1[hero_id]) > len(aliases2[hero_id]):
-                # 更新file2中的别名
-                for hero in data2["names"]:
-                    if hero.get("hero_id") == hero_id:
-                        hero["aliases"] = list(aliases1[hero_id])
-                        break
-            else:
-                # 更新file1中的别名
-                for hero in data1["names"]:
-                    if hero.get("hero_id") == hero_id:
-                        hero["aliases"] = list(aliases2[hero_id])
-                        break
+    # 将file1的别名直接同步到file2
+    for hero_id in aliases1:
+        for hero in data2["names"]:
+            if hero.get("hero_id") == hero_id:
+                hero["aliases"] = aliases1[hero_id]
+                break
 
     # 保存更新后的文件
     class CustomDumper(yaml.SafeDumper):
@@ -373,7 +362,7 @@ def load_aliases(group_id=None):
     return alias_map
 
 # 加载所需的JSON文件
-def load_json_data(group_id=None):
+def load_json_data(group_id: int):
     config = get_group_data_source(group_id)
     logger.info(f"当前使用的数据源配置: {config}")
     json_path = config["json_path"]

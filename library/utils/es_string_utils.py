@@ -1660,6 +1660,8 @@ def get_character_story(data, hero_id):
                 "choices": choices
             })
         
+        print(f"章节信息：{episode_info}")
+        print(f"结局信息：{endings}")
         return True, episode_info, endings
         
     except Exception as e:
@@ -1769,21 +1771,28 @@ def format_character_story(episode_info, endings, is_test=False):
                     # 首先查找是否有负数好感度的选项
                     min_affinity = min((c["affinity"] for c in current_group))
                     if min_affinity < 0:
-                        for c in current_group:
-                            if c["affinity"] == min_affinity:
-                                bad_choices.append(c["text"])
+                        # 找出所有具有最小负数好感度的选项
+                        min_aff_choices = [c["text"] for c in current_group if c["affinity"] == min_affinity]
+                        if len(min_aff_choices) > 1:
+                            bad_choices.append("或者".join(min_aff_choices))
+                        else:
+                            bad_choices.extend(min_aff_choices)
                     else:
                         # 如果没有负数好感度，查找0好感度的选项
-                        zero_choices = [c for c in current_group if c["affinity"] == 0]
+                        zero_choices = [c["text"] for c in current_group if c["affinity"] == 0]
                         if zero_choices:
-                            for c in zero_choices:
-                                bad_choices.append(c["text"])
+                            if len(zero_choices) > 1:
+                                bad_choices.append("或者".join(zero_choices))
+                            else:
+                                bad_choices.extend(zero_choices)
                         else:
                             # 如果既没有负数也没有0，则选择最小的正数好感度
                             min_positive = min((c["affinity"] for c in current_group))
-                            for c in current_group:
-                                if c["affinity"] == min_positive:
-                                    bad_choices.append(c["text"])
+                            min_pos_choices = [c["text"] for c in current_group if c["affinity"] == min_positive]
+                            if len(min_pos_choices) > 1:
+                                bad_choices.append("或者".join(min_pos_choices))
+                            else:
+                                bad_choices.extend(min_pos_choices)
                 
                 # 开始新的一组
                 current_index = choice["talk_index"]
@@ -1795,19 +1804,25 @@ def format_character_story(episode_info, endings, is_test=False):
         if current_group:
             min_affinity = min((c["affinity"] for c in current_group))
             if min_affinity < 0:
-                for c in current_group:
-                    if c["affinity"] == min_affinity:
-                        bad_choices.append(c["text"])
+                min_aff_choices = [c["text"] for c in current_group if c["affinity"] == min_affinity]
+                if len(min_aff_choices) > 1:
+                    bad_choices.append("或者".join(min_aff_choices))
+                else:
+                    bad_choices.extend(min_aff_choices)
             else:
-                zero_choices = [c for c in current_group if c["affinity"] == 0]
+                zero_choices = [c["text"] for c in current_group if c["affinity"] == 0]
                 if zero_choices:
-                    for c in zero_choices:
-                        bad_choices.append(c["text"])
+                    if len(zero_choices) > 1:
+                        bad_choices.append("或者".join(zero_choices))
+                    else:
+                        bad_choices.extend(zero_choices)
                 else:
                     min_positive = min((c["affinity"] for c in current_group))
-                    for c in current_group:
-                        if c["affinity"] == min_positive:
-                            bad_choices.append(c["text"])
+                    min_pos_choices = [c["text"] for c in current_group if c["affinity"] == min_positive]
+                    if len(min_pos_choices) > 1:
+                        bad_choices.append("或者".join(min_pos_choices))
+                    else:
+                        bad_choices.extend(min_pos_choices)
         
         bad_end.extend(bad_choices)
 

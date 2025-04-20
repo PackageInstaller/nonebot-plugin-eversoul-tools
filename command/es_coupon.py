@@ -8,11 +8,12 @@ from ..library.utils import *
 BINDING_USERS = {}
 
 # 兑换码文件路径
-COUPON_YAML_PATH = DATA_DIR / "coupons.yaml"
+COUPON_YAML_PATH = COUPON_DIR / "coupons.yaml"
 
 # 确保兑换码文件存在
 def ensure_coupon_file():
     if not os.path.exists(COUPON_YAML_PATH):
+        os.makedirs(COUPON_DIR, exist_ok=True)
         with open(COUPON_YAML_PATH, "w", encoding="utf-8") as f:
             yaml.dump({
                 "coupons": [

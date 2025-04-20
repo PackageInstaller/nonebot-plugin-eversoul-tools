@@ -147,6 +147,7 @@ RESOURCE_DIR = Path(__file__).parent / "resource"
 DATA_DIR = Path(__file__).parent / "data"
 CONFIG_DIR = DATA_DIR / "config"
 DATABASE_DIR = DATA_DIR / "database"
+COUPON_DIR = DATA_DIR / "coupon"
 DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"
 
 # 默认配置

@@ -88,7 +88,7 @@ names:
     kr_name: 메피스토펠레스
     en_name: Mephistopheles
     ja_name: メフィストフェレス
-    aliases: [一號, 梅妃, 梅菲, 太空人, 一号]
+    aliases: [梅菲, 梅妃, 太空人, 一號, 一号]
     hero_id: 1010
   - zh_tw_name: 貝萊德
     zh_cn_name: 贝莱德
@@ -194,7 +194,7 @@ names:
     kr_name: 지호(미르)
     en_name: Jiho (Mir)
     ja_name: ジホ(ミル)
-    aliases: [谋智河, 米智河, 米河, 界智河, 米纸盒, 界纸盒, 大纸盒, 谋纸盒, 米盒, 大智河]
+    aliases: [大智河, 米河, 米智河, 大纸盒, 米盒, 米纸盒, 界智河, 界纸盒, 谋智河, 谋纸盒]
     hero_id: 1160
   - zh_tw_name: 紅蘭
     zh_cn_name: 红兰
@@ -292,28 +292,28 @@ names:
     kr_name: 오닉스
     en_name: Onyx
     ja_name: オニキス
-    aliases: [哔波, 欧尼斯, 章魚, 嗶波, 章鱼]
+    aliases: [章鱼, 哔波, 章魚, 嗶波, 欧尼斯]
     hero_id: 2140
   - zh_tw_name: 櫻世（業火）
     zh_cn_name: 樱世（业火）
     kr_name: 사쿠요(업화)
     en_name: Sakuyo (Inferno)
     ja_name: サクヨ(業火)
-    aliases: [大櫻世, 界樱世, 大貓, 大樱世, 大猫]
+    aliases: [大樱世, 大猫, 大櫻世, 大貓, 界樱世]
     hero_id: 2150
   - zh_tw_name: 紅蘭（無雙）
     zh_cn_name: ''
     kr_name: 홍란(무쌍)
     en_name: Honglan (Peerless)
     ja_name: ホンラン(無双)
-    aliases: [关羽, 大痣, 红兰无双, 标红兰, 龙女, 刀狼, 大红兰, 子龙, 界红兰, 武圣, 武兰]
+    aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰, 标红兰]
     hero_id: 2160
   - zh_tw_name: 河路（神威）
     zh_cn_name: ''
     kr_name: 하루(카무이)
     en_name: Haru (Kamuy)
     ja_name: ハル(カムイ)
-    aliases: [大河路]
+    aliases: [大河路, 界河路]
     hero_id: 2170
   - zh_tw_name: 艾麗卡
     zh_cn_name: 艾丽卡
@@ -334,7 +334,7 @@ names:
     kr_name: 르네
     en_name: Renee
     ja_name: ルネ
-    aliases: [弟弟, 劲夫, 蕾妮, 贝勒爷]
+    aliases: [贝勒爷, 蕾妮, 劲夫, 弟弟]
     hero_id: 3030
   - zh_tw_name: 塔利亞
     zh_cn_name: 塔利亚
@@ -355,7 +355,7 @@ names:
     kr_name: 이디스
     en_name: Edith
     ja_name: イーディス
-    aliases: [yds, 伊迪斯, eds]
+    aliases: [伊迪斯, eds, yds]
     hero_id: 3060
   - zh_tw_name: 妮可
     zh_cn_name: 妮可
@@ -425,14 +425,14 @@ names:
     kr_name: 르네(백은)
     en_name: Renee (Argent)
     ja_name: ルネ(白銀)
-    aliases: [大蕾妮, 界勒内, 大贤者, 大勒内, 长发勒内, 界蕾妮]
+    aliases: [大勒内, 界勒内, 大蕾妮, 界蕾妮, 长发勒内, 大贤者]
     hero_id: 3160
   - zh_tw_name: 米里昂（殘影）
     zh_cn_name: ''
     kr_name: 미리암(잔영)
     en_name: Miriam (Afterimage)
     ja_name: ミリアム(残影)
-    aliases: [大米]
+    aliases: [大米, 界米里昂]
     hero_id: 3170
   - zh_tw_name: 蘿拉
     zh_cn_name: 萝拉
@@ -551,14 +551,14 @@ names:
     kr_name: 페트라(각혼)
     en_name: Petra (Awakened Soul)
     ja_name: ''
-    aliases: [大佩特拉]
+    aliases: [大佩特拉, 界佩特拉]
     hero_id: 4160
   - zh_tw_name: 佳妮特（悅樂）
     zh_cn_name: ''
     kr_name: 가넷(열락)
     en_name: Garnet (Rapture)
     ja_name: ガーネット(悦楽)
-    aliases: [大佳妮特]
+    aliases: [大佳妮特, 界佳妮特]
     hero_id: 4170
   - zh_tw_name: 克勞迪婭
     zh_cn_name: 克劳迪娅
@@ -579,14 +579,14 @@ names:
     kr_name: 유리아
     en_name: Yuria
     ja_name: ユリア
-    aliases: [女王, 王女, 尤利娅, 尤莉婭]
+    aliases: [女王, 王女, 尤利娅, 尤莉娅]
     hero_id: 5030
   - zh_tw_name: 韓羽
     zh_cn_name: 韩羽
     kr_name: 한울
     en_name: Hanul
     ja_name: ハンウル
-    aliases: [白虎, 大秋秋, 越女剑, 韩语, 倚天剑, 历飞雨, 厉飞雨, 女飞剑, 哈吉羽, 墨剑, 韩愈, 天剑]
+    aliases: [白虎, 女飞剑, 大秋秋, 墨剑, 天剑, 韩语, 韩愈, 厉飞雨, 历飞雨, 越女剑, 倚天剑, 哈吉羽]
     hero_id: 5040
   - zh_tw_name: 布利基特
     zh_cn_name: 布利基特
@@ -635,35 +635,35 @@ names:
     kr_name: 니아
     en_name: Nia
     ja_name: ニア
-    aliases: [尼亚, 你呀]
+    aliases: [你呀, 尼亚]
     hero_id: 6060
   - zh_tw_name: 異次元精髓
     zh_cn_name: 异次元精髓
     kr_name: 이차원의 정수
     en_name: Essence of Another Dimension
     ja_name: 異次元の精髄
-    aliases: [紫球, 遗精, 异精, 異精]
+    aliases: [异精, 異精, 紫球, 遗精]
     hero_id: 6500
   - zh_tw_name: 凱瑟琳（光輝）
     zh_cn_name: 凯瑟琳（光辉）
     kr_name: 캐서린(광휘)
     en_name: Catherine (Radiance)
     ja_name: キャサリン(光輝)
-    aliases: [光凯, 光凱, 光輝凱瑟琳, 大凱, 火凱, 光輝凱色琳]
+    aliases: [光凯, 光凱, 光輝凱瑟琳, 大凱, 火凱, 光輝凱色琳, 界凯瑟琳]
     hero_id: 6510
   - zh_tw_name: 琳賽（桑納托斯）
     zh_cn_name: 琳赛（桑纳托斯）
     kr_name: 린지(타나토스)
     en_name: Linzy (Thanatos)
     ja_name: リンジー(タナトス)
-    aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽]
+    aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽, 界琳赛]
     hero_id: 6520
   - zh_tw_name: 梅菲斯托佩萊斯（黎明）
     zh_cn_name: ''
     kr_name: 메피스토펠레스(여명)
     en_name: Mephistopheles (Dawn)
     ja_name: メフィストフェレス(暁)
-    aliases: [黎梅, 暗梅菲, 大梅菲, 大梅妃, 飛機, 界梅妃, 界梅菲, 牢梅, 李梅, 光梅菲, 飞机, 黎梅菲, 菲姬]
+    aliases: [菲姬, 牢梅, 黎梅, 飞机, 黎梅菲, 暗梅菲, 界梅菲, 李梅, 大梅妃, 飛機, 界梅妃, 大梅菲, 光梅菲]
     hero_id: 6530
   - zh_tw_name: 時崎狂三
     zh_cn_name: 时崎狂三

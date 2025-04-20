@@ -172,8 +172,8 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
 攻擊力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防禦力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
-暴擊率：{hero_data.get('critical_rate', 0)*100:.1f}% + {hero_data.get('inc_critical_rate', 0)*100:.3f}%/级
-暴擊威力：{hero_data.get('critical_power', 0)*100:.1f}% + {hero_data.get('inc_critical_power', 0)*100:.3f}%/级"""
+暴擊率：{hero_data.get('critical_rate', 0) * 100:.1f}% + {hero_data.get('inc_critical_rate', 0) * 100:.3f}%/级
+暴擊威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
         basic_info_msg.append(basic_info_zh_tw)
         messages.append("\n".join(str(x) for x in basic_info_msg))
 
