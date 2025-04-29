@@ -61,7 +61,7 @@ async def handle_ark_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Reg
                                        if s["no"] == item.get("name_sno")), "未知材料")
                         break
                 
-                ark_msg.append(f"升级消耗：{item_name} x{ark.get('pay_amount', 0)}")
+                ark_msg.append(f"升级消耗：{item_name}x{ark.get('pay_amount', 0)}")
                 
                 # 获取基础属性加成
                 if buff_no := ark.get("contents_buff_no"):

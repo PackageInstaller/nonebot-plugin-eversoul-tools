@@ -76,7 +76,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                 amount = gate_info.get(f"amount{i}")
                 if item_no and amount:
                     item_name = get_string_item(data, item_no)
-                    rewards.append(f"・ {item_name['zh_tw']} x{amount}")
+                    rewards.append(f"・ {item_name['zh_tw']}x{amount}")
             
             if rewards:
                 messages.append("\n【通关奖励】")

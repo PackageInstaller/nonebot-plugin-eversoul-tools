@@ -518,7 +518,7 @@ def get_mail_event(data, target_month, current_year):
                 amount = mail.get(reward_amount_key, 0)
                 item_name = get_string_item(data, reward_no)
                 if item_name and amount:
-                    rewards.append(f"{item_name['zh_tw']} x{amount}")
+                    rewards.append(f"{item_name['zh_tw']}x{amount}")
         
         # 构建事件信息
         event_info = []

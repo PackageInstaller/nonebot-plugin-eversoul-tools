@@ -98,12 +98,12 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         if boss_data.get("reward_item1_no"):
             item_name = get_string_item(data, boss_data.get("reward_item1_no"))
             item_amount = boss_data.get("reward_item1_amount", 0)
-            reward_items.append(f"{item_name['zh_tw']} x {item_amount}")
+            reward_items.append(f"{item_name['zh_tw']}x {item_amount}")
         
         if boss_data.get("reward_item2_no"):
             item_name = get_string_item(data, boss_data.get("reward_item2_no"))
             item_amount = boss_data.get("reward_item2_amount", 0)
-            reward_items.append(f"{item_name['zh_tw']} x {item_amount}")
+            reward_items.append(f"{item_name['zh_tw']}x {item_amount}")
         
         # 构建消息
         messages = []

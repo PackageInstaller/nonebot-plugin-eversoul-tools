@@ -1043,7 +1043,7 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                                                     item_name_zh_tw = string.get("zh_tw", "")
                                                     item_name_kr = string.get("kr", "")
                                                     item_name = item_name_zh_tw if item_name_zh_tw else (item_name_kr if is_test else item_name_zh_tw)
-                                                    rewards.append(f"{item_name} x{item_amount}")
+                                                    rewards.append(f"{item_name}x{item_amount}")
                                                     break
                         
                         # 添加任务信息
@@ -1125,7 +1125,7 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
                     content_info.append("\n礼包内容：")
                     for item_no, amount in items:
                         item_name = get_string_item(data, item_no)
-                        content_info.append(f"・{item_name['zh_tw']} x{amount}")
+                        content_info.append(f"・{item_name['zh_tw']}x{amount}")
                 except Exception as e:
                     logger.error(f"解析礼包内容时发生错误：{e}")
             if content_info:

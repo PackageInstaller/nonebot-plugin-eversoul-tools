@@ -36,11 +36,8 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         
         if not main_stage:
             await es_stage_info.finish(f"未找到关卡 {area_no}-{stage_no} 的信息")
-        
-        # 构建消息
-        messages = []
 
-        # 基础信息
+        messages = []
         basic_info = []
         basic_info.append(f"关卡 {area_no}-{stage_no} 信息：")
         
@@ -54,14 +51,17 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         basic_info.append(f"经验值：{stage_data.get('exp', 0)}")
         messages.append("\n".join(basic_info))
         
-        # 固定掉落物品，按组分类
-        for i in range(1, 5):  # 检查item_no1到item_no4
+        fixed_items = ["固定掉落物品："]
+        for i in range(1, 10):
             item_key = f"item_no{i}"
             amount_key = f"amount{i}"
             if item_no := stage_data.get(item_key):
                 item_name = get_string_item(data, item_no)
                 amount = stage_data.get(amount_key, 0)
-                messages.append(f"固定掉落物品{i}：\n{item_name['zh_tw']} x{amount}")
+                fixed_items.append(f"{item_name['zh_tw']}x{amount}")
+        
+        if len(fixed_items) > 1: 
+            messages.append("\n".join(fixed_items))
 
         # 获取关卡编号
         stage_no = stage_data["no"]
@@ -108,7 +108,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         # 获取掉落率信息
         drop_items = get_drop_item_rate(data, drop_group_no)
         if drop_items:
-            drop_info = [f"掉落物品概率如下："]
+            drop_info = [f"掉落物品概率如下：\n"]
             for item_name, amount, rate in drop_items:
                 drop_info.append(f"{item_name['zh_tw']} ({rate:.3f}%)")
             messages.append("\n".join(drop_info))

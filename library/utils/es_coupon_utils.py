@@ -104,10 +104,10 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                                     # 获取物品名称
                                     try:
                                         item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
-                                        reward_info.append(f"{item_name} x{quantity}")
+                                        reward_info.append(f"{item_name}x{quantity}")
                                     except Exception as e:
                                         logger.error(f"获取物品名称失败: {e}")
-                                        reward_info.append(f"未知物品(itemCode:{item_code}) x{quantity}")
+                                        reward_info.append(f"未知物品(itemCode:{item_code})x{quantity}")
                             
                             # 处理其他物品
                             if "others" in response_data and isinstance(response_data["others"], list):
@@ -122,10 +122,10 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                                         # 获取物品名称
                                         try:
                                             item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
-                                            reward_info.append(f"{item_name} x{quantity}")
+                                            reward_info.append(f"{item_name}x{quantity}")
                                         except Exception as e:
                                             logger.error(f"获取物品名称失败: {e}")
-                                            reward_info.append(f"未知物品(itemCode:{item_code}) x{quantity}")
+                                            reward_info.append(f"未知物品(itemCode:{item_code})x{quantity}")
                             
                             # 构建成功消息
                             if reward_info:
