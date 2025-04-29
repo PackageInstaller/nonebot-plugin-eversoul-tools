@@ -370,8 +370,8 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
         name_sno = None
         gacha_no = None
         
-        # 对于EventInfo_Side_开头的活动，直接从event_info中获取信息
-        if schedule_key.startswith("EventInfo_Side_") and not (schedule_key.endswith("_Main") or schedule_key.endswith("_Infinity") or schedule_key.endswith("_Minigame") or schedule_key.endswith("_Quest")):
+        # 对于EventInfo_Side_开头的活动，直接从event_info中获取信息,只获取pass的
+        if schedule_key.startswith("EventInfo_Side_") and ((schedule_key.endswith("_Pass")) or (schedule_key.endswith("_Attend"))):
             for event_info in data["event_info"]["json"]:
                 if event_info.get("schedule_key") == schedule_key:
                     name_sno = event_info.get("name_sno")

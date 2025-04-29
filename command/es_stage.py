@@ -28,6 +28,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             if stage.get("area_no") == area_no and stage.get("stage_no") == stage_no:
                 if "exp" in stage:
                     main_stage = stage
+                    drop_group_no = stage.get("item_drop_group_no")
                     break  # 找到主线关卡就直接跳出
         
         # 优先使用主线关卡，如果没有则使用其他关卡
@@ -81,6 +82,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             battle_teams.sort(key=lambda x: x.get("team_no", 0))
             
             for team in battle_teams:
+                print(team)
                 team_info = [f"敌方队伍 {team.get('team_no', '?')}："]
                 team_info.append(f"阵型：{get_formation_type(team.get('formation_type'))}")
                 
@@ -102,7 +104,15 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                         team_info.append(f"位置{i}：{hero_name_zh_tw} {grade_name_zh_tw} {level}级")
                 
                 messages.append("\n".join(team_info))
-
+                
+        # 获取掉落率信息
+        drop_items = get_drop_item_rate(data, drop_group_no)
+        if drop_items:
+            drop_info = [f"掉落物品概率如下："]
+            for item_name, amount, rate in drop_items:
+                drop_info.append(f"{item_name['zh_tw']} ({rate:.3f}%)")
+            messages.append("\n".join(drop_info))
+        
         # 发送合并转发消息
         forward_msgs = []
         for msg in messages:

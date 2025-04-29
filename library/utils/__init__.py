@@ -75,7 +75,7 @@ from .es_image_utils import (
 
 # 文本相关
 from .es_string_utils import (
-    clean_tags, format_number,
+    clean_tags, format_number, get_drop_item_rate,
     get_string_character, get_string_system,
     get_character_lost_item, format_character_story, get_cash_pack, get_string_item, 
     get_formation_type, get_character_skill, get_character_skill_value,

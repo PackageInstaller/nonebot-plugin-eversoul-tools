@@ -146,6 +146,32 @@ def get_string_character(data, hero_no, special=False):
     return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
+def get_drop_item_rate(data, group_no):
+    """获取掉落物品信息
+    
+    Args:
+        data: JSON数据字典
+        group_no: 掉落组编号
+    
+    Returns:
+        list: [(物品名称, 数量, 掉落率)] 的列表
+    """
+    drop_items = []
+    for drop_group in data["item_drop_group"]["json"]:
+        if drop_group["no"] == group_no:
+            item_no = drop_group.get("item_no")
+            amount = drop_group.get("amount", 0)
+            drop_rate = drop_group.get("drop_rate", 0)
+            
+            if item_no:
+                item_name = get_string_item(data, item_no)
+                # 转换掉落率 (1 = 0.001%)
+                rate_percent = drop_rate * 0.001
+                drop_items.append((item_name, amount, rate_percent))
+    
+    return sorted(drop_items, key=lambda x: -x[2])
+
+
 def get_character_skill_type(data, type_no):
     """获取技能类型名称
     
@@ -1436,27 +1462,27 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
     
     # 计算好结局和坏结局的总好感度
     good_total_affinity = sum(choice["affinity"] for choice in good_ending_choices)
-    # bad_total_affinity = sum(choice["affinity"] for choice in bad_ending_choices)
+    bad_total_affinity = sum(choice["affinity"] for choice in bad_ending_choices)
     
     # 计算需要减少的好感度，使总好感度落在一般结局区间内
-    # target_affinity = (bad_threshold + normal_threshold) / 2  # 取区间中点作为目标
-    # affinity_to_reduce = good_total_affinity - target_affinity
+    target_affinity = (bad_threshold + normal_threshold) / 2  # 取区间中点作为目标
+    affinity_to_reduce = good_total_affinity - target_affinity
     
-    # # 如果好结局总好感度已经在区间内，直接返回好结局选项
-    # if good_total_affinity <= normal_threshold and good_total_affinity >= bad_threshold:
-    #     normal_end_note = f"注意：按照好结局选项选择即可达到一般结局条件（总好感度：{good_total_affinity}）"
-    #     return [{
-    #         "episode": 0,
-    #         "choices": [normal_end_note]
-    #     }]
+    # 如果好结局总好感度已经在区间内，直接返回好结局选项
+    if good_total_affinity <= normal_threshold and good_total_affinity >= bad_threshold:
+        normal_end_note = f"注意：按照好结局选项选择即可达到一般结局条件（总好感度：{good_total_affinity}）"
+        return [{
+            "episode": 0,
+            "choices": [normal_end_note]
+        }]
     
-    # # 如果坏结局总好感度已经在区间内，直接返回坏结局选项
-    # if bad_total_affinity <= normal_threshold and bad_total_affinity >= bad_threshold:
-    #     normal_end_note = f"注意：按照坏结局选项选择即可达到一般结局条件（总好感度：{bad_total_affinity}）"
-    #     return [{
-    #         "episode": 0,
-    #         "choices": [normal_end_note]
-    #     }]
+    # 如果坏结局总好感度已经在区间内，直接返回坏结局选项
+    if bad_total_affinity <= normal_threshold and bad_total_affinity >= bad_threshold:
+        normal_end_note = f"注意：按照坏结局选项选择即可达到一般结局条件（总好感度：{bad_total_affinity}）"
+        return [{
+            "episode": 0,
+            "choices": [normal_end_note]
+        }]
     
     # 计算好结局和坏结局选项的好感度差值
     choice_diffs = []
@@ -1659,9 +1685,6 @@ def get_character_story(data, hero_id):
                 "en_title": episode_title_en,
                 "choices": choices
             })
-        
-        print(f"章节信息：{episode_info}")
-        print(f"结局信息：{endings}")
         return True, episode_info, endings
         
     except Exception as e:
