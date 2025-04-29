@@ -147,7 +147,7 @@ def get_string_character(data, hero_no, special=False):
 
 
 def get_drop_item_rate(data, group_no):
-    """获取掉落物品信息
+    """获取掉落物品信息，对于相同名称的物品保留概率最高的一个
     
     Args:
         data: JSON数据字典
@@ -157,6 +157,10 @@ def get_drop_item_rate(data, group_no):
         list: [(物品名称, 数量, 掉落率)] 的列表
     """
     drop_items = []
+    
+    if group_no is None:
+        return []
+    
     for drop_group in data["item_drop_group"]["json"]:
         if drop_group["no"] == group_no:
             item_no = drop_group.get("item_no")
@@ -169,7 +173,22 @@ def get_drop_item_rate(data, group_no):
                 rate_percent = drop_rate * 0.001
                 drop_items.append((item_name, amount, rate_percent))
     
-    return sorted(drop_items, key=lambda x: -x[2])
+    # 名称作为键，保存概率最高的物品
+    name_to_best_item = {}
+    
+    for item in drop_items:
+        item_name = item[0]['zh_tw']
+        item_rate = item[2]
+        
+        # 如果名称还没有记录，或者当前概率更高，则更新
+        if item_name not in name_to_best_item or item_rate > name_to_best_item[item_name][2]:
+            name_to_best_item[item_name] = item
+    
+    # 将字典值转换为列表
+    unique_items = list(name_to_best_item.values())
+    
+    # 按掉落率从高到低排序
+    return sorted(unique_items, key=lambda x: -x[2])
 
 
 def get_character_skill_type(data, type_no):
