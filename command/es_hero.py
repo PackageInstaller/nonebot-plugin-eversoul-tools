@@ -221,8 +221,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                             link_msg.append("  " + "\n  ".join(effects_list))
                         else:
                             link_msg.append("  未知效果")
-                            
-                # 开启时间可能为空
+        
                 if link['open_date']:
                     link_msg.append(f"\n开启时间：{link['open_date']}")
                     

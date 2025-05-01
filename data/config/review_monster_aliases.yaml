@@ -3786,6 +3786,55 @@ names:
     ja_name: ''
     aliases: []
     hero_id: 32119
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 지원군 소환
+    en_name: Summon Reinforcements
+    ja_name: ''
+    aliases: []
+    hero_id: 32120
+  - zh_tw_name: 艾琳
+    zh_cn_name: ''
+    kr_name: 아이린
+    en_name: Irene
+    ja_name: アイリーン
+    aliases: []
+    hero_id: 32121
+  - zh_tw_name: 卡斯珀
+    zh_cn_name: ''
+    kr_name: 캐스퍼
+    en_name: Casper
+    ja_name: キャスパー
+    aliases: []
+    hero_id: 32122
+  - zh_tw_name: 蘿絲
+    zh_cn_name: ''
+    kr_name: 로제
+    en_name: Rose
+    ja_name: ロゼ
+    aliases: []
+    hero_id: 32123
+  - zh_tw_name: 琳賽
+    zh_cn_name: ''
+    kr_name: 린지
+    en_name: Linzy
+    ja_name: リンジー
+    aliases: []
+    hero_id: 32124
+  - zh_tw_name: 塔利亞
+    zh_cn_name: ''
+    kr_name: 탈리아
+    en_name: Talia
+    ja_name: タリア
+    aliases: []
+    hero_id: 32125
+  - zh_tw_name: 威里
+    zh_cn_name: ''
+    kr_name: 웨리
+    en_name: Wheri
+    ja_name: ウェリー
+    aliases: []
+    hero_id: 32126
   - zh_tw_name: 起司
     zh_cn_name: ''
     kr_name: 치즈

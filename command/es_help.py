@@ -117,9 +117,9 @@ async def handle_es_help(bot: Bot, event: Event):
                 <div class="example">示例：es恶灵信息66009</div>
             </div>
             <div class="command">
-                <div class="command-name">13. es数据源切换 + [review/live]</div>
+                <div class="command-name">13. es数据源 + [review/live]</div>
                 <div class="usage">用途：切换数据源，仅限超管，群主以及管理员可用</div>
-                <div class="example">示例：es数据源切换review</div>
+                <div class="example">示例：es数据源review</div>
             </div>
             <div class="command">
                 <div class="command-name">14. es兑换码</div>

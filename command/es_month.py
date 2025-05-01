@@ -5,7 +5,8 @@ from ..library.utils import *
 async def handle_es_month(bot: Bot, event: Event):
     try:
         # 获取月份
-        month_match = re.match(r"^es(\d{1,2})月事件$", event.get_plaintext())
+        raw_message = event.get_plaintext() # 获取纯文本消息
+        month_match = re.match(r"^es(\d{1,2})月事件$", raw_message)
         if month_match:
             target_month = int(month_match.group(1))
             if not 1 <= target_month <= 12:
@@ -36,16 +37,6 @@ async def handle_es_month(bot: Bot, event: Event):
         
         month_events.extend(get_schedule_event(data, target_month, current_year,
                                              "Calender_PickUp_", "Pickup"))
-        month_events.extend(get_schedule_event(data, target_month, current_year, 
-                                             "Calender_SingleRaid_", "恶灵讨伐"))
-        month_events.extend(get_schedule_event(data, target_month, current_year,
-                                             "Calender_EdenAlliance_", "联合作战"))
-        month_events.extend(get_schedule_event(data, target_month, current_year,
-                                             "Calender_WorldBoss_", "世界Boss"))
-        month_events.extend(get_schedule_event(data, target_month, current_year,
-                                             "Calender_GuildRaid_", "工会突袭"))
-        month_events.extend(get_schedule_event(data, target_month, current_year,
-                                             "EventInfo_Side_", "附属活动"))
 
         # 获取一般活动事件
         calendar_events = get_calendar_event(data, target_month, current_year)
@@ -66,12 +57,14 @@ async def handle_es_month(bot: Bot, event: Event):
             if isinstance(event, GroupMessageEvent):
                 await bot.send_group_msg(
                     group_id=event.group_id,
-                    message=MessageSegment.image(png_pic)
+                    message=MessageSegment.image(png_pic),
+                    reply_message=True
                 )
             else:
                 await bot.send_private_msg(
                     user_id=event.user_id,
-                    message=MessageSegment.image(png_pic)
+                    message=MessageSegment.image(png_pic),
+                    reply_message=True
                 )
         else:
             await es_month.finish(f"{target_month}月份没有事件哦~")

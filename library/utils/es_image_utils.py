@@ -12,7 +12,7 @@ from ...config import (
     CG_DIR, HERO_DIR, CUSTOM_FONT
 )
 from .es_string_utils import (
-    get_string_item, get_string_character
+    get_string_item, get_string_character, get_string_ui
 )
 from nonebot.adapters.onebot.v11 import (
     MessageSegment
@@ -323,20 +323,28 @@ def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path, str]
 
 
 def get_schedule_event(data, target_month, current_year, schedule_prefix, event_type):
-    """获取日程事件信息
+    """获取活动日程事件信息
     
     Args:
         data: JSON数据字典
         target_month: 目标月份
         current_year: 当前年份
-        schedule_prefix: 日程key前缀(如"Calender_SingleRaid_")
-        event_type: 事件类型显示名称(如"恶灵讨伐")
+        schedule_prefix: 日程key前缀(如"Calender_PickUp_")
+        event_type: 事件类型显示名称(如"Pickup")
     
     Returns:
         list: 事件信息列表
     """
     events = []
     now = datetime.now()
+    
+    # 跳过已经迁移到get_calendar_event函数中的类型
+    if (schedule_prefix.startswith("EventInfo_Side_") or 
+        schedule_prefix.startswith("Calender_SingleRaid_") or 
+        schedule_prefix.startswith("Calender_EdenAlliance_") or
+        schedule_prefix.startswith("Calender_WorldBoss_") or
+        schedule_prefix.startswith("Calender_GuildRaid_")):
+        return events
     
     for schedule in data["localization_schedule"]["json"]:
         # 对于主要活动，使用完全匹配而不是startswith
@@ -370,36 +378,20 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
         name_sno = None
         gacha_no = None
         
-        # 对于EventInfo_Side_开头的活动，直接从event_info中获取信息,只获取pass的
-        if schedule_key.startswith("EventInfo_Side_") and ((schedule_key.endswith("_Pass")) or (schedule_key.endswith("_Attend"))):
-            for event_info in data["event_info"]["json"]:
-                if event_info.get("schedule_key") == schedule_key:
-                    name_sno = event_info.get("name_sno")
-                    banner_raw = event_info.get("banner_path", "")
-                    if banner_raw:
-                        banner_path = f"{banner_raw}_ZH_TW.png"
-                    # 如果找到name_sno，从StringUI中获取名称
-                    if name_sno:
-                        for string in data["string_ui"]["json"]:
-                            if string["no"] == name_sno:
-                                event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
-                                break
-                    break
-        else:
-            # 从EventCalender中获取name_sno和gacha_no
-            for event in data["event_calender"]["json"]:
-                if event.get("schedule_key") == schedule_key:
-                    name_sno = event.get("name_sno")
-                    # 如果是Pickup类型，获取gacha_no
-                    if schedule_key.startswith("Calender_PickUp_"):
-                        gacha_no = event.get("gacha_no")
-                    if name_sno:
-                        # 从StringUI中获取名称
-                        for string in data["string_ui"]["json"]:
-                            if string["no"] == name_sno:
-                                event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
-                                break
-                    break
+        # 从EventCalender中获取name_sno和gacha_no
+        for event in data["event_calender"]["json"]:
+            if event.get("schedule_key") == schedule_key:
+                name_sno = event.get("name_sno")
+                # 如果是Pickup类型，获取gacha_no
+                if schedule_key.startswith("Calender_PickUp_"):
+                    gacha_no = event.get("gacha_no")
+                if name_sno:
+                    # 从StringUI中获取名称
+                    for string in data["string_ui"]["json"]:
+                        if string["no"] == name_sno:
+                            event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
+                            break
+                break
         
         # 对于Pickup类型，从Gacha.json中获取banner_path
         if schedule_key.startswith("Calender_PickUp_") and gacha_no:
@@ -410,44 +402,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
                         if banner_raw:
                             banner_path = f"{banner_raw}_ZH_TW.png"
                         break
-        # 恶灵讨伐类型，从schedule_key提取角色名生成贴纸路径                        
-        elif schedule_key.startswith("Calender_SingleRaid_"):
-            # 从schedule_key中提取角色名称：Calender_SingleRaid_HeroName
-            parts = schedule_key.split('_')
-            if len(parts) > 2:
-                hero_name = parts[-1]  # 获取最后一部分，保持原始大小写
-                # 这里是给数据表中不同字段角色名称做适配
-                hero_name = HERO_NAME_MAPPING.get(hero_name, hero_name)  # 如果不在映射表中，使用原名
-                sticker_path = f"sticker_singleraid_{hero_name}_01.png"
-                # 检查文件是否存在
-                if (STICKER_DIR / sticker_path).exists():
-                    banner_path = sticker_path
-        # 联合作战类型，从schedule_key提取角色名生成徽章路径
-        elif schedule_key.startswith("Calender_EdenAlliance_"):
-            # 从schedule_key中提取角色名称：Calender_EdenAlliance_HeroName
-            parts = schedule_key.split('_')
-            if len(parts) > 2:
-                hero_name = parts[-1].lower()  # 获取最后一部分并转为小写
-                # 寻找最大tier值的贴纸
-                max_tier = 0
-                found_sticker = None
-                # 查找基础贴纸（不带_1后缀）
-                for tier in range(1, 20):  # 假设tier最多到20
-                    sticker_name = f"sticker_eas_{hero_name}_tier_{tier}.png"
-                    sticker_path = STICKER_DIR / sticker_name
-                    if sticker_path.exists():
-                        max_tier = tier
-                        found_sticker = sticker_name
-                
-                # 如果找到了基础贴纸，尝试查找带_1后缀的贴纸
-                if found_sticker:
-                    variant_sticker = f"sticker_eas_{hero_name}_tier_{max_tier}_1.png"
-                    variant_path = STICKER_DIR / variant_sticker
-                    if variant_path.exists():
-                        banner_path = variant_sticker
-                    else:
-                        banner_path = found_sticker
-        # 其他类型，从EventInfo中获取banner路径
+        # 从EventInfo中获取banner路径
         elif name_sno:
             for event_info in data["event_info"]["json"]:
                 if event_info.get("name_sno") == name_sno:
@@ -552,14 +507,18 @@ def get_calendar_event(data, target_month, current_year):
     
     for schedule in data["localization_schedule"]["json"]:
         schedule_key = schedule.get("schedule_key", "")
-        # 排除特殊事件和主要活动
-        if not schedule_key.startswith("Calender_") or \
-           schedule_key.startswith("Calender_SingleRaid_") or \
-           schedule_key.startswith("Calender_EdenAlliance_") or \
-           schedule_key.startswith("Calender_PickUp_") or \
-           schedule_key.startswith("Calender_WorldBoss_") or \
-           schedule_key.startswith("Calender_GuildRaid_") or \
-           schedule_key.endswith("_Main"):
+        # 排除以下类型：
+        #   - Calender_PickUp_ （Pickup活动）
+        #   - *_Main 结尾的主要活动
+        if ((not schedule_key.startswith("Calender_") and not schedule_key.startswith("EventInfo_")) or 
+            schedule_key.startswith("Calender_PickUp_") or 
+            schedule_key.endswith("_Main") or  # 主要活动
+            schedule_key.endswith("_Quest") or  # 7日任务
+            schedule_key.endswith("_Infinity") or  # 无限挑战
+            schedule_key.endswith("_Rewardgame") or  # 小游戏
+            (schedule_key.startswith("EventInfo_") and 
+             not schedule_key.endswith("_Pass") and 
+             not schedule_key.endswith("_Attend"))):
             continue
             
         start_date = schedule.get("start_date")
@@ -583,23 +542,84 @@ def get_calendar_event(data, target_month, current_year):
         event_name_cn = ""
         banner_path = ""
         name_sno = None
+        gacha_no = None
         
-        # 从EventCalender中获取name_sno
-        for event in data["event_calender"]["json"]:
-            if event.get("schedule_key") == schedule_key:
-                name_sno = event.get("name_sno")
-                if name_sno:
-                    # 从StringUI中获取名称并处理换行
-                    for string in data["string_ui"]["json"]:
-                        if string["no"] == name_sno:
-                            # 在这里处理换行符
-                            event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
-                            event_name_cn = string.get("zh_cn", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
-                            break
-                break
+        # 对于EventInfo_开头的活动，直接从event_info中获取信息
+        if schedule_key.startswith("EventInfo_") and ((schedule_key.endswith("_Pass")) or (schedule_key.endswith("_Attend"))):
+            for event_info in data["event_info"]["json"]:
+                if event_info.get("schedule_key") == schedule_key:
+                    name_sno = event_info.get("name_sno")
+                    banner_raw = event_info.get("banner_path", "")
+                    if banner_raw:
+                        banner_path = f"{banner_raw}_ZH_TW.png"
+                    # 如果找到name_sno，从StringUI中获取名称
+                    if name_sno:
+                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
+                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
+                        break
+                    break
+        else:
+            # 从EventCalender中获取name_sno
+            for event in data["event_calender"]["json"]:
+                if event.get("schedule_key") == schedule_key:
+                    name_sno = event.get("name_sno")
+                    if name_sno:
+                        # 从StringUI中获取名称
+                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
+                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
+                        break
+                    break
+            
+            # 从EventInfo中获取名称
+            for event in data["event_info"]["json"]:
+                if event.get("schedule_key") == schedule_key:
+                    name_sno = event.get("name_sno")
+                    if name_sno:
+                        # 从StringUI中获取名称并处理换行
+                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
+                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
+                        break
+                    break
         
+        # 处理不同类型活动的banner
+        if schedule_key.startswith("Calender_SingleRaid_"):
+            # 从schedule_key中提取角色名称：Calender_SingleRaid_HeroName
+            parts = schedule_key.split('_')
+            if len(parts) > 2:
+                hero_name = parts[-1]  # 获取最后一部分，保持原始大小写
+                # 这里是给数据表中不同字段角色名称做适配
+                hero_name = HERO_NAME_MAPPING.get(hero_name, hero_name)  # 如果不在映射表中，使用原名
+                sticker_path = f"sticker_singleraid_{hero_name}_01.png"
+                # 检查文件是否存在
+                if (STICKER_DIR / sticker_path).exists():
+                    banner_path = sticker_path
+        # 联合作战类型，从schedule_key提取角色名生成徽章路径
+        elif schedule_key.startswith("Calender_EdenAlliance_"):
+            # 从schedule_key中提取角色名称：Calender_EdenAlliance_HeroName
+            parts = schedule_key.split('_')
+            if len(parts) > 2:
+                hero_name = parts[-1].lower()  # 获取最后一部分并转为小写
+                # 寻找最大tier值的贴纸
+                max_tier = 0
+                found_sticker = None
+                # 查找基础贴纸（不带_1后缀）
+                for tier in range(1, 20):  # 假设tier最多到20
+                    sticker_name = f"sticker_eas_{hero_name}_tier_{tier}.png"
+                    sticker_path = STICKER_DIR / sticker_name
+                    if sticker_path.exists():
+                        max_tier = tier
+                        found_sticker = sticker_name
+                
+                # 如果找到了基础贴纸，尝试查找带_1后缀的贴纸
+                if found_sticker:
+                    variant_sticker = f"sticker_eas_{hero_name}_tier_{max_tier}_1.png"
+                    variant_path = STICKER_DIR / variant_sticker
+                    if variant_path.exists():
+                        banner_path = variant_sticker
+                    else:
+                        banner_path = found_sticker
         # 从EventInfo中获取banner路径
-        if name_sno:
+        elif name_sno and not banner_path:
             for event_info in data["event_info"]["json"]:
                 if event_info.get("name_sno") == name_sno:
                     banner_raw = event_info.get("banner_path", "")
@@ -742,24 +762,14 @@ def get_event_name(event: str) -> str:
 
 def get_event_type_class(event: str) -> str:
     """根据事件内容返回对应的CSS类名"""
-    if "【附属活动】" in event:
-        return "side"
-    elif "【主要活动】" in event:
+    if "【主要活动】" in event:
         return "main"
     elif "【活动】" in event:
         return "calendar"
     elif "【邮箱事件】" in event:
         return "mail"
-    elif "【恶灵讨伐】" in event:
-        return "raid"
-    elif "【联合作战】" in event:
-        return "eden"
     elif "【Pickup】" in event:
         return "pickup"
-    elif "【世界Boss】" in event:
-        return "worldboss"
-    elif "【工会突袭】" in event:
-        return "guildraid"
     return "calendar"
 
 
@@ -843,6 +853,13 @@ async def generate_timeline_html(month: int, events: list) -> str:
                 margin-bottom: 20px;
                 padding-bottom: 10px;
                 border-bottom: 2px solid #eee;
+                text-align: center;
+            }}
+            .event-container {{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
             }}
             .event {{
                 margin-bottom: 20px;
@@ -850,6 +867,7 @@ async def generate_timeline_html(month: int, events: list) -> str:
                 background-color: #ffffff;
                 border-radius: 5px;
                 position: relative;
+                width: 90%;
             }}
             .event::before {{
                 content: '';
@@ -893,38 +911,6 @@ async def generate_timeline_html(month: int, events: list) -> str:
                 background-color: #6a1b9a;
             }}
             
-            /* 恶灵讨伐 - 红色 */
-            .event.raid::before {{
-                background-color: #c62828;
-            }}
-            .event.raid .event-type {{
-                background-color: #c62828;
-            }}
-            
-            /* 联合作战 - 绿色 */
-            .event.eden::before {{
-                background-color: #2e7d32;
-            }}
-            .event.eden .event-type {{
-                background-color: #2e7d32;
-            }}
-            
-            /* 世界Boss - 橙色 */
-            .event.worldboss::before {{
-                background-color: #e65100;
-            }}
-            .event.worldboss .event-type {{
-                background-color: #e65100;
-            }}
-            
-            /* 工会突袭 - 棕色 */
-            .event.guildraid::before {{
-                background-color: #4e342e;
-            }}
-            .event.guildraid .event-type {{
-                background-color: #4e342e;
-            }}
-            
             /* 邮箱事件 - 青色 */
             .event.mail::before {{
                 background-color: #00838f;
@@ -941,13 +927,6 @@ async def generate_timeline_html(month: int, events: list) -> str:
                 background-color: #37474f;
             }}
             
-            /* 附属活动 - 蓝色 */
-            .event.side::before {{
-                background-color: #007bff;
-            }}
-            .event.side .event-type {{
-                background-color: #007bff;
-            }}
             
             .event-content {{
                 color: #333;
@@ -963,30 +942,36 @@ async def generate_timeline_html(month: int, events: list) -> str:
             <div class="content-container">
                 <div class="column">
                     <div class="column-title">特殊活动</div>
-                    {''.join([f'''
-                    <div class="event {get_event_type_class(event)}">
-                        <div class="event-type">{get_event_name(event)}</div>
-                        {generate_event_html(event, "special")}
+                    <div class="event-container">
+                        {''.join([f'''
+                        <div class="event {get_event_type_class(event)}">
+                            <div class="event-type">{get_event_name(event)}</div>
+                            {generate_event_html(event, "special")}
+                        </div>
+                        ''' for event in special_events])}
                     </div>
-                    ''' for event in special_events])}
                 </div>
                 <div class="column">
                     <div class="column-title">一般活动</div>
-                    {''.join([f'''
-                    <div class="event {get_event_type_class(event)}">
-                        <div class="event-type">{get_event_name(event)}</div>
-                        {generate_event_html(event, "normal")}
+                    <div class="event-container">
+                        {''.join([f'''
+                        <div class="event {get_event_type_class(event)}">
+                            <div class="event-type">{get_event_name(event)}</div>
+                            {generate_event_html(event, "normal")}
+                        </div>
+                        ''' for event in normal_events])}
                     </div>
-                    ''' for event in normal_events])}
                 </div>
                 <div class="column">
                     <div class="column-title">邮箱事件</div>
-                    {''.join([f'''
-                    <div class="event {get_event_type_class(event)}">
-                        <div class="event-type">{get_event_name(event)}</div>
-                        {generate_event_html(event, "mail")}
+                    <div class="event-container">
+                        {''.join([f'''
+                        <div class="event {get_event_type_class(event)}">
+                            <div class="event-type">{get_event_name(event)}</div>
+                            {generate_event_html(event, "mail")}
+                        </div>
+                        ''' for event in mail_events])}
                     </div>
-                    ''' for event in mail_events])}
                 </div>
             </div>
         </div>

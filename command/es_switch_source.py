@@ -2,16 +2,16 @@ from ..library.utils import *
 
 
 @es_switch_source.handle()
-async def handle_switch_source(event: GroupMessageEvent):
+async def handle_switch_source(event: GroupMessageEvent, args: Message = CommandArg()):
     # 获取参数
-    msg = str(event.get_message()).strip()
-    args = msg.replace("es数据源切换", "").strip().lower()
+    args = str(args).strip().lower()
     
     # 获取群组ID
     group_id = str(event.group_id)
     
     if not args:
-        await es_switch_source.finish("请指定数据源类型：live 或 review")
+        group_data_source = get_group_data_source(group_id)["type"]
+        await es_switch_source.finish(f"当前群组数据源为{group_data_source}")
     
     if args not in ["live", "review"]:
         await es_switch_source.finish("参数错误！请使用 'live' 或 'review'")

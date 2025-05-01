@@ -82,7 +82,6 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             battle_teams.sort(key=lambda x: x.get("team_no", 0))
             
             for team in battle_teams:
-                print(team)
                 team_info = [f"敌方队伍 {team.get('team_no', '?')}："]
                 team_info.append(f"阵型：{get_formation_type(team.get('formation_type'))}")
                 

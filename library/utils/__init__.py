@@ -46,7 +46,7 @@ es_month = on_regex(r"^es(\d{1,2})月事件$", priority=5, block=True)
 es_potential_info = on_command("es潜能信息", priority=5, block=True)
 es_stage_info = on_command("es主线信息", priority=5, block=True)
 es_stats = on_regex(r"^es(身高|体重)排行$", priority=5, block=True)
-es_switch_source = on_command("es数据源切换", priority=5, permission=\
+es_switch_source = on_command("es数据源", priority=5, permission=\
                             (SUPERUSER | GROUP_ADMIN | GROUP_OWNER), block=True)
 es_tier_info = on_command("es礼品信息", priority=5, block=True)
 es_coupon = on_command("es兑换码", priority=5, block=True)

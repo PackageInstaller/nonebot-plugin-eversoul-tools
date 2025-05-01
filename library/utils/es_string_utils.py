@@ -106,10 +106,10 @@ def get_string_ui(data, no):
     for string in data["string_ui"]["json"]:
         if string["no"] == no:
             return {
-                "zh_tw": string.get("zh_tw", ""),
-                "zh_cn": string.get("zh_cn", ""),
-                "kr": string.get("kr", ""),
-                "en": string.get("en", "")
+                "zh_tw": string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
+                "zh_cn": string.get("zh_cn", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
+                "kr": string.get("kr", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
+                "en": string.get("en", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
             }
     return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
@@ -1214,6 +1214,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                 
         # 获取收集效果
         collection_effects = []
+        
         if collection_id := link.get("collection"):
             # 按condition_list排序
             collection_items = sorted(
@@ -1248,6 +1249,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                     buff = next((b for b in data["contents_buff"]["json"] 
                                if b.get("no") == buff_no), None)
                     if buff:
+                        # 处理所有属性，包括战力加成
                         for key, value in buff.items():
                             if key in STAT_NAME_MAPPING and value != 0:
                                 # 获取属性名称，优先使用zh_tw
@@ -1256,6 +1258,16 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                                     buff_effects.append(f"{stat_name}：{value*100:.1f}%")
                                 else:
                                     buff_effects.append(f"{stat_name}：{int(value)}")
+                        
+                        # 百分比战力加成
+                        battle_power_per = buff.get("battle_power_per", 0)
+                        if battle_power_per != 0:
+                            buff_effects.append(f"战力加成：{battle_power_per*100:.1f}%")
+                        
+                        # 固定值战力加成
+                        battle_power = buff.get("battle_power", 0)
+                        if battle_power != 0:
+                            buff_effects.append(f"战力加成：{int(battle_power)}")
                 
                 if condition_text and buff_effects:
                     collection_effects.append({
