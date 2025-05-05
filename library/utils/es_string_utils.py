@@ -14,31 +14,131 @@ from ...config import (
 
 
 def format_number(num):
-    '''
-    递归实现，精确为最大单位值 + 小数点后一位
-    处理科学计数法表示的数值
-    '''
-    def strofsize(num, level):
-        if level >= 29:
-            return num, level
-        elif num >= 10000:
-            num /= 10000
-            level += 1
-            return strofsize(num, level)
-        else:
-            return num, level
-        
-    units = ['', '万', '亿', '兆', '京', '垓', '秭', '穰', '沟', '涧', '正', '载', '极', 
-            '恒河沙', '阿僧祗', '那由他', '不思议', '无量大', '万无量大', '亿无量大', 
-            '兆无量大', '京无量大', '垓无量大', '秭无量大', '穰无量大', '沟无量大', 
-            '涧无量大', '正无量大', '载无量大', '极无量大']
+    """
+    将数字转换为中文单位表示，精确到两个单位
+    例如：123456789 -> 1.2亿3456万
+    对于能够用一个单位精确表示的数字，仍使用一个单位
+    例如：50000000 -> 5千万
+    支持负数
+    """
+    # 处理负数情况
+    is_negative = False
+    if num < 0:
+        is_negative = True
+        num = abs(num)
+
+    units = [
+        "",
+        "万",
+        "亿",
+        "兆",
+        "京",
+        "垓",
+        "秭",
+        "穰",
+        "沟",
+        "涧",
+        "正",
+        "载",
+        "极",
+        "恒河沙",
+        "阿僧祗",
+        "那由他",
+        "不思议",
+        "无量大",
+        "万无量大",
+        "亿无量大",
+        "兆无量大",
+        "京无量大",
+        "垓无量大",
+        "秭无量大",
+        "穰无量大",
+        "沟无量大",
+        "涧无量大",
+        "正无量大",
+        "载无量大",
+        "极无量大",
+    ]
+    
+    # 千单位特殊处理
+    sub_units = ["", "十", "百", "千"]
+    
     # 处理科学计数法
     if "e" in str(num):
         num = float(f"{num:.1f}")
-    num, level = strofsize(num, 0)
-    if level >= len(units):
-        level = len(units) - 1
-    return f"{round(num, 1)}{units[level]}"
+    
+    # 处理0和小数
+    if num == 0:
+        return "0"
+    if num < 1:
+        return str(round(num, 2))
+    
+    # 首先确定最大单位
+    def get_unit_level(n):
+        level = 0
+        while n >= 10000:
+            n /= 10000
+            level += 1
+        return n, level
+    
+    main_num, main_level = get_unit_level(num)
+    
+    # 检查是否需要显示第二个单位
+    # 判断条件：主单位的小数部分不为0，且数值足够大
+    main_int = int(main_num)
+    main_decimal = main_num - main_int
+    
+    # 如果没有小数部分或不足以表示第二个单位，直接返回一个单位
+    if main_decimal < 0.0001 or main_level == 0:
+        if main_level >= len(units):
+            main_level = len(units) - 1
+        result = f"{main_int}{units[main_level]}"
+        if is_negative:
+            return f"负{result}"
+        return result
+    
+    # 计算第二个单位
+    second_num = main_decimal * 10000  # 转换到下一个单位
+    
+    # 对于万以上单位，尝试使用千/百/十进行表示
+    if main_level > 0 and second_num < 10:
+        # 数值太小，不足以用第二个单位表示，直接使用一个单位
+        if main_level >= len(units):
+            main_level = len(units) - 1
+        result = f"{main_int}{units[main_level]}"
+        if is_negative:
+            return f"负{result}"
+        return result
+    
+    second_level = main_level - 1
+    
+    # 如果第二个单位是个位数（小于万），使用千/百/十表示
+    if second_level == 0:
+        # 确定sub_unit
+        sub_unit_index = 0
+        temp_num = second_num
+        while temp_num >= 10:
+            temp_num /= 10
+            sub_unit_index += 1
+            if sub_unit_index >= len(sub_units) - 1:
+                break
+        
+        second_display = int(second_num / (10 ** sub_unit_index))
+        
+        # 最终结果
+        if main_level >= len(units):
+            main_level = len(units) - 1
+        result = f"{main_int}{units[main_level]}{second_display}{sub_units[sub_unit_index]}"
+    else:
+        # 第二个单位是万及以上，直接使用
+        second_int = int(second_num)
+        if second_level >= len(units):
+            second_level = len(units) - 1
+        result = f"{main_int}{units[main_level]}{second_int}{units[second_level]}"
+    
+    if is_negative:
+        return f"负{result}"
+    return result
 
 
 def clean_tags(text):

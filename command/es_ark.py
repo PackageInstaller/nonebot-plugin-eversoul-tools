@@ -91,26 +91,9 @@ async def handle_ark_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Reg
                                     ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{value*100:.2f}%")
                     if not found_buff:
                         ark_msg.append("特殊属性加成：数据未找到")
-
-                # 获取超频信息
-                if overclock_max := ark.get("overclock_max_level"):
-                    ark_msg.append(f"\n超频信息：")
-                    total_cost = 0
-                    for overclock in data["ark_overclock"]["json"]:
-                        if overclock.get("overclock_level", 0) <= overclock_max:
-                            total_cost += overclock.get("mana_crystal", 0)
-                    ark_msg.append(f"最大超频等级：{overclock_max}")
-                    ark_msg.append(f"总超频消耗：{format_number(total_cost)} 魔力水晶")
             
             messages.append("\n".join(ark_msg))
-        
-        # 添加统计图
-        chart_msg = []
-        chart_msg.append("\n【等级关系统计图】")
-        chart = await generate_ark_level_chart(data)
-        chart_msg.append(chart)
-        messages.append("\n".join(str(x) for x in chart_msg))
-        
+            
         # 构建转发消息
         forward_msgs = []
         for msg in messages:

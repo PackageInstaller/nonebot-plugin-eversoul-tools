@@ -981,8 +981,16 @@ async def generate_timeline_html(month: int, events: list) -> str:
     return html
 
 
-async def generate_ark_level_chart(data: dict) -> MessageSegment:
-    """生成主方舟等级与超频等级关系图以及超频等级升级消耗图"""
+async def generate_ark_level_chart(data: dict, target_level: int = None) -> MessageSegment:
+    """生成主方舟等级与超频等级关系图以及超频等级升级消耗图
+    
+    Args:
+        data: 游戏数据
+        target_level: 指定的目标超频等级，如果提供则会在图中标注，并将图表范围限制到该等级
+    
+    Returns:
+        MessageSegment: 包含图表的消息段
+    """
     try:
         # 收集数据点
         levels = []
@@ -997,48 +1005,111 @@ async def generate_ark_level_chart(data: dict) -> MessageSegment:
                     overclock_levels.append(overclock)
         
         # 收集超频消耗数据
-        overclock_costs = []
-        overclock_levels_cost = []
+        all_overclock_costs = []
+        all_overclock_levels_cost = []
         for overclock in data["ark_overclock"]["json"]:
             level = overclock.get("overclock_level", 0)
             cost = overclock.get("mana_crystal", 0)
             if level is not None and cost is not None:
+                all_overclock_levels_cost.append(level)
+                all_overclock_costs.append(cost)
+        
+        # 获取数据的最大超频等级
+        max_overclock_level = max(all_overclock_levels_cost) if all_overclock_levels_cost else 0
+        
+        # 如果提供了目标等级，限制图表范围为目标等级
+        # 否则使用全范围
+        plot_max_level = target_level if target_level is not None else max_overclock_level
+        
+        # 过滤数据点，只保留小于等于plot_max_level的点
+        filtered_levels = []
+        filtered_overclock_levels = []
+        for i, overclock in enumerate(overclock_levels):
+            if overclock <= plot_max_level:
+                filtered_levels.append(levels[i])
+                filtered_overclock_levels.append(overclock)
+        
+        # 过滤超频消耗数据
+        overclock_levels_cost = []
+        overclock_costs = []
+        for i, level in enumerate(all_overclock_levels_cost):
+            if level <= plot_max_level:
                 overclock_levels_cost.append(level)
-                overclock_costs.append(cost)
+                overclock_costs.append(all_overclock_costs[i])
         
         # 创建两个子图
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12))
         
         # 第一个子图：主方舟等级与最大超频等级关系图
-        ax1.plot(levels, overclock_levels, 'b-', marker='o', markersize=3)
+        ax1.plot(filtered_levels, filtered_overclock_levels, 'b-', marker='o', markersize=3)
         ax1.set_title('主方舟等级与最大超频等级关系图', fontproperties=CUSTOM_FONT)
         ax1.set_xlabel('主方舟等级', fontproperties=CUSTOM_FONT)
         ax1.set_ylabel('最大超频等级', fontproperties=CUSTOM_FONT)
         ax1.grid(True, linestyle='--', alpha=0.7)
-        ax1.set_xticks(range(0, max(levels)+1, 50))
         
-        # 添加关键点标注
-        ax1.annotate(f'最大值: ({max(levels)}, {max(overclock_levels)})',
-                    xy=(max(levels), max(overclock_levels)),
-                    xytext=(10, 10),
-                    textcoords='offset points',
-                    fontproperties=CUSTOM_FONT)
+        # 设置x轴刻度
+        if filtered_levels:
+            x_max = max(filtered_levels)
+            if x_max <= 100:
+                x_interval = 10
+            elif x_max <= 500:
+                x_interval = 50
+            else:
+                x_interval = 100
+            ax1.set_xticks(range(0, x_max+1, x_interval))
+        
+        # 设置y轴范围，确保从0开始到最大超频等级
+        if filtered_overclock_levels:
+            y_max = max(filtered_overclock_levels)
+            ax1.set_ylim(0, y_max * 1.1)  # 留出10%的空间
+        
+        # 添加最大点标注
+        if filtered_levels and filtered_overclock_levels:
+            max_x = filtered_levels[-1]
+            max_y = filtered_overclock_levels[-1]
+            ax1.annotate(f'最大值: ({max_x}, {max_y})',
+                        xy=(max_x, max_y),
+                        xytext=(10, 10),
+                        textcoords='offset points',
+                        fontproperties=CUSTOM_FONT)
         
         # 第二个子图：超频等级升级消耗图
         ax2.plot(overclock_levels_cost, overclock_costs, 'r-', marker='o', markersize=3)
-        ax2.set_title('超频等级升级消耗图', fontproperties=CUSTOM_FONT)
+        ax2.set_title(f'超频等级升级消耗图 (1-{plot_max_level}级)', fontproperties=CUSTOM_FONT)
         ax2.set_xlabel('超频等级', fontproperties=CUSTOM_FONT)
         ax2.set_ylabel('魔力水晶消耗', fontproperties=CUSTOM_FONT)
         ax2.grid(True, linestyle='--', alpha=0.7)
         
-        # 添加关键点标注
-        ax2.annotate(f'最大消耗: ({overclock_levels_cost[overclock_costs.index(max(overclock_costs))]}, {max(overclock_costs)})',
-                    xy=(overclock_levels_cost[overclock_costs.index(max(overclock_costs))], max(overclock_costs)),
-                    xytext=(10, 10),
-                    textcoords='offset points',
-                    fontproperties=CUSTOM_FONT)
+        # 设置x轴范围和刻度
+        if overclock_levels_cost:
+            x_max = max(overclock_levels_cost)
+            if x_max <= 50:
+                x_interval = 5
+            elif x_max <= 100:
+                x_interval = 10
+            elif x_max <= 500:
+                x_interval = 50
+            else:
+                x_interval = 100
+            ax2.set_xlim(0, x_max)
+            ax2.set_xticks(range(0, x_max+1, x_interval))
         
-        # 调整子图之间的间距
+        # 设置y轴范围，确保从0开始
+        if overclock_costs:
+            y_max = max(overclock_costs)
+            ax2.set_ylim(0, y_max * 1.1)  # 留出10%的空间
+        
+        # 添加最大消耗标注
+        if overclock_costs and overclock_levels_cost:
+            max_cost = max(overclock_costs)
+            max_cost_index = overclock_costs.index(max_cost)
+            max_cost_level = overclock_levels_cost[max_cost_index]
+            ax2.annotate(f'最大消耗: ({max_cost_level}, {max_cost})',
+                        xy=(max_cost_level, max_cost),
+                        xytext=(10, 10),
+                        textcoords='offset points',
+                        fontproperties=CUSTOM_FONT)
+        
         plt.tight_layout()
         
         buffer = BytesIO()

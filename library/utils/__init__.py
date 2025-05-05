@@ -36,6 +36,7 @@ from ..model import *
 
 es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, priority=5, block=True)
 es_ark_info = on_regex(r"^es方舟等级信息(\d+)$", priority=5, block=True)
+es_ark_overclock = on_regex(r"^es超频消耗(\d+)$", priority=5, block=True)
 es_cash_pack_info = on_command("es突发礼包信息", priority=5, block=True)
 es_single_raid = on_command("es恶灵信息", priority=5, block=True)
 es_gate = on_regex(r"es(自由|人类|野兽|妖精|不死)传送门信息(\d+)", priority=5, block=True)
