@@ -85,7 +85,8 @@ from .es_string_utils import (
     get_character_keyword_source, get_character_keyword_location,
     get_character_arbeit, get_character_soullink, get_character_story,
     get_character_keyword, get_character_town_object, get_character_town_object_task,
-    get_character_signature, get_character_signature_value, get_character_skill_type
+    get_character_signature, get_character_signature_value, get_character_skill_type,
+    get_base_battle_power, get_stage_team_battle_power
 )
 
 # 兑换码相关

@@ -165,9 +165,6 @@ CURRENT_DATA_SOURCE = {
     }
 }
 
-
-
-
 # 字体路径
 FONT_DIR = RESOURCE_DIR / "font" / "Sarasa-Regular.ttc"
 CUSTOM_FONT = FontProperties(fname=FONT_DIR)

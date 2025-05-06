@@ -86,7 +86,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                 team_info.append(f"阵型：{get_formation_type(team.get('formation_type'))}")
                 
                 # 添加每个角色的信息
-                for i in range(1, 6):  # 检查5个角色位置
+                for i in range(1, 6):  # 检查最多5个角色位置
                     hero_key = f"hero_no{i}"
                     grade_key = f"hero_grade{i}"
                     level_key = f"level{i}"
@@ -101,6 +101,18 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                         level = team.get(level_key, 0)
                         
                         team_info.append(f"位置{i}：{hero_name_zh_tw} {grade_name_zh_tw} {level}级")
+                
+                if team.get("hero_no1") and team.get("hero_grade1") and team.get("level1"):
+                    level = team.get("level1", 1)
+                    grade = team.get("hero_grade1")
+                    
+                    hero_count = 0
+                    for i in range(1, 6):
+                        if team.get(f"hero_no{i}"):
+                            hero_count += 1
+                    
+                    team_battle_power = get_stage_team_battle_power(data, level, grade, hero_count)
+                    team_info.append(f"队伍战力：{team_battle_power}")
                 
                 messages.append("\n".join(team_info))
                 

@@ -387,6 +387,9 @@ def load_json_data(group_id: int):
         "hero": "Hero.json", # 角色
         "hero_option": "HeroOption.json", # 角色潜能
         "hero_gift": "HeroGift.json", # 角色喜好礼物
+        "hero_desc": "HeroDesc.json", # 角色描述
+        "hero_level_grade": "HeroLevelGrade.json", # 角色等级加成率
+        "hero_grade": "HeroGrade.json", # 角色品质
         "string_character": "StringCharacter.json", # 角色文本
         "string_system": "StringSystem.json", # 系统文本
         "skill": "Skill.json", # 技能
@@ -395,7 +398,6 @@ def load_json_data(group_id: int):
         "skill_buff": "SkillBuff.json", # 技能效果
         "skill_icon": "SkillIcon.json", # 技能图标
         "signature": "Signature.json", # 遗物
-        "hero_desc": "HeroDesc.json", # 角色描述
         "signature_level": "SignatureLevel.json", # 遗物等级
         "string_evertalk": "StringEverTalk.json",
         "story_info": "StoryInfo.json", # 故事信息

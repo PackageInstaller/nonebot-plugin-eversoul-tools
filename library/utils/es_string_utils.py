@@ -4,6 +4,7 @@
 import os
 import re
 import ast
+import math
 from nonebot.log import logger
 from difflib import get_close_matches
 from ...config import (
@@ -1826,9 +1827,9 @@ def get_character_story(data, hero_id):
 def format_character_story(episode_info, endings, is_test=False):
     """格式化好感故事攻略"""
     # 创建三个结局的信息列表
-    good_end = ["好结局攻略："]
-    normal_end = ["一般结局攻略："]
-    bad_end = ["坏结局攻略："]
+    good_end = ["😃好结局攻略："]
+    normal_end = ["🙂一般结局攻略："]
+    bad_end = ["🥲坏结局攻略："]
     
     # 添加结局条件
     bad_threshold = endings.get('bad', 0)
@@ -2002,3 +2003,106 @@ def format_character_story(episode_info, endings, is_test=False):
     result.extend([""] + bad_end)
     
     return "\n".join(result)
+
+
+def get_base_battle_power(data: dict, entity_type: int, level: int) -> int:
+    """计算基础战力
+    
+    Args:
+        data: 游戏数据字典
+        entity_type: 实体类型 (1=角色, 2=怪物, 3=raid)
+        level: 等级
+    
+    Returns:
+        int: 计算出的基础战力(整数)
+    """
+    try:
+        type_prefix = ""
+        if entity_type == 1:
+            type_prefix = "BP_hero"
+        elif entity_type == 2:
+            type_prefix = "BP_monster"
+        elif entity_type == 3:
+            type_prefix = "BP_raid"
+        else:
+            return 0
+        
+        base_value = 0.0
+        level_value = 0.0
+        level_per_value = 0.0
+        
+        for kv in data["key_values"]["json"]:
+            key_name = kv.get("key_name", "")
+            
+            if key_name == f"{type_prefix}_base":
+                try:
+                    base_value = float(kv.get("values_data", "0"))
+                except ValueError:
+                    base_value = 0.0
+            
+            elif key_name == f"{type_prefix}_level":
+                try:
+                    level_value = float(kv.get("values_data", "0"))
+                except ValueError:
+                    level_value = 0.0
+            
+            elif key_name == f"{type_prefix}_level_per":
+                try:
+                    level_per_value = float(kv.get("values_data", "0"))
+                except ValueError:
+                    level_per_value = 0.0
+        
+        # 计算战力，向下取整
+        # 公式：base + (level_value + level_per_value * level) * (level - 1)
+        battle_power = int(base_value + (level_value + level_per_value * level) * (level - 1))
+        return battle_power
+    
+    except Exception as e:
+        logger.error(f"计算基础战力时发生错误: {e}")
+        return 0
+
+
+def get_stage_team_battle_power(data: dict, level: int, hero_grade: int, hero_count: int = 5) -> int:
+    """计算主线队伍总战力
+    
+    Args:
+        data: 游戏数据字典
+        level: 等级
+        hero_grade: 角色品质
+        hero_count: 队伍中的角色数量，默认为5
+    
+    Returns:
+        int: 计算出的总战力(整数)
+    """
+    try:
+        base_battle_power = get_base_battle_power(data, 2, level)
+        level_grade_value = 1.0
+        level_grades = data["hero_level_grade"]["json"]
+        level_grades.sort(key=lambda x: x.get("level", 0))
+        
+        for grade_data in level_grades:
+            if grade_data.get("level", 0) <= level:
+                level_grade_value = grade_data.get("value", 1.0)
+            else:
+                break
+                
+        max_level_data = max(level_grades, key=lambda x: x.get("level", 0))
+        if level >= max_level_data.get("level", 0):
+            level_grade_value = max_level_data.get("value", 1.0)
+        
+        hero_grade_value = 0.85
+        for grade_data in data["hero_grade"]["json"]:
+            if grade_data.get("name_sno") == hero_grade:
+                hero_grade_value = grade_data.get("hero_grade_value", 0.85)
+                break
+        
+        # 计算总战力
+        # 公式：(基础战力 + (等级加成率 - 1) * 基础战力 + (角色品质值 - 1) * 基础战力) * 角色数量
+        level_bonus = int((level_grade_value - 1) * base_battle_power)
+        grade_bonus = int((hero_grade_value - 1) * base_battle_power)
+        team_power = int((base_battle_power + level_bonus + grade_bonus) * hero_count)
+        return team_power
+    
+    except Exception as e:
+        logger.error(f"计算主线队伍总战力时发生错误: {e}")
+        return 0
