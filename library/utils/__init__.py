@@ -53,6 +53,7 @@ es_tier_info = on_command("es礼品信息", priority=5, block=True)
 es_coupon = on_command("es兑换码", priority=5, block=True)
 es_bind = on_command("es绑定账号", aliases={"es绑定"}, priority=5, block=True)
 es_unbind = on_command("es解绑账号", aliases={"es解绑"}, priority=5, block=True)
+es_notice = on_command("es公告", priority=5, block=True)
 
 
 # 数据相关

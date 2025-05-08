@@ -147,6 +147,11 @@ async def handle_es_help(bot: Bot, event: Event):
                 <div class="usage">用途：查看当前绑定的所有游戏账号信息</div>
                 <div class="example">示例：es账号信息</div>
             </div>
+            <div class="command">
+                <div class="command-name">es公告</div>
+                <div class="usage">用途：查询游戏公告</div>
+                <div class="example">示例：es公告</div>
+            </div>
         </div>
     </body>
     </html>
