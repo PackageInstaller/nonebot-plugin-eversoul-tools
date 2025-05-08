@@ -137,6 +137,17 @@ SERVER_NAME_MAPPING = {
     "jp": "日服"
 }
 
+# 恶灵讨伐护盾削减系数映射
+SINGLE_RAID_GROGGY_TRIGGER_MAPPING = {
+    201: "暈眩",
+    202: "睡眠",
+    206: "沉默",
+    207: "魅惑"
+}
+
+# 恶灵讨伐削减系数数组映射
+SINGLE_RAID_GROGGY_TRIGGER_ARRAY = [1, 2, 1, 1, 1, 3, 4]
+
 # app_id到服务器名称的反向映射
 APP_ID_TO_SERVER_NAME = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
 

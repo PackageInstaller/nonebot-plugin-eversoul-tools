@@ -38,9 +38,9 @@ es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, p
 es_ark_info = on_regex(r"^es方舟等级信息(\d+)$", priority=5, block=True)
 es_ark_overclock = on_regex(r"^es超频消耗(\d+)$", priority=5, block=True)
 es_cash_pack_info = on_command("es突发礼包信息", priority=5, block=True)
-es_single_raid = on_command("es恶灵信息", priority=5, block=True)
+es_single_raid = on_command("es恶灵信息", aliases={"es惡靈資訊"}, priority=5, block=True)
 es_gate = on_regex(r"es(自由|人类|野兽|妖精|不死)传送门信息(\d+)", priority=5, block=True)
-es_hero_info = on_command("es角色信息", priority=5, block=True)
+es_hero_info = on_command("es角色信息", aliases={"es角色資訊"}, priority=5, block=True)
 es_hero_list = on_command("es角色列表", priority=5, block=True)
 es_level_cost = on_regex(r"^es升级消耗(\d+)$", priority=5, block=True)
 es_month = on_regex(r"^es(\d{1,2})月事件$", priority=5, block=True)
@@ -86,7 +86,7 @@ from .es_string_utils import (
     get_character_arbeit, get_character_soullink, get_character_story,
     get_character_keyword, get_character_town_object, get_character_town_object_task,
     get_character_signature, get_character_signature_value, get_character_skill_type,
-    get_base_battle_power, get_stage_team_battle_power
+    get_base_battle_power, get_stage_team_battle_power, get_character_skill_pattern
 )
 
 # 兑换码相关

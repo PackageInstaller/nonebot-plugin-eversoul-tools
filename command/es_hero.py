@@ -309,6 +309,15 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
         # 技能信息
         skill_types = []
         skill_keys = ["skill_no1", "skill_no2", "skill_no3", "skill_no4",  "ultimate_skill_no", "support_skill_no"]
+        
+        # 获取并显示技能释放顺序
+        skill_pattern = get_character_skill_pattern(data, hero_id, is_test)
+        if skill_pattern:
+            pattern_text = ["▼ 技能释放顺序"]
+            for i, (skill_name, is_normal) in enumerate(skill_pattern, 1):
+                pattern_text.append(f"{i}. {skill_name}")
+            messages.append("\n".join(pattern_text))
+        
         # 先检查角色有哪些技能
         for skill_key in skill_keys:
             if skill_no := hero_data.get(skill_key):

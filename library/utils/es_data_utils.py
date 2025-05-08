@@ -397,6 +397,7 @@ def load_json_data(group_id: int):
         "skill_code": "SkillCode.json", # 技能代码
         "skill_buff": "SkillBuff.json", # 技能效果
         "skill_icon": "SkillIcon.json", # 技能图标
+        "skill_pattern": "SkillPattern.json", # 技能释放顺序
         "signature": "Signature.json", # 遗物
         "signature_level": "SignatureLevel.json", # 遗物等级
         "string_evertalk": "StringEverTalk.json",
@@ -438,6 +439,7 @@ def load_json_data(group_id: int):
         "arbeit_fairy_level": "ArbeitFairyLevel.json", # 打工等级
         "tower": "Tower.json", # 起源塔
         "contents_buff": "ContentsBuff.json", # buff数值内容
+        "battle_buff": "BattleBuff.json", # 战斗buff
         "world_raid_partner_buff": "WorldRaidPartnerBuff.json", # 支援伙伴buff
         "arbeit_choice": "ArbeitChoice.json", # 专属物品任务选择
         "arbeit_list": "ArbeitList.json",   # 专属物品任务列表
@@ -448,6 +450,11 @@ def load_json_data(group_id: int):
         "single_raid_boss": "SingleRaidBoss.json", # 恶灵讨伐BOSS
         "single_raid": "SingleRaid.json", # 恶灵讨伐
         "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json", # 恶灵讨伐BOSS等级
+        "single_raid_schedule": "SingleRaidSchedule.json", # 恶灵讨伐日程(记录了赛季，以及日程键值)
+        "single_raid_season": "SingleRaidSeason.json", # 恶灵讨伐赛季
+        "single_raid_boss_interaction_detail": "SingleRaidBossInteractionDetail.json", # 恶灵讨伐开场白角色
+        "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json", # 恶灵讨伐护盾削减系数
+        "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json", # 恶灵讨伐特殊之人
     }
     
     data = {}

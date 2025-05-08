@@ -534,8 +534,8 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
             # 检查value是否为整数形式（去掉.0后）的数字
             value_without_decimal = int(code["value"]) if code["value"].is_integer() else code["value"]
             
-            # 如果value（去掉.0后）等于另一个no，则从SkillBuff中查找这个no的值
-            if isinstance(value_without_decimal, int):
+            # 只有当value大于4位数时才去skillbuff中查找
+            if isinstance(value_without_decimal, int) and value_without_decimal >= 1000:
                 for buff in data["skill_buff"]["json"]:
                     if buff["no"] == value_without_decimal:
                         value = buff["value"]  # 获取原始值
@@ -2106,3 +2106,58 @@ def get_stage_team_battle_power(data: dict, level: int, hero_grade: int, hero_co
     except Exception as e:
         logger.error(f"计算主线队伍总战力时发生错误: {e}")
         return 0
+
+
+def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False) -> list:
+    """获取角色技能释放顺序
+    
+    Args:
+        data: 游戏数据字典
+        hero_no: 角色编号
+    
+    Returns:
+        list: 技能释放顺序列表，每个元素为(技能名称, 是否为普通攻击)
+    """
+    print(f"角色: {hero_no}")
+    try:
+        # 查找角色的技能释放顺序
+        pattern_data = None
+        for pattern in data["skill_pattern"]["json"]:
+            if pattern.get("hero_no") == hero_no:
+                pattern_data = pattern
+                break
+        print(f"pattern_data: {pattern_data}")
+        if not pattern_data:
+            return []
+        
+        # 收集所有pattern键
+        pattern_keys = [key for key in pattern_data.keys() if key.startswith("pattern")]
+        pattern_keys.sort(key=lambda x: int(x.replace("pattern", "")))
+        print(f"pattern_keys: {pattern_keys}")
+        # 获取技能顺序
+        skill_pattern = []
+        for key in pattern_keys:
+            skill_no = pattern_data.get(key)
+            if skill_no == hero_no:
+                # 普通攻击
+                skill_pattern.append(("普通攻击", True))
+            else:
+                # 获取技能名称
+                skill_name = ""
+                for skill in data["skill"]["json"]:
+                    if skill["no"] == skill_no:
+                        for string in data["string_skill"]["json"]:
+                            if string["no"] == skill["name_sno"]:
+                                zh_tw = string.get("zh_tw", "")
+                                kr = string.get("kr", "")
+                                skill_name = zh_tw if zh_tw else (kr if is_test else zh_tw)
+                                break
+                        break
+                if skill_name:
+                    skill_pattern.append((skill_name, False))
+        
+        return skill_pattern
+    
+    except Exception as e:
+        logger.error(f"获取角色技能释放顺序时发生错误: {e}")
+        return []
