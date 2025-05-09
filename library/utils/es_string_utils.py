@@ -10,7 +10,7 @@ from difflib import get_close_matches
 from ...config import (
     TOWN_DIR, TRAIT_NAME_MAPPING, 
     PACKAGE_TYPE_MAPPING, STAT_NAME_MAPPING,
-    FORMATION_TYPE_MAPPING
+    FORMATION_TYPE_MAPPING, SIGNATURE_GRADE_LEVEL_MAP
 )
 
 
@@ -534,42 +534,63 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
             # 检查value是否为整数形式（去掉.0后）的数字
             value_without_decimal = int(code["value"]) if code["value"].is_integer() else code["value"]
             
-            # 只有当value大于4位数时才去skillbuff中查找
-            if isinstance(value_without_decimal, int) and value_without_decimal >= 1000:
+            # 如果value是引用SkillBuff的编号
+            if isinstance(value_without_decimal, int):
                 for buff in data["skill_buff"]["json"]:
                     if buff["no"] == value_without_decimal:
                         value = buff["value"]  # 获取原始值
                         abs_value = abs(value)  # 取绝对值
+                        buff_effect = buff.get("buff_effect", 0)
                         
-                        # 小于20的值按百分比处理
-                        if abs_value < 20:
-                            # 检查百分比值是否为整数
+                        # 根据buff_effect类型判断是整数还是百分比
+                        if is_percent_value_type(buff_effect, abs_value):
+                            # 处理为百分比
                             percent_value = abs_value * 100
-                            # 使用round函数处理浮点数精度问题
                             rounded_value = round(percent_value, 1)
                             if rounded_value.is_integer():
                                 return f"{int(rounded_value)}%"
                             return f"{rounded_value}%"
                         else:
-                            # 大于等于20的值按整数处理
+                            # 处理为整数
                             return str(int(abs_value))
             
             # 如果不是引用其他no，则直接使用code中的value
             value = code["value"]  # 获取原始值
             abs_value = abs(value)  # 取绝对值
+            function_key = code.get("function_key", 0)
             
-            # 小于20的值按百分比处理
-            if abs_value < 20:
-                # 检查百分比值是否为整数
+            # 根据function_key判断是整数还是百分比
+            if is_integer_value_type(function_key):
+                # 处理为整数
+                return str(int(abs_value))
+            else:
+                # 处理为百分比
                 percent_value = abs_value * 100
-                # 使用round函数处理浮点数精度问题
                 rounded_value = round(percent_value, 1)
                 if rounded_value.is_integer():
                     return f"{int(rounded_value)}%"
                 return f"{rounded_value}%"
-            # 大于20的值按整数处理
-            return str(int(abs_value))
     return "？？？"
+
+
+def is_integer_value_type(function_key):
+    """判断是否为整数类型的技能值"""
+    integer_types = {26, 27}  # 根据掩码201326608（1<<26 | 1<<27）推导
+    return function_key in integer_types
+
+
+def is_percent_value_type(buff_effect, value):
+    """判断是否为百分比类型的技能值"""
+    # 以下类型直接按整数处理（不带百分比）
+    integer_types = {10101, 10102, 420}
+    
+    # 特殊处理，((1 << (type - 122)) & 0x13) != 0判断
+    special_types = {10106 + offset for offset in [0, 2, 4] if (1 << (offset)) & 0x13 != 0}
+    
+    # 返回是否为百分比类型（取反，因为判断的是整数类型）
+    is_integer = (buff_effect in integer_types) or (buff_effect in special_types)
+    
+    return not is_integer
 
 
 def process_skill_description(data, description):
@@ -594,7 +615,7 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
         hero_data: 角色数据（用于获取辅助伙伴技能信息）
     
     Returns:
-        tuple: (技能名称, 技能描述列表, 技能图标信息, 是否为支援技能)
+        dict: 包含技能信息的字典
     """
     skill_data_list = []
     skill_name_zh_tw = ""
@@ -641,7 +662,6 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
             max_level_skill = max(skill_data_list, key=lambda x: x.get("level", 0))
             
             # 获取主要伙伴技能描述
-                        # 获取主要伙伴技能描述
             for string in data["string_skill"]["json"]:
                 if string["no"] == max_level_skill["tooltip_sno"]:
                     desc_tw = string.get("zh_tw", "")
@@ -658,12 +678,13 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                     desc_cn = process_skill_description(data, desc_cn)
                     desc_kr = process_skill_description(data, desc_kr)
                     desc_en = process_skill_description(data, desc_en)
-                    skill_descriptions.append((
-                        f"主要夥伴：{desc_tw}",  # 添加主要伙伴标记
-                        f"主要伙伴：{desc_cn}",
-                        f"메인 파트너：{desc_kr}",
-                        f"Main Partner Effect：{desc_en}"
-                    ))
+                    skill_descriptions.append({
+                        "desc_zh_tw": f"主要夥伴：{desc_tw}",
+                        "desc_zh_cn": f"主要伙伴：{desc_cn}",
+                        "desc_kr": f"메인 파트너：{desc_kr}",
+                        "desc_en": f"Main Partner Effect：{desc_en}",
+                        "type": "main_partner"
+                    })
                     break
             
             # 如果提供了hero_data，获取辅助伙伴技能描述
@@ -715,12 +736,13 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                                                 desc_kr = desc_kr.replace(placeholder, str(value))
                                                 desc_en = desc_en.replace(placeholder, str(value))
                                         
-                                        skill_descriptions.append((
-                                            f"輔助夥伴：{desc_tw}",
-                                            f"辅助伙伴：{desc_cn}",
-                                            f"서브 파트너：{desc_kr}",
-                                            f"Support Effect：{desc_en}"
-                                        ))
+                                        skill_descriptions.append({
+                                            "desc_zh_tw": f"輔助夥伴：{desc_tw}",
+                                            "desc_zh_cn": f"辅助伙伴：{desc_cn}",
+                                            "desc_kr": f"서브 파트너：{desc_kr}",
+                                            "desc_en": f"Support Effect：{desc_en}",
+                                            "type": "support_partner"
+                                        })
                                         break
                             break
         else:
@@ -743,11 +765,26 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                         desc_cn = process_skill_description(data, desc_cn)
                         desc_kr = process_skill_description(data, desc_kr)
                         desc_en = process_skill_description(data, desc_en)
-                        skill_descriptions.append((desc_tw, desc_cn, desc_kr, desc_en, hero_level))
+                        skill_descriptions.append({
+                            "desc_zh_tw": desc_tw,
+                            "desc_zh_cn": desc_cn,
+                            "desc_kr": desc_kr,
+                            "desc_en": desc_en,
+                            "hero_level": hero_level
+                        })
                         break
     
-    return skill_name_zh_tw, skill_name_zh_cn, skill_name_kr, skill_name_en,\
-            skill_descriptions, skill_icon_info, is_support
+    return {
+        "name": {
+            "zh_tw": skill_name_zh_tw,
+            "zh_cn": skill_name_zh_cn,
+            "kr": skill_name_kr,
+            "en": skill_name_en
+        },
+        "descriptions": skill_descriptions,
+        "icon_info": skill_icon_info,
+        "is_support": is_support
+    }
 
 
 def get_character_keyword_location(data: dict, keyword_get_details: int, is_test: bool = False) -> str:
@@ -1398,11 +1435,10 @@ def get_character_signature_value(data, level_group):
     Returns:
         dict: 遗物属性统计
     """
-    # 找到最高等级的属性数据
     max_level_data = None
     max_level = 0
     
-    # 先遍历一遍找出这个遗物的最大等级（40或45）
+    # 这个遗物的最大等级（40或45）
     for level_data in data["signature_level"]["json"]:
         if level_data["group"] == level_group:
             if level_data["signature_level_"] > max_level:
@@ -1417,7 +1453,6 @@ def get_character_signature_value(data, level_group):
     if not max_level_data:
         return []
     
-    # 格式化输出文本
     formatted_stats = []
     for stat_key, stat_name in STAT_NAME_MAPPING.items():
         if stat_key in max_level_data and max_level_data[stat_key] != 0:
@@ -1445,7 +1480,7 @@ def get_character_signature(data, hero_id):
         hero_id: 角色ID
     
     Returns:
-        tuple: (遗物名称, 遗物技能名称, 遗物简介, 遗物技能描述列表)
+        dict: 包含遗物信息的字典
     """
     signature_data = None
     signature_name_zh_tw = ""
@@ -1514,6 +1549,8 @@ def get_character_signature(data, hero_id):
                     signature_desc_en = desc_en
                 break
         
+        
+        
         # 获取所有等级的技能描述
         for i in range(1, 8):  # 1-7级
             sno_key = f"skill_tooltip_sno{i}"
@@ -1525,17 +1562,54 @@ def get_character_signature(data, hero_id):
                         desc_cn = string.get("zh_cn", "")  # 获取简体中文描述
                         desc_kr = string.get("kr", "")
                         desc_en = string.get("en", "")
+                        
                         # 先清理颜色标签
                         desc_tw = clean_tags(desc_tw)
                         desc_cn = clean_tags(desc_cn)
                         desc_kr = clean_tags(desc_kr)
                         desc_en = clean_tags(desc_en)
-                        # 处理数值标签
+                        
+                        # 处理数值标签，模拟官方parse逗号分隔的数值
                         desc_tw = process_skill_description(data, desc_tw)
                         desc_cn = process_skill_description(data, desc_cn)
                         desc_kr = process_skill_description(data, desc_kr)
                         desc_en = process_skill_description(data, desc_en)
-                        skill_descriptions.append((desc_tw, desc_cn, desc_kr, desc_en))  # 将四种语言的描述作为元组存储
+                        
+                        # 处理技能描述中可能包含的逗号分隔数值
+                        # 模拟官方Info_SignatureSkillInfos__Parse方法的行为
+                        def parse_comma_values(text):
+                            # 识别可能包含的逗号分隔数值，如"1,2,3"
+                            import re
+                            pattern = r'\b\d+(?:,\d+)*\b'
+                            
+                            def replace_parsed_values(match):
+                                values_str = match.group(0)
+                                # 分割字符串，过滤空值，转换为整数列表
+                                values = [int(v.strip()) for v in values_str.split(',') if v.strip()]
+                                # 返回处理后的字符串（例如可以添加格式或者直接显示）
+                                return ','.join(str(v) for v in values)
+                                
+                            return re.sub(pattern, replace_parsed_values, text)
+                        
+                        # 应用逗号分隔数值处理
+                        desc_tw = parse_comma_values(desc_tw)
+                        desc_cn = parse_comma_values(desc_cn)
+                        desc_kr = parse_comma_values(desc_kr)
+                        desc_en = parse_comma_values(desc_en)
+                        
+                        # 添加等级、品质信息
+                        grade_sno = 110014 + i - 1  # 按顺序映射等级
+                        level_name = SIGNATURE_GRADE_LEVEL_MAP.get(grade_sno, f"Level{i}")
+                        
+                        skill_descriptions.append({
+                            "desc_zh_tw": desc_tw,
+                            "desc_zh_cn": desc_cn,
+                            "desc_kr": desc_kr,
+                            "desc_en": desc_en,
+                            "level": i,
+                            "grade_sno": grade_sno,
+                            "level_name": level_name
+                        })
                         break
         
     # 修改返回值，添加图标路径
@@ -1543,13 +1617,41 @@ def get_character_signature(data, hero_id):
         level_group = signature_data.get("level_group")
         signature_stats = get_character_signature_value(data, level_group) if level_group else []
         
-        return (signature_name_zh_tw, signature_name_zh_cn, signature_name_kr, signature_name_en, signature_title_zh_tw, signature_title_zh_cn, signature_title_kr, signature_title_en, 
-                signature_desc_zh_tw, signature_desc_zh_cn, signature_desc_kr, signature_desc_en, skill_descriptions, signature_stats, signature_bg_path) 
+        return {
+            "name": {
+                "zh_tw": signature_name_zh_tw,
+                "zh_cn": signature_name_zh_cn,
+                "kr": signature_name_kr,
+                "en": signature_name_en
+            },
+            "title": {
+                "zh_tw": signature_title_zh_tw,
+                "zh_cn": signature_title_zh_cn,
+                "kr": signature_title_kr,
+                "en": signature_title_en
+            },
+            "description": {
+                "zh_tw": signature_desc_zh_tw,
+                "zh_cn": signature_desc_zh_cn,
+                "kr": signature_desc_kr,
+                "en": signature_desc_en
+            },
+            "skills": skill_descriptions,
+            "stats": signature_stats[0] if signature_stats else [],
+            "max_level": signature_stats[1] if len(signature_stats) > 1 else 0,
+            "bg_path": signature_bg_path
+        }
     
-    # 如果没有找到遗物数据，返回空值
-    return "", "", "", "",\
-            "", "", "", "",\
-            "", "", "", "", [], [], ""
+    # 如果没有找到遗物数据，返回空字典
+    return {
+        "name": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
+        "title": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
+        "description": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
+        "skills": [],
+        "stats": [],
+        "max_level": 0,
+        "bg_path": ""
+    }
 
 
 def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_threshold):
