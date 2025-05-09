@@ -2146,15 +2146,18 @@ def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False)
                 skill_name = ""
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
+                        if "name_sno" not in skill:
+                            skill_pattern.append(("返回原位", False))
+                            break
                         for string in data["string_skill"]["json"]:
                             if string["no"] == skill["name_sno"]:
                                 zh_tw = string.get("zh_tw", "")
                                 kr = string.get("kr", "")
                                 skill_name = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                 break
+                        if skill_name:
+                            skill_pattern.append((skill_name, False))
                         break
-                if skill_name:
-                    skill_pattern.append((skill_name, False))
         
         return skill_pattern
     

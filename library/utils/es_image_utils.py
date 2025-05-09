@@ -415,7 +415,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
             event_info = []
             event_info.append(f"【{event_type}】")
             event_info.append(f"名称：{event_name_tw}")
-            event_info.append(f"持续时间：{start_date.strftime('%Y-%m-%d')} 至 {end_date.strftime('%Y-%m-%d')}")
+            event_info.append(f"持续时间：{start_date} 至 {end_date}")
             if banner_path:
                 event_info.append(f"banner：{banner_path}")
             # 返回带开始时间的元组
@@ -631,7 +631,7 @@ def get_calendar_event(data, target_month, current_year):
             event_info = []
             event_info.append(f"【活动】")
             event_info.append(f"名称：{event_name_tw}")
-            event_info.append(f"持续时间：{start_date.strftime('%Y-%m-%d')} 至 {end_date.strftime('%Y-%m-%d')}")
+            event_info.append(f"持续时间：{start_date} 至 {end_date}")
             if banner_path:
                 event_info.append(f"banner：{banner_path}")
             calendar_events_with_date.append((start_date, "\n".join(event_info)))

@@ -30,7 +30,7 @@ async def handle_es_notice(bot: Bot, event: Event):
 
                 notices = data["content"].get("notices", [])
                 if not notices:
-                    await es_notice.finish("当前没有通知")
+                    await es_notice.finish("当前没有通知", reply_message=True)
                     return
 
                 # 处理通知信息
@@ -53,8 +53,8 @@ async def handle_es_notice(bot: Bot, event: Event):
                     # 构建消息
                     message = [
                         f"【通知类型】{notice_type}\n",
-                        f"【开始时间】{start_time_str}\n",
-                        f"【结束时间】{end_time_str}\n",
+                        # f"【开始时间】{start_time_str}\n",
+                        # f"【结束时间】{end_time_str}\n",
                         f"【通知内容】\n{content}\n"
                     ]
                     
