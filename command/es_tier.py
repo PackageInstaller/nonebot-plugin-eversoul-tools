@@ -107,7 +107,8 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                     f"描述：{desc}",
                     f"\n【最大属性】(等级{max_stat.get('level')})",
                     f"・ 满级所需经验：{format_number(max_stat.get('sum_exp', 0))}",
-                    f"・ 满级战斗力：{format_number(max_stat.get('battle_power', 0))}"
+                    f"・ 满级战斗力：{format_number(max_stat.get('battle_power', 0))}",
+                    f"・ 每级战斗力：{format_number(max_stat.get('battle_power_per', 0))} * {max_stat.get('level')}"
                 ]
 
                 # 添加基础属性和额外属性

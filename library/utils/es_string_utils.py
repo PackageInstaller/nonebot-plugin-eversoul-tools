@@ -558,7 +558,6 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
             value = code["value"]  # 获取原始值
             abs_value = abs(value)  # 取绝对值
             function_key = code.get("function_key", 0)
-            
             # 根据function_key判断是整数还是百分比
             if is_integer_value_type(function_key):
                 # 处理为整数
@@ -574,8 +573,14 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
 
 
 def is_integer_value_type(function_key):
-    """判断是否为整数类型的技能值"""
-    integer_types = {26, 27}  # 根据掩码201326608（1<<26 | 1<<27）推导
+    """判断是否为整数类型的技能值
+    
+    SkillTextUtil__GetCodeValueText中的逻辑:
+    if ( type <= 27 && ((1 << type) & 0xC000010) != 0 || type - 1026 < 2 )
+    
+    0x0C000010转成2进制是  00001100 00000000 00000000 00010000
+    """
+    integer_types = {4, 26, 27, 1026, 1027}
     return function_key in integer_types
 
 
@@ -1469,7 +1474,7 @@ def get_character_signature_value(data, level_group):
                 else:
                     formatted_stats.append(f"{stat_name}：{formatted_value}%")
     
-    return formatted_stats, max_level
+    return formatted_stats, max_level, max_level_data["battle_power_per"]
 
 
 def get_character_signature(data, hero_id):
@@ -1639,6 +1644,7 @@ def get_character_signature(data, hero_id):
             "skills": skill_descriptions,
             "stats": signature_stats[0] if signature_stats else [],
             "max_level": signature_stats[1] if len(signature_stats) > 1 else 0,
+            "max_level_battle_power_per": signature_stats[2] if len(signature_stats) > 2 else 0,
             "bg_path": signature_bg_path
         }
     
@@ -1650,6 +1656,7 @@ def get_character_signature(data, hero_id):
         "skills": [],
         "stats": [],
         "max_level": 0,
+        "max_level_battle_power_per": 0,
         "bg_path": ""
     }
 

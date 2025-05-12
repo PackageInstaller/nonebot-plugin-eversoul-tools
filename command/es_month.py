@@ -50,10 +50,30 @@ async def handle_es_month(bot: Bot, event: Event):
             html = await generate_timeline_html(target_month, month_events)
             png_pic = await html_to_pic(
                 html, 
-                viewport={"width": 1800, "height": 10}
+                device_scale_factor = 0.8,
+                viewport={"width": 1800, "height": 1000}
             )
             
-            # 直接发送bytes数据
+            # try:
+            #     img = Image.open(BytesIO(png_pic))
+            #     webp_buffer = BytesIO()
+            #     img.save(webp_buffer, format="WEBP", quality=10)
+            #     webp_pic = webp_buffer.getvalue()
+
+            #     if isinstance(event, GroupMessageEvent):
+            #         await bot.send_group_msg(
+            #             group_id=event.group_id,
+            #             message=MessageSegment.image(webp_pic),
+            #             reply_message=True
+            #         )
+            #     else:
+            #         await bot.send_private_msg(
+            #             user_id=event.user_id,
+            #             message=MessageSegment.image(webp_pic),
+            #             reply_message=True
+            #         )
+            # except Exception as e:
+            # logger.error(f"转换图片格式时发生错误: {str(e)}")
             if isinstance(event, GroupMessageEvent):
                 await bot.send_group_msg(
                     group_id=event.group_id,

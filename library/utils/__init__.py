@@ -31,6 +31,8 @@ from nonebot_plugin_htmlrender import html_to_pic
 from google_play_scraper import app as playstore_app
 from difflib import get_close_matches
 from datetime import datetime
+from PIL import Image
+from io import BytesIO
 from ...config import *
 from ..model import *
 

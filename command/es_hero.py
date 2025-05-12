@@ -409,6 +409,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
         if signature_info["name"]["kr"]:
             signature_stats = signature_info["stats"]
             max_level = signature_info["max_level"] 
+            max_level_battle_power_per = signature_info["max_level_battle_power_per"]
             signature_bg_path = signature_info["bg_path"]
             signature_img_path = str(SIGNATURE_DIR / signature_bg_path)
 
@@ -432,10 +433,9 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
             
             signature_info_text = f"""{signature_name_text}
 {signature_desc_text}
-
+最大等级战力百分比：{max_level_battle_power_per}
 {max_level}級屬性：
 {chr(10).join(signature_stats)}
-
 遺物技能【{signature_title_text}】：
 """ + "\n".join(skill_descriptions_text)
             

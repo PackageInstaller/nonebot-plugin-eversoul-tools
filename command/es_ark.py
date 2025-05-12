@@ -70,6 +70,10 @@ async def handle_ark_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Reg
                         if buff.get("no") == buff_no:
                             found_buff = True
                             ark_msg.append("基础属性加成：")
+                            if buff.get("battle_power"):
+                                ark_msg.append(f"・ 战斗力加成：{buff.get('battle_power')}")
+                            if buff.get("battle_power_per"):
+                                ark_msg.append(f"・ 每级战斗力加成：{buff.get('battle_power_per')}")
                             for key, value in buff.items():
                                 if key in STAT_NAME_MAPPING and value != 0:
                                     if key.endswith('_rate'):
@@ -86,6 +90,10 @@ async def handle_ark_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Reg
                         if buff.get("no") == int(sp_buff_value):
                             found_buff = True
                             ark_msg.append("特殊属性加成：")
+                            if buff.get("battle_power"):
+                                ark_msg.append(f"・ 战斗力加成：{buff.get('battle_power')}")
+                            if buff.get("battle_power_per"):
+                                ark_msg.append(f"・ 每级战斗力加成：{buff.get('battle_power_per')}")
                             for key, value in buff.items():
                                 if key in STAT_NAME_MAPPING and value != 0:
                                     ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{value*100:.2f}%")

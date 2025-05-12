@@ -734,8 +734,8 @@ def generate_event_html(event, event_type):
     return html
 
 
-def get_event_name(event: str) -> str:
-    """提取活动名称"""
+def get_event_name(event):
+    """获取事件名称"""
     lines = event.split('\n')
     
     # 检查是否是邮件事件
@@ -817,169 +817,331 @@ async def generate_timeline_html(month: int, events: list) -> str:
     
     html = f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="zh-CN">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{month}月份活动时间线</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <style>
+            /* 全局样式 */
             body {{
-                font-family: "Microsoft YaHei", Arial, sans-serif;
-                margin: 20px;
-                background-color: #ffffff;
-            }}
-            .timeline-container {{
-                max-width: 1600px;
-                margin: 0 auto;
-                display: flex;
-                flex-direction: column;
-            }}
-            .title {{
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
                 color: #333;
-                font-size: 24px;
-                margin-bottom: 30px;
-                text-align: center;
-            }}
-            .content-container {{
-                display: flex;
-                gap: 20px;
-                justify-content: center;
-            }}
-            .column {{
-                flex: 1;
-                max-width: 520px;  /* 调整每列的最大宽度 */
-            }}
-            .column-title {{
-                color: #333;
-                font-size: 18px;
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-                border-bottom: 2px solid #eee;
-                text-align: center;
-            }}
-            .event-container {{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                width: 100%;
-            }}
-            .event {{
-                margin-bottom: 20px;
-                padding: 15px 15px 15px 20px;
-                background-color: #ffffff;
-                border-radius: 5px;
-                position: relative;
-                width: 90%;
-            }}
-            .event::before {{
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: 4px;
-                border-radius: 2px;
-            }}
-            .event-type {{
-                display: inline-block;
-                padding: 4px 12px;
-                border-radius: 4px;
-                font-size: 16px;
-                font-weight: bold;
-                margin-bottom: 10px;
-                color: #fff;
-            }}
-            .event-banner {{
-                width: 400px;
-                height: 200px;
-                object-fit: contain;
-                margin: 10px 0;
-                border-radius: 4px;
             }}
 
-            /* 主要活动 - 玫瑰红 */
-            .event.main::before {{
-                background-color: #b61274;
+            :root {{
+                --primary-color: #165DFF;
+                --secondary-color: #4080FF;
+                --accent-color: #86B4FF;
+                --active-color: #0DC6E8;
+                --main-color: #b61274;
+                --pickup-color: #6a1b9a;
+                --mail-color: #00838f;
+                --calendar-color: #37474f;
             }}
-            .event.main .event-type {{
-                background-color: #b61274;
+
+            .flex {{
+                display: flex;
             }}
-            
-            /* Pickup - 紫色 */
-            .event.pickup::before {{
-                background-color: #6a1b9a;
+
+            .flex_align_center {{
+                align-items: center;
             }}
-            .event.pickup .event-type {{
-                background-color: #6a1b9a;
+
+            .topTitle {{
+                font-size: 45px;
+                font-weight: 900;
+                margin: 0;
+                background: linear-gradient(90deg, var(--active-color) 0%, var(--active-color) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 0 4px 8px rgba(142, 45, 226, 0.15),
+                    0 2px 4px rgba(142, 45, 226, 0.1);
+                letter-spacing: -2px;
+                position: relative;
+                text-align: center;
+                margin-bottom: 2rem;
             }}
-            
-            /* 邮箱事件 - 青色 */
-            .event.mail::before {{
-                background-color: #00838f;
+
+            .topTitle::after {{
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 150px;
+                height: 3px;
+                background: linear-gradient(90deg, var(--active-color), var(--secondary-color), var(--accent-color));
+                border-radius: 3px;
+                box-shadow: 0 2px 4px rgba(22, 93, 255, 0.2);
             }}
-            .event.mail .event-type {{
-                background-color: #00838f;
+
+            .container {{
+                max-width: 1600px;
+                margin: 0 auto;
+                padding: 32px 16px;
             }}
-            
-            /* 一般活动 - 深灰色 */
-            .event.calendar::before {{
-                background-color: #37474f;
+
+            h2 {{
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+                color: var(--active-color);
+                border-bottom: 2px solid var(--active-color);
+                padding-bottom: 0.5rem;
+                display: inline-block;
             }}
-            .event.calendar .event-type {{
-                background-color: #37474f;
+
+            /* 活动网格样式 */
+            .event-grid {{
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 1rem;
+                margin-bottom: 2rem;
             }}
-            
-            
+
+            .event-grid-email {{
+                grid-template-columns: repeat(1, 1fr);
+            }}
+
+            /* 活动卡片样式 */
+            .event-card {{
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }}
+
+            .event-card:hover {{
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }}
+
+            .event-card-email {{
+                flex-direction: row;
+                display: flex;
+            }}
+
+            .event-card .content {{
+                padding: 0.8rem;
+            }}
+
+            .event-card-email .content-email {{
+                display: flex;
+                flex-direction: column;
+                padding: 1rem;
+                flex: 1;
+            }}
+
+            .event-author {{
+                font-weight: bold;
+                font-size: 1.1rem;
+                margin: 0 auto 0.5rem auto;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                position: relative;
+                padding: 2px 12px;
+                border-radius: 20px;
+                display: inline-block;
+                color: #fff;
+                max-width: 90%;
+                text-align: center;
+            }}
+
+            .main-event .event-author {{
+                background: linear-gradient(90deg, var(--main-color) 0%, #e9559e 100%);
+                box-shadow: 0 2px 5px rgba(182, 18, 116, 0.3);
+            }}
+
+            .pickup-event .event-author {{
+                background: linear-gradient(90deg, var(--pickup-color) 0%, #9c41c9 100%);
+                box-shadow: 0 2px 5px rgba(106, 27, 154, 0.3);
+            }}
+
+            .calendar-event .event-author {{
+                background: linear-gradient(90deg, var(--calendar-color) 0%, #607d8b 100%);
+                box-shadow: 0 2px 5px rgba(55, 71, 79, 0.3);
+            }}
+
+            .mail-event .event-author {{
+                background: linear-gradient(90deg, var(--mail-color) 0%, #26c6da 100%);
+                box-shadow: 0 2px 5px rgba(0, 131, 143, 0.3);
+            }}
+
+            .event-time {{
+                font-size: 1rem;
+                color: #000;
+                margin: 0.5rem 0;
+                font-weight: bold;
+                text-align: center;
+            }}
+
             .event-content {{
-                color: #333;
+                width: 100%;
+                text-indent: 2em;
+                margin: 10px 0;
                 white-space: pre-wrap;
-                font-size: 15px;
-                line-height: 1.6;
+                font-size: 14px;
+                line-height: 1.5;
+                overflow: hidden;
+                max-height: 125px;
+            }}
+
+            .event-img {{
+                width: 100%;
+                height: 200px;
+                object-fit: contain;
+                display: block;
+                background-color: #f8f8f8;
+            }}
+
+            .event-img-email {{
+                width: 20%;
+                height: auto;
+            }}
+
+            .icon {{
+                font-size: 1.6rem;
+                background: linear-gradient(90deg, #0587f1 0%, #84c1f3 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 0 4px 8px rgba(142, 45, 226, 0.15),
+                    0 2px 4px rgba(142, 45, 226, 0.1);
+                margin-bottom: -0.3rem;
+                margin-left: 0.3rem;
+            }}
+
+            .section-title {{
+                margin-bottom: 1rem;
+            }}
+
+            /* 响应式布局 */
+            @media (max-width: 768px) {{
+                .event-grid {{
+                    grid-template-columns: repeat(2, 1fr);
+                }}
+            }}
+
+            @media (max-width: 480px) {{
+                .event-grid {{
+                    grid-template-columns: 1fr;
+                }}
             }}
         </style>
     </head>
     <body>
-        <div class="timeline-container">
-            <div class="title">{month}月份活动时间线</div>
-            <div class="content-container">
-                <div class="column">
-                    <div class="column-title">特殊活动</div>
-                    <div class="event-container">
-                        {''.join([f'''
-                        <div class="event {get_event_type_class(event)}">
-                            <div class="event-type">{get_event_name(event)}</div>
-                            {generate_event_html(event, "special")}
-                        </div>
-                        ''' for event in special_events])}
-                    </div>
+        <div class="container">
+            <h1 class="topTitle">{month}月份活动时间线</h1>
+
+            <!-- 特殊活动部分 -->
+            {f'''
+            <div class="mb-8">
+                <div class="flex flex_align_center section-title">
+                    <h2>特殊活动</h2>
+                    <span class="icon"><i class="fa fa-pagelines"></i></span>
                 </div>
-                <div class="column">
-                    <div class="column-title">一般活动</div>
-                    <div class="event-container">
-                        {''.join([f'''
-                        <div class="event {get_event_type_class(event)}">
-                            <div class="event-type">{get_event_name(event)}</div>
-                            {generate_event_html(event, "normal")}
+
+                <div class="event-grid">
+                    {''.join([f"""
+                    <div class="event-card main-event">
+                        <div class="content">
+                            <div class="event-author">{get_event_name(event)}</div>
+                            <div class="event-time">{get_event_time(event)}</div>
+                            <div class="event-content">{get_event_description(event)}</div>
                         </div>
-                        ''' for event in normal_events])}
+                        <img src="{get_event_banner(event)}" alt="{get_event_name(event)}" class="event-img">
                     </div>
-                </div>
-                <div class="column">
-                    <div class="column-title">邮箱事件</div>
-                    <div class="event-container">
-                        {''.join([f'''
-                        <div class="event {get_event_type_class(event)}">
-                            <div class="event-type">{get_event_name(event)}</div>
-                            {generate_event_html(event, "mail")}
-                        </div>
-                        ''' for event in mail_events])}
-                    </div>
+                    """ for event in special_events])}
                 </div>
             </div>
+            ''' if special_events else ''}
+
+            <!-- 一般活动部分 -->
+            {f'''
+            <div class="mb-8">
+                <div class="flex flex_align_center section-title">
+                    <h2>一般活动</h2>
+                    <span class="icon"><i class="fa fa-pagelines"></i></span>
+                </div>
+                <div class="event-grid">
+                    {''.join([f"""
+                    <div class="event-card calendar-event">
+                        <div class="content">
+                            <div class="event-author">{get_event_name(event)}</div>
+                            <div class="event-time">{get_event_time(event)}</div>
+                            <div class="event-content">{get_event_description(event)}</div>
+                        </div>
+                        <img src="{get_event_banner(event)}" alt="{get_event_name(event)}" class="event-img">
+                    </div>
+                    """ for event in normal_events])}
+                </div>
+            </div>
+            ''' if normal_events else ''}
         </div>
     </body>
     </html>
     """
     return html
 
+def get_event_time(event):
+    """获取事件时间"""
+    lines = event.split('\n')
+    for line in lines:
+        if "持续时间：" in line:
+            time_str = line.replace("持续时间：", "").strip()
+            # 格式化为简短的月.日-月.日格式
+            try:
+                start_date_str, end_date_str = time_str.split("至")
+                start_date = datetime.strptime(start_date_str.strip(), '%Y-%m-%d')
+                end_date = datetime.strptime(end_date_str.strip(), '%Y-%m-%d')
+                return f"{start_date.month}.{start_date.day}-{end_date.month}.{end_date.day}"
+            except:
+                return time_str
+    return "时间未知"
+
+def get_event_description(event):
+    """获取事件描述"""
+    lines = event.split('\n')
+    description_lines = []
+    skip_lines = 0
+    
+    for i, line in enumerate(lines):
+        if i < skip_lines:
+            continue
+        
+        if "【" in line and "】" in line or "持续时间：" in line or line.startswith("名称：") or line.startswith("banner："):
+            skip_lines = i + 1
+            continue
+            
+        if line.strip():
+            description_lines.append(line)
+    
+    return "\n".join(description_lines)
+
+def get_event_banner(event):
+    """获取事件banner图片路径"""
+    lines = event.split('\n')
+    for line in lines:
+        if line.startswith("banner："):
+            banner_path = line.replace("banner：", "").strip()
+            # 检查是否是联合作战的sticker图片或恶灵讨伐或邮箱事件的sticker图片
+            if (banner_path.startswith("sticker_eas_") or 
+                banner_path.startswith("sticker_singleraid_") or 
+                banner_path.startswith("sticker_love_")):
+                return str(STICKER_DIR / banner_path)
+            else:
+                return str(BANNER_DIR / banner_path)
+    # 如果没有找到banner图片，返回默认图片
+    return str(BANNER_DIR / "banner_No_Image.png")
 
 async def generate_ark_level_chart(data: dict, target_level: int = None) -> MessageSegment:
     """生成主方舟等级与超频等级关系图以及超频等级升级消耗图
