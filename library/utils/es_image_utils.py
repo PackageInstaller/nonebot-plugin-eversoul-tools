@@ -1376,6 +1376,27 @@ async def generate_level_cost_chart(data: dict) -> MessageSegment:
         return MessageSegment.text("生成统计图失败")
 
 
+def get_battle_power_percentage(data: dict, effect_no: int) -> float:
+    """获取潜能对应的战力百分比
+    
+    Args:
+        data: JSON数据字典
+        effect_no: 效果编号
+    
+    Returns:
+        float: 战力百分比，如果没有找到则返回None
+    """
+    try:
+        if str(effect_no).startswith('4'):
+            # 从ContentsBuff中获取战力百分比
+            for buff in data["contents_buff"]["json"]:
+                if buff.get("no") == effect_no:
+                    return buff.get("battle_power_per", 0)
+    except Exception as e:
+        logger.error(f"获取战力百分比时发生错误: {e}, effect_no: {effect_no}")
+    return None
+
+
 async def generate_potential_html(data: dict) -> str:
     """生成潜能信息HTML"""
     try:
@@ -1465,7 +1486,13 @@ async def generate_potential_html(data: dict) -> str:
                 if level in level_data:
                     effect_no, option = level_data[level]
                     value = get_potential_value(data, effect_no, level)
-                    html += f"<td>{value}</td>"
+                    # 获取战力百分比
+                    battle_power_per = get_battle_power_percentage(data, effect_no)
+                    
+                    if battle_power_per:
+                        html += f"<td class='value-cell'>{value}<br><span class='power-value'>战力+{battle_power_per}</span></td>"
+                    else:
+                        html += f"<td>{value}</td>"
                 else:
                     html += "<td>-</td>"
             

@@ -277,7 +277,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
         town_objects = get_character_town_object(data, hero_id, is_test)
         if town_objects:
             objects_msg = ["【专属领地物品】"]
-            for obj_no, name, grade, slot_type, desc, img_path in town_objects:
+            for obj_no, name, grade, slot_type, desc, img_path, battle_power_per in town_objects:
                 if img_path and os.path.exists(img_path):
                     objects_msg.append(MessageSegment.image(f"file:///{img_path}"))
                 objects_msg.append(f"名称：{name}")
@@ -287,6 +287,8 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                     objects_msg.append(f"类型：{slot_type}")
                 if desc:
                     objects_msg.append(f"描述：{desc}")
+                if battle_power_per:
+                    objects_msg.append(f"战力百分比：{battle_power_per}")
                 
                 # 添加可进行的任务信息
                 tasks = get_character_town_object_task(data, obj_no, is_test)

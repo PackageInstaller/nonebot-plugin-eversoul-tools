@@ -83,7 +83,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 max_stat = max((s for s in data["item_stat"]["json"] 
                               if s.get("no") == item.get("no")), 
                              key=lambda x: x.get("level", 0))
-                
+                print(f"max_stat: {max_stat}")
                 # 获取套装效果
                 set2_buff_no = set_effect.get("set2_contentsbuff")
                 set4_buff_no = set_effect.get("set4_contentsbuff")
@@ -97,7 +97,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 if set4_buff_no:
                     set4_buff = next((buff for buff in data["contents_buff"]["json"] 
                                     if buff.get("no") == set4_buff_no), {})
-                
+                print(set2_buff, set4_buff)
                  # 构建消息
                 msg = [
                     f"━━━━━━━━━━━━━━━",
@@ -106,9 +106,9 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                     f"品质：{grade_name}",
                     f"描述：{desc}",
                     f"\n【最大属性】(等级{max_stat.get('level')})",
-                    f"・ 满级所需经验：{format_number(max_stat.get('sum_exp', 0))}",
-                    f"・ 满级战斗力：{format_number(max_stat.get('battle_power', 0))}",
-                    f"・ 每级战斗力：{format_number(max_stat.get('battle_power_per', 0))} * {max_stat.get('level')}"
+                    f"・ 满级所需经验：{max_stat.get('sum_exp', 0)}",
+                    f"・ 满级战斗力：{max_stat.get('battle_power', 0)}",
+                    f"・ 百分比战斗力：{max_stat.get('battle_power_per', 0)} * {max_stat.get('level')}"
                 ]
 
                 # 添加基础属性和额外属性
@@ -119,7 +119,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 exclude_keys = {"index", "no", "level", "exp", "sum_exp", "battle_power", "battle_power_per"}
                 stat_items = [(k, v) for k, v in max_stat.items() 
                              if k not in exclude_keys and v and k in STAT_NAME_MAPPING]
-                
+                print(f"stat_items: {stat_items}")
                 # 前三个是基础属性，之后的是额外属性
                 for i, (stat, value) in enumerate(stat_items):
                     stat_display = STAT_NAME_MAPPING[stat]
@@ -128,11 +128,12 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                     else:
                         value_str = format_number(value)
                         
+                    
                     if i < 3:  # 基础属性
                         base_stats.append(f"・ {stat_display}：{value_str}")
                     else:  # 额外属性
                         extra_stats.append(f"・ {stat_display}：{value_str}")
-                
+                print(f"base_stats: {base_stats}, extra_stats: {extra_stats}")
                 # 添加基础属性
                 if base_stats:
                     msg.append("\n基础属性：")
@@ -158,6 +159,8 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                         has_2set = True
                         stat_display = STAT_NAME_MAPPING[stat]
                         msg.append(f"・ {stat_display}：{value*100:.1f}%")
+                        if 'battle_power_per' in set2_buff:
+                            msg.append(f"战力百分比：{set2_buff['battle_power_per']}")
                 if not has_2set:
                     msg.append("・ 无效果")
                 
@@ -169,6 +172,8 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                         has_4set = True
                         stat_display = STAT_NAME_MAPPING[stat]
                         msg.append(f"・ {stat_display}：{value*100:.1f}%")
+                        if 'battle_power_per' in set4_buff:
+                            msg.append(f"战力百分比：{set4_buff['battle_power_per']}")
                 if not has_4set:
                     msg.append("・ 无效果")
                 

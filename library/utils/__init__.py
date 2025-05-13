@@ -7,6 +7,7 @@ import yaml
 import asyncio
 import nonebot
 import aiohttp
+import requests
 from typing import Any, Tuple, Dict
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
@@ -33,6 +34,7 @@ from difflib import get_close_matches
 from datetime import datetime
 from PIL import Image
 from io import BytesIO
+from bs4 import BeautifulSoup
 from ...config import *
 from ..model import *
 
@@ -89,7 +91,7 @@ from .es_string_utils import (
     get_character_arbeit, get_character_soullink, get_character_story,
     get_character_keyword, get_character_town_object, get_character_town_object_task,
     get_character_signature, get_character_signature_value, get_character_skill_type,
-    get_base_battle_power, get_stage_team_battle_power, get_character_skill_pattern
+    get_base_battle_power, calculate_battle_power, get_character_skill_pattern
 )
 
 # 兑换码相关

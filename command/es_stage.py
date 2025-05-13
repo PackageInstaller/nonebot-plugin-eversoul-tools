@@ -84,14 +84,25 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             for team in battle_teams:
                 team_info = [f"敌方队伍 {team.get('team_no', '?')}："]
                 team_info.append(f"阵型：{get_formation_type(team.get('formation_type'))}")
+                hero_positions = []
+                first_valid_hero = None
                 
-                # 添加每个角色的信息
-                for i in range(1, 6):  # 检查最多5个角色位置
+                for i in range(1, 6):
                     hero_key = f"hero_no{i}"
                     grade_key = f"hero_grade{i}"
                     level_key = f"level{i}"
                     
                     if hero_no := team.get(hero_key):
+                        hero_positions.append(i)
+                        
+                        if first_valid_hero is None:
+                            first_valid_hero = {
+                                "position": i,
+                                "hero_no": hero_no,
+                                "grade": team.get(grade_key),
+                                "level": team.get(level_key, 0)
+                            }
+                        
                         hero_name_data = get_string_character(data, hero_no, special=True)
                         hero_name_zh_tw = hero_name_data["zh_tw"]
                         
@@ -102,16 +113,13 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                         
                         team_info.append(f"位置{i}：{hero_name_zh_tw} {grade_name_zh_tw} {level}级")
                 
-                if team.get("hero_no1") and team.get("hero_grade1") and team.get("level1"):
-                    level = team.get("level1", 1)
-                    grade = team.get("hero_grade1")
+                if first_valid_hero and first_valid_hero["grade"] and first_valid_hero["level"]:
+                    level = first_valid_hero["level"]
+                    grade = first_valid_hero["grade"]
+                    hero_count = len(hero_positions)
                     
-                    hero_count = 0
-                    for i in range(1, 6):
-                        if team.get(f"hero_no{i}"):
-                            hero_count += 1
-                    
-                    team_battle_power = get_stage_team_battle_power(data, level, grade, hero_count)
+                    print(level, grade, hero_count)
+                    team_battle_power = calculate_battle_power(data, 2, level, grade) * hero_count
                     team_info.append(f"队伍战力：{team_battle_power}")
                 
                 messages.append("\n".join(team_info))

@@ -574,26 +574,37 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
 
 def is_integer_value_type(function_key):
     """判断是否为整数类型的技能值
-    
+
     SkillTextUtil__GetCodeValueText中的逻辑:
-    if ( type <= 27 && ((1 << type) & 0xC000010) != 0 || type - 1026 < 2 )
-    
-    0x0C000010转成2进制是  00001100 00000000 00000000 00010000
+    if ((unsigned int)type <= 0x1B && ((1 << type) & 0xC000010) != 0 || (unsigned int)(type - 1026) < 2)
+    执行位运算判断是否为整数类型
+
     """
-    integer_types = {4, 26, 27, 1026, 1027}
-    return function_key in integer_types
+
+    condition1 = (function_key <= 0x1B) and (((1 << function_key) & 0xC000010) != 0)
+    condition2 = (function_key >= 1026) and (function_key < 1028)
+    
+    return condition1 or condition2
 
 
 def is_percent_value_type(buff_effect, value):
-    """判断是否为百分比类型的技能值"""
-    # 以下类型直接按整数处理（不带百分比）
-    integer_types = {10101, 10102, 420}
+    """判断是否为百分比类型的技能值
     
-    # 特殊处理，((1 << (type - 122)) & 0x13) != 0判断
-    special_types = {10106 + offset for offset in [0, 2, 4] if (1 << (offset)) & 0x13 != 0}
-    
-    # 返回是否为百分比类型（取反，因为判断的是整数类型）
-    is_integer = (buff_effect in integer_types) or (buff_effect in special_types)
+    SkillTextUtil__GetBuffValueText中的逻辑:
+    if (type <= 10102 && ((type == 10101) || (type == 10102) || type == 420))
+    以及
+    if ((unsigned int)(type - 10106) <= 4 && ((1 << (type - 122)) & 0x13) != 0)
+
+    """
+
+    condition1 = (buff_effect <= 10102) and (buff_effect in {10101, 10102, 420})
+    condition2 = False
+
+    if buff_effect >= 10106 and (buff_effect - 10106) <= 4:
+        shift_value = buff_effect - 122
+        condition2 = ((1 << shift_value) & 0x13) != 0
+
+    is_integer = condition1 or condition2
     
     return not is_integer
 
@@ -1058,11 +1069,23 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
         for obj in data["town_object"]["json"]:
             if obj.get("hero") == hero_id:
                 obj_no = obj.get("no")
+                buff2_sno = obj.get("buff2")
                 if not obj_no:
                     continue
                 
                 # 获取prefab作为图片名称
                 prefab = obj.get("prefab", "").lower()
+
+                for buff in data["town_buff"]["json"]:
+                    if buff.get("no") == buff2_sno:
+                        contents_buff_no = buff.get("contents_buff_no")
+                        break
+                
+                if contents_buff_no:
+                    for buff in data["contents_buff"]["json"]:
+                        if buff.get("no") == contents_buff_no:
+                            battle_power_per = buff.get("battle_power_per")
+                            break
                     
                 # 在Item.json中查找对应物品信息
                 for item in data["item"]["json"]:
@@ -1126,7 +1149,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                                     if not os.path.exists(img_path):
                                         img_path = None
                             
-                            objects_info.append((obj_no, name, grade, slot_type, desc, img_path))
+                            objects_info.append((obj_no, name, grade, slot_type, desc, img_path, battle_power_per))
                         
         return objects_info
         
@@ -1390,7 +1413,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                 buff_effects = []
                 if buff_no := item.get("contents_buff_no"):
                     buff = next((b for b in data["contents_buff"]["json"] 
-                               if b.get("no") == buff_no), None)
+                                if b.get("no") == buff_no), None)
                     if buff:
                         # 处理所有属性，包括战力加成
                         for key, value in buff.items():
@@ -1402,10 +1425,10 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                                 else:
                                     buff_effects.append(f"{stat_name}：{int(value)}")
                         
-                        # 百分比战力加成
+                        # 战力百分比加成
                         battle_power_per = buff.get("battle_power_per", 0)
                         if battle_power_per != 0:
-                            buff_effects.append(f"战力加成：{battle_power_per*100:.1f}%")
+                            buff_effects.append(f"战力百分比加成：{battle_power_per}")
                         
                         # 固定值战力加成
                         battle_power = buff.get("battle_power", 0)
@@ -2171,20 +2194,88 @@ def get_base_battle_power(data: dict, entity_type: int, level: int) -> int:
         return 0
 
 
-def get_stage_team_battle_power(data: dict, level: int, hero_grade: int, hero_count: int = 5) -> int:
-    """计算主线队伍总战力
+def calculate_battle_power(data: dict, entity_type: int, level: int, grade: int, 
+                         equipment_power: int = 0, equipment_power_per: float = 0.0, 
+                         signature_power_per: float = 0.0, contents_buff_power: float = 0.0, 
+                         contents_buff_power_per: float = 0.0) -> int:
+    """计算角色总战力
     
     Args:
         data: 游戏数据字典
-        level: 等级
-        hero_grade: 角色品质
-        hero_count: 队伍中的角色数量，默认为5
-    
+        entity_type: 实体类型 (1=角色, 2=怪物, 3=raid)
+        level: 角色等级
+        grade: 角色品质
+        level_grade: 等级加成系数，默认1.0
+        equipment_power: 装备战力值，默认0
+        equipment_power_per: 装备战力百分比，默认0.0
+        signature_power_per: 遗物战力百分比，默认0.0
+        contents_buff_power: 内容buff战力，默认0.0
+        contents_buff_power_per: 内容buff战力百分比，默认0.0
+        
     Returns:
         int: 计算出的总战力(整数)
     """
     try:
-        base_battle_power = get_base_battle_power(data, 2, level)
+        base_power = get_base_battle_power(data, entity_type, level)
+        grade_value = get_hero_grade_value(data, grade)
+        level_grade_value = get_hero_level_grade_value(data, level)
+        
+        print(f"grade_value: {grade_value}, level_grade_value: {level_grade_value}, base_power: {base_power}")
+        total_power = (
+            base_power +                          # 基础战力
+            (level_grade_value - 1.0) * base_power +  # 等级加成
+            (grade_value - 1.0) * base_power +     # 品质加成
+            equipment_power +                    # 装备战力
+            equipment_power_per * base_power +   # 装备战力百分比
+            signature_power_per * base_power +   # 遗物战力百分比
+            contents_buff_power +                # 内容buff战力
+            contents_buff_power_per * base_power # 内容buff战力百分比
+        )
+
+        if total_power == float('inf'):
+            return 0
+        
+        return int(total_power)
+        
+    except Exception as e:
+        logger.error(f"计算总战力时发生错误: {e}")
+        return 0
+    
+
+def get_hero_grade_value(data: dict, grade: int) -> float:
+    """获取角色品质加成值
+    
+    Args:
+        data: 游戏数据字典
+        grade: 角色品质
+        
+    Returns:
+        float: 品质加成值
+    """
+
+    try:
+        for grade_info in data["hero_grade"]["json"]:
+            if grade_info.get("name_sno") == grade:
+                return grade_info.get("hero_grade_value", 0.85)
+            
+        return 0.85
+    
+    except Exception as e:
+        logger.error(f"获取角色品质加成值时发生错误: {e}")
+        return 0.85
+    
+
+def get_hero_level_grade_value(data: dict, level: int) -> float:
+    """获取角色等级加成率
+    
+    Args:
+        data: 游戏数据字典
+        level: 角色等级
+        
+    Returns:
+        float: 等级加成率，默认为1.0（无加成）
+    """
+    try:
         level_grade_value = 1.0
         level_grades = data["hero_level_grade"]["json"]
         level_grades.sort(key=lambda x: x.get("level", 0))
@@ -2196,25 +2287,14 @@ def get_stage_team_battle_power(data: dict, level: int, hero_grade: int, hero_co
                 break
                 
         max_level_data = max(level_grades, key=lambda x: x.get("level", 0))
-        if level >= max_level_data.get("level", 0):
+        if level >= int(max_level_data.get("level", 0)):
             level_grade_value = max_level_data.get("value", 1.0)
         
-        hero_grade_value = 0.85
-        for grade_data in data["hero_grade"]["json"]:
-            if grade_data.get("name_sno") == hero_grade:
-                hero_grade_value = grade_data.get("hero_grade_value", 0.85)
-                break
+        return level_grade_value
         
-        # 计算总战力
-        # 公式：(基础战力 + (等级加成率 - 1) * 基础战力 + (角色品质值 - 1) * 基础战力) * 角色数量
-        level_bonus = int((level_grade_value - 1) * base_battle_power)
-        grade_bonus = int((hero_grade_value - 1) * base_battle_power)
-        team_power = int((base_battle_power + level_bonus + grade_bonus) * hero_count)
-        return team_power
-    
     except Exception as e:
-        logger.error(f"计算主线队伍总战力时发生错误: {e}")
-        return 0
+        logger.error(f"获取角色等级加成率时发生错误: {e}")
+        return 1.0
 
 
 def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False) -> list:

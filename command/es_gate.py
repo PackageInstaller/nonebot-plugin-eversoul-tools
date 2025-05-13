@@ -49,11 +49,9 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
         all_messages = []
 
         # 添加传送门基本信息
-        all_messages.append(f"━━━━━━━━━━━━━━━\n{gate_name}\n━━━━━━━━━━━━━━━")
-        all_messages.append(f"开放日期：{open_days_str}")
+        all_messages.append(f"开放日期：{open_days_str}\n")
         if race_restriction:
             all_messages.append(f"限制种族：{race_restriction}")
-        all_messages.append("━━━━━━━━━━━━━━━\n")
         
         for gate_info in gate_infos:
             messages = []
@@ -67,8 +65,6 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                     stage_name = stage_name.format(stage_no)
                     break
                     
-            messages.append(f"━━━━━━━━━━━━━━━\n{stage_name}\n━━━━━━━━━━━━━━━")
-            
             # 获取奖励信息
             rewards = []
             for i in range(1, 3):
@@ -137,11 +133,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                     if sig_skill_level := team.get("signature_skill_level"):
                         messages.append(f"・ 遗物技能等级：{sig_skill_level}")
                     messages.append("-" * 25)
-            
-            # 添加分隔线
-            if gate_info != gate_infos[-1]:
-                messages.append("\n" + "=" * 30 + "\n")
-            
+
             all_messages.extend(messages)
         
         # 发送合并转发消息

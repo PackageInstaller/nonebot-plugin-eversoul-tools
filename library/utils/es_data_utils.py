@@ -436,6 +436,7 @@ def load_json_data(group_id: int):
         "town_object": "TownObjet.json", # 专属领地物品
         "string_town": "StringTown.json", # 地点文本
         "town_lost_item": "TownLostItem.json", # 遗失物品
+        "town_buff": "TownBuff.json", # 专属领地物品buff
         "arbeit_fairy_level": "ArbeitFairyLevel.json", # 打工等级
         "tower": "Tower.json", # 起源塔
         "contents_buff": "ContentsBuff.json", # buff数值内容
