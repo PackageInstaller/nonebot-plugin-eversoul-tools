@@ -58,30 +58,30 @@ def parse_gamekee_date(date_str):
     try:
         # 处理"几分钟前"、"几小时前"这种时间格式
         if "刚刚" in date_str:
-            return datetime.datetime.now()
+            return datetime.now()
         elif "秒前" in date_str:
             seconds = int(date_str.replace("秒前", "").strip())
-            return datetime.datetime.now() - datetime.timedelta(seconds=seconds)
+            return datetime.now() - datetime.timedelta(seconds=seconds)
         elif "分钟前" in date_str:
             minutes = int(date_str.replace("分钟前", "").strip())
-            return datetime.datetime.now() - datetime.timedelta(minutes=minutes)
+            return datetime.now() - datetime.timedelta(minutes=minutes)
         elif "小时前" in date_str:
             hours = int(date_str.replace("小时前", "").strip())
-            return datetime.datetime.now() - datetime.timedelta(hours=hours)
+            return datetime.now() - datetime.timedelta(hours=hours)
         elif "天前" in date_str:
             days = int(date_str.replace("天前", "").strip())
-            return datetime.datetime.now() - datetime.timedelta(days=days)
+            return datetime.now() - datetime.timedelta(days=days)
         elif "个月前" in date_str:
             months = int(date_str.replace("个月前", "").strip())
             # 近似计算，一个月按30天计算
-            return datetime.datetime.now() - datetime.timedelta(days=30*months)
+            return datetime.now() - datetime.timedelta(days=30*months)
         elif "年前" in date_str:
             years = int(date_str.replace("年前", "").strip())
             # 近似计算，一年按365天计算
-            return datetime.datetime.now() - datetime.timedelta(days=365*years)
+            return datetime.now() - datetime.timedelta(days=365*years)
         else:
             # 处理常规日期格式（例如"2023/12/15"）
-            current_year = datetime.datetime.now().year
+            current_year = datetime.now().year
             if "/" in date_str:
                 # 假设格式为 YYYY/MM/DD 或 MM/DD
                 parts = date_str.split('/')
@@ -90,12 +90,12 @@ def parse_gamekee_date(date_str):
                     year = int(parts[0])
                     month = int(parts[1])
                     day = int(parts[2].replace("日", "").strip())
-                    return datetime.datetime(year, month, day)
+                    return datetime(year, month, day)
                 elif len(parts) == 2:
                     # 简略日期格式 MM/DD，默认当前年份
                     month = int(parts[0])
                     day = int(parts[1].replace("日", "").strip())
-                    return datetime.datetime(current_year, month, day)
+                    return datetime(current_year, month, day)
             
             # 处理其他格式
             if "日" in date_str:
@@ -111,16 +111,16 @@ def parse_gamekee_date(date_str):
             
             for fmt in date_formats:
                 try:
-                    return datetime.datetime.strptime(date_str, fmt)
+                    return datetime.strptime(date_str, fmt)
                 except ValueError:
                     continue
             
             logger.warning(f"无法解析日期格式: {date_str}，将使用当前日期")
-            return datetime.datetime.now()
+            return datetime.now()
             
     except Exception as e:
         logger.error(f"解析日期时出错: {e}, 原始日期: {date_str}")
-        return datetime.datetime.now()
+        return datetime.now()
 
 # 定义一个异步函数来获取帖子列表
 async def fetch_posts():
@@ -137,7 +137,7 @@ async def fetch_posts():
 
         posts = []
         # 计算一个月前的日期
-        one_day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
+        one_day_ago = datetime.now()
         
         for el in post_elements:
             # 标题
@@ -309,46 +309,46 @@ async def fetch_post_detail(url):
         return None
 
 # 定义定时任务，每10分钟检查新帖子
-@scheduler.scheduled_job("cron", minute="*/10", id="gamekee_news_check")
-async def check_gamekee_news():
-    try:
-        logger.info("检查 GameKee 社区新帖子...")
-        posts = await fetch_posts()
+# @scheduler.scheduled_job("cron", minute="*/10", id="gamekee_news_check")
+# async def check_gamekee_news():
+#     try:
+#         logger.info("检查 GameKee 社区新帖子...")
+#         posts = await fetch_posts()
         
-        new_posts = []
-        for post in posts:
-            url = post['url']
-            if url and url not in seen_posts:
-                seen_posts.add(url)
-                new_posts.append(post)
+#         new_posts = []
+#         for post in posts:
+#             url = post['url']
+#             if url and url not in seen_posts:
+#                 seen_posts.add(url)
+#                 new_posts.append(post)
         
-        # 如果有新帖子且机器人已连接，则推送到群
-        if new_posts:
-            try:
-                bot = get_bot()  # 获取当前的机器人实例
+#         # 如果有新帖子且机器人已连接，则推送到群
+#         if new_posts:
+#             try:
+#                 bot = get_bot()  # 获取当前的机器人实例
                 
-                # 先发送总标题
-                await bot.send_group_msg(group_id=PUSH_GROUP_ID, message="【GameKee社区新帖子推送】")
+#                 # 先发送总标题
+#                 await bot.send_group_msg(group_id=PUSH_GROUP_ID, message="【GameKee社区新帖子推送】")
                 
-                # 为每个帖子获取详细信息并单独发送
-                for i, post in enumerate(new_posts, 1):
-                    # 获取帖子详情（使用异步等待以避免阻塞）
-                    post_detail = await fetch_post_detail(post['url'])
-                    if post_detail:
-                        # 合并详情信息
-                        post.update(post_detail)
+#                 # 为每个帖子获取详细信息并单独发送
+#                 for i, post in enumerate(new_posts, 1):
+#                     # 获取帖子详情（使用异步等待以避免阻塞）
+#                     post_detail = await fetch_post_detail(post['url'])
+#                     if post_detail:
+#                         # 合并详情信息
+#                         post.update(post_detail)
                     
-                    # 构建消息
-                    msg = await build_post_message(i, post)
+#                     # 构建消息
+#                     msg = await build_post_message(i, post)
                     
-                    # 发送帖子信息
-                    await bot.send_group_msg(group_id=PUSH_GROUP_ID, message=msg)
+#                     # 发送帖子信息
+#                     await bot.send_group_msg(group_id=PUSH_GROUP_ID, message=msg)
                     
-                    # 添加延时避免过快发送
-                    await asyncio.sleep(1)
+#                     # 添加延时避免过快发送
+#                     await asyncio.sleep(1)
                 
-                logger.info(f"成功推送 {len(new_posts)} 个新帖子到群 {PUSH_GROUP_ID}")
-            except Exception as e:
-                logger.error(f"推送GameKee新帖子时出错: {e}")
-    except Exception as e:
-        logger.error(f"检查GameKee新帖子定时任务出错: {e}") 
+#                 logger.info(f"成功推送 {len(new_posts)} 个新帖子到群 {PUSH_GROUP_ID}")
+#             except Exception as e:
+#                 logger.error(f"推送GameKee新帖子时出错: {e}")
+#     except Exception as e:
+#         logger.error(f"检查GameKee新帖子定时任务出错: {e}") 

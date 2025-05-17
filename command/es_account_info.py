@@ -1,11 +1,29 @@
 from ..library.utils import *
 
-# 注册命令
+
 es_account_info = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
 
 @es_account_info.handle()
 async def handle_account_info(bot: Bot, event: Event):
-    """处理查询账号信息命令"""
+    """
+    处理查询账号信息命令
+    参数:
+        bot: Bot 机器人对象
+        event: Event 事件对象
+    返回:
+        None
+    异常:
+        None
+
+    handle account info command
+    args:
+        bot
+        event
+    return:
+        None
+    exception:
+        None
+    """
     user_id = event.get_user_id()
     
     # 获取用户所有账号
