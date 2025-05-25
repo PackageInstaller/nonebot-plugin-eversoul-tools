@@ -18,9 +18,11 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
             group_id = event.group_id
         
         # 加载数据
+        # load the data
         data = load_json_data(group_id)
         
-        # 第一步：在event_calender中查找name_sno相符的所有内容
+        # 第一步：在event_info中查找name_sno相符的所有内容
+        # first step: find all event_info that match the condition
         calendar_events = []
         for event_item in data["event_info"]["json"]:
             if event_item.get("name_sno") == target_id:
@@ -33,13 +35,15 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
         all_story_info = []
         
         # 获取活动名称
+        # get the event name
         event_name = get_string_ui(data, target_id).get("zh_tw", f"活动ID {target_id}")
         
         for calendar_event in calendar_events:
             event_type = calendar_event.get("event_type")
             event_group = calendar_event.get("group")
             
-            # 第二步：根据no, event_type, group去eventstory寻找符合条件的内容
+            # 第二步：根据event_type, group去eventstory寻找符合条件的内容
+            # second step: find all event_story that match the condition
             matching_event_stories = []
             for event_story in data["event_story"]["json"]:
                 if (event_story.get("event_type") == event_type and 
@@ -47,6 +51,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
                     matching_event_stories.append(event_story)
             
             # 第三步：根据story_act去story_info寻找act符合的所有内容
+            # third step: find all story_info that match the condition
             for event_story in matching_event_stories:
                 story_act = event_story.get("story_act")
                 if story_act:
@@ -57,6 +62,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
                     
                     if episodes:
                         # 按episode排序
+                        # sort the episodes by episode
                         episodes.sort(key=lambda x: x.get("episode", 0))
                         
                         story_info = {
