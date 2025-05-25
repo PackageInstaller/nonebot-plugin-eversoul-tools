@@ -2,10 +2,13 @@ from ..library.utils import *
 
 
 @es_ark_overclock.handle()
-async def handle_ark_overclock(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()):
+async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取目标超频等级
-        target_level = int(matched[0])
+        target_level = args.extract_plain_text().strip()
+        if not target_level:
+            await es_ark_overclock.finish("请输入正确的格式：es超频消耗+等级")
+        target_level = int(target_level)
         
         # 加载数据
         # 获取群组ID

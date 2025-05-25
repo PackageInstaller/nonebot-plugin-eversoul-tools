@@ -4,7 +4,6 @@
 import os
 import re
 import ast
-import math
 from nonebot.log import logger
 from difflib import get_close_matches
 from ...config import (
@@ -238,6 +237,27 @@ def get_string_ui(data, no):
                 "zh_cn": string.get("zh_cn", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
                 "kr": string.get("kr", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
                 "en": string.get("en", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
+            }
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
+
+
+def get_string_talk(data, no):
+    """get string talk
+    
+    Args:
+        data: JSON data dictionary
+        no: string no
+        
+    Returns:
+        dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
+    """
+    for string in data["string_talk"]["json"]:
+        if string["no"] == no:
+            return {
+                "zh_tw": string.get("zh_tw", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
+                "zh_cn": string.get("zh_cn", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
+                "kr": string.get("kr", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
+                "en": string.get("en", "").replace('\\r\\n', '\n').replace('\r\n', '\n')
             }
     return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
@@ -631,7 +651,7 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
                         
                         # 根据buff_effect类型判断是整数还是百分比
                         # determine if it is an integer or percentage based on buff_effect type
-                        if is_percent_value_type(buff_effect, abs_value):
+                        if is_percent_value_type(buff_effect):
                             # 处理为百分比
                             # handle percentage
                             percent_value = abs_value * 100
@@ -686,7 +706,7 @@ def is_integer_value_type(function_key):
     return condition1 or condition2
 
 
-def is_percent_value_type(buff_effect, value):
+def is_percent_value_type(buff_effect):
     """Determine whether the skill value is a percentage type
     
     Logic in SkillTextUtil__GetBuffValueText:
@@ -698,7 +718,6 @@ def is_percent_value_type(buff_effect, value):
     is percent value type
     args:
         buff_effect: buff effect
-        value: value
     return:
         bool: is percent value type
     exception:
@@ -708,9 +727,8 @@ def is_percent_value_type(buff_effect, value):
     condition1 = (buff_effect <= 10102) and (buff_effect in {10101, 10102, 420})
     condition2 = False
 
-    if buff_effect >= 10106 and (buff_effect - 10106) <= 4:
-        shift_value = buff_effect - 122
-        condition2 = ((1 << shift_value) & 0x13) != 0
+    if abs(buff_effect - 10106) <= 4:
+        condition2 = ((1 << (buff_effect - 122)) & 0x13) != 0
 
     is_integer = condition1 or condition2
     
@@ -951,7 +969,7 @@ def get_character_keyword_location(data: dict, keyword_get_details: int, is_test
     # 获取地点名称，优先使用zh_tw
     # get location name, use zh_tw first
     location_data = next((s for s in data["string_town"]["json"] 
-                      if s["no"] == location.get("location_name_sno")), None)
+                        if s["no"] == location.get("location_name_sno")), None)
     if location_data:
         zh_tw = location_data.get("zh_tw", "")
         kr = location_data.get("kr", "")
@@ -1073,7 +1091,7 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
         
     if 101 <= details <= 110:
         location = next((loc for loc in data["town_location"]["json"] 
-                       if loc["no"] == details), None)
+                        if loc["no"] == details), None)
         if location:
             # 获取地点名称，优先使用zh_tw. get location name, use zh_tw first
             location_data = next((s for s in data["string_town"]["json"] 
@@ -1102,7 +1120,7 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
             return f"好感达Lv.{details}时可获得"
     else:
         story = next((s for s in data["story_info"]["json"] 
-                     if s["no"] == details), None)
+                        if s["no"] == details), None)
         if story:
             act = story.get('act', '?')
             episode = story.get('episode', '?')
@@ -1443,15 +1461,15 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
             # 获取礼包名称和描述. get package name and description
             name_sno = shop_item.get("name_sno")
             package_name = next((s.get("zh_tw", "未知礼包") for s in data["string_cashshop"]["json"] 
-                               if s["no"] == name_sno), "未知礼包")
+                                if s["no"] == name_sno), "未知礼包")
             
             info_sno = shop_item.get("item_info_sno")
             package_desc = next((s.get("zh_tw", "") for s in data["string_cashshop"]["json"] 
-                               if s["no"] == info_sno), "")
+                                if s["no"] == info_sno), "")
             
             desc_sno = shop_item.get("desc_sno")
             limit_desc = next((s.get("zh_tw", "").format(shop_item.get("limit_buy", 0)) 
-                             for s in data["string_ui"]["json"] if s["no"] == desc_sno), "")
+                                for s in data["string_ui"]["json"] if s["no"] == desc_sno), "")
             
             # 基本信息部分. basic info
             basic_info = [
@@ -1526,13 +1544,13 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
         # 获取灵魂链接标题和故事. get soul link title and story
         # 优先使用zh_tw内容的逻辑. use zh_tw content logic first
         title_data = next((s for s in data["string_character"]["json"] 
-                         if s["no"] == link.get("group_title")), {})
+                            if s["no"] == link.get("group_title")), {})
         title_zh_tw = title_data.get("zh_tw", "")
         title_kr = title_data.get("kr", "")
         title = title_zh_tw if title_zh_tw else (title_kr if is_test else title_zh_tw)
         
         story_data = next((s for s in data["string_character"]["json"] 
-                         if s["no"] == link.get("group_story")), {})
+                            if s["no"] == link.get("group_story")), {})
         story_zh_tw = story_data.get("zh_tw", "")
         story_kr = story_data.get("kr", "")
         story = story_zh_tw if story_zh_tw else (story_kr if is_test else story_zh_tw)
@@ -1554,7 +1572,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
             # 按condition_list排序. sort by condition_list
             collection_items = sorted(
                 [item for item in data["soullink_collection"]["json"] 
-                 if item.get("collection_group") == collection_id],
+                    if item.get("collection_group") == collection_id],
                 key=lambda x: x.get("condition_list", 0)
             )
             
@@ -1562,7 +1580,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                 # 获取条件文本，修改为优先使用zh_tw内容的逻辑. get condition text, modify to use zh_tw content logic first
                 condition_string_no = item.get("condition_string")
                 condition_data = next((s for s in data["string_ui"]["json"] 
-                                     if s["no"] == condition_string_no), {})
+                                        if s["no"] == condition_string_no), {})
                 condition_zh_tw = condition_data.get("zh_tw", "")
                 condition_kr = condition_data.get("kr", "")
                 

@@ -2,10 +2,13 @@ from ..library.utils import *
 
 
 @es_level_cost.handle()
-async def handle_level_cost(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()):
+async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取目标等级
-        target_level = int(matched[0])
+        target_level = args.extract_plain_text().strip()
+        if not target_level:
+            await es_level_cost.finish("请输入正确的格式：es升级消耗+等级")
+        target_level = int(target_level)
         
         # 加载数据
         # 获取群组ID

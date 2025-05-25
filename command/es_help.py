@@ -152,6 +152,12 @@ async def handle_es_help(bot: Bot, event: Event):
                 <div class="usage">用途：查询游戏公告</div>
                 <div class="example">示例：es公告</div>
             </div>
+            
+            <div class="command">
+                <div class="command-name">es故事信息 + 数字ID</div>
+                <div class="usage">用途：查询活动故事的详细信息</div>
+                <div class="example">示例：es故事信息12044</div>
+            </div>
         </div>
     </body>
     </html>

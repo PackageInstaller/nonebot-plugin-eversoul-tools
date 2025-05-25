@@ -431,6 +431,7 @@ def load_json_data(group_id: int):
         "localization_schedule": "LocalizationSchedule.json", # 活动日历, localization schedule
         "event_calender": "EventCalender.json", # 活动日历, event calender
         "event_info": "EventInfo.json", # 活动信息, event info
+        "event_story": "EventStory.json", # 活动剧情, event story
         "string_ui": "StringUI.json", # UI文本, ui text
         "eden_alliance": "EdenAlliance.json", # 联合作战, eden alliance
         "stage_equip": "StageEquip.json", # 关卡装备, stage equip

@@ -3639,39 +3639,39 @@ names:
     ja_name: 土の戦士
     aliases: []
     hero_id: 32098
-  - zh_tw_name: 爐心
+  - zh_tw_name: 魔物襲擊
     zh_cn_name: ''
-    kr_name: 노심
-    en_name: Reactor Core
-    ja_name: 爐心
+    kr_name: 마물 습격
+    en_name: Monster Attack
+    ja_name: ''
     aliases: []
     hero_id: 32099
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32100
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32101
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32102
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32103
   - zh_tw_name: 土俑軍
@@ -3681,60 +3681,60 @@ names:
     ja_name: 土の戦士
     aliases: []
     hero_id: 32104
-  - zh_tw_name: 凍結砲（上段）
+  - zh_tw_name: 1號坦克射擊
     zh_cn_name: ''
-    kr_name: 빙결포(상단)
-    en_name: Frost Cannon (Top)
-    ja_name: 氷結砲(上段)
+    kr_name: 1호 탱크
+    en_name: 'Tank #1'
+    ja_name: ''
     aliases: []
     hero_id: 32105
-  - zh_tw_name: 凍結砲（中段）
+  - zh_tw_name: 2號坦克射擊
     zh_cn_name: ''
-    kr_name: 빙결포(중단)
-    en_name: Frost Cannon (Middle)
-    ja_name: 氷結砲(中段)
+    kr_name: 2호 탱크
+    en_name: 'Tank #2'
+    ja_name: ''
     aliases: []
     hero_id: 32106
-  - zh_tw_name: 凍結砲（下段）
+  - zh_tw_name: 3號坦克射擊
     zh_cn_name: ''
-    kr_name: 빙결포(하단)
-    en_name: Frost Cannon (Bottom)
-    ja_name: 氷結砲(下段)
+    kr_name: 3호 탱크
+    en_name: 'Tank #3'
+    ja_name: ''
     aliases: []
     hero_id: 32107
-  - zh_tw_name: 凍結砲（齊發砲擊）
+  - zh_tw_name: 緊急裝填
     zh_cn_name: ''
-    kr_name: 빙결포(일제 포격)
-    en_name: Frost Cannon (Triple Barrage)
-    ja_name: 氷結砲(一斉砲撃)
+    kr_name: 긴급 장전
+    en_name: Emergency Reload
+    ja_name: ''
     aliases: []
     hero_id: 32108
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32109
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32110
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32111
-  - zh_tw_name: 土俑軍
+  - zh_tw_name: 冷酷的審訊官
     zh_cn_name: ''
-    kr_name: 토용군
-    en_name: Clay Creature
-    ja_name: 土の戦士
+    kr_name: 무자비한 심문관
+    en_name: Merciless Interrogator
+    ja_name: 無慈悲な尋問官
     aliases: []
     hero_id: 32112
   - zh_tw_name: 爐心
@@ -3786,55 +3786,27 @@ names:
     ja_name: ''
     aliases: []
     hero_id: 32119
-  - zh_tw_name: ''
+  - zh_tw_name: 雪之賢者
     zh_cn_name: ''
-    kr_name: 지원군 소환
-    en_name: Summon Reinforcements
+    kr_name: 눈의 현자
+    en_name: Sage of the Snow
     ja_name: ''
     aliases: []
     hero_id: 32120
-  - zh_tw_name: 艾琳
+  - zh_tw_name: 雪之賢者
     zh_cn_name: ''
-    kr_name: 아이린
-    en_name: Irene
-    ja_name: アイリーン
+    kr_name: 눈의 현자
+    en_name: Sage of the Snow
+    ja_name: ''
     aliases: []
     hero_id: 32121
-  - zh_tw_name: 卡斯珀
+  - zh_tw_name: 拜斯
     zh_cn_name: ''
-    kr_name: 캐스퍼
-    en_name: Casper
-    ja_name: キャスパー
+    kr_name: 바이스
+    en_name: Weiss
+    ja_name: ヴァイス
     aliases: []
     hero_id: 32122
-  - zh_tw_name: 蘿絲
-    zh_cn_name: ''
-    kr_name: 로제
-    en_name: Rose
-    ja_name: ロゼ
-    aliases: []
-    hero_id: 32123
-  - zh_tw_name: 琳賽
-    zh_cn_name: ''
-    kr_name: 린지
-    en_name: Linzy
-    ja_name: リンジー
-    aliases: []
-    hero_id: 32124
-  - zh_tw_name: 塔利亞
-    zh_cn_name: ''
-    kr_name: 탈리아
-    en_name: Talia
-    ja_name: タリア
-    aliases: []
-    hero_id: 32125
-  - zh_tw_name: 威里
-    zh_cn_name: ''
-    kr_name: 웨리
-    en_name: Wheri
-    ja_name: ウェリー
-    aliases: []
-    hero_id: 32126
   - zh_tw_name: 起司
     zh_cn_name: ''
     kr_name: 치즈
@@ -4073,6 +4045,20 @@ names:
     ja_name: 悪代官クロエ
     aliases: []
     hero_id: 60012
+  - zh_tw_name: 潔克琳
+    zh_cn_name: ''
+    kr_name: 재클린
+    en_name: Jacqueline
+    ja_name: ジャクリーン
+    aliases: []
+    hero_id: 66001
+  - zh_tw_name: 綾織
+    zh_cn_name: ''
+    kr_name: 아야메
+    en_name: Ayame
+    ja_name: アヤメ
+    aliases: []
+    hero_id: 66003
   - zh_tw_name: 艾拉
     zh_cn_name: ''
     kr_name: 아이라
