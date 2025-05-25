@@ -22,7 +22,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
         
         # 第一步：在event_calender中查找name_sno相符的所有内容
         calendar_events = []
-        for event_item in data["event_calender"]["json"]:
+        for event_item in data["event_info"]["json"]:
             if event_item.get("name_sno") == target_id:
                 calendar_events.append(event_item)
         
@@ -36,15 +36,13 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
         event_name = get_string_ui(data, target_id).get("zh_tw", f"活动ID {target_id}")
         
         for calendar_event in calendar_events:
-            event_no = calendar_event.get("no")
             event_type = calendar_event.get("event_type")
             event_group = calendar_event.get("group")
             
             # 第二步：根据no, event_type, group去eventstory寻找符合条件的内容
             matching_event_stories = []
             for event_story in data["event_story"]["json"]:
-                if (event_story.get("no") == event_no and 
-                    event_story.get("event_type") == event_type and 
+                if (event_story.get("event_type") == event_type and 
                     event_story.get("event_group") == event_group):
                     matching_event_stories.append(event_story)
             
