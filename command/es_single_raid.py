@@ -58,16 +58,16 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         hero_name_en = ""
         if hero_data["name_sno"]:
             name_data = get_string_character(data, hero_data["name_sno"])
-            hero_name_zh_tw = name_data["zh_tw"]
-            hero_name_zh_cn = name_data["zh_cn"]
-            hero_name_kr = name_data["kr"]
-            hero_name_en = name_data["en"]
+            hero_name_zh_tw = name_data["zh_twOffset"]
+            hero_name_zh_cn = name_data["zh_cnOffset"]
+            hero_name_kr = name_data["krOffset"]
+            hero_name_en = name_data["enOffset"]
 
         # 获取基础属性
-        race_zh_tw = get_string_system(data, hero_data["race_sno"])["zh_tw"]
-        hero_class_zh_tw = get_string_system(data, hero_data["class_sno"])["zh_tw"]
-        sub_class_zh_tw = get_string_system(data, hero_data["sub_class_sno"])["zh_tw"]
-        stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_tw"]
+        race_zh_tw = get_string_system(data, hero_data["race_sno"])["zh_twOffset"]
+        hero_class_zh_tw = get_string_system(data, hero_data["class_sno"])["zh_twOffset"]
+        sub_class_zh_tw = get_string_system(data, hero_data["sub_class_sno"])["zh_twOffset"]
+        stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_twOffset"]
         
         # 获取战斗时长
         battle_time = 0
@@ -81,7 +81,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         guide_text = ""
         if raid_data and raid_data.get("guide_sno"):
             guide_data = get_string_ui(data, raid_data.get("guide_sno"))
-            guide_text = guide_data["zh_tw"]
+            guide_text = guide_data["zh_twOffset"]
         
         # 获取血量倍数
         hp_multiplier = 1.0
@@ -98,12 +98,12 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         if boss_data.get("reward_item1_no"):
             item_name = get_string_item(data, boss_data.get("reward_item1_no"))
             item_amount = boss_data.get("reward_item1_amount", 0)
-            reward_items.append(f"{item_name['zh_tw']}x{item_amount}")
+            reward_items.append(f"{item_name['zh_twOffset']}x{item_amount}")
         
         if boss_data.get("reward_item2_no"):
             item_name = get_string_item(data, boss_data.get("reward_item2_no"))
             item_amount = boss_data.get("reward_item2_amount", 0)
-            reward_items.append(f"{item_name['zh_tw']}x{item_amount}")
+            reward_items.append(f"{item_name['zh_twOffset']}x{item_amount}")
         
         # 获取赛季信息
         season_info = ""
@@ -120,7 +120,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                 for season in data["single_raid_season"]["json"]:
                     if season.get("no") == latest_schedule.get("season_no"):
                         season_name = get_string_ui(data, season.get("season_name_no"))
-                        season_info = f"赛季：{season_name['zh_tw']}"
+                        season_info = f"赛季：{season_name['zh_twOffset']}"
                         break
         
         # 获取相互作用之人信息
@@ -135,7 +135,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                     # 获取角色名称
                     hero_name = get_string_character(data, interaction.get("hero_no"), special=True)
                     if hero_name:
-                        interaction_info.append(hero_name["zh_tw"])
+                        interaction_info.append(hero_name["zh_twOffset"])
             
             # 获取特殊之人
             if raid_data.get("no"):
@@ -155,12 +155,12 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                                         # 获取角色名称
                                         hero_name = get_string_character(data, specific_target, special=True)
                                         if hero_name:
-                                            special_hero = hero_name["zh_tw"]
+                                            special_hero = hero_name["zh_twOffset"]
                                         special_heroes[specific_target] = special_hero
                                     # 检查是否有delay
                                     if buff.get("delay"):
                                         delay_seconds = buff.get("delay")
-                                        delay_text = get_string_ui(data, buff.get("buff_tooltip_sno"))['zh_tw']
+                                        delay_text = get_string_ui(data, buff.get("buff_tooltip_sno"))['zh_twOffset']
                             i += 1
         
         # 获取护盾削减系数和解除眩晕时间
@@ -177,8 +177,8 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                         array_index = status_code - 201
                         # 检查该索引位置的值是否在type中
                         type_value = SINGLE_RAID_GROGGY_TRIGGER_ARRAY[array_index]
-                        type_key = f"type{type_value}"
-                        value_key = f"value{type_value}"
+                        type_key = f"type_{type_value}"
+                        value_key = f"value_{type_value}"
                         
                         # 如果type和value都存在
                         if type_key in groggy and value_key in groggy:

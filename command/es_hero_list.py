@@ -38,7 +38,7 @@ async def handle_hero_list(bot: Bot, event: Event):
                 
             # 获取种族名称
             race_data = get_string_system(data, hero_data["race_sno"])
-            race_tw = race_data["zh_tw"]
+            race_tw = race_data["zh_twOffset"]
             if not race_tw:
                 continue
                 
@@ -59,8 +59,7 @@ async def handle_hero_list(bot: Bot, event: Event):
         for category, heroes in hero_categories.items():
             if heroes:  # 只显示有角色的分类
                 msg = f"【{category}】\n"
-                msg += "\n".join(f"・ {hero}" for hero in sorted(heroes))  # 按名称排序
-                
+                msg += "\n".join(f"・{hero}" for hero in sorted(heroes))  # 按名称排序
                 forward_msgs.append({
                     "type": "node",
                     "data": {
@@ -69,8 +68,7 @@ async def handle_hero_list(bot: Bot, event: Event):
                         "content": msg
                     }
                 })
-        
-        # 发送合并转发消息
+
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
                 "send_group_forward_msg",

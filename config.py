@@ -193,9 +193,8 @@ CUSTOM_FONT = FontProperties(fname=FONT_DIR)
 
 CG_DIR = RESOURCE_DIR / "image" / "cg"
 EVERTALK_DIR = RESOURCE_DIR / "image" / "evertalk"
-HERO_DIR = RESOURCE_DIR / "image" / "hero"
+SOUL_DIR = RESOURCE_DIR / "image" / "soul"
 ICON_DIR = RESOURCE_DIR / "image" / "icon"
-SIGNATURE_DIR = RESOURCE_DIR / "image" / "signature"
 TIER_DIR = RESOURCE_DIR / "image" / "tier"
 TOWN_DIR = RESOURCE_DIR / "image" / "town"
 BANNER_DIR = RESOURCE_DIR / "image" / "banner"

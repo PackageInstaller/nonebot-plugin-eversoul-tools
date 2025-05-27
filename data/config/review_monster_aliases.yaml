@@ -1,4 +1,60 @@
 names:
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 폭주한 실베스터 조이 3세
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8000
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 폭주한 실베스터 조이 3세
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8010
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 폭주한 실베스터 조이 3세
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8020
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 폭주한 실베스터 조이 3세
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8030
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 폭주한 실베스터 조이 3세
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8040
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 낙원의 마녀
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8050
+  - zh_tw_name: 白巧克力棒
+    zh_cn_name: ''
+    kr_name: 화이트 초코봉
+    en_name: White Chocolate Stick
+    ja_name: ホワイトチョコ棒
+    aliases: []
+    hero_id: 8060
+  - zh_tw_name: 黑巧克力棒
+    zh_cn_name: ''
+    kr_name: 다크 초코봉
+    en_name: Dark Chocolate Stick
+    ja_name: ダークチョコ棒
+    aliases: []
+    hero_id: 8070
   - zh_tw_name: 懲戒的狂信徒
     zh_cn_name: ''
     kr_name: 징벌의 광신도

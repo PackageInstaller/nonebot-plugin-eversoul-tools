@@ -26,7 +26,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         
         for stage in data["stage"]["json"]:
             if stage.get("area_no") == area_no and stage.get("stage_no") == stage_no:
-                if "exp" in stage:
+                if "area_no" in stage:
                     main_stage = stage
                     drop_group_no = stage.get("item_drop_group_no")
                     break  # 找到主线关卡就直接跳出
@@ -45,7 +45,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         level_type = ""
         for system in data["string_system"]["json"]:
             if system["no"] == stage_data.get("level_type"):
-                level_type = system.get("zh_tw", "未知类型")
+                level_type = system.get("zh_twOffset", "未知类型")
                 break
         basic_info.append(f"关卡类型：{level_type}")
         basic_info.append(f"经验值：{stage_data.get('exp', 0)}")
@@ -53,12 +53,12 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         
         fixed_items = ["固定掉落物品："]
         for i in range(1, 10):
-            item_key = f"item_no{i}"
-            amount_key = f"amount{i}"
+            item_key = f"item_no_{i}"
+            amount_key = f"amount_{i}"
             if item_no := stage_data.get(item_key):
                 item_name = get_string_item(data, item_no)
                 amount = stage_data.get(amount_key, 0)
-                fixed_items.append(f"{item_name['zh_tw']}x{amount}")
+                fixed_items.append(f"{item_name['zh_twOffset']}x{amount}")
         
         if len(fixed_items) > 1: 
             messages.append("\n".join(fixed_items))
@@ -88,9 +88,9 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                 first_valid_hero = None
                 
                 for i in range(1, 6):
-                    hero_key = f"hero_no{i}"
-                    grade_key = f"hero_grade{i}"
-                    level_key = f"level{i}"
+                    hero_key = f"hero_no_{i}"
+                    grade_key = f"hero_grade_{i}"
+                    level_key = f"level_{i}"
                     
                     if hero_no := team.get(hero_key):
                         hero_positions.append(i)
@@ -104,10 +104,10 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                             }
                         
                         hero_name_data = get_string_character(data, hero_no, special=True)
-                        hero_name_zh_tw = hero_name_data["zh_tw"]
+                        hero_name_zh_tw = hero_name_data["zh_twOffset"]
                         
                         grade_data = get_string_system(data, team.get(grade_key))
-                        grade_name_zh_tw = grade_data["zh_tw"]
+                        grade_name_zh_tw = grade_data["zh_twOffset"]
                         
                         level = team.get(level_key, 0)
                         
@@ -117,8 +117,6 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                     level = first_valid_hero["level"]
                     grade = first_valid_hero["grade"]
                     hero_count = len(hero_positions)
-                    
-                    print(level, grade, hero_count)
                     team_battle_power = calculate_battle_power(data, 2, level, grade) * hero_count
                     team_info.append(f"队伍战力：{team_battle_power}")
                 

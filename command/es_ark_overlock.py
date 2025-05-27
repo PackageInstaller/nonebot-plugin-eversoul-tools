@@ -73,18 +73,18 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         
         # 对于最大等级，显示最大等级的消耗（而不是升到最大等级+1的消耗，因为没有这个等级）
         if target_level == max_level:
-            detail_msg.append(f"当前等级消耗：{format_number(last_level_cost)} 魔力水晶")
+            detail_msg.append(f"当前等级消耗：\n{format_number(last_level_cost)} 魔力水晶")
         else:
-            detail_msg.append(f"当前等级消耗：{format_number(current_level_cost)} 魔力水晶")
+            detail_msg.append(f"当前等级消耗：\n{format_number(current_level_cost)} 魔力水晶")
         
         # 添加下一级消耗信息（如果有）
         if target_level < max_level:
-            detail_msg.append(f"下一级消耗：{format_number(next_level_cost)} 魔力水晶")
+            detail_msg.append(f"下一级消耗：\n{format_number(next_level_cost)} 魔力水晶")
         else:
             detail_msg.append("已达到最大超频等级")
         
         # 添加总消耗
-        detail_msg.append(f"\n总超频消耗（1-{target_level}级）：{format_number(total_cost)} 魔力水晶")
+        detail_msg.append(f"\n总超频消耗（1-{target_level}级）：\n{format_number(total_cost)} 魔力水晶")
         messages.append("\n".join(detail_msg))
 
         # 添加统计图

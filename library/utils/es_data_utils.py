@@ -184,11 +184,11 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
         if "no" in string:
             if string["no"] not in hero_names:
                 hero_names[string["no"]] = {
-                    "zh_tw": string.get("zh_tw", ""),
-                    "zh_cn": string.get("zh_cn", ""),
-                    "kr": string.get("kr", ""),
-                    "en": string.get("en", ""),
-                    "ja": string.get("ja", "")
+                    "zh_tw": string.get("zh_twOffset", ""),
+                    "zh_cn": string.get("zh_cnOffset", ""),
+                    "kr": string.get("krOffset", ""),
+                    "en": string.get("enOffset", ""),
+                    "ja": string.get("jaOffset", "")
                 }
 
     seen_hero_ids = set()

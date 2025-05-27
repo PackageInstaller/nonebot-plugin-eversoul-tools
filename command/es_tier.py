@@ -32,7 +32,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
             grade_name = f"{grade_map[grade]}+{level}"  # 其他装备加上等级
             
         grade_sno = next((s["no"] for s in data["string_system"]["json"] 
-                         if s.get("zh_tw") == grade_name), None)
+                            if s.get("zh_twOffset") == grade_name), None)
         
         # 获取属性限制对应的stat_limit_sno
         stat_sno = STAT_TYPE_MAPPING.get(stat_type)
@@ -40,7 +40,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
         # 获取套装效果对应的set_effect_no
         set_no = EFFECT_TYPE_MAPPING.get(set_type)
         set_effect = next((e for e in data["item_set_effect"]["json"] 
-                          if e.get("name") == set_no), None)
+                            if e.get("name") == set_no), None)
         
         if not all([grade_sno, stat_sno, set_effect]):
             await es_tier_info.finish("未找到对应的礼品信息")
@@ -61,13 +61,13 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
         for item in items:
             try:
                 # 获取礼品基本信息
-                name = next((s.get("zh_tw", "未知") for s in data["string_item"]["json"] 
-                           if s["no"] == item.get("name_sno")), "未知")
-                desc = next((s.get("zh_tw", "") for s in data["string_item"]["json"] 
-                           if s["no"] == item.get("desc_sno")), "")
+                name = next((s.get("zh_twOffset", "未知") for s in data["string_item"]["json"] 
+                            if s["no"] == item.get("name_sno")), "未知")
+                desc = next((s.get("zh_twOffset", "") for s in data["string_item"]["json"] 
+                            if s["no"] == item.get("desc_sno")), "")
                 
                 # 获取图标路径
-                icon_base = item.get("icon_path", "")
+                icon_base = item.get("icon_pathOffset", "")
                 if icon_base:
                     # 构建完整的图片路径
                     icon_path = str(TIER_DIR / f"{icon_base}.png")
@@ -75,15 +75,14 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                     if Path(icon_path).exists():
                         img_msg = MessageSegment.image(f"file:///{icon_path}")
                     else:
-                        img_msg = "[图片未找到]"
+                        img_msg = ""
                 else:
-                    img_msg = "[无图片信息]"
+                    img_msg = ""
                 
-                 # 获取最高等级的属性信息
+                # 获取最高等级的属性信息
                 max_stat = max((s for s in data["item_stat"]["json"] 
-                              if s.get("no") == item.get("no")), 
-                             key=lambda x: x.get("level", 0))
-                print(f"max_stat: {max_stat}")
+                                if s.get("no") == item.get("no")), 
+                                key=lambda x: x.get("level", 0))
                 # 获取套装效果
                 set2_buff_no = set_effect.get("set2_contentsbuff")
                 set4_buff_no = set_effect.get("set4_contentsbuff")
@@ -97,10 +96,8 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 if set4_buff_no:
                     set4_buff = next((buff for buff in data["contents_buff"]["json"] 
                                     if buff.get("no") == set4_buff_no), {})
-                print(set2_buff, set4_buff)
-                 # 构建消息
+                # 构建消息
                 msg = [
-                    f"━━━━━━━━━━━━━━━",
                     str(img_msg),
                     f"【{name}】",
                     f"品质：{grade_name}",
@@ -108,7 +105,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                     f"\n【最大属性】(等级{max_stat.get('level')})",
                     f"・ 满级所需经验：{max_stat.get('sum_exp', 0)}",
                     f"・ 满级战斗力：{max_stat.get('battle_power', 0)}",
-                    f"・ 百分比战斗力：{max_stat.get('battle_power_per', 0)} * {max_stat.get('level')}"
+                    f"・ 百分比战斗力：{max_stat.get('battle_power_per', 0)}"
                 ]
 
                 # 添加基础属性和额外属性
@@ -118,8 +115,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 # 获取所有属性（排除特定键）
                 exclude_keys = {"index", "no", "level", "exp", "sum_exp", "battle_power", "battle_power_per"}
                 stat_items = [(k, v) for k, v in max_stat.items() 
-                             if k not in exclude_keys and v and k in STAT_NAME_MAPPING]
-                print(f"stat_items: {stat_items}")
+                                if k not in exclude_keys and v and k in STAT_NAME_MAPPING]
                 # 前三个是基础属性，之后的是额外属性
                 for i, (stat, value) in enumerate(stat_items):
                     stat_display = STAT_NAME_MAPPING[stat]
@@ -133,7 +129,6 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                         base_stats.append(f"・ {stat_display}：{value_str}")
                     else:  # 额外属性
                         extra_stats.append(f"・ {stat_display}：{value_str}")
-                print(f"base_stats: {base_stats}, extra_stats: {extra_stats}")
                 # 添加基础属性
                 if base_stats:
                     msg.append("\n基础属性：")
@@ -177,7 +172,6 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 if not has_4set:
                     msg.append("・ 无效果")
                 
-                msg.append("━━━━━━━━━━━━━━━")
                 messages.append("\n".join(msg))
             
             except Exception as e:

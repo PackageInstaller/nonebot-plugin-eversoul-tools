@@ -38,7 +38,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
         if item_type == "主线":
             # 获取所有主线关卡信息. get all main line stage info
             for stage in data["stage"]["json"]:
-                if "exp" in stage:  # 确认是主线关卡. confirm it is main line stage
+                if "area_no" in stage:  # 确认是主线关卡. confirm it is main line stage
                     area_no = stage.get("area_no")
                     # 如果指定了章节，只处理对应章节的关卡. if specified chapter, only process the corresponding chapter stage
                     if chapter and str(area_no) != chapter:
@@ -74,7 +74,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
             
             if barrier_info:
                 # 获取传送门名称. get gate name
-                gate_name = next((s.get("zh_tw", "未知") for s in data["string_stage"]["json"] 
+                gate_name = next((s.get("zh_twOffset", "未知") for s in data["string_stage"]["json"] 
                                 if s["no"] == barrier_info.get("text_name_sno")), "未知")
                 messages.append(f"{gate_name}:")
                 
@@ -87,7 +87,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                         stage_name = ""
                         for string in data["string_stage"]["json"]:
                             if string["no"] == name_sno:
-                                stage_name = string.get("zh_tw", "未知")
+                                stage_name = string.get("zh_twOffset", "未知")
                                 stage_name = stage_name.format(stage_no)
                                 break
                         
@@ -112,7 +112,7 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                     if hero["hero_id"] == hero_id:
                         for char in data["string_character"]["json"]:
                             if char["no"] == hero["name_sno"]:
-                                hero_name = char.get("zh_tw", "")
+                                hero_name = char.get("zh_twOffset", "")
                                 break
                         break
                 

@@ -1,8 +1,6 @@
 from ..library.utils import *
 
 
-es_account_info = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
-
 @es_account_info.handle()
 async def handle_account_info(bot: Bot, event: Event):
     """

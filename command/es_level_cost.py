@@ -20,7 +20,7 @@ async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()
         # 找出最大等级
         max_level = 0
         for item in data["level"]["json"]:
-            if level := item.get("level_"):
+            if level := item.get("level"):
                 max_level = max(max_level, level)
         
         # 如果目标等级超过最大等级，使用最大等级
@@ -31,9 +31,9 @@ async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()
         level_data = None
         next_level_data = None
         for item in data["level"]["json"]:
-            if item.get("level_") == target_level:
+            if item.get("level") == target_level:
                 level_data = item
-            elif item.get("level_") == target_level + 1:
+            elif item.get("level") == target_level + 1:
                 next_level_data = item
             if level_data and next_level_data:
                 break
