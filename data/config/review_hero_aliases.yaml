@@ -302,14 +302,14 @@ names:
     aliases: [大樱世, 大猫, 大櫻世, 大貓, 界樱世]
     hero_id: 2150
   - zh_tw_name: 紅蘭（無雙）
-    zh_cn_name: ''
+    zh_cn_name: 红兰（无双）
     kr_name: 홍란(무쌍)
     en_name: Honglan (Peerless)
     ja_name: ホンラン(無双)
     aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰, 标红兰]
     hero_id: 2160
   - zh_tw_name: 河路（神威）
-    zh_cn_name: ''
+    zh_cn_name: 河路（神威）
     kr_name: 하루(카무이)
     en_name: Haru (Kamuy)
     ja_name: ハル(カムイ)
@@ -421,14 +421,14 @@ names:
     aliases: [蜘蛛, 威力]
     hero_id: 3150
   - zh_tw_name: 勒內（白銀）
-    zh_cn_name: ''
+    zh_cn_name: 勒内（白银）
     kr_name: 르네(백은)
     en_name: Renee (Argent)
     ja_name: ルネ(白銀)
     aliases: [大勒内, 界勒内, 大蕾妮, 界蕾妮, 长发勒内, 大贤者, 雪贤]
     hero_id: 3160
   - zh_tw_name: 米里昂（殘影）
-    zh_cn_name: ''
+    zh_cn_name: 米里昂（残影）
     kr_name: 미리암(잔영)
     en_name: Miriam (Afterimage)
     ja_name: ミリアム(残影)
@@ -596,7 +596,7 @@ names:
     aliases: [大帝]
     hero_id: 5050
   - zh_tw_name: 卡內莉安
-    zh_cn_name: ''
+    zh_cn_name: 卡内莉安
     kr_name: 카넬리안
     en_name: Carnelian
     ja_name: カーネリアン

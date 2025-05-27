@@ -67,6 +67,8 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                                     main_names["韩文"] = name
                                 elif name == hero.get("en_name"):
                                     main_names["英文"] = name
+                                elif name == hero.get("ja_name"):
+                                    main_names["日文"] = name
                                 elif name in hero.get("aliases", []):
                                     aliases.append(name)
                 
