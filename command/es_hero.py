@@ -183,7 +183,6 @@ CV_JP：{get_character_cv(data, hero_desc)["jaOffset"]}
         for char in data["string_character"]["json"]:
             if char["no"] == hero_data["name_sno"]:
                 images = get_character_illustration(data, hero_id)
-                print(images)
                 if images:
                     image_msg = []
                     image_msg.append("【立绘】")

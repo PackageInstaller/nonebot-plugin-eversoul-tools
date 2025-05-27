@@ -115,7 +115,7 @@ def get_character_illustration(data, hero_id):
                         costume_name_zh_cn = string.get("zh_cnOffset", "")
                         costume_name_kr = string.get("krOffset", "")
                         costume_name_en = string.get("enOffset", "")
-                        if costume_name_zh_tw and costume_name_zh_cn and costume_name_kr and costume_name_en:
+                        if costume_name_zh_tw or costume_name_kr:
                             # 从StringUI.json获取解锁条件
                             condition_tw = ""
                             condition_cn = ""
@@ -194,7 +194,7 @@ def get_character_illustration(data, hero_id):
     for file in all_files:
         file_stem = file.stem
         # 检查是否是旧设立绘
-        if " (1)" in file_stem and "_2048" in file_stem:
+        if "(1)" in file_stem and "_2048" in file_stem:
             # 提取原始基础名称，要去掉_2048和 (1)
             original_base_name = file_stem.split("_2048")[0]
             
