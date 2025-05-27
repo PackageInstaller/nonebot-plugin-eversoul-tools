@@ -50,27 +50,27 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
                     "繁体": None,
                     "简体": None,
                     "韩文": None,
-                    "英文": None
+                    "英文": None,
+                    "日文": None
                 }
                 aliases = []
                 
-                for name, hid in alias_map.items():
-                    if hid == matched_hero_id:
-                        # 在原始数据中查找这个名称属于哪种语言
-                        for hero in aliases_data["names"]:
-                            if hero["hero_id"] == matched_hero_id:
-                                if name == hero.get("zh_tw_name"):
-                                    main_names["繁体"] = name
-                                elif name == hero.get("zh_cn_name"):
-                                    main_names["简体"] = name
-                                elif name == hero.get("kr_name"):
-                                    main_names["韩文"] = name
-                                elif name == hero.get("en_name"):
-                                    main_names["英文"] = name
-                                elif name == hero.get("ja_name"):
-                                    main_names["日文"] = name
-                                elif name in hero.get("aliases", []):
-                                    aliases.append(name)
+                # 直接从原始数据中获取各语言名称
+                for hero in aliases_data["names"]:
+                    if hero["hero_id"] == matched_hero_id:
+                        if hero.get("zh_tw_name"):
+                            main_names["繁体"] = hero.get("zh_tw_name")
+                        if hero.get("zh_cn_name"):
+                            main_names["简体"] = hero.get("zh_cn_name")
+                        if hero.get("kr_name"):
+                            main_names["韩文"] = hero.get("kr_name")
+                        if hero.get("en_name"):
+                            main_names["英文"] = hero.get("en_name")
+                        if hero.get("ja_name"):
+                            main_names["日文"] = hero.get("ja_name")
+                        # 获取别名
+                        aliases = hero.get("aliases", [])
+                        break
                 
                 # 构建响应消息
                 response_parts = ["未找到角色 " + hero_name + "\n您是否想查询："]

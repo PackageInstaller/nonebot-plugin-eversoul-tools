@@ -341,7 +341,8 @@ def load_aliases(group_id=None):
                 "zh_tw_name",
                 "zh_cn_name",
                 "kr_name",
-                "en_name"
+                "en_name",
+                "ja_name"
             ]
             
             # 添加所有非空的名称作为可能的匹配
