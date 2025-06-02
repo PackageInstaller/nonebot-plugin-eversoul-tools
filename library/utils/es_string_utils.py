@@ -1490,7 +1490,7 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
                     content_info.append("\n礼包内容：")
                     for item_no, amount in items:
                         item_name = get_string_item(data, item_no)
-                        content_info.append(f"・{item_name['zh_tw']}x{amount}")
+                        content_info.append(f"・{item_name["zh_twOffset"]}x{amount}")
                 except Exception as e:
                     logger.error(f"解析礼包内容时发生错误：{e}")
             if content_info:
@@ -2532,7 +2532,6 @@ def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False)
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
                         if "name_sno" not in skill:
-                            skill_pattern.append(("返回原位", False)) # 返回原位. return to original position
                             break
                         for string in data["string_skill"]["json"]:
                             if string["no"] == skill["name_sno"]:

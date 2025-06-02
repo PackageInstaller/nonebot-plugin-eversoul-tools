@@ -317,7 +317,7 @@ CV_JP：{get_character_cv(data, hero_desc)["jaOffset"]}
         # 获取并显示技能释放顺序
         skill_pattern = get_character_skill_pattern(data, hero_id, is_test)
         if skill_pattern:
-            pattern_text = ["▼ 技能释放顺序"]
+            pattern_text = ["▼ 技能释放顺序(仅供参考,具体情况以实际为准)"]
             for i, (skill_name, is_normal) in enumerate(skill_pattern, 1):
                 pattern_text.append(f"{i}. {skill_name}")
             messages.append("\n".join(pattern_text))

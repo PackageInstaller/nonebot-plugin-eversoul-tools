@@ -127,7 +127,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         if drop_items:
             drop_info = [f"掉落物品概率如下：\n"]
             for item_name, amount, rate in drop_items:
-                drop_info.append(f"{item_name['zh_tw']} ({rate:.3f}%)")
+                drop_info.append(f"{item_name["zh_twOffset"]} ({rate:.3f}%)")
             messages.append("\n".join(drop_info))
         
         # 发送合并转发消息
