@@ -1,43 +1,43 @@
 names:
-  - zh_tw_name: ''
+  - zh_tw_name: 暴走的席爾維斯特喬伊三世
     zh_cn_name: ''
     kr_name: 폭주한 실베스터 조이 3세
-    en_name: ''
-    ja_name: ''
+    en_name: Rampaging King Sylvester Joey III
+    ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8000
-  - zh_tw_name: ''
+  - zh_tw_name: 暴走的席爾維斯特喬伊三世
     zh_cn_name: ''
     kr_name: 폭주한 실베스터 조이 3세
-    en_name: ''
-    ja_name: ''
+    en_name: Rampaging King Sylvester Joey III
+    ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8010
-  - zh_tw_name: ''
+  - zh_tw_name: 暴走的席爾維斯特喬伊三世
     zh_cn_name: ''
     kr_name: 폭주한 실베스터 조이 3세
-    en_name: ''
-    ja_name: ''
+    en_name: Rampaging King Sylvester Joey III
+    ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8020
-  - zh_tw_name: ''
+  - zh_tw_name: 暴走的席爾維斯特喬伊三世
     zh_cn_name: ''
     kr_name: 폭주한 실베스터 조이 3세
-    en_name: ''
-    ja_name: ''
+    en_name: Rampaging King Sylvester Joey III
+    ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8030
-  - zh_tw_name: ''
+  - zh_tw_name: 暴走的席爾維斯特喬伊三世
     zh_cn_name: ''
     kr_name: 폭주한 실베스터 조이 3세
-    en_name: ''
-    ja_name: ''
+    en_name: Rampaging King Sylvester Joey III
+    ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8040
-  - zh_tw_name: ''
+  - zh_tw_name: 樂園魔女
     zh_cn_name: ''
     kr_name: 낙원의 마녀
-    en_name: ''
+    en_name: The Witch of Paradise
     ja_name: ''
     aliases: []
     hero_id: 8050
@@ -3737,21 +3737,21 @@ names:
     ja_name: 土の戦士
     aliases: []
     hero_id: 32104
-  - zh_tw_name: 1號坦克射擊
+  - zh_tw_name: 1號坦克
     zh_cn_name: ''
     kr_name: 1호 탱크
     en_name: 'Tank #1'
     ja_name: ''
     aliases: []
     hero_id: 32105
-  - zh_tw_name: 2號坦克射擊
+  - zh_tw_name: 2號坦克
     zh_cn_name: ''
     kr_name: 2호 탱크
     en_name: 'Tank #2'
     ja_name: ''
     aliases: []
     hero_id: 32106
-  - zh_tw_name: 3號坦克射擊
+  - zh_tw_name: 3號坦克
     zh_cn_name: ''
     kr_name: 3호 탱크
     en_name: 'Tank #3'

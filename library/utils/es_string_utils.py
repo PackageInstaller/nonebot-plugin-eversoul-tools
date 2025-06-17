@@ -2363,23 +2363,23 @@ def get_base_battle_power(data: dict, entity_type: int, level: int) -> int:
         level_per_value = 0.0
         
         for kv in data["key_values"]["json"]:
-            key_name = kv.get("key_name", "")
+            key_name = kv.get("key_nameOffset", "")
             
             if key_name == f"{type_prefix}_base":
                 try:
-                    base_value = float(kv.get("values_data", "0"))
+                    base_value = float(kv.get("values_dataOffset", "0"))
                 except ValueError:
                     base_value = 0.0
             
             elif key_name == f"{type_prefix}_level":
                 try:
-                    level_value = float(kv.get("values_data", "0"))
+                    level_value = float(kv.get("values_dataOffset", "0"))
                 except ValueError:
                     level_value = 0.0
             
             elif key_name == f"{type_prefix}_level_per":
                 try:
-                    level_per_value = float(kv.get("values_data", "0"))
+                    level_per_value = float(kv.get("values_dataOffset", "0"))
                 except ValueError:
                     level_per_value = 0.0
         

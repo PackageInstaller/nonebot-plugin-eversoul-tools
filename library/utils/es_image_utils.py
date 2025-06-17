@@ -1152,41 +1152,56 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
         MessageSegment: 包含图表的消息段
     """
     try:
-        # 收集数据点
-        levels = []
-        overclock_levels = []
-        
-        for ark in data["ark_enhance"]["json"]:
-            if ark.get("core_type_02") == 110051:  # 主方舟
-                level = ark.get("core_level")
-                overclock = ark.get("overclock_max_level")
-                if level is not None and overclock is not None:
-                    levels.append(level)
-                    overclock_levels.append(overclock)
+        # 检查数据是否存在
+        if "ark_enhance" not in data or "json" not in data["ark_enhance"]:
+            logger.error("数据中缺少ark_enhance或其json字段")
+            return MessageSegment.text("生成统计图失败: 缺少方舟强化数据")
+            
+        if "ark_overclock" not in data or "json" not in data["ark_overclock"]:
+            logger.error("数据中缺少ark_overclock或其json字段")
+            return MessageSegment.text("生成统计图失败: 缺少超频数据")
         
         # 收集超频消耗数据
         all_overclock_costs = []
         all_overclock_levels_cost = []
+        
+        # 收集额外物品消耗数据
+        extra_items_data = {}  # 格式: {item_no: {levels: [], costs: []}}
+        
+        # 使用字典确保每个超频等级只对应一个消耗值
+        level_cost_map = {}
         for overclock in data["ark_overclock"]["json"]:
             level = overclock.get("overclock_level", 0)
             cost = overclock.get("mana_crystal", 0)
             if level is not None and cost is not None:
-                all_overclock_levels_cost.append(level)
-                all_overclock_costs.append(cost)
-
+                level_cost_map[level] = cost
+                
+                # 收集额外物品消耗数据
+                for i in range(10):  # 最多有10个额外物品
+                    item_no_key = f"pay_item_no_{i}"
+                    item_amount_key = f"pay_amount_{i}"
+                    if item_no_key in overclock and item_amount_key in overclock:
+                        item_no = overclock[item_no_key]
+                        item_amount = overclock[item_amount_key]
+                        if item_no and item_amount:
+                            if item_no not in extra_items_data:
+                                extra_items_data[item_no] = {"levels": [], "costs": []}
+                            if level not in [l for l in extra_items_data[item_no]["levels"]]:
+                                extra_items_data[item_no]["levels"].append(level)
+                                extra_items_data[item_no]["costs"].append(item_amount)
+        
+        # 将字典转换为有序列表
+        sorted_cost_levels = sorted(level_cost_map.keys())
+        for level in sorted_cost_levels:
+            all_overclock_levels_cost.append(level)
+            all_overclock_costs.append(level_cost_map[level])
+        
         # 获取数据的最大超频等级
         max_overclock_level = max(all_overclock_levels_cost) if all_overclock_levels_cost else 0
         
         # 如果提供了目标等级，限制图表范围为目标等级
         # 否则使用全范围
         plot_max_level = target_level if target_level else max_overclock_level
-        # 过滤数据点，只保留小于等于plot_max_level的点
-        filtered_levels = []
-        filtered_overclock_levels = []
-        for i, overclock in enumerate(overclock_levels):
-            if overclock <= plot_max_level:
-                filtered_levels.append(levels[i])
-                filtered_overclock_levels.append(overclock)
         
         # 过滤超频消耗数据
         overclock_levels_cost = []
@@ -1195,49 +1210,72 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
             if level <= plot_max_level:
                 overclock_levels_cost.append(level)
                 overclock_costs.append(all_overclock_costs[i])
+                
         
-        # 创建两个子图
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12))
+        # 过滤额外物品消耗数据
+        filtered_extra_items_data = {}
+        for item_no, item_data in extra_items_data.items():
+            filtered_levels = []
+            filtered_costs = []
+            for i, level in enumerate(item_data["levels"]):
+                if i < len(item_data["costs"]) and level <= plot_max_level:
+                    filtered_levels.append(level)
+                    filtered_costs.append(item_data["costs"][i])
+            if filtered_levels:  # 只保留有数据的物品
+                item_name = get_string_item(data, item_no).get("zh_twOffset", "")
+                if not item_name:
+                    item_name = f"{item_no}"
+                filtered_extra_items_data[item_no] = {
+                    "levels": filtered_levels,
+                    "costs": filtered_costs,
+                    "name": item_name
+                }
         
-        # 第一个子图：主方舟等级与最大超频等级关系图
-        ax1.plot(filtered_levels, filtered_overclock_levels, 'b-', marker='o', markersize=3)
-        ax1.set_title('主方舟等级与最大超频等级关系图', fontproperties=CUSTOM_FONT)
-        ax1.set_xlabel('主方舟等级', fontproperties=CUSTOM_FONT)
-        ax1.set_ylabel('最大超频等级', fontproperties=CUSTOM_FONT)
-        ax1.grid(True, linestyle='--', alpha=0.7)
+        # 使用双Y轴
+        fig, ax1 = plt.subplots(figsize=(12, 8))
         
-        # 设置x轴刻度
-        if filtered_levels:
-            x_max = max(filtered_levels)
-            if x_max <= 100:
-                x_interval = 10
-            elif x_max <= 500:
-                x_interval = 50
-            else:
-                x_interval = 100
-            ax1.set_xticks(range(0, x_max+1, x_interval))
+        # 设置左侧Y轴 - 魔力水晶
+        ax1.set_xlabel('超频等级', fontproperties=CUSTOM_FONT)
+        ax1.set_ylabel('魔力水晶消耗', color='red', fontproperties=CUSTOM_FONT)
+        ax1.plot(overclock_levels_cost, overclock_costs, 'r-', marker='o', markersize=3, label='魔力水晶')
+        ax1.tick_params(axis='y', labelcolor='red')
+        ax1.grid(True, linestyle='--', alpha=0.7, axis='both')
         
-        # 设置y轴范围，确保从0开始到最大超频等级
-        if filtered_overclock_levels:
-            y_max = max(filtered_overclock_levels)
-            ax1.set_ylim(0, y_max * 1.1)  # 留出10%的空间
+        # 设置右侧Y轴 - 额外物品
+        if filtered_extra_items_data:
+            ax2 = ax1.twinx()  # 创建共享X轴的第二个Y轴
+            ax2.set_ylabel('额外物品消耗', color='blue', fontproperties=CUSTOM_FONT)
+            
+            # 设置颜色循环
+            colors = ['g', 'c', 'm', 'y', 'k', 'b']
+            color_index = 0
+            
+            # 绘制每种额外物品的消耗曲线
+            for item_no, item_data in filtered_extra_items_data.items():
+                # 验证数据
+                if len(item_data["levels"]) != len(item_data["costs"]):
+                    logger.warning(f"物品 {item_no} 数据维度不匹配: levels({len(item_data['levels'])}) != costs({len(item_data['costs'])})")
+                    continue
+                    
+                if len(item_data["levels"]) == 0:
+                    continue
+                    
+                color = colors[color_index % len(colors)]
+                ax2.plot(item_data["levels"], item_data["costs"], f'{color}-', marker='o', markersize=3, label=item_data["name"])
+                color_index += 1
+                
+            ax2.tick_params(axis='y', labelcolor='blue')
+            
+            # 添加图例 - 合并两个轴的图例
+            lines1, labels1 = ax1.get_legend_handles_labels()
+            lines2, labels2 = ax2.get_legend_handles_labels()
+            ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left', prop=CUSTOM_FONT)
+        else:
+            # 如果没有额外物品，只添加魔力水晶的图例
+            ax1.legend(loc='upper left', prop=CUSTOM_FONT)
         
-        # 添加最大点标注
-        if filtered_levels and filtered_overclock_levels:
-            max_x = filtered_levels[-1]
-            max_y = filtered_overclock_levels[-1]
-            ax1.annotate(f'最大值: ({max_x}, {max_y})',
-                        xy=(max_x, max_y),
-                        xytext=(10, 10),
-                        textcoords='offset points',
-                        fontproperties=CUSTOM_FONT)
-        
-        # 第二个子图：超频等级升级消耗图
-        ax2.plot(overclock_levels_cost, overclock_costs, 'r-', marker='o', markersize=3)
-        ax2.set_title(f'超频等级升级消耗图 (1-{plot_max_level}级)', fontproperties=CUSTOM_FONT)
-        ax2.set_xlabel('超频等级', fontproperties=CUSTOM_FONT)
-        ax2.set_ylabel('魔力水晶消耗', fontproperties=CUSTOM_FONT)
-        ax2.grid(True, linestyle='--', alpha=0.7)
+        # 设置图表标题
+        plt.title(f'超频等级升级消耗图 (1-{plot_max_level}级)', fontproperties=CUSTOM_FONT)
         
         # 设置x轴范围和刻度
         if overclock_levels_cost:
@@ -1250,24 +1288,17 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                 x_interval = 50
             else:
                 x_interval = 100
-            ax2.set_xlim(0, x_max)
-            ax2.set_xticks(range(0, x_max+1, x_interval))
+            ax1.set_xlim(0, x_max)
+            ax1.set_xticks(range(0, x_max+1, x_interval))
         
-        # 设置y轴范围，确保从0开始
-        if overclock_costs:
-            y_max = max(overclock_costs)
-            ax2.set_ylim(0, y_max * 1.1)  # 留出10%的空间
+        # 添加网格线
+        ax1.grid(True, linestyle='--', alpha=0.7)
         
-        # 添加最大消耗标注
-        if overclock_costs and overclock_levels_cost:
-            max_cost = max(overclock_costs)
-            max_cost_index = overclock_costs.index(max_cost)
-            max_cost_level = overclock_levels_cost[max_cost_index]
-            ax2.annotate(f'最大消耗: ({max_cost_level}, {max_cost})',
-                        xy=(max_cost_level, max_cost),
-                        xytext=(10, 10),
-                        textcoords='offset points',
-                        fontproperties=CUSTOM_FONT)
+        # 添加标记线，显示当前等级
+        if target_level and target_level <= plot_max_level:
+            ax1.axvline(x=target_level, color='purple', linestyle='--', alpha=0.7)
+            ax1.text(target_level, ax1.get_ylim()[1] * 0.95, f'当前等级: {target_level}', 
+                    color='purple', ha='right', va='top', fontproperties=CUSTOM_FONT)
         
         plt.tight_layout()
         
@@ -1278,12 +1309,14 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
         # 获取bytes数据
         buffer.seek(0)
         image_bytes = buffer.getvalue()
-        
+
         # 返回MessageSegment对象
         return MessageSegment.image(image_bytes)
         
     except Exception as e:
-        logger.error(f"生成统计图时发生错误: {str(e)}")
+        import traceback
+        error_trace = traceback.format_exc()
+        logger.error(f"生成统计图时发生错误: {str(e)}\n{error_trace}")
         return MessageSegment.text("生成统计图失败")
 
 
@@ -1338,7 +1371,6 @@ async def generate_level_cost_chart(data: dict) -> MessageSegment:
         ax2.grid(True, linestyle='--', alpha=0.7)
         ax2.set_xticks(range(0, max_level+1, x_interval))
         ax2.tick_params(axis='x', rotation=45)
-        ax2.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
         
         # 绘制魔力水晶消耗
         ax3.plot(levels, mana_crystal_costs, 'r-', marker='o', markersize=2)
