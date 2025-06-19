@@ -13,7 +13,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
         target_id = int(story_match)
         
         # 获取群组ID
-        group_id = None
+        group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         

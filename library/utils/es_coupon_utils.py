@@ -80,7 +80,7 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                     if status_code == 200:
                         # 尝试解析JSON响应
                         try:
-                            group_id = None
+                            group_id = 0
                             if isinstance(event, GroupMessageEvent):
                                 group_id = event.group_id
                             
@@ -186,7 +186,7 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
 
 # 用于并发执行兑换操作的函数
 async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items: List[Dict[str, Any]], 
-            event: Event, coupon_history: Dict[str, Any], max_workers: int = 100) -> List[Dict[str, Any]]:
+            event: Event, coupon_history: Dict[str, Any], max_workers: int = 100) -> Tuple[List[Dict[str, Any]], int]:
     """并发兑换多个礼包码
     
     Args:

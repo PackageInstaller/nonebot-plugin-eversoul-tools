@@ -10,7 +10,7 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
             await es_hero_info.finish("请输入角色名！")
         
         # 获取群组ID
-        group_id = None
+        group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         

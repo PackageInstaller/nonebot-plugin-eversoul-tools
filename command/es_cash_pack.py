@@ -25,11 +25,11 @@ async def handle_cash_pack_info(bot: Bot, event: Event, args: Message = CommandA
                 await es_cash_pack_info.finish("请带上传送门类型参数！例如：es突发礼包信息自由传送门")
             item_type = args_text
             chapter = None
-            gate_type = None
+            gate_type = ""
         
         # 加载数据
         # 获取群组ID. get group id
-        group_id = None
+        group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         data = load_json_data(group_id)

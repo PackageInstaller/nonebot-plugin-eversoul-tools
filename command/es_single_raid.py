@@ -15,7 +15,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
             await es_single_raid.finish("恶灵ID必须是数字")
         
         # 获取群组ID
-        group_id = None
+        group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         

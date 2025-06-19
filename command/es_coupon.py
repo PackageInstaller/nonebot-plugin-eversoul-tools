@@ -116,7 +116,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     all_coupon_histories = {}
     for account in user_accounts:
         player_id = account.get("player_id")
-        history = await EversoulUser.get_coupon_history(int(user_id), player_id)
+        history = await EversoulUser.get_coupon_history(int(user_id), str(player_id))
         all_coupon_histories[player_id] = history
     
     # 寻找已过期但限制兑换的码
@@ -169,7 +169,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         })
         
         # 获取该账号的兑换历史
-        coupon_history = await EversoulUser.get_coupon_history(int(user_id), player_id)
+        coupon_history = await EversoulUser.get_coupon_history(int(user_id), str(player_id))
         
         # 对于已更新日期的特殊兑换码，从历史记录中移除，确保它们会被重新尝试兑换
         if expired_limit_codes:
@@ -179,7 +179,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 使用并发执行兑换
         results, skipped_count = await redeem_coupons_concurrently(
-            app_id, player_id, all_coupons, event, coupon_history, max_workers=100
+            str(app_id), str(player_id), all_coupons, event, coupon_history, max_workers=100
         )
         
         # 对结果进行排序：成功的在前，超出限制的其次，失败的放最后
@@ -272,7 +272,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                 # 更新兑换历史
                 await EversoulUser.update_coupon_history(
                     int(user_id), 
-                    player_id, 
+                    str(player_id), 
                     code, 
                     {
                         "status": status_text,

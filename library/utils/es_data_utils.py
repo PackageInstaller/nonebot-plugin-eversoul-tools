@@ -86,7 +86,7 @@ def sync_aliases(file1: Path, file2: Path) -> None:
             return super().represent_scalar(tag, value, style)
 
         def represent_sequence(self, tag, sequence, flow_style=None):
-            if len(sequence) > 0 and isinstance(sequence[0], str):
+            if isinstance(sequence, (list, tuple)) and len(sequence) > 0 and isinstance(sequence[0], str):
                 flow_style = True
             return super().represent_sequence(tag, sequence, flow_style=flow_style)
 
@@ -289,7 +289,7 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
 
         def represent_sequence(self, tag, sequence, flow_style=None):
             """对于字符串列表使用flow风格（单行）"""
-            if len(sequence) > 0 and isinstance(sequence[0], str):
+            if isinstance(sequence, (list, tuple)) and len(sequence) > 0 and isinstance(sequence[0], str):
                 flow_style = True
             return super().represent_sequence(tag, sequence, flow_style=flow_style)
     

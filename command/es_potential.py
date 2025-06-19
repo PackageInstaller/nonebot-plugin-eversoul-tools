@@ -6,7 +6,7 @@ async def handle_potential_info(bot: Bot, event: Event):
     """处理潜能信息查询"""
     try:
         # 获取群组ID
-        group_id = None
+        group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         data = load_json_data(group_id)

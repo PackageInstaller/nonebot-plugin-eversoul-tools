@@ -7,7 +7,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         # 获取参数文本
         stage_text = args.extract_plain_text().strip()
         # 获取群组ID
-        group_id = None
+        group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         # 检查格式

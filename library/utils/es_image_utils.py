@@ -6,6 +6,7 @@ from pathlib import Path
 from io import BytesIO
 from datetime import datetime
 from PIL import Image
+from matplotlib.ticker import FuncFormatter
 from ...config import (
     BANNER_DIR, STICKER_DIR, 
     HERO_NAME_MAPPING, EVERTALK_DIR, 
@@ -1384,7 +1385,7 @@ async def generate_level_cost_chart(data: dict) -> MessageSegment:
         # 将魔力水晶的数值转换为"万"为单位
         def format_func(x, p):
             return f"{x/10000:.1f}"
-        ax3.yaxis.set_major_formatter(plt.FuncFormatter(format_func))
+        ax3.yaxis.set_major_formatter(FuncFormatter(format_func))
         
         # 调整子图之间的间距和整体布局
         plt.tight_layout(pad=3.0)
@@ -1423,7 +1424,7 @@ def get_battle_power_percentage(data: dict, effect_no: int) -> float:
                     return buff.get("battle_power_per", 0)
     except Exception as e:
         logger.error(f"获取战力百分比时发生错误: {e}, effect_no: {effect_no}")
-    return None
+    return 0
 
 
 async def generate_potential_html(data: dict) -> str:

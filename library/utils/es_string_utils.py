@@ -612,127 +612,183 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
         value_id: skill id
         value_type: value type ("VALUE" or "DURATION")
     """
-    # 如果是DURATION类型，需要从SkillCode和SkillBuff中获取
-    # if it is DURATION type, need to get value from SkillCode and SkillBuff
-    if value_type == "DURATION":
-        # 先检查SkillCode中的value
-        # first check value in SkillCode
-        for code in data["skill_code"]["json"]:
-            if code["no"] == value_id:
-                value_without_decimal = int(code["value"]) if code["value"].is_integer() else code["value"]
-                # 在SkillBuff中查找对应的duration
-                # find the corresponding duration in SkillBuff
-                for buff in data["skill_buff"]["json"]:
-                    if buff["no"] == value_without_decimal:
-                        return str(int(abs(buff["duration"])))  # 返回duration值. return duration value
-        
-        # 如果在SkillCode中没找到，直接查找SkillBuff
-        # if not found in SkillCode, then check SkillBuff
-        for buff in data["skill_buff"]["json"]:
-            if buff["no"] == value_id:
-                return str(int(abs(buff["duration"])))  # 取绝对值. get absolute value
-        return "？？？"
-
-    # 从SkillCode.json中查找数值
-    # find value in SkillCode.json
+    # 查找SkillCode
+    # find SkillCode
+    skill_code = None
     for code in data["skill_code"]["json"]:
         if code["no"] == value_id:
-            # 检查value是否为整数形式（去掉.0后）的数字
-            # check if value is an integer (remove .0)
-            value_without_decimal = int(code["value"]) if code["value"].is_integer() else code["value"]
-            # if value is a reference to a SkillBuff no, then get value from SkillBuff
-            # 如果value是引用SkillBuff的编号
-            if isinstance(value_without_decimal, int):
-                for buff in data["skill_buff"]["json"]:
-                    if buff["no"] == value_without_decimal:
-                        value = buff["value"]  # 获取原始值. get original value
-                        abs_value = abs(value)  # 取绝对值. get absolute value
+            skill_code = code
+            break
+    
+    if not skill_code:
+        return "？？？"
+    
+    function_key = skill_code.get("function_key", 0)
+    
+    # 根据官方逻辑判断特殊处理的function_key
+    # determine special handling function_key according to official logic
+    if function_key > 29:
+        # function_key == 300 或 30 的特殊处理
+        # special handling for function_key == 300 or 30
+        if function_key == 300 or function_key == 30:
+            skill_value = skill_code.get("value", 0)
+            value_as_int = int(skill_value) if isinstance(skill_value, float) and skill_value.is_integer() else skill_value
+            
+            # 在SkillBuff中查找
+            # find in SkillBuff
+            for buff in data["skill_buff"]["json"]:
+                if buff["no"] == value_as_int:
+                    if value_type == "VALUE":
+                        buff_value = buff.get("value", 0)
                         buff_effect = buff.get("buff_effect", 0)
+                        abs_value = abs(buff_value)
                         
-                        # 根据buff_effect类型判断是整数还是百分比
-                        # determine if it is an integer or percentage based on buff_effect type
-                        if is_percent_value_type(buff_effect):
-                            # 处理为百分比
-                            # handle percentage
+                        # 使用BuffValueText的逻辑判断整数还是百分比
+                        # use BuffValueText logic to determine integer or percentage
+                        if get_buff_value_text_is_integer(buff_effect):
+                            return str(int(abs_value))
+                        else:
                             percent_value = abs_value * 100
                             rounded_value = round(percent_value, 1)
                             if rounded_value.is_integer():
                                 return f"{int(rounded_value)}%"
                             return f"{rounded_value}%"
-                        else:
-                            # 处理为整数
-                            # handle integer
-                            return str(int(abs_value))
+                    elif value_type == "DURATION":
+                        duration = buff.get("duration", 0)
+                        return str(int(abs(duration)))
+                    break
+            return "？？？"
+    else:
+        # function_key <= 29 的处理
+        # handling for function_key <= 29
+        if function_key in [25, 28, 29]:
+            # 特殊类型的处理逻辑
+            # special type handling logic
+            if value_type == "DURATION":
+                duration = skill_code.get("duration", 0)
+                return str(int(abs(duration)))
             
-            # 如果不是引用其他no，则直接使用code中的value
-            # if not a reference to other no, then use value in code
-            value = code["value"]  # 获取原始值. get original value
-            abs_value = abs(value)  # 取绝对值. get absolute value
-            function_key = code.get("function_key", 0)
-            # determine if it is an integer or percentage based on function_key
-            # 根据function_key判断是整数还是百分比
-            if is_integer_value_type(function_key):
-                # 处理为整数. handle integer
+            # VALUE类型需要递归查找
+            # VALUE type needs recursive lookup
+            skill_value = skill_code.get("value", 0)
+            value_as_int = int(skill_value) if isinstance(skill_value, float) and skill_value.is_integer() else skill_value
+            
+            # 递归查找引用的SkillCode
+            # recursively find referenced SkillCode
+            referenced_code = None
+            for code in data["skill_code"]["json"]:
+                if code["no"] == value_as_int:
+                    referenced_code = code
+                    break
+            
+            if referenced_code:
+                ref_function_key = referenced_code.get("function_key", 0)
+                ref_value = referenced_code.get("value", 0)
+                
+                # 如果引用的是SkillBuff类型
+                # if referencing SkillBuff type
+                if ref_function_key == 300 or ref_function_key == 30:
+                    ref_value_as_int = int(ref_value) if isinstance(ref_value, float) and ref_value.is_integer() else ref_value
+                    for buff in data["skill_buff"]["json"]:
+                        if buff["no"] == ref_value_as_int:
+                            buff_value = buff.get("value", 0)
+                            buff_effect = buff.get("buff_effect", 0)
+                            abs_value = abs(buff_value)
+                            
+                            if get_buff_value_text_is_integer(buff_effect):
+                                return str(int(abs_value))
+                            else:
+                                percent_value = abs_value * 100
+                                rounded_value = round(percent_value, 1)
+                                if rounded_value.is_integer():
+                                    return f"{int(rounded_value)}%"
+                                return f"{rounded_value}%"
+                            break
+                    return "？？？"
+                else:
+                    # 直接使用引用代码的值
+                    # directly use referenced code value
+                    abs_value = abs(ref_value)
+                    if get_code_value_text_is_integer(ref_function_key):
+                        return str(int(abs_value))
+                    else:
+                        percent_value = abs_value * 100
+                        rounded_value = round(percent_value, 1)
+                        if rounded_value.is_integer():
+                            return f"{int(rounded_value)}%"
+                        return f"{rounded_value}%"
+        
+        # 常规处理逻辑
+        # regular handling logic
+        if value_type == "VALUE":
+            skill_value = skill_code.get("value", 0)
+            abs_value = abs(skill_value)
+            
+            if get_code_value_text_is_integer(function_key):
                 return str(int(abs_value))
             else:
-                # 处理为百分比. handle percentage
                 percent_value = abs_value * 100
                 rounded_value = round(percent_value, 1)
                 if rounded_value.is_integer():
                     return f"{int(rounded_value)}%"
                 return f"{rounded_value}%"
+        elif value_type == "DURATION":
+            duration = skill_code.get("duration", 0)
+            return str(int(abs(duration)))
+    
     return "？？？"
 
 
-def is_integer_value_type(function_key):
-    """Determine whether the skill value is an integer type
-
-    Logic in SkillTextUtil__GetCodeValueText:
-    if ((unsigned int)type <= 0x1B && ((1 << type) & 0xC000010) != 0 || (unsigned int)(type - 1026) < 2)
-    Execute bitwise operation to determine whether it is an integer type
-
-    is integer value type
-    args:
-        function_key: function key
-    return:
-        bool: is integer value type
-    exception:
-        None
+def get_code_value_text_is_integer(skill_effect_type):
+    """Determine whether the skill value should be formatted as integer in SkillTextUtil::GetCodeValueText
+    
+    Official logic from SkillTextUtil::GetCodeValueText:
+    if (type <= 0x1B && ((1 << type) & 0xC000010) != 0 || type - 1026 < 2)
+    
+    Args:
+        skill_effect_type: SkillEffect enum value (function_key)
+    Returns:
+        bool: True if should format as integer, False if should format as percentage
     """
-
-    condition1 = (function_key <= 0x1B) and (((1 << function_key) & 0xC000010) != 0)
-    condition2 = (function_key >= 1026) and (function_key < 1028)
+    condition1 = (skill_effect_type <= 0x1B) and (((1 << skill_effect_type) & 0xC000010) != 0)
+    condition2 = (skill_effect_type >= 1026) and (skill_effect_type < 1028)
     
     return condition1 or condition2
 
 
-def is_percent_value_type(buff_effect):
-    """Determine whether the skill value is a percentage type
+def get_buff_value_text_is_integer(buff_type):
+    """Determine whether the buff value should be formatted as integer in SkillTextUtil::GetBuffValueText
     
-    Logic in SkillTextUtil__GetBuffValueText:
-    SkillTextUtil__GetBuffValueText中的逻辑:
-    if (type <= 10102 && ((type == 10101) || (type == 10102) || type == 420))
-    以及
-    if ((unsigned int)(type - 10106) <= 4 && ((1 << (type - 122)) & 0x13) != 0)
-
-    is percent value type
-    args:
-        buff_effect: buff effect
-    return:
-        bool: is percent value type
-    exception:
-        None
+    Official logic from SkillTextUtil::GetBuffValueText:
+    if (type <= 10102) {
+        if ((type - 10101) >= 2 && type != 420)
+            goto LABEL_12;  // percentage
+    LABEL_11:
+        // integer format
+    }
+    if ((type - 10106) <= 4 && ((1 << (type - 122)) & 0x13) != 0)
+        goto LABEL_11;  // integer
+    LABEL_12:
+        // percentage format
+    
+    Args:
+        buff_type: buff effect type
+    Returns:
+        bool: True if should format as integer, False if should format as percentage
     """
-
-    condition1 = (buff_effect <= 10102) and (buff_effect in {10101, 10102, 420})
-    condition2 = False
-
-    if abs(buff_effect - 10106) <= 4:
-        condition2 = ((1 << (buff_effect - 122)) & 0x13) != 0
-
-    is_integer = condition1 or condition2
+    if buff_type <= 10102:
+        # Special cases that format as integer
+        if buff_type in {10101, 10102, 420}:
+            return True
+        # All other values <= 10102 format as percentage
+        return False
     
-    return not is_integer
+    # For buff_type > 10102, check second condition
+    if (buff_type - 10106) <= 4 and ((1 << (buff_type - 122)) & 0x13) != 0:
+        return True
+    
+    # Default to percentage format
+    return False
 
 
 def process_skill_description(data, description):
@@ -1060,7 +1116,7 @@ def get_character_keyword_point(data: dict, keyword_type: str) -> list:
     return [20, 40, 60]  # 默认值. default value
 
 
-def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int = None, keyword_type: int = None, is_test: bool = False) -> str:
+def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int, keyword_type: int = 0, is_test: bool = False) -> str:
     """get character keyword source
     
     Args:
