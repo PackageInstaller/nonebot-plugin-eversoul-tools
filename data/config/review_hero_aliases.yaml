@@ -194,7 +194,7 @@ names:
     kr_name: 지호(미르)
     en_name: Jiho (Mir)
     ja_name: ジホ(ミル)
-    aliases: [大智河, 米河, 米智河, 大纸盒, 米盒, 米纸盒, 界智河, 界纸盒, 谋智河, 谋纸盒]
+    aliases: [大智河, 米河, 米智河, 大纸盒, 米盒, 米纸盒, 界智河, 界纸盒]
     hero_id: 1160
   - zh_tw_name: 紅蘭
     zh_cn_name: 红兰
@@ -306,14 +306,14 @@ names:
     kr_name: 홍란(무쌍)
     en_name: Honglan (Peerless)
     ja_name: ホンラン(無双)
-    aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰, 标红兰]
+    aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰]
     hero_id: 2160
   - zh_tw_name: 河路（神威）
     zh_cn_name: 河路（神威）
     kr_name: 하루(카무이)
     en_name: Haru (Kamuy)
     ja_name: ハル(カムイ)
-    aliases: [大河路, 界河路]
+    aliases: [大河路, 界河路, 神河, 神威]
     hero_id: 2170
   - zh_tw_name: 艾麗卡
     zh_cn_name: 艾丽卡
@@ -502,7 +502,7 @@ names:
     kr_name: 에루샤
     en_name: Erusha
     ja_name: エルーシャ
-    aliases: [艾露沙, 舞娘]
+    aliases: [艾露沙, 舞娘, 舞孃, 艾露莎, 鲁莎卡]
     hero_id: 4090
   - zh_tw_name: 佩特拉
     zh_cn_name: 佩特拉
