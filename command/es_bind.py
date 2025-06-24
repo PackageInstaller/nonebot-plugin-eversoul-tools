@@ -13,14 +13,12 @@ async def handle_bind(bot: Bot, event: Event, args: Message = CommandArg()):
         help_msg = (
             "请按照以下格式绑定账号：\n"
             "es绑定账号 [地区+ID]\n"
-            "例如：es绑定账号 kr123456789012\n\n"
+            "例如：es绑定账号 kr734521179911(偷偷夹点私货,我的好友码)\n\n"
             "支持的地区代码：\n"
             "asia - 亚服\n"
             "kr - 韩服\n"
             "en - 欧美服\n"
-            "jp - 日服\n\n"
-            "ID必须是12位纯数字\n\n"
-            "您可以绑定多个不同的账号，兑换码将为所有账号自动兑换"
+            "jp - 日服"
         )
         await es_bind.finish(message=help_msg, reply_message=True)
     
@@ -55,6 +53,13 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
                 message=f"此账号已经绑定！\n服务器：{SERVER_NAME_MAPPING.get(server_code, server_code)}\n玩家ID：{player_id}",
                 reply_message=True
             )
+    
+    if server_code == "jp" and datetime.now() > datetime(2025, 8, 20, 0, 0, 0):
+        # 日服关服了所以不再支持绑定
+        await es_bind.finish(
+            message="日服已关服，请使用其他服务器",
+            reply_message=True
+        )
     
     # 保存用户信息
     success = await EversoulUser.add_user(int(user_id), app_id, player_id)
