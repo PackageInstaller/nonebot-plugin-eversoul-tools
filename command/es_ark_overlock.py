@@ -24,11 +24,11 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         max_level = 0
         last_level_cost = 0
         
-        # 额外物品消耗信息
-        current_extra_items = {}  # 当前等级的额外物品消耗
-        next_extra_items = {}     # 下一等级的额外物品消耗
-        total_extra_items = {}    # 总的额外物品消耗
-        last_extra_items = {}     # 最大等级的额外物品消耗
+        # 魔力粉尘消耗信息
+        current_extra_items = {}  # 当前等级的魔力粉尘消耗
+        next_extra_items = {}     # 下一等级的魔力粉尘消耗
+        total_extra_items = {}    # 总的魔力粉尘消耗
+        last_extra_items = {}     # 最大等级的魔力粉尘消耗
         
         # 找出最大超频等级
         for overclock in data["ark_overclock"]["json"]:
@@ -48,8 +48,8 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             # 获取当前等级的消耗
             if overclock_level == target_level:
                 current_level_cost = mana_crystal
-                # 收集额外物品消耗
-                for i in range(10):  # 最多有10个额外物品
+                # 收集魔力粉尘消耗
+                for i in range(10):  # 最多有10个魔力粉尘
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -61,8 +61,8 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             # 获取下一级的消耗
             if overclock_level == target_level + 1:
                 next_level_cost = mana_crystal
-                # 收集额外物品消耗
-                for i in range(10):  # 最多有10个额外物品
+                # 收集魔力粉尘消耗
+                for i in range(10):  # 最多有10个魔力粉尘
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -74,8 +74,8 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             # 记录上一级的消耗（用于显示最大等级的消耗）
             if overclock_level == max_level:
                 last_level_cost = mana_crystal
-                # 收集额外物品消耗
-                for i in range(10):  # 最多有10个额外物品
+                # 收集魔力粉尘消耗
+                for i in range(10):  # 最多有10个魔力粉尘
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -87,8 +87,8 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             # 计算总消耗
             if overclock_level <= target_level:
                 total_cost += mana_crystal
-                # 收集额外物品总消耗
-                for i in range(10):  # 最多有10个额外物品
+                # 收集魔力粉尘总消耗
+                for i in range(10):  # 最多有10个魔力粉尘
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -117,7 +117,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         # 对于最大等级，显示最大等级的消耗（而不是升到最大等级+1的消耗，因为没有这个等级）
         if target_level == max_level:
             cost_msg = [f"当前等级消耗：\n{format_number(last_level_cost)} 魔力水晶"]
-            # 添加额外物品消耗
+            # 添加魔力粉尘消耗
             if last_extra_items:
                 for item_no, amount in last_extra_items.items():
                     item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")
@@ -125,7 +125,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             detail_msg.append("\n".join(cost_msg))
         else:
             cost_msg = [f"当前等级消耗：\n{format_number(current_level_cost)} 魔力水晶"]
-            # 添加额外物品消耗
+            # 添加魔力粉尘消耗
             if current_extra_items:
                 for item_no, amount in current_extra_items.items():
                     item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")
@@ -135,7 +135,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         # 添加下一级消耗信息（如果有）
         if target_level < max_level:
             next_cost_msg = [f"下一级消耗：\n{format_number(next_level_cost)} 魔力水晶"]
-            # 添加额外物品消耗
+            # 添加魔力粉尘消耗
             if next_extra_items:
                 for item_no, amount in next_extra_items.items():
                     item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")
@@ -146,7 +146,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         
         # 添加总消耗
         total_cost_msg = [f"\n总超频消耗（1-{target_level}级）：\n{format_number(total_cost)} 魔力水晶"]
-        # 添加额外物品总消耗
+        # 添加魔力粉尘总消耗
         if total_extra_items:
             for item_no, amount in total_extra_items.items():
                 item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")

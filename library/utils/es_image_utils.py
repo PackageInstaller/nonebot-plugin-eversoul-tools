@@ -1166,7 +1166,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
         all_overclock_costs = []
         all_overclock_levels_cost = []
         
-        # 收集额外物品消耗数据
+        # 收集魔力粉尘消耗数据
         extra_items_data = {}  # 格式: {item_no: {levels: [], costs: []}}
         
         # 使用字典确保每个超频等级只对应一个消耗值
@@ -1177,8 +1177,8 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
             if level is not None and cost is not None:
                 level_cost_map[level] = cost
                 
-                # 收集额外物品消耗数据
-                for i in range(10):  # 最多有10个额外物品
+                # 收集魔力粉尘消耗数据
+                for i in range(10):  # 最多有10个魔力粉尘
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -1213,7 +1213,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                 overclock_costs.append(all_overclock_costs[i])
                 
         
-        # 过滤额外物品消耗数据
+        # 过滤魔力粉尘消耗数据
         filtered_extra_items_data = {}
         for item_no, item_data in extra_items_data.items():
             filtered_levels = []
@@ -1242,16 +1242,16 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
         ax1.tick_params(axis='y', labelcolor='red')
         ax1.grid(True, linestyle='--', alpha=0.7, axis='both')
         
-        # 设置右侧Y轴 - 额外物品
+        # 设置右侧Y轴 - 魔力粉尘
         if filtered_extra_items_data:
             ax2 = ax1.twinx()  # 创建共享X轴的第二个Y轴
-            ax2.set_ylabel('额外物品消耗', color='blue', fontproperties=CUSTOM_FONT)
+            ax2.set_ylabel('魔力粉尘消耗', color='blue', fontproperties=CUSTOM_FONT)
             
             # 设置颜色循环
             colors = ['g', 'c', 'm', 'y', 'k', 'b']
             color_index = 0
             
-            # 绘制每种额外物品的消耗曲线
+            # 绘制每种魔力粉尘的消耗曲线
             for item_no, item_data in filtered_extra_items_data.items():
                 # 验证数据
                 if len(item_data["levels"]) != len(item_data["costs"]):
@@ -1272,7 +1272,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
             lines2, labels2 = ax2.get_legend_handles_labels()
             ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left', prop=CUSTOM_FONT)
         else:
-            # 如果没有额外物品，只添加魔力水晶的图例
+            # 如果没有魔力粉尘，只添加魔力水晶的图例
             ax1.legend(loc='upper left', prop=CUSTOM_FONT)
         
         # 设置图表标题

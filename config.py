@@ -126,7 +126,7 @@ PACKAGE_TYPE_MAPPING = {
 SERVER_APP_ID_MAPPING = {
     "asia": "743491",  # 亚服
     "kr": "743487",    # 韩服
-    "en": "750066",     # 欧美服
+    "en": "750066",    # 欧美服
     "jp": "981921"     # 日服
 }
 
