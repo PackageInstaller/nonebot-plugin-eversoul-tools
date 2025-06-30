@@ -33,8 +33,18 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
     server_code, player_id = parse_server_id(server_id_text)
     
     if not server_code or not player_id:
+        help_msg = (
+            "请按照以下格式绑定账号：\n"
+            "es绑定账号 [地区+ID]\n"
+            "例如：es绑定账号 kr734521179911(偷偷夹点私货,我的好友码)\n\n"
+            "支持的地区代码：\n"
+            "asia - 亚服\n"
+            "kr - 韩服\n"
+            "en - 欧美服\n"
+            "jp - 日服"
+        )
         await es_bind.finish(
-            message="输入格式错误！请按照格式：【地区+ID】\n例如：kr123456789012进行绑定",
+            message=help_msg,
             reply_message=True
         )
     
@@ -55,7 +65,7 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
             )
     
     if server_code == "jp" and datetime.now() > datetime(2025, 8, 20, 0, 0, 0):
-        # 日服关服了所以不再支持绑定
+        # 日服8.20关服,所以不再支持绑定
         await es_bind.finish(
             message="日服已关服，请使用其他服务器",
             reply_message=True

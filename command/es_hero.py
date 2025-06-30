@@ -206,9 +206,8 @@ CV_JP：{get_character_cv(data, hero_desc)["jaOffset"]}
                 heroes = '、'.join(link['heroes']) if link['heroes'] else "未知角色"
                 link_msg.append(f"相关角色：{heroes}")
                 
-                # 故事可能为空
                 if link['story']:
-                    link_msg.append(f"\n故事：{link['story']}")
+                    link_msg.append(f"\n{link['story']}")
                     
                 # 效果可能为空
                 if link['effects']:

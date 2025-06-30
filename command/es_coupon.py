@@ -1,11 +1,5 @@
 from ..library.utils import *
 
-# 保存当前正在等待绑定的用户
-# 键是用户ID，值是绑定过期时间和其他信息
-BINDING_USERS = {}
-
-# 兑换码文件路径
-COUPON_YAML_PATH = COUPON_DIR / "coupons.yaml"
 
 # 确保兑换码文件存在
 def ensure_coupon_file():
@@ -210,8 +204,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 合并同一类别的结果到一条消息中
         if success_results:
-            success_content = f"——— ✅ 兑换成功({len(success_results)}个) ———\n"
-            success_content += "\n".join([result_item["result"] for result_item in success_results])
+            success_content = "\n".join([result_item["result"] for result_item in success_results])
             forward_messages.append({
                 "type": "node",
                 "data": {
@@ -222,8 +215,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
             })
         
         if limit_results:
-            limit_content = f"——— ⚠️ 超出兑换限制({len(limit_results)}个) ———\n"
-            limit_content += "\n".join([result_item["result"] for result_item in limit_results])
+            limit_content = "\n".join([result_item["result"] for result_item in limit_results])
             forward_messages.append({
                 "type": "node",
                 "data": {
@@ -234,8 +226,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
             })
         
         if failed_results:
-            failed_content = f"——— ❎ 兑换失败({len(failed_results)}个) ———\n"
-            failed_content += "\n".join([result_item["result"] for result_item in failed_results])
+            failed_content = "\n".join([result_item["result"] for result_item in failed_results])
             forward_messages.append({
                 "type": "node",
                 "data": {
@@ -246,8 +237,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
             })
         
         if skipped_results:
-            skipped_content = f"——— ⏭️ 已兑换过({len(skipped_results)}个) ———\n"
-            skipped_content += "\n".join([result_item["result"] for result_item in skipped_results])
+            skipped_content = "\n".join([result_item["result"] for result_item in skipped_results])
             forward_messages.append({
                 "type": "node",
                 "data": {
@@ -296,9 +286,9 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         "data": {
             "name": "Eversoul Helper",
             "uin": event.self_id,
-            "content": f"兑换完成！共{accounts_count}个账号，{len(all_coupons)}个兑换码\n"
-                       f"✅成功: {total_success_results}个 | ⚠️超出限制: {total_limit_results}个\n"
-                       f"❎失败: {total_failed_results}个 | ⏭️已兑换过: {total_skipped_results}个"
+            "content": f"共{accounts_count}个账号，{len(all_coupons)}个兑换码\n"
+                       f"✅成功: {total_success_results} | ⚠️超出限制: {total_limit_results}\n"
+                       f"❎失败: {total_failed_results} | ⏭️已兑换过: {total_skipped_results}"
         }
     })
     

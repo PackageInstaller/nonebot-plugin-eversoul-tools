@@ -63,7 +63,6 @@ class EversoulUser:
                         logger.info("数据库表 eversoul_users 已更新，添加了 coupon_history 列")
             except Exception as e:
                 logger.error(f"升级数据库结构失败: {e}")
-        logger.info("数据库初始化完成")
     
     @classmethod
     async def add_user(cls, user_id: int, app_id: str, player_id: str) -> bool:

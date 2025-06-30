@@ -39,7 +39,7 @@ from datetime import datetime
 from ...config import *
 from ..model import *
 
-es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表"}, priority=5, block=True)
+es_help = on_command("es命令列表", aliases={"es帮助", "es指令列表", "es功能", "es菜单", "es命令", "es指令"}, priority=5, block=True)
 es_ark_info = on_command("es方舟等级信息", priority=5, block=True)
 es_ark_overclock = on_command("es超频消耗", priority=5, block=True)
 es_cash_pack_info = on_command("es突发礼包信息", priority=5, block=True)

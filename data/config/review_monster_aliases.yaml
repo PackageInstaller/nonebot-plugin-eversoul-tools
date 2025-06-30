@@ -4108,6 +4108,13 @@ names:
     ja_name: ジャクリーン
     aliases: []
     hero_id: 66001
+  - zh_tw_name: 薇薇安
+    zh_cn_name: ''
+    kr_name: 비비안
+    en_name: Vivienne
+    ja_name: ビビアン
+    aliases: []
+    hero_id: 66002
   - zh_tw_name: 綾織
     zh_cn_name: ''
     kr_name: 아야메
