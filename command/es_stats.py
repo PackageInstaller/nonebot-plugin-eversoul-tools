@@ -34,10 +34,10 @@ async def handle_es_stats(bot: Bot, event: Event):
                 
                 # 获取角色名称
                 char_name_data = get_string_character(data, hero_id, special=True)
-                char_name_zh_tw = char_name_data["zh_twOffset"]
-                char_name_zh_cn = char_name_data["zh_cnOffset"]
-                char_name_kr = char_name_data["krOffset"]
-                char_name_en = char_name_data["enOffset"]
+                char_name_zh_tw = char_name_data["zh_tw"]
+                char_name_zh_cn = char_name_data["zh_cn"]
+                char_name_kr = char_name_data["kr"]
+                char_name_en = char_name_data["en"]
                 
                 # 查找角色描述数据
                 hero_desc = None

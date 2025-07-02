@@ -158,15 +158,10 @@ SIGNATURE_GRADE_LEVEL_MAP = {
 
 # 恶灵讨伐削减系数数组映射
 SINGLE_RAID_GROGGY_TRIGGER_ARRAY = [1, 2, 1, 1, 1, 3, 4]
-
 # app_id到服务器名称的反向映射
 APP_ID_TO_SERVER_NAME = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
-
-
-
 # 资源路径
 RESOURCE_DIR = Path(__file__).parent / "resource"
-
 # 添加数据源配置文件路径
 DATA_DIR = Path(__file__).parent / "data"
 CONFIG_DIR = DATA_DIR / "config"

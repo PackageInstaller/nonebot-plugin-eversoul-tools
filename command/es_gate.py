@@ -25,11 +25,11 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
         if not barrier_info:
             await es_gate.finish(f"未找到{gate_type}型传送门信息")
 
-        race_restriction = next((s.get("zh_twOffset", "") for s in data["string_system"]["json"] 
+        race_restriction = next((s.get("zh_tw", "") for s in data["string_system"]["json"] 
                                if s["no"] == barrier_info.get("restrictions_race_sno")), "")
         
         # 获取开放日期
-        open_days = barrier_info.get("open_dayOffset", "").split(",")
+        open_days = barrier_info.get("open_day", "").split(",")
         day_names = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
         open_days_str = "、".join(day_names[int(d)-1] for d in open_days)
         
@@ -58,7 +58,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
             stage_name = ""
             for string in data["string_stage"]["json"]:
                 if string["no"] == name_sno:
-                    stage_name = string.get("zh_twOffset", "未知")
+                    stage_name = string.get("zh_tw", "未知")
                     stage_name = stage_name.format(stage_no)
                     break
                     
@@ -69,7 +69,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                 amount = gate_info.get(f"amount_{i}")
                 if item_no and amount:
                     item_name = get_string_item(data, item_no)
-                    rewards.append(f"・{item_name['zh_twOffset']}x{amount}")
+                    rewards.append(f"・{item_name['zh_tw']}x{amount}")
             
             if rewards:
                 messages.append("\n【通关奖励】")
@@ -98,10 +98,10 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                             continue
                             
                         hero_name_data = get_string_character(data, hero_no, special=True)
-                        hero_name_zh_tw = hero_name_data["zh_twOffset"]
+                        hero_name_zh_tw = hero_name_data["zh_tw"]
                         
                         grade_data = get_string_system(data, team.get(f"hero_grade_{i}"))
-                        grade_name_zh_tw = grade_data["zh_twOffset"]
+                        grade_name_zh_tw = grade_data["zh_tw"]
                         
                         level = team.get(f"level_{i}", 0)
                         
@@ -118,7 +118,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
                                     if item_no := equip_data.get(f"slot_{slot}"):
                                         item_name = get_string_item(data, item_no)
                                         level = equip_data.get(f"level_{slot}", 0)
-                                        messages.append(f"・{item_name['zh_twOffset']} Lv.{level}")
+                                        messages.append(f"・{item_name['zh_tw']} Lv.{level}")
                         
                         # 检查终极技能优先级
                         if ult_priority := team.get(f"ultimate_autosetting_{i}"):

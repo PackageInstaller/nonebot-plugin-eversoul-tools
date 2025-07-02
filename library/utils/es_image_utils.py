@@ -78,7 +78,7 @@ def get_character_portrait(data, hero_id, hero_name_en, raid=False):
     # 如果直接用英文名找不到，尝试从item_costume获取portrait_path
     for costume in data["item_costume"]["json"]:
         if costume.get("hero_no") == hero_id:
-            portrait_path = costume.get("portrait_pathOffset", "")
+            portrait_path = costume.get("portrait_path", "")
             if portrait_path:
                 # 构建头像路径
                 portrait_file = str(SOUL_DIR / f"{portrait_path}_512.png")
@@ -105,17 +105,17 @@ def get_character_illustration(data, hero_id):
     costume_info = {}
     for costume in data["item_costume"]["json"]:
         if costume.get("hero_no") == hero_id:
-            portrait_path = costume.get("portrait_pathOffset", "")
+            portrait_path = costume.get("portrait_path", "")
             name_sno = costume.get("name_sno")
             type_sno = costume.get("type_sno")  # 获取时装的type_sno
             if portrait_path and name_sno and type_sno:
                 # 从StringItem.json获取立绘名称
                 for string in data["string_item"]["json"]:
                     if string["no"] == name_sno:
-                        costume_name_zh_tw = string.get("zh_twOffset", "")
-                        costume_name_zh_cn = string.get("zh_cnOffset", "")
-                        costume_name_kr = string.get("krOffset", "")
-                        costume_name_en = string.get("enOffset", "")
+                        costume_name_zh_tw = string.get("zh_tw", "")
+                        costume_name_zh_cn = string.get("zh_cn", "")
+                        costume_name_kr = string.get("kr", "")
+                        costume_name_en = string.get("en", "")
                         if costume_name_zh_tw or costume_name_kr:
                             # 从StringUI.json获取解锁条件
                             condition_tw = ""
@@ -124,10 +124,10 @@ def get_character_illustration(data, hero_id):
                             condition_en = ""
                             for ui_string in data["string_ui"]["json"]:
                                 if ui_string["no"] == type_sno:
-                                    condition_tw = ui_string.get("zh_twOffset", "")
-                                    condition_cn = ui_string.get("zh_cnOffset", "")
-                                    condition_kr = ui_string.get("krOffset", "")
-                                    condition_en = ui_string.get("enOffset", "")
+                                    condition_tw = ui_string.get("zh_tw", "")
+                                    condition_cn = ui_string.get("zh_cn", "")
+                                    condition_kr = ui_string.get("kr", "")
+                                    condition_en = ui_string.get("en", "")
                                     break
                             costume_info[portrait_path] = (costume_name_zh_tw, costume_name_zh_cn, costume_name_kr, costume_name_en,\
                                                             condition_tw, condition_cn, condition_kr, condition_en)
@@ -265,9 +265,9 @@ def get_character_affection_cg(data, hero_id):
     for illust in data["illust"]["json"]:
         if ("open_condition" in illust and 
             illust["open_condition"] in story_info and 
-            "bg_movie_pathOffset" in illust):
+            "bg_movie_path" in illust):
             # 从路径中提取CG名称
-            path_parts = illust["bg_movie_pathOffset"].split('/')
+            path_parts = illust["bg_movie_path"].split('/')
             cg_name = path_parts[-1]
             # 获取对应的章节信息
             story_no = illust["open_condition"]
@@ -283,7 +283,7 @@ def get_character_affection_cg(data, hero_id):
             if episode_info["episode_name_sno"]:
                 for string in data["string_talk"]["json"]:
                     if string["no"] == episode_info["episode_name_sno"]:
-                        episode_title = string.get("zh_twOffset", "")
+                        episode_title = string.get("zh_tw", "")
                         break
             images.append((file, f"CG_{no}", episode_info["episode"], episode_title))
             break  # 找到一个匹配的文件就跳出
@@ -305,13 +305,13 @@ def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path, str]
     
     # 从EverTalkDesc.json中查找插图
     for talk in data["evertalk_desc"]["json"]:
-        if talk.get("hero_no") == hero_id and talk.get("ui_typeOffset") == "Illust":
+        if talk.get("hero_no") == hero_id and talk.get("ui_type") == "Illust":
             talk_no = talk.get("no")
             # 从StringEverTalk.json中获取插图名称
             for string in data["string_evertalk"]["json"]:
                 if string.get("no") == talk_no:
                     # 提取插图基础名称
-                    illust_match = re.search(r"<display:(.+?)>", string.get("krOffset", ""))
+                    illust_match = re.search(r"<display:(.+?)>", string.get("kr", ""))
                     if illust_match:
                         illust_base = illust_match.group(1)
                         illust_path = EVERTALK_DIR / f"{illust_base}.png"
@@ -348,14 +348,14 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
     for schedule in data["localization_schedule"]["json"]:
         # 对于主要活动，使用完全匹配而不是startswith
         if schedule_prefix.endswith("_Main") or schedule_prefix.endswith("_Return_Main"):
-            if schedule.get("schedule_keyOffset", "") != schedule_prefix:
+            if schedule.get("schedule_key", "") != schedule_prefix:
                 continue
         else:
-            if not schedule.get("schedule_keyOffset", "").startswith(schedule_prefix):
+            if not schedule.get("schedule_key", "").startswith(schedule_prefix):
                 continue
             
-        start_date = schedule.get("start_dateOffset")
-        end_date = schedule.get("end_dateOffset")
+        start_date = schedule.get("start_date")
+        end_date = schedule.get("end_date")
         
         if not (start_date and end_date):
             continue
@@ -371,7 +371,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
         if not is_in_month:
             continue
             
-        schedule_key = schedule["schedule_keyOffset"]
+        schedule_key = schedule["schedule_key"]
         event_name_tw = ""
         banner_path = ""
         name_sno = None
@@ -379,7 +379,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
         
         # 从EventCalender中获取name_sno和gacha_no
         for event in data["event_calender"]["json"]:
-            if event.get("schedule_keyOffset") == schedule_key:
+            if event.get("schedule_key") == schedule_key:
                 name_sno = event.get("name_sno")
                 # 如果是Pickup类型，获取gacha_no
                 if schedule_key.startswith("Calender_PickUp_"):
@@ -388,7 +388,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
                     # 从StringUI中获取名称
                     for string in data["string_ui"]["json"]:
                         if string["no"] == name_sno:
-                            event_name_tw = string.get("zh_twOffset", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
+                            event_name_tw = string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
                             break
                 break
         
@@ -397,7 +397,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
             if "gacha" in data:
                 for gacha in data["gacha"]["json"]:
                     if gacha.get("no") == gacha_no:
-                        banner_raw = gacha.get("banner_pathOffset", "")
+                        banner_raw = gacha.get("banner_path", "")
                         if banner_raw:
                             banner_path = f"{banner_raw}_ZH_TW.png"
                         break
@@ -405,7 +405,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
         elif name_sno:
             for event_info in data["event_info"]["json"]:
                 if event_info.get("name_sno") == name_sno:
-                    banner_raw = event_info.get("banner_pathOffset", "")
+                    banner_raw = event_info.get("banner_path", "")
                     if banner_raw:
                         banner_path = f"{banner_raw}_ZH_TW.png"
                     break
@@ -452,15 +452,15 @@ def get_mail_event(data, target_month, current_year):
         sender_name_en = "Unknown"
         if sender_sno := mail.get("sender_sno"):
             sender_data = get_string_character(data, sender_sno, special=True)
-            sender_name_tw = sender_data["zh_twOffset"]
-            sender_name_en = sender_data["enOffset"]
+            sender_name_tw = sender_data["zh_tw"]
+            sender_name_en = sender_data["en"]
         
         # 获取标题和描述
         title_data = get_string_character(data, mail.get("title_sno", 0)) or "无标题"
-        title_tw = title_data["zh_twOffset"] if isinstance(title_data, dict) else "无标题"
+        title_tw = title_data["zh_tw"] if isinstance(title_data, dict) else "无标题"
         
         desc_data = get_string_character(data, mail.get("desc_sno", 0)) or "无描述"
-        desc_tw = desc_data["zh_twOffset"] if isinstance(desc_data, dict) else "无描述"
+        desc_tw = desc_data["zh_tw"] if isinstance(desc_data, dict) else "无描述"
         
         # 处理奖励信息
         rewards = []
@@ -472,7 +472,7 @@ def get_mail_event(data, target_month, current_year):
                 amount = mail.get(reward_amount_key, 0)
                 item_name = get_string_item(data, reward_no)
                 if item_name and amount:
-                    rewards.append(f"{item_name['zh_twOffset']}x{amount}")
+                    rewards.append(f"{item_name['zh_tw']}x{amount}")
         
         # 构建事件信息
         event_info = []
@@ -505,7 +505,7 @@ def get_calendar_event(data, target_month, current_year):
     now = datetime.now()
     
     for schedule in data["localization_schedule"]["json"]:
-        schedule_key = schedule.get("schedule_keyOffset", "")
+        schedule_key = schedule.get("schedule_key", "")
         # 排除以下类型：
         #   - Calender_PickUp_ （Pickup活动）
         #   - *_Main 结尾的主要活动
@@ -520,8 +520,8 @@ def get_calendar_event(data, target_month, current_year):
              not schedule_key.endswith("_Attend"))):
             continue
             
-        start_date = schedule.get("start_dateOffset")
-        end_date = schedule.get("end_dateOffset")
+        start_date = schedule.get("start_date")
+        end_date = schedule.get("end_date")
         
         if not (start_date and end_date):
             continue
@@ -546,37 +546,37 @@ def get_calendar_event(data, target_month, current_year):
         # 对于EventInfo_开头的活动，直接从event_info中获取信息
         if schedule_key.startswith("EventInfo_") and ((schedule_key.endswith("_Pass")) or (schedule_key.endswith("_Attend"))):
             for event_info in data["event_info"]["json"]:
-                if event_info.get("schedule_keyOffset") == schedule_key:
+                if event_info.get("schedule_key") == schedule_key:
                     name_sno = event_info.get("name_sno")
-                    banner_raw = event_info.get("banner_pathOffset", "")
+                    banner_raw = event_info.get("banner_path", "")
                     if banner_raw:
                         banner_path = f"{banner_raw}_ZH_TW.png"
                     # 如果找到name_sno，从StringUI中获取名称
                     if name_sno:
-                        event_name_tw = get_string_ui(data, name_sno)["zh_twOffset"]
-                        event_name_cn = get_string_ui(data, name_sno)["zh_cnOffset"]
+                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
+                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
                         break
                     break
         else:
             # 从EventCalender中获取name_sno
             for event in data["event_calender"]["json"]:
-                if event.get("schedule_keyOffset") == schedule_key:
+                if event.get("schedule_key") == schedule_key:
                     name_sno = event.get("name_sno")
                     if name_sno:
                         # 从StringUI中获取名称
-                        event_name_tw = get_string_ui(data, name_sno)["zh_twOffset"]
-                        event_name_cn = get_string_ui(data, name_sno)["zh_cnOffset"]
+                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
+                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
                         break
                     break
             
             # 从EventInfo中获取名称
             for event in data["event_info"]["json"]:
-                if event.get("schedule_keyOffset") == schedule_key:
+                if event.get("schedule_key") == schedule_key:
                     name_sno = event.get("name_sno")
                     if name_sno:
                         # 从StringUI中获取名称并处理换行
-                        event_name_tw = get_string_ui(data, name_sno)["zh_twOffset"]
-                        event_name_cn = get_string_ui(data, name_sno)["zh_cnOffset"]
+                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
+                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
                         break
                     break
         
@@ -621,7 +621,7 @@ def get_calendar_event(data, target_month, current_year):
         elif name_sno and not banner_path:
             for event_info in data["event_info"]["json"]:
                 if event_info.get("name_sno") == name_sno:
-                    banner_raw = event_info.get("banner_pathOffset", "")
+                    banner_raw = event_info.get("banner_path", "")
                     if banner_raw:
                         banner_path = f"{banner_raw}_ZH_TW.png"
                     break
@@ -1223,7 +1223,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                     filtered_levels.append(level)
                     filtered_costs.append(item_data["costs"][i])
             if filtered_levels:  # 只保留有数据的物品
-                item_name = get_string_item(data, item_no).get("zh_twOffset", "")
+                item_name = get_string_item(data, item_no).get("zh_tw", "")
                 if not item_name:
                     item_name = f"{item_no}"
                 filtered_extra_items_data[item_no] = {
@@ -1449,7 +1449,7 @@ async def generate_potential_html(data: dict) -> str:
         potential_names = {}  # {tooltip_sno: name}
         for string in data["string_ui"]["json"]:
             if string.get("no") in potentials:
-                potential_names[string["no"]] = string.get("zh_twOffset", "未知潜能")
+                potential_names[string["no"]] = string.get("zh_tw", "未知潜能")
         
         # 生成HTML
         html = """

@@ -107,24 +107,24 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         # 获取角色名称
         if hero_data["name_sno"]:
             name_data = get_string_character(data, hero_data["name_sno"])
-            hero_name_zh_tw = name_data["zh_twOffset"]
-            hero_name_zh_cn = name_data["zh_cnOffset"]
-            hero_name_kr = name_data["krOffset"]
-            hero_name_en = name_data["enOffset"]
+            hero_name_zh_tw = name_data["zh_tw"]
+            hero_name_zh_cn = name_data["zh_cn"]
+            hero_name_kr = name_data["kr"]
+            hero_name_en = name_data["en"]
             
 
         # 实装日期
         character_release_date = get_character_release_date(data, hero_id)
         # 类型
-        race_zh_tw = get_string_system(data, hero_data["race_sno"])["zh_twOffset"]
+        race_zh_tw = get_string_system(data, hero_data["race_sno"])["zh_tw"]
         # 职业
-        hero_class_zh_tw = get_string_system(data, hero_data["class_sno"])["zh_twOffset"]
+        hero_class_zh_tw = get_string_system(data, hero_data["class_sno"])["zh_tw"]
         # 攻击方式
-        sub_class_zh_tw = get_string_system(data, hero_data["sub_class_sno"])["zh_twOffset"]
+        sub_class_zh_tw = get_string_system(data, hero_data["sub_class_sno"])["zh_tw"]
         # 属性
-        stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_twOffset"]
+        stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_tw"]
         # 品质
-        grade_zh_tw = get_string_system(data, hero_data["grade_sno"])["zh_twOffset"]
+        grade_zh_tw = get_string_system(data, hero_data["grade_sno"])["zh_tw"]
         
         # 构建消息列表
         messages = []
@@ -133,8 +133,8 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         if hero_desc and isinstance(hero_desc, dict):
             nick_name_sno = hero_desc.get("nick_name_sno")
             nickname_data = get_string_character(data, nick_name_sno)
-            nickname_zh_tw = nickname_data["zh_twOffset"]
-            nickname_kr = nickname_data["krOffset"]
+            nickname_zh_tw = nickname_data["zh_tw"]
+            nickname_kr = nickname_data["kr"]
         
         # 繁体中文版本
         basic_info_msg = []
@@ -149,10 +149,10 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
 屬性：{stat_zh_tw}
 品質：{grade_zh_tw}
 隸屬：{
-    get_string_character(data, hero_desc.get("union_sno", 0), special=True)["zh_twOffset"] 
+    get_string_character(data, hero_desc.get("union_sno", 0), special=True)["zh_tw"] 
     if hero_desc is not None and hero_desc.get("union_sno") is not None and 
        get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
-       get_string_character(data, hero_desc.get("union_sno", 0), special=True).get("zh_twOffset", "") != ""
+       get_string_character(data, hero_desc.get("union_sno", 0), special=True).get("zh_tw", "") != ""
     else "？？？"
 }
 身高：{hero_desc.get("height", "？？？") if hero_desc else "？？？"}cm
@@ -160,16 +160,16 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
 生日：{str(hero_desc.get("birthday", "？？？")).zfill(4)[:2]\
 if hero_desc else "？？？"}.{str(hero_desc.get("birthday", "？？？")).zfill(4)[2:]\
 if hero_desc and hero_desc.get("birthday") else "？？？"}
-星座：{get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)["zh_twOffset"] if hero_desc else "？？？"}
-興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)["zh_twOffset"] if hero_desc else "？？？"}
-特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)["zh_twOffset"] if hero_desc else "？？？"}
-喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0), special=True)["zh_twOffset"] if hero_desc else "？？？"}
-討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)["zh_twOffset"] if hero_desc else "？？？"}
+星座：{get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
 喜好禮物：{get_character_prefer_gift(data, hero_id)}
 初始打工屬性：{get_character_arbeit(data, hero_id)["initial"]}
 滿級打工屬性：{get_character_arbeit(data, hero_id)["max"]}
-CV_KR：{get_character_cv(data, hero_desc)["krOffset"]}
-CV_JP：{get_character_cv(data, hero_desc)["jaOffset"]}
+CV_KR：{get_character_cv(data, hero_desc)["kr"]}
+CV_JP：{get_character_cv(data, hero_desc)["ja"]}
 实装日期：{character_release_date}
 攻擊力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防禦力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
@@ -233,10 +233,10 @@ CV_JP：{get_character_cv(data, hero_desc)["jaOffset"]}
             intro_sno = hero_desc.get("introduction_sno")
             if intro_sno:
                 intro_data = get_string_character(data, intro_sno)
-                intro_zh_tw = intro_data["zh_twOffset"]
-                intro_zh_cn = intro_data["zh_cnOffset"]
-                intro_kr = intro_data["krOffset"]
-                intro_en = intro_data["enOffset"]
+                intro_zh_tw = intro_data["zh_tw"]
+                intro_zh_cn = intro_data["zh_cn"]
+                intro_kr = intro_data["kr"]
+                intro_en = intro_data["en"]
                 if intro_zh_tw or intro_kr:
                     intro_text = intro_zh_tw if intro_zh_tw else (intro_kr if is_test else intro_zh_tw)
                     messages.append("【自我介绍】\n" + intro_text)
@@ -327,10 +327,10 @@ CV_JP：{get_character_cv(data, hero_desc)["jaOffset"]}
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
                         skill_type_data = get_character_skill_type(data, skill["type"])
-                        skill_type_zh_tw = skill_type_data["zh_twOffset"]
-                        skill_type_zh_cn = skill_type_data["zh_cnOffset"]
-                        skill_type_kr = skill_type_data["krOffset"]
-                        skill_type_en = skill_type_data["enOffset"]
+                        skill_type_zh_tw = skill_type_data["zh_tw"]
+                        skill_type_zh_cn = skill_type_data["zh_cn"]
+                        skill_type_kr = skill_type_data["kr"]
+                        skill_type_en = skill_type_data["en"]
                         # 判断是否为支援技能
                         is_support = (skill_key == "support_skill_no")
                         skill_info = get_character_skill(data, skill_no, is_support, hero_data)
@@ -413,7 +413,7 @@ CV_JP：{get_character_cv(data, hero_desc)["jaOffset"]}
             signature_stats = signature_info["stats"]
             max_level = signature_info["max_level"] 
             max_level_battle_power_per = signature_info["max_level_battle_power_per"]
-            signature_bg_path = signature_info["bg_pathOffset"]
+            signature_bg_path = signature_info["bg_path"]
             signature_img_path = str(SOUL_DIR / signature_bg_path)
 
             # 遗物信息 - 优先使用zh_tw，为空时根据is_test决定

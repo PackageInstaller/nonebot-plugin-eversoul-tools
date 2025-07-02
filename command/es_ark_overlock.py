@@ -120,7 +120,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             # 添加魔力粉尘消耗
             if last_extra_items:
                 for item_no, amount in last_extra_items.items():
-                    item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")
+                    item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
                     cost_msg.append(f"{format_number(amount)} {item_name}")
             detail_msg.append("\n".join(cost_msg))
         else:
@@ -128,7 +128,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             # 添加魔力粉尘消耗
             if current_extra_items:
                 for item_no, amount in current_extra_items.items():
-                    item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")
+                    item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
                     cost_msg.append(f"{format_number(amount)} {item_name}")
             detail_msg.append("\n".join(cost_msg))
         
@@ -138,7 +138,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             # 添加魔力粉尘消耗
             if next_extra_items:
                 for item_no, amount in next_extra_items.items():
-                    item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")
+                    item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
                     next_cost_msg.append(f"{format_number(amount)} {item_name}")
             detail_msg.append("\n".join(next_cost_msg))
         else:
@@ -149,7 +149,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         # 添加魔力粉尘总消耗
         if total_extra_items:
             for item_no, amount in total_extra_items.items():
-                item_name = get_string_item(data, item_no).get("zh_twOffset", "未知物品")
+                item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
                 total_cost_msg.append(f"{format_number(amount)} {item_name}")
         detail_msg.append("\n".join(total_cost_msg))
         messages.append("\n".join(detail_msg))

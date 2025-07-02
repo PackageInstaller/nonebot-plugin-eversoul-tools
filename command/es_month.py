@@ -28,7 +28,7 @@ async def handle_es_month(bot: Bot, event: Event):
 
         main_events = []
         for schedule in data["localization_schedule"]["json"]:
-            schedule_key = schedule.get("schedule_keyOffset", "")
+            schedule_key = schedule.get("schedule_key", "")
             if schedule_key.startswith("Calender_") and schedule_key.endswith("_Main"):
                 prefix = schedule_key
                 main_events.extend(get_schedule_event(data, target_month, current_year,

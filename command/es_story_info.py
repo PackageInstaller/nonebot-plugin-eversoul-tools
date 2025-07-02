@@ -36,7 +36,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
         
         # 获取活动名称
         # get the event name
-        event_name = get_string_ui(data, target_id).get("zh_twOffset", f"活动ID {target_id}")
+        event_name = get_string_ui(data, target_id).get("zh_tw", f"活动ID {target_id}")
         
         for calendar_event in calendar_events:
             event_type = calendar_event.get("event_type")
@@ -107,13 +107,13 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
                 episode_title = ""
                 if episode_name_sno:
                     title_data = get_string_talk(data, episode_name_sno)
-                    episode_title = title_data.get("zh_twOffset", "")
+                    episode_title = title_data.get("zh_tw", "")
                 
                 # 获取章节大意
                 episode_summary = ""
                 if episode_skip_sno:
                     summary_data = get_string_talk(data, episode_skip_sno)
-                    episode_summary = summary_data.get("zh_twOffset", "")
+                    episode_summary = summary_data.get("zh_tw", "")
                 
                 episode_parts = [f"第 {episode_num} 章：{episode_title}"]
                 if episode_summary:

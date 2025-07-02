@@ -46,7 +46,7 @@ async def handle_ark_info(bot: Bot, event: Event, args: Message = CommandArg()):
                 continue
                 
             # 获取方舟类型名称
-            type_name = next((s.get("zh_twOffset", "未知类型") for s in data["string_system"]["json"] 
+            type_name = next((s.get("zh_tw", "未知类型") for s in data["string_system"]["json"] 
                             if s["no"] == core_type), "未知类型")
             
             # 主方舟名称适配
@@ -60,7 +60,7 @@ async def handle_ark_info(bot: Bot, event: Event, args: Message = CommandArg()):
                 item_name = "未知材料"
                 for item in data["item"]["json"]:
                     if item["no"] == ark.get("pay_item_no"):
-                        item_name = next((s.get("zh_twOffset", "未知材料") for s in data["string_item"]["json"] 
+                        item_name = next((s.get("zh_tw", "未知材料") for s in data["string_item"]["json"] 
                                        if s["no"] == item.get("name_sno")), "未知材料")
                         break
                 

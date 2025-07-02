@@ -45,7 +45,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         level_type = ""
         for system in data["string_system"]["json"]:
             if system["no"] == stage_data.get("level_type"):
-                level_type = system.get("zh_twOffset", "未知类型")
+                level_type = system.get("zh_tw", "未知类型")
                 break
         basic_info.append(f"关卡类型：{level_type}")
         basic_info.append(f"经验值：{stage_data.get('exp', 0)}")
@@ -58,7 +58,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
             if item_no := stage_data.get(item_key):
                 item_name = get_string_item(data, item_no)
                 amount = stage_data.get(amount_key, 0)
-                fixed_items.append(f"{item_name['zh_twOffset']}x{amount}")
+                fixed_items.append(f"{item_name['zh_tw']}x{amount}")
         
         if len(fixed_items) > 1: 
             messages.append("\n".join(fixed_items))
@@ -104,10 +104,10 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                             }
                         
                         hero_name_data = get_string_character(data, hero_no, special=True)
-                        hero_name_zh_tw = hero_name_data["zh_twOffset"]
+                        hero_name_zh_tw = hero_name_data["zh_tw"]
                         
                         grade_data = get_string_system(data, team.get(grade_key))
-                        grade_name_zh_tw = grade_data["zh_twOffset"]
+                        grade_name_zh_tw = grade_data["zh_tw"]
                         
                         level = team.get(level_key, 0)
                         
@@ -127,7 +127,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         if drop_items:
             drop_info = [f"掉落物品概率如下：\n"]
             for item_name, amount, rate in drop_items:
-                drop_info.append(f"{item_name["zh_twOffset"]} ({rate:.3f}%)")
+                drop_info.append(f"{item_name["zh_tw"]} ({rate:.3f}%)")
             messages.append("\n".join(drop_info))
         
         # 发送合并转发消息

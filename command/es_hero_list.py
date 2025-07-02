@@ -38,7 +38,7 @@ async def handle_hero_list(bot: Bot, event: Event):
                 
             # 获取种族名称
             race_data = get_string_system(data, hero_data["race_sno"])
-            race_tw = race_data["zh_twOffset"]
+            race_tw = race_data["zh_tw"]
             if not race_tw:
                 continue
                 

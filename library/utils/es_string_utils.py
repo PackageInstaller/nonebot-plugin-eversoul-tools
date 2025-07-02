@@ -212,12 +212,12 @@ def get_string_system(data, no):
     for string in data["string_system"]["json"]:
         if string["no"] == no:
             return {
-                "zh_twOffset": string.get("zh_twOffset", ""),
-                "zh_cnOffset": string.get("zh_cnOffset", ""),
-                "krOffset": string.get("krOffset", ""),
-                "enOffset": string.get("enOffset", "")
+                "zh_tw": string.get("zh_tw", ""),
+                "zh_cn": string.get("zh_cn", ""),
+                "kr": string.get("kr", ""),
+                "en": string.get("en", "")
             }
-    return {"zh_twOffset": "", "zh_cnOffset": "", "krOffset": "", "enOffset": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_string_ui(data, no):
@@ -233,12 +233,12 @@ def get_string_ui(data, no):
     for string in data["string_ui"]["json"]:
         if string["no"] == no:
             return {
-                "zh_twOffset": string.get("zh_twOffset", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
-                "zh_cnOffset": string.get("zh_cnOffset", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
-                "krOffset": string.get("krOffset", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
-                "enOffset": string.get("enOffset", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
+                "zh_tw": string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
+                "zh_cn": string.get("zh_cn", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
+                "kr": string.get("kr", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
+                "en": string.get("en", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
             }
-    return {"zh_twOffset": "", "zh_cnOffset": "", "krOffset": "", "enOffset": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_string_talk(data, no):
@@ -254,12 +254,12 @@ def get_string_talk(data, no):
     for string in data["string_talk"]["json"]:
         if string["no"] == no:
             return {
-                "zh_twOffset": string.get("zh_twOffset", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
-                "zh_cnOffset": string.get("zh_cnOffset", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
-                "krOffset": string.get("krOffset", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
-                "enOffset": string.get("enOffset", "").replace('\\r\\n', '\n').replace('\r\n', '\n')
+                "zh_tw": string.get("zh_tw", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
+                "zh_cn": string.get("zh_cn", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
+                "kr": string.get("kr", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
+                "en": string.get("en", "").replace('\\r\\n', '\n').replace('\r\n', '\n')
             }
-    return {"zh_twOffset": "", "zh_cnOffset": "", "krOffset": "", "enOffset": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_string_character(data, hero_no, special=False):
@@ -297,13 +297,13 @@ def get_string_character(data, hero_no, special=False):
     for char in data["string_character"]["json"]:
         if char["no"] == name_sno:
             return {
-                "zh_twOffset": char.get("zh_twOffset", ""),
-                "zh_cnOffset": char.get("zh_cnOffset", ""),
-                "krOffset": char.get("krOffset", ""),
-                "enOffset": char.get("enOffset", "")
+                "zh_tw": char.get("zh_tw", ""),
+                "zh_cn": char.get("zh_cn", ""),
+                "kr": char.get("kr", ""),
+                "en": char.get("en", "")
             }
             
-    return {"zh_twOffset": "", "zh_cnOffset": "", "krOffset": "", "enOffset": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_drop_item_rate(data, group_no):
@@ -339,7 +339,7 @@ def get_drop_item_rate(data, group_no):
     name_to_best_item = {}
     
     for item in drop_items:
-        item_name = item[0]['zh_twOffset']
+        item_name = item[0]['zh_tw']
         item_rate = item[2]
         
         # 如果名称还没有记录，或者当前概率更高，则更新
@@ -369,12 +369,12 @@ def get_character_skill_type(data, type_no):
     for string in data["string_system"]["json"]:
         if string["no"] == type_no:
             return {
-                "zh_twOffset": string.get("zh_twOffset", ""),
-                "zh_cnOffset": string.get("zh_cnOffset", ""),
-                "krOffset": string.get("krOffset", ""),
-                "enOffset": string.get("enOffset", "")
+                "zh_tw": string.get("zh_tw", ""),
+                "zh_cn": string.get("zh_cn", ""),
+                "kr": string.get("kr", ""),
+                "en": string.get("en", "")
             }
-    return {"zh_twOffset": "", "zh_cnOffset": "", "krOffset": "", "enOffset": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_string_item(data, item_no):
@@ -399,12 +399,12 @@ def get_string_item(data, item_no):
                 for string in data["string_item"]["json"]:
                     if string.get("no") == name_sno:
                         return {
-                            "zh_twOffset": string.get("zh_twOffset", ""),
-                            "zh_cnOffset": string.get("zh_cnOffset", ""),
-                            "krOffset": string.get("krOffset", ""),
-                            "enOffset": string.get("enOffset", "")
+                            "zh_tw": string.get("zh_tw", ""),
+                            "zh_cn": string.get("zh_cn", ""),
+                            "kr": string.get("kr", ""),
+                            "en": string.get("en", "")
                         }
-    return {"zh_twOffset": "", "zh_cnOffset": "", "krOffset": "", "enOffset": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_character_cv(data, hero_desc):
@@ -417,11 +417,11 @@ def get_character_cv(data, hero_desc):
     Returns:
         dict: include korean and japanese cv, keys are 'kr', 'ja'
     """
-    cv_kr = get_string_character(data, hero_desc.get("cv_sno", 0))["zh_twOffset"] if hero_desc else "？？？"
-    cv_ja = get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_twOffset"] if hero_desc else "？？？"
+    cv_kr = get_string_character(data, hero_desc.get("cv_sno", 0))["zh_tw"] if hero_desc else "？？？"
+    cv_ja = get_string_character(data, hero_desc.get("cv_jp_sno", 0))["zh_tw"] if hero_desc else "？？？"
     cv_ja = cv_ja if cv_ja != cv_kr and cv_ja != "" else "？？？"
 
-    return {"krOffset": cv_kr, "jaOffset": cv_ja}
+    return {"kr": cv_kr, "ja": cv_ja}
 
 
 def get_character_release_date(data, hero_id):
@@ -439,9 +439,9 @@ def get_character_release_date(data, hero_id):
         if movie.get("hero_check") == hero_id:
             # 只取日期部分，不要时间
             # only get the date part, not the time
-            start_dateOffset = movie.get("start_dateOffset", "").split()[0]
-            if start_dateOffset and start_dateOffset != "2999-12-31":  # 排除默认日期. exclude default date
-                release_date = start_dateOffset
+            start_date = movie.get("start_date", "").split()[0]
+            if start_date and start_date != "2999-12-31":  # 排除默认日期. exclude default date
+                release_date = start_date
                 break
     
     
@@ -536,7 +536,7 @@ def get_character_prefer_gift(data, hero_id):
         if gift.get("hero_no") == hero_id:
             # 获取prefer_gift_items字符串并分割成列表
             # get prefer_gift_items string and split into list
-            prefer_items = gift.get("prefer_gift_itemsOffset", "").split(",")
+            prefer_items = gift.get("prefer_gift_items", "").split(",")
             prefer_items = [item.strip() for item in prefer_items if item.strip()]
             # process each item_no
             # 对每个物品ID进行处理
@@ -553,7 +553,7 @@ def get_character_prefer_gift(data, hero_id):
                             # find the item name in StringItem.json
                             for string in data["string_item"]["json"]:
                                 if string.get("no") == name_sno:
-                                    gift_items.append(string.get("zh_twOffset", ""))
+                                    gift_items.append(string.get("zh_tw", ""))
                                     break
                         break
     
@@ -849,8 +849,8 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                     for icon_data in data["skill_icon"]["json"]:
                         if icon_data["no"] == icon_prefab:
                             skill_icon_info = {
-                                "icon": icon_data["iconOffset"],
-                                "color": f"#{icon_data['colorOffset']}"
+                                "icon": icon_data["icon"],
+                                "color": f"#{icon_data['color']}"
                             }
                             break
     
@@ -859,10 +859,10 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
         # get skill name
         for string in data["string_skill"]["json"]:
             if string["no"] == skill_data_list[0]["name_sno"]:
-                skill_name_zh_tw = string.get("zh_twOffset", "")
-                skill_name_zh_cn = string.get("zh_cnOffset", "")
-                skill_name_kr = string.get("krOffset", "")
-                skill_name_en = string.get("enOffset", "")
+                skill_name_zh_tw = string.get("zh_tw", "")
+                skill_name_zh_cn = string.get("zh_cn", "")
+                skill_name_kr = string.get("kr", "")
+                skill_name_en = string.get("en", "")
                 break
         
         if is_support:
@@ -874,10 +874,10 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
             # get main partner skill description
             for string in data["string_skill"]["json"]:
                 if string["no"] == max_level_skill["tooltip_sno"]:
-                    desc_tw = string.get("zh_twOffset", "")
-                    desc_cn = string.get("zh_cnOffset", "")
-                    desc_kr = string.get("krOffset", "")
-                    desc_en = string.get("enOffset", "")
+                    desc_tw = string.get("zh_tw", "")
+                    desc_cn = string.get("zh_cn", "")
+                    desc_kr = string.get("kr", "")
+                    desc_en = string.get("en", "")
                     # 清理颜色标签. clean color tags
                     desc_tw = clean_tags(desc_tw)
                     desc_cn = clean_tags(desc_cn)
@@ -933,10 +933,10 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                                 # 在StringUI中查找描述文本. find description text in StringUI.json
                                 for string in data["string_ui"]["json"]:
                                     if string["no"] == buff_sno:
-                                        desc_tw = string.get("zh_twOffset", "")
-                                        desc_cn = string.get("zh_cnOffset", "")
-                                        desc_kr = string.get("krOffset", "")
-                                        desc_en = string.get("enOffset", "")
+                                        desc_tw = string.get("zh_tw", "")
+                                        desc_cn = string.get("zh_cn", "")
+                                        desc_kr = string.get("kr", "")
+                                        desc_en = string.get("en", "")
                                         
                                         # 正则表达式找出所有占位符. find all placeholders using regex
                                         placeholders = re.findall(r'{([^}]+)}', desc_tw)
@@ -965,10 +965,10 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                 hero_level = skill_data.get("hero_level", 1)  # 获取技能解锁等级. get skill unlock level
                 for string in data["string_skill"]["json"]:
                     if string["no"] == skill_data["tooltip_sno"]:
-                        desc_tw = string.get("zh_twOffset", "")
-                        desc_cn = string.get("zh_cnOffset", "")
-                        desc_kr = string.get("krOffset", "")
-                        desc_en = string.get("enOffset", "")
+                        desc_tw = string.get("zh_tw", "")
+                        desc_cn = string.get("zh_cn", "")
+                        desc_kr = string.get("kr", "")
+                        desc_en = string.get("en", "")
                         # 清理颜色标签. clean color tags
                         desc_tw = clean_tags(desc_tw)
                         desc_cn = clean_tags(desc_cn)
@@ -1027,8 +1027,8 @@ def get_character_keyword_location(data: dict, keyword_get_details: int, is_test
     location_data = next((s for s in data["string_town"]["json"] 
                         if s["no"] == location.get("location_name_sno")), None)
     if location_data:
-        zh_tw = location_data.get("zh_twOffset", "")
-        kr = location_data.get("krOffset", "")
+        zh_tw = location_data.get("zh_tw", "")
+        kr = location_data.get("kr", "")
         return zh_tw if zh_tw else (kr if is_test else zh_tw)
     return ""
 
@@ -1061,7 +1061,7 @@ def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword
                 # find the choice talk in Talk.json
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    action = next((s.get("krOffset" if is_test else "zh_twOffset", "") for s in data["string_talk"]["json"] 
+                    action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
                                 if s.get("no") == choice_talk.get("no")), "")
                     return f"{action}"
 
@@ -1070,7 +1070,7 @@ def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    action = next((s.get("krOffset" if is_test else "zh_twOffset", "") for s in data["string_talk"]["json"] 
+                    action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
                                 if s.get("no") == choice_talk.get("no")), "")
                     return f"{action}"
 
@@ -1081,7 +1081,7 @@ def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_trip]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    location = next((s.get("krOffset" if is_test else "zh_twOffset", "") for s in data["string_talk"]["json"] 
+                    location = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
                                 if s.get("no") == choice_talk.get("no")), "")
                     if location:
                         return f"{location}"
@@ -1130,8 +1130,8 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
     # 优先获取zh_tw，当zh_tw为空时再根据is_test判断. get zh_tw first, then check is_test
     source_data = next((s for s in data["string_ui"]["json"] if s["no"] == source_sno), None)
     if source_data:
-        zh_tw = source_data.get("zh_twOffset", "")
-        kr = source_data.get("krOffset", "")
+        zh_tw = source_data.get("zh_tw", "")
+        kr = source_data.get("kr", "")
         source = zh_tw if zh_tw else (kr if is_test else zh_tw)
     else:
         source = ""
@@ -1153,8 +1153,8 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
             location_data = next((s for s in data["string_town"]["json"] 
                                 if s["no"] == location.get("location_name_sno")), None)
             if location_data:
-                zh_tw = location_data.get("zh_twOffset", "")
-                kr = location_data.get("krOffset", "")
+                zh_tw = location_data.get("zh_tw", "")
+                kr = location_data.get("kr", "")
                 location_name = zh_tw if zh_tw else (kr if is_test else zh_tw)
             else:
                 location_name = "未知"
@@ -1228,10 +1228,10 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
                 favor_point = points[grade_index]
                     
                 trip_keywords.append({
-                    "name": get_string_ui(data, keyword_info.get("keyword_string"))["krOffset" if is_test else "zh_twOffset"],
+                    "name": get_string_ui(data, keyword_info.get("keyword_string"))["kr" if is_test else "zh_tw"],
                     "type": keyword_type,
                     "favor_point": favor_point,
-                    "grade": get_string_system(data, grade_sno)["zh_twOffset"],
+                    "grade": get_string_system(data, grade_sno)["zh_tw"],
                     "source": get_character_keyword_source(
                         data, 
                         keyword_info.get("keyword_source", 0),
@@ -1311,7 +1311,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                     continue
                 
                 # 获取prefab作为图片名称. get prefab as image name
-                prefab = obj.get("prefabOffset", "").lower()
+                prefab = obj.get("prefab", "").lower()
 
                 for buff in data["town_buff"]["json"]:
                     if buff.get("no") == buff2_sno:
@@ -1333,8 +1333,8 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if name_sno:
                             for string in data["string_item"]["json"]:
                                 if string.get("no") == name_sno:
-                                    zh_tw = string.get("zh_twOffset", "")
-                                    kr = string.get("krOffset", "")
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
                                     name = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                     break
                         
@@ -1344,8 +1344,8 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if grade_sno:
                             for string in data["string_system"]["json"]:
                                 if string.get("no") == grade_sno:
-                                    zh_tw = string.get("zh_twOffset", "")
-                                    kr = string.get("krOffset", "")
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
                                     grade = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                     break
                         
@@ -1355,8 +1355,8 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if slot_limit_sno:
                             for string in data["string_ui"]["json"]:
                                 if string.get("no") == slot_limit_sno:
-                                    zh_tw = string.get("zh_twOffset", "")
-                                    kr = string.get("krOffset", "")
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
                                     slot_type = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                     break
                         
@@ -1366,8 +1366,8 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         if desc_sno:
                             for string in data["string_item"]["json"]:
                                 if string.get("no") == desc_sno:
-                                    zh_tw = string.get("zh_twOffset", "")
-                                    kr = string.get("krOffset", "")
+                                    zh_tw = string.get("zh_tw", "")
+                                    kr = string.get("kr", "")
                                     desc_text = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                     desc = clean_tags(desc_text)
                                     break
@@ -1424,8 +1424,8 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                         if rarity_sno:
                             for string in data["string_system"]["json"]:
                                 if string.get("no") == rarity_sno:
-                                    rarity_zh_tw = string.get("zh_twOffset", "")
-                                    rarity_kr = string.get("krOffset", "")
+                                    rarity_zh_tw = string.get("zh_tw", "")
+                                    rarity_kr = string.get("kr", "")
                                     rarity = rarity_zh_tw if rarity_zh_tw else (rarity_kr if is_test else rarity_zh_tw)
                                     break
                         
@@ -1435,8 +1435,8 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                         if name_sno:
                             for string in data["string_town"]["json"]:
                                 if string.get("no") == name_sno:
-                                    name_zh_tw = string.get("zh_twOffset", "")
-                                    name_kr = string.get("krOffset", "")
+                                    name_zh_tw = string.get("zh_tw", "")
+                                    name_kr = string.get("kr", "")
                                     name = name_zh_tw if name_zh_tw else (name_kr if is_test else name_zh_tw)
                                     break
                                     
@@ -1462,8 +1462,8 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                                         if name_sno:
                                             for string in data["string_item"]["json"]:
                                                 if string.get("no") == name_sno:
-                                                    item_name_zh_tw = string.get("zh_twOffset", "")
-                                                    item_name_kr = string.get("krOffset", "")
+                                                    item_name_zh_tw = string.get("zh_tw", "")
+                                                    item_name_kr = string.get("kr", "")
                                                     item_name = item_name_zh_tw if item_name_zh_tw else (item_name_kr if is_test else item_name_zh_tw)
                                                     rewards.append(f"{item_name}x{item_amount}")
                                                     break
@@ -1505,7 +1505,7 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
     
     # 获取符合条件的商店物品. get shop items that match the condition
     for shop_item in data["cash_shop_item"]["json"]:
-        if shop_item.get("typeOffset") == item_type and shop_item.get("type_valueOffset") == str(gate_info["no"]):
+        if shop_item.get("type") == item_type and shop_item.get("type_value") == str(gate_info["no"]):
             shop_items.append(shop_item)
     
     if shop_items:
@@ -1515,15 +1515,15 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
             
             # 获取礼包名称和描述. get package name and description
             name_sno = shop_item.get("name_sno")
-            package_name = next((s.get("zh_twOffset", "未知礼包") for s in data["string_cashshop"]["json"] 
+            package_name = next((s.get("zh_tw", "未知礼包") for s in data["string_cashshop"]["json"] 
                                 if s["no"] == name_sno), "未知礼包")
             
             info_sno = shop_item.get("item_info_sno")
-            package_desc = next((s.get("zh_twOffset", "") for s in data["string_cashshop"]["json"] 
+            package_desc = next((s.get("zh_tw", "") for s in data["string_cashshop"]["json"] 
                                 if s["no"] == info_sno), "")
             
             desc_sno = shop_item.get("desc_sno")
-            limit_desc = next((s.get("zh_twOffset", "").format(shop_item.get("limit_buy", 0)) 
+            limit_desc = next((s.get("zh_tw", "").format(shop_item.get("limit_buy", 0)) 
                                 for s in data["string_ui"]["json"] if s["no"] == desc_sno), "")
             
             # 基本信息部分. basic info
@@ -1540,13 +1540,13 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
             
             # 礼包内容部分. package content
             content_info = []
-            if item_infos := shop_item.get("item_infosOffset"):
+            if item_infos := shop_item.get("item_infos"):
                 try:
                     items = ast.literal_eval(item_infos)
                     content_info.append("\n礼包内容：")
                     for item_no, amount in items:
                         item_name = get_string_item(data, item_no)
-                        content_info.append(f"・{item_name["zh_twOffset"]}x{amount}")
+                        content_info.append(f"・{item_name["zh_tw"]}x{amount}")
                 except Exception as e:
                     logger.error(f"解析礼包内容时发生错误：{e}")
             if content_info:
@@ -1556,7 +1556,7 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
             price_info = ["\n价格信息："]
             if price_krw := shop_item.get("price_krw"):
                 price_info.append(f"・ {price_krw}韩元")
-            if price_other := shop_item.get("price_otherOffset"):
+            if price_other := shop_item.get("price_other"):
                 price_info.append(f"・ {price_other}日元")
             package_info.append("\n".join(price_info))
             
@@ -1582,7 +1582,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
     # 查找所有包含该角色的灵魂链接. find all soul links that contain the character
     for link in data["soullink"]["json"]:
         # 动态查找所有hero槽位键. dynamic find all hero slot keys
-        hero_keys = [key for key in link.keys() if key.startswith("Group_Hero") and link[key] == hero_id]
+        hero_keys = [key for key in link.keys() if key.startswith("group_hero") and link[key] == hero_id]
         
         if not hero_keys:
             continue  # 如果没有找到包含目标角色的槽位，跳过此链接. if no hero slot is found, skip this link
@@ -1590,7 +1590,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
         # 收集所有角色ID. collect all hero ids
         hero_ids = []
         for key in link.keys():
-            if key.startswith("Group_Hero") and link[key] > 0:
+            if key.startswith("group_hero") and link[key] > 0:
                 hero_ids.append(link[key])
         
         if not hero_ids:
@@ -1599,23 +1599,23 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
         # 获取灵魂链接标题和故事. get soul link title and story
         # 优先使用zh_tw内容的逻辑. use zh_tw content logic first
         title_data = next((s for s in data["string_character"]["json"] 
-                            if s["no"] == link.get("Group_Title")), {})
-        title_zh_tw = title_data.get("zh_twOffset", "")
-        title_kr = title_data.get("krOffset", "")
+                            if s["no"] == link.get("group_title")), {})
+        title_zh_tw = title_data.get("zh_tw", "")
+        title_kr = title_data.get("kr", "")
         title = title_zh_tw if title_zh_tw else (title_kr if is_test else title_zh_tw)
         
         story_data = next((s for s in data["string_character"]["json"] 
-                            if s["no"] == link.get("Group_Story")), {})
-        story_zh_tw = story_data.get("zh_twOffset", "")
-        story_kr = story_data.get("krOffset", "")
+                            if s["no"] == link.get("group_story")), {})
+        story_zh_tw = story_data.get("zh_tw", "")
+        story_kr = story_data.get("kr", "")
         story = story_zh_tw if story_zh_tw else (story_kr if is_test else story_zh_tw)
         
         # 获取所有角色名称. get all hero names
         hero_names = []
         for hid in hero_ids:
             name_data = get_string_character(data, hid, special=True)
-            name_zh_tw = name_data["zh_twOffset"]
-            name_kr = name_data["krOffset"]
+            name_zh_tw = name_data["zh_tw"]
+            name_kr = name_data["kr"]
             name = name_zh_tw if name_zh_tw else (name_kr if is_test else name_zh_tw)
             if name:
                 hero_names.append(name)
@@ -1636,8 +1636,8 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
                 condition_string_no = item.get("condition_string")
                 condition_data = next((s for s in data["string_ui"]["json"] 
                                         if s["no"] == condition_string_no), {})
-                condition_zh_tw = condition_data.get("zh_twOffset", "")
-                condition_kr = condition_data.get("krOffset", "")
+                condition_zh_tw = condition_data.get("zh_tw", "")
+                condition_kr = condition_data.get("kr", "")
                 
                 condition_text = ""
                 if condition_zh_tw:
@@ -1776,27 +1776,27 @@ def get_character_signature(data, hero_id):
         if signature["hero_sno"] == hero_id:
             signature_data = signature
             # 获取遗物图标路径. get signature icon path
-            if signature_bg_pathOffset := signature.get("signature_bg_pathOffset"):
-                signature_bg_path = f"Img_Signature_{signature_bg_pathOffset}.png"
+            if signature_bg_path := signature.get("signature_bg_path"):
+                signature_bg_path = f"Img_Signature_{signature_bg_path}.png"
             break
     
     if signature_data:
         # 获取遗物名称. get signature name
         for string in data["string_skill"]["json"]:
             if string["no"] == signature_data["signature_name_sno"]:
-                signature_name_zh_tw = string.get("zh_twOffset", "")
-                signature_name_zh_cn = string.get("zh_cnOffset", "")
-                signature_name_kr = string.get("krOffset", "")
-                signature_name_en = string.get("enOffset", "")
+                signature_name_zh_tw = string.get("zh_tw", "")
+                signature_name_zh_cn = string.get("zh_cn", "")
+                signature_name_kr = string.get("kr", "")
+                signature_name_en = string.get("en", "")
                 break
         
         # 获取遗物技能名称. get signature skill name
         for string in data["string_skill"]["json"]:
             if string["no"] == signature_data["skill_name_sno"]:
-                signature_title_zh_tw = string.get("zh_twOffset", "")
-                signature_title_zh_cn = string.get("zh_cnOffset", "")
-                signature_title_kr = string.get("krOffset", "")
-                signature_title_en = string.get("enOffset", "")
+                signature_title_zh_tw = string.get("zh_tw", "")
+                signature_title_zh_cn = string.get("zh_cn", "")
+                signature_title_kr = string.get("kr", "")
+                signature_title_en = string.get("en", "")
                 break
                 
         # 获取遗物简介. get signature description
@@ -1805,10 +1805,10 @@ def get_character_signature(data, hero_id):
         signature_desc_en = "No signature description information"  # 设置默认值. set default value
         for string in data["string_skill"]["json"]:
             if string["no"] == signature_data["tooltip_explain_sno"]:
-                desc_tw = string.get("zh_twOffset", "")
-                desc_cn = string.get("zh_cnOffset", "")
-                desc_kr = string.get("krOffset", "")
-                desc_en = string.get("enOffset", "")
+                desc_tw = string.get("zh_tw", "")
+                desc_cn = string.get("zh_cn", "")
+                desc_kr = string.get("kr", "")
+                desc_en = string.get("en", "")
                 if desc_tw.strip():
                     signature_desc_zh_tw = desc_tw
                 if desc_cn.strip():
@@ -1826,10 +1826,10 @@ def get_character_signature(data, hero_id):
                 tooltip_sno = signature_data[sno_key]
                 for string in data["string_skill"]["json"]:
                     if string["no"] == tooltip_sno:
-                        desc_tw = string.get("zh_twOffset", "")
-                        desc_cn = string.get("zh_cnOffset", "")
-                        desc_kr = string.get("krOffset", "")
-                        desc_en = string.get("enOffset", "")
+                        desc_tw = string.get("zh_tw", "")
+                        desc_cn = string.get("zh_cn", "")
+                        desc_kr = string.get("kr", "")
+                        desc_en = string.get("en", "")
                         
                         # 先清理颜色标签. clean color tags first
                         desc_tw = clean_tags(desc_tw)
@@ -1908,7 +1908,7 @@ def get_character_signature(data, hero_id):
             "stats": signature_stats[0] if signature_stats else [],
             "max_level": signature_stats[1] if len(signature_stats) > 1 else 0,
             "max_level_battle_power_per": signature_stats[2] if len(signature_stats) > 2 else 0,
-            "bg_pathOffset": signature_bg_path
+            "bg_path": signature_bg_path
         }
     
     # 如果没有找到遗物数据，返回空字典. if no signature data is found, return empty dictionary
@@ -1920,7 +1920,7 @@ def get_character_signature(data, hero_id):
         "stats": [],
         "max_level": 0,
         "max_level_battle_power_per": 0,
-        "bg_pathOffset": ""
+        "bg_path": ""
     }
 
 
@@ -2152,10 +2152,10 @@ def get_character_story(data, hero_id):
                     if talk_no is not None:
                         for string in data["string_talk"]["json"]:
                             if string.get("no") == talk_no:
-                                choice_text_zh_tw = string.get("zh_twOffset", "")
-                                choice_text_zh_cn = string.get("zh_cnOffset", "")
-                                choice_text_kr = string.get("krOffset", "")
-                                choice_text_en = string.get("enOffset", "")
+                                choice_text_zh_tw = string.get("zh_tw", "")
+                                choice_text_zh_cn = string.get("zh_cn", "")
+                                choice_text_kr = string.get("kr", "")
+                                choice_text_en = string.get("en", "")
                                 break
                     
                     # 按position_type分组存储选项. store options by position_type
@@ -2183,10 +2183,10 @@ def get_character_story(data, hero_id):
             if episode_name_sno is not None:
                 for string in data["string_talk"]["json"]:
                     if string.get("no") == episode_name_sno:
-                        episode_title_zh_tw = string.get("zh_twOffset", "")
-                        episode_title_zh_cn = string.get("zh_cnOffset", "")
-                        episode_title_kr = string.get("krOffset", "")
-                        episode_title_en = string.get("enOffset", "")
+                        episode_title_zh_tw = string.get("zh_tw", "")
+                        episode_title_zh_cn = string.get("zh_cn", "")
+                        episode_title_kr = string.get("kr", "")
+                        episode_title_en = string.get("en", "")
                         break
             
             # 添加章节信息. add episode info
@@ -2419,23 +2419,23 @@ def get_base_battle_power(data: dict, entity_type: int, level: int) -> int:
         level_per_value = 0.0
         
         for kv in data["key_values"]["json"]:
-            key_name = kv.get("key_nameOffset", "")
+            key_name = kv.get("key_name", "")
             
             if key_name == f"{type_prefix}_base":
                 try:
-                    base_value = float(kv.get("values_dataOffset", "0"))
+                    base_value = float(kv.get("values_data", "0"))
                 except ValueError:
                     base_value = 0.0
             
             elif key_name == f"{type_prefix}_level":
                 try:
-                    level_value = float(kv.get("values_dataOffset", "0"))
+                    level_value = float(kv.get("values_data", "0"))
                 except ValueError:
                     level_value = 0.0
             
             elif key_name == f"{type_prefix}_level_per":
                 try:
-                    level_per_value = float(kv.get("values_dataOffset", "0"))
+                    level_per_value = float(kv.get("values_data", "0"))
                 except ValueError:
                     level_per_value = 0.0
         
@@ -2591,8 +2591,8 @@ def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False)
                             break
                         for string in data["string_skill"]["json"]:
                             if string["no"] == skill["name_sno"]:
-                                zh_tw = string.get("zh_twOffset", "")
-                                kr = string.get("krOffset", "")
+                                zh_tw = string.get("zh_tw", "")
+                                kr = string.get("kr", "")
                                 skill_name = zh_tw if zh_tw else (kr if is_test else zh_tw)
                                 break
                         if skill_name:

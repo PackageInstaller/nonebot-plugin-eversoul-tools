@@ -8,7 +8,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
         args_text = args.extract_plain_text().strip()
         match = re.match(r'^(粉|红\+?)(\d*)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)$', args_text)
         if not match:
-            await es_tier_info.finish("格式错误！请使用如：es礼品信息粉1智力加速")
+            await es_tier_info.finish("格式错误！请使用如：es礼品信息粉1智力加速\n具体格式参考:\n(粉|红+数字)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)")
             
         # 获取参数
         grade, level, stat_type, set_type = match.groups()
@@ -32,7 +32,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
             grade_name = f"{grade_map[grade]}+{level}"  # 其他装备加上等级
             
         grade_sno = next((s["no"] for s in data["string_system"]["json"] 
-                            if s.get("zh_twOffset") == grade_name), None)
+                            if s.get("zh_tw") == grade_name), None)
         
         # 获取属性限制对应的stat_limit_sno
         stat_sno = STAT_TYPE_MAPPING.get(stat_type)
@@ -61,13 +61,13 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
         for item in items:
             try:
                 # 获取礼品基本信息
-                name = next((s.get("zh_twOffset", "未知") for s in data["string_item"]["json"] 
+                name = next((s.get("zh_tw", "未知") for s in data["string_item"]["json"] 
                             if s["no"] == item.get("name_sno")), "未知")
-                desc = next((s.get("zh_twOffset", "") for s in data["string_item"]["json"] 
+                desc = next((s.get("zh_tw", "") for s in data["string_item"]["json"] 
                             if s["no"] == item.get("desc_sno")), "")
                 
                 # 获取图标路径
-                icon_base = item.get("icon_pathOffset", "")
+                icon_base = item.get("icon_path", "")
                 if icon_base:
                     # 构建完整的图片路径
                     icon_path = str(TIER_DIR / f"{icon_base}.png")
