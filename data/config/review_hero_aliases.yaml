@@ -313,7 +313,7 @@ names:
     kr_name: 하루(카무이)
     en_name: Haru (Kamuy)
     ja_name: ハル(カムイ)
-    aliases: [大河路, 界河路, 神河, 神威]
+    aliases: [大河路, 界河路, 神河, 神威, 和珅, 河神]
     hero_id: 2170
   - zh_tw_name: 艾麗卡
     zh_cn_name: 艾丽卡
@@ -453,7 +453,7 @@ names:
     kr_name: 가넷
     en_name: Garnet
     ja_name: ガーネット
-    aliases: [佳尼特, 病娇, 病嬌]
+    aliases: [佳尼特, 加尼特, 病娇, 病嬌]
     hero_id: 4020
   - zh_tw_name: 瑞貝卡
     zh_cn_name: 瑞贝卡

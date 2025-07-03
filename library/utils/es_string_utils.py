@@ -2476,14 +2476,14 @@ def calculate_battle_power(data: dict, entity_type: int, level: int, grade: int,
         level_grade_value = get_hero_level_grade_value(data, level)
         
         total_power = (
-            base_power +                          # 基础战力. base power
-            (level_grade_value - 1.0) * base_power +  # 等级加成. level grade bonus
-            (grade_value - 1.0) * base_power +     # 品质加成. grade bonus
-            equipment_power +                    # 装备战力. equipment power
-            equipment_power_per * base_power +   # 装备战力百分比. equipment power percent
-            signature_power_per * base_power +   # 遗物战力百分比. signature power percent
-            contents_buff_power +                # 内容buff战力. contents buff power
-            contents_buff_power_per * base_power # 内容buff战力百分比. contents buff power percent
+            base_power +                                # 基础战力. base power
+            (level_grade_value - 1.0) * base_power +    # 等级加成. level grade bonus
+            (grade_value - 1.0) * base_power +          # 品质加成. grade bonus
+            equipment_power +                           # 装备战力. equipment power
+            equipment_power_per * base_power +          # 装备战力百分比. equipment power percent
+            signature_power_per * base_power +          # 遗物战力百分比. signature power percent
+            contents_buff_power +                       # 内容buff战力. contents buff power
+            contents_buff_power_per * base_power        # 内容buff战力百分比. contents buff power percent
         )
 
         if total_power == float('inf'):
