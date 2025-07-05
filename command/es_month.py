@@ -1,3 +1,4 @@
+from nonebot.adapters.onebot.v11.event import Reply
 from ..library.utils import *
 
 
@@ -82,7 +83,7 @@ async def handle_es_month(bot: Bot, event: Event):
                 )
             else:
                 await bot.send_private_msg(
-                    user_id=event.user_id,
+                    user_id=event.get_user_id(),
                     message=MessageSegment.image(png_pic),
                     reply_message=True
                 )

@@ -2604,3 +2604,27 @@ def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False)
     except Exception as e:
         logger.error(f"获取角色技能释放顺序时发生错误: {e}")
         return []
+
+
+def get_character_attack_range(data: dict, hero_id: int) -> float:
+    """获取角色攻击范围
+    
+    Args:
+        data: JSON数据字典
+        hero_id: 角色ID
+    
+    Returns:
+        float: 攻击范围，如果没有找到则返回0.0
+    """
+    try:
+        # 在skill数据中查找该角色的技能
+        for skill in data["skill"]["json"]:
+            if skill.get("no") == hero_id and skill.get("range"):
+                return float(skill.get("range"))
+        
+        # 如果没有找到有range的技能，返回0.0
+        return 0.0
+        
+    except Exception as e:
+        logger.error(f"获取角色攻击范围时发生错误: {e}, hero_id: {hero_id}")
+        return 0.0

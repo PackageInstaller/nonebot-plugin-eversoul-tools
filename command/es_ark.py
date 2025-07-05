@@ -127,7 +127,7 @@ async def handle_ark_info(bot: Bot, event: Event, args: Message = CommandArg()):
         else:
             await bot.call_api(
                 "send_private_forward_msg",
-                user_id=event.user_id,
+                user_id=event.get_user_id(),
                 messages=forward_msgs
             )
             

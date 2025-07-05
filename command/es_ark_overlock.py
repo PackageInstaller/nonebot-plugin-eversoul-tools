@@ -183,7 +183,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         else:
             await bot.call_api(
                 "send_private_forward_msg",
-                user_id=event.user_id,
+                user_id=event.get_user_id(),
                 messages=forward_msgs
             )
             

@@ -4,6 +4,7 @@ from .es_help import *
 from .es_stage import *
 from .es_month import *
 from .es_stats import *
+from .es_range_ranking import *
 from .es_level_cost import *
 from .es_ark import *
 from .es_gate import *
@@ -18,5 +19,4 @@ from .es_bind import *
 from .es_account_info import *
 from .es_ark_overlock import *
 from .es_notice import *
-# from .es_gamekee_news import *
 from .es_story_info import *

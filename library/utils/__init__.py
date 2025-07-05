@@ -52,6 +52,7 @@ es_month = on_regex(r"^es(\d{1,2})月事件$", priority=5, block=True)
 es_potential_info = on_command("es潜能信息", priority=5, block=True)
 es_stage_info = on_command("es主线信息", priority=5, block=True)
 es_stats = on_regex(r"^es(身高|体重)排行$", priority=5, block=True)
+es_range_ranking = on_fullmatch("es攻击范围排行", priority=5, block=True)
 es_switch_source = on_command("es数据源", priority=5, permission=(SUPERUSER | GROUP_ADMIN | GROUP_OWNER), block=True)
 es_tier_info = on_command("es礼品信息", priority=5, block=True)
 es_coupon = on_fullmatch("es兑换码", priority=5, block=True)
@@ -92,7 +93,8 @@ from .es_string_utils import (
     get_character_arbeit, get_character_soullink, get_character_story,
     get_character_keyword, get_character_town_object, get_character_town_object_task,
     get_character_signature, get_character_signature_value, get_character_skill_type,
-    get_base_battle_power, calculate_battle_power, get_character_skill_pattern
+    get_base_battle_power, calculate_battle_power, get_character_skill_pattern,
+    get_character_attack_range
 )
 
 # 兑换码相关

@@ -88,6 +88,9 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
             else:
                 await es_hero_info.finish(f"未找到角色 {hero_name}")
         
+        # 确保hero_id不为None (类型断言)
+        assert hero_id is not None, "hero_id 应该不为空"
+        
         # 查找角色数据
         hero_data = None
         hero_desc = None
@@ -144,11 +147,11 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         if portrait_path:
             basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
         basic_info_zh_tw = f"""{nickname_zh_tw if nickname_zh_tw != "" else nickname_kr}・{hero_name_zh_tw if hero_name_zh_tw != "" else hero_name_kr}
-類型：{race_zh_tw} {hero_class_zh_tw}
-攻擊方式：{sub_class_zh_tw}
-屬性：{stat_zh_tw}
-品質：{grade_zh_tw}
-隸屬：{
+类型：{race_zh_tw} {hero_class_zh_tw}
+攻击方式：{sub_class_zh_tw}
+属性：{stat_zh_tw}
+品质：{grade_zh_tw}
+隶属：{
     get_string_character(data, hero_desc.get("union_sno", 0), special=True)["zh_tw"] 
     if hero_desc is not None and hero_desc.get("union_sno") is not None and 
        get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
@@ -156,26 +159,27 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
     else "？？？"
 }
 身高：{hero_desc.get("height", "？？？") if hero_desc else "？？？"}cm
-體重：{hero_desc.get("weight", "？？？") if hero_desc else "？？？"}kg
+体重：{hero_desc.get("weight", "？？？") if hero_desc else "？？？"}kg
 生日：{str(hero_desc.get("birthday", "？？？")).zfill(4)[:2]\
 if hero_desc else "？？？"}.{str(hero_desc.get("birthday", "？？？")).zfill(4)[2:]\
 if hero_desc and hero_desc.get("birthday") else "？？？"}
 星座：{get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-興趣：{get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-特殊專長：{get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-喜歡的東西：{get_string_character(data, hero_desc.get("like_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-討厭的東西：{get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-喜好禮物：{get_character_prefer_gift(data, hero_id)}
-初始打工屬性：{get_character_arbeit(data, hero_id)["initial"]}
-滿級打工屬性：{get_character_arbeit(data, hero_id)["max"]}
+兴趣：{get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+特殊特长：{get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+喜欢的东西：{get_string_character(data, hero_desc.get("like_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+讨厌的东西：{get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
+喜好礼物：{get_character_prefer_gift(data, hero_id)}
+初始打工属性：{get_character_arbeit(data, hero_id)["initial"]}
+满级打工属性：{get_character_arbeit(data, hero_id)["max"]}
 CV_KR：{get_character_cv(data, hero_desc)["kr"]}
 CV_JP：{get_character_cv(data, hero_desc)["ja"]}
 实装日期：{character_release_date}
-攻擊力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
-防禦力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
+攻击范围：{get_character_attack_range(data, hero_id)}
+攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
+防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
-暴擊率：{hero_data.get('critical_rate', 0) * 100:.1f}% + {hero_data.get('inc_critical_rate', 0) * 100:.3f}%/级
-暴擊威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
+暴击率：{hero_data.get('critical_rate', 0) * 100:.1f}% + {hero_data.get('inc_critical_rate', 0) * 100:.3f}%/级
+暴击威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
         basic_info_msg.append(basic_info_zh_tw)
         messages.append("\n".join(str(x) for x in basic_info_msg))
 
@@ -480,7 +484,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
         else:
             await bot.call_api(
                 "send_private_forward_msg",
-                user_id=event.user_id,
+                user_id=event.get_user_id(),
                 messages=forward_msgs
             )
     except Exception as e:
