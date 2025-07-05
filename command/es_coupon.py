@@ -1,27 +1,10 @@
 from ..library.utils import *
 
 
-# 确保兑换码文件存在
-def ensure_coupon_file():
-    if not os.path.exists(COUPON_YAML_PATH):
-        os.makedirs(COUPON_DIR, exist_ok=True)
-        with open(COUPON_YAML_PATH, "w", encoding="utf-8") as f:
-            yaml.dump({
-                "coupons": [
-                    # 示例兑换码数据
-                    # {"code": "ABCD1234", "desc": "测试兑换码", "date": "2024-12-31"}
-                ]
-            }, f, allow_unicode=True)
-        logger.info(f"已创建兑换码文件: {COUPON_YAML_PATH}")
-
-
 @es_coupon.handle()
 async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     """处理兑换码指令"""
 
-    # 确保兑换码文件存在
-    ensure_coupon_file()
-    
     user_id = event.get_user_id()
     
     # 获取用户的所有账号

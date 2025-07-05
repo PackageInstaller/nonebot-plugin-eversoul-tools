@@ -12,7 +12,7 @@ import requests
 from typing import Any, Tuple, Dict
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
-from nonebot import on_regex, on_command, require, on_message, on_notice, get_bot
+from nonebot import on_regex, on_command, require, on_message, on_notice, get_bot, on_fullmatch
 from nonebot.exception import FinishedException
 from nonebot.params import RegexGroup, CommandArg
 from nonebot.adapters.onebot.v11 import (
@@ -54,10 +54,10 @@ es_stage_info = on_command("es主线信息", priority=5, block=True)
 es_stats = on_regex(r"^es(身高|体重)排行$", priority=5, block=True)
 es_switch_source = on_command("es数据源", priority=5, permission=(SUPERUSER | GROUP_ADMIN | GROUP_OWNER), block=True)
 es_tier_info = on_command("es礼品信息", priority=5, block=True)
-es_coupon = on_command("es兑换码", priority=5, block=True)
-es_bind = on_command("es绑定账号", aliases={"es绑定"}, priority=5, block=True)
-es_unbind = on_command("es解绑账号", aliases={"es解绑"}, priority=5, block=True)
-es_notice = on_command("es公告", priority=5, block=True)
+es_coupon = on_fullmatch("es兑换码", priority=5, block=True)
+es_bind = on_command("es绑定", priority=5, block=True)
+es_unbind = on_fullmatch("es解绑", priority=5, block=True)
+es_notice = on_fullmatch("es公告", priority=5, block=True)
 es_story_info = on_command("es故事信息", priority=5, block=True)
 es_account_info = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
 
