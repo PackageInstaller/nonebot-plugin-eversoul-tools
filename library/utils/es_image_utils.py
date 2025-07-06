@@ -57,35 +57,43 @@ def apply_color_to_icon(icon_path: str, color: str) -> bytes:
     
 
 def get_character_portrait(data, hero_id, hero_name_en, raid=False):
-    """获取角色头像
+    """获取角色头像（包括基础头像和所有皮肤头像），动态查找所有皮肤。
     
     Args:
-        data: JSON数据字典
-        hero_id: 角色ID
-        hero_name_en: 角色英文名称
-        raid: 是否为恶灵讨伐
+        data: JSON数据字典 (保留以备将来使用或用于查找基础头像).
+        hero_id: 角色ID (保留以备将来使用或用于查找基础头像).
+        hero_name_en: 角色英文名称.
+        raid: 是否为恶灵讨伐.
     Returns:
-        Path: 头像图片路径或None
+        list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
-    # 头像路径
-    if raid:
-        portrait_path = str(SOUL_DIR / f"{HERO_NAME_MAPPING.get(hero_name_en, hero_name_en)}_Raid_512.png")
-    else:
-        portrait_path = str(SOUL_DIR / f"{hero_name_en}_512.png")
-    if Path(portrait_path).exists():
-        return portrait_path
+    portraits = []
     
-    # 如果直接用英文名找不到，尝试从item_costume获取portrait_path
-    for costume in data["item_costume"]["json"]:
-        if costume.get("hero_no") == hero_id:
-            portrait_path = costume.get("portrait_path", "")
-            if portrait_path:
-                # 构建头像路径
-                portrait_file = str(SOUL_DIR / f"{portrait_path}_512.png")
-                if Path(portrait_file).exists():
-                    return portrait_file
-                break
-    return None
+    base_name = HERO_NAME_MAPPING.get(hero_name_en, hero_name_en) if raid else hero_name_en
+    suffix = "_Raid_512.png" if raid else "_512.png"
+    
+    base_portrait_path = SOUL_DIR / f"{base_name}{suffix}"
+    
+    if base_portrait_path.exists():
+        portraits.append(str(base_portrait_path))
+    else:
+        for costume in data.get("item_costume", {}).get("json", []):
+            if costume.get("hero_no") == hero_id:
+                portrait_path = costume.get("portrait_path", "")
+                if portrait_path:
+                    portrait_file = SOUL_DIR / f"{portrait_path}_512.png"
+                    if portrait_file.exists():
+                        portraits.append(str(portrait_file))
+                        break
+
+    costume_pattern = f"{base_name}_Costume*{suffix}"
+    costume_paths = sorted(SOUL_DIR.glob(costume_pattern))
+    
+    for path in costume_paths:
+        portraits.append(str(path))
+        
+    return portraits
+
 
 
 def get_character_illustration(data, hero_id):

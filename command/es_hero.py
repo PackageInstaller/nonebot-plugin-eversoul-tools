@@ -128,6 +128,8 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_tw"]
         # 品质
         grade_zh_tw = get_string_system(data, hero_data["grade_sno"])["zh_tw"]
+
+        atk_range = get_character_attack_range(data, hero_id)
         
         # 构建消息列表
         messages = []
@@ -141,11 +143,12 @@ async def handle_hero_info(bot: Bot, event: Event, args: Message = CommandArg())
         
         # 繁体中文版本
         basic_info_msg = []
-        # 立绘
-        portrait_path = get_character_portrait(data, hero_id, hero_name_en) 
+        # 头像（基础头像和皮肤头像）
+        portrait_paths = get_character_portrait(data, hero_id, hero_name_en) 
         basic_info_msg.append("【基础信息】")
-        if portrait_path:
-            basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
+        if portrait_paths:
+            for portrait_path in portrait_paths:
+                basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
         basic_info_zh_tw = f"""{nickname_zh_tw if nickname_zh_tw != "" else nickname_kr}・{hero_name_zh_tw if hero_name_zh_tw != "" else hero_name_kr}
 类型：{race_zh_tw} {hero_class_zh_tw}
 攻击方式：{sub_class_zh_tw}
@@ -174,7 +177,7 @@ if hero_desc and hero_desc.get("birthday") else "？？？"}
 CV_KR：{get_character_cv(data, hero_desc)["kr"]}
 CV_JP：{get_character_cv(data, hero_desc)["ja"]}
 实装日期：{character_release_date}
-攻击范围：{get_character_attack_range(data, hero_id)}
+攻击范围：{atk_range if atk_range > 0 else "未知"}(4.0以下为近战)
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级

@@ -1376,15 +1376,13 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                             # 构建图片路径. build image path
                             img_path = None
                             if prefab:
-                                img_path = TOWN_DIR / f"{prefab}.png"
-                                if os.path.exists(TOWN_DIR):
-                                    for file in os.listdir(TOWN_DIR):
-                                        if file.lower() == f"{prefab}.png":
-                                            img_path = TOWN_DIR / file
-                                            break
-                                    
-                                    if not os.path.exists(img_path):
-                                        img_path = None
+                                for file in os.listdir(TOWN_DIR):
+                                    if file.lower() == f"{prefab}.png":
+                                        img_path = TOWN_DIR / file
+                                        break
+                                
+                                if not os.path.exists(img_path):
+                                    img_path = None
                             
                             objects_info.append((obj_no, name, grade, slot_type, desc, img_path, battle_power_per))
                         
