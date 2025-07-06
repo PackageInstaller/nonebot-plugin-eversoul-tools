@@ -39,7 +39,8 @@ def parse_server_id(text: str) -> Tuple[Optional[str], Optional[str]]:
     return server_code, player_id
 
 
-async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Event, max_retries: int = 3, retry_delay: float = 1.0) -> Tuple[bool, str]:
+async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Event,
+                        max_retries: int = 3, retry_delay: float = 1.0) -> Tuple[bool, str]:
     """兑换礼包码
     
     Args:
@@ -76,92 +77,63 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                     response_text = await response.text()
                     status_code = response.status
                     
-                    # 处理各种可能的结果
                     if status_code == 200:
-                        # 尝试解析JSON响应
-                        try:
-                            group_id = 0
-                            if isinstance(event, GroupMessageEvent):
-                                group_id = event.group_id
-                            
-                            # 解析响应JSON
-                            response_data = json.loads(response_text)
-                            
-                            # 构建奖励信息
-                            reward_info = []
-                            
-                            # 加载物品数据
-                            data = load_json_data(group_id)
-                            # 处理主要物品
-                            if "item" in response_data:
-                                item = response_data["item"]
-                                item_code = item.get("itemCode")
-                                # 确保item_code是整数
+                        if isinstance(event, GroupMessageEvent):
+                            group_id = event.group_id
+                        
+                        response_data = json.loads(response_text)
+                        reward_info = []
+                        
+                        data = load_json_data(group_id)
+                        if "item" in response_data:
+                            item = response_data["item"]
+                            item_code = item.get("itemCode")
+                            if isinstance(item_code, str):
+                                item_code = int(item_code)
+                            quantity = item.get("quantity", 1)
+                            if item_code:
+                                item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
+                                reward_info.append(f"{item_name}x{quantity}")
+                        
+                        if "others" in response_data and isinstance(response_data["others"], list):
+                            for other_item in response_data["others"]:
+                                item_code = other_item.get("itemCode")
                                 if isinstance(item_code, str):
                                     item_code = int(item_code)
-                                quantity = item.get("quantity", 1)
-                                if item_code:
-                                    # 获取物品名称
-                                    try:
-                                        item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
-                                        reward_info.append(f"{item_name}x{quantity}")
-                                    except Exception as e:
-                                        logger.error(f"获取物品名称失败: {e}")
-                                        reward_info.append(f"未知物品(itemCode:{item_code})x{quantity}")
-                            
-                            # 处理其他物品
-                            if "others" in response_data and isinstance(response_data["others"], list):
-                                for other_item in response_data["others"]:
-                                    item_code = other_item.get("itemCode")
-                                    # 确保item_code是整数
-                                    if isinstance(item_code, str):
-                                        item_code = int(item_code)
-                                    quantity = other_item.get("quantity", 1)
+                                quantity = other_item.get("quantity", 1)
 
-                                    if item_code:
-                                        # 获取物品名称
-                                        try:
-                                            item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
-                                            reward_info.append(f"{item_name}x{quantity}")
-                                        except Exception as e:
-                                            logger.error(f"获取物品名称失败: {e}")
-                                            reward_info.append(f"未知物品(itemCode:{item_code})x{quantity}")
-                            
-                            # 构建成功消息
-                            if reward_info:
-                                rewards = "、".join(reward_info)
-                                return True, f"兑换成功! 获得: {rewards}"
-                            return True, f"兑换成功!"
-                        except Exception as e:
-                            logger.error(f"解析奖励信息失败: {e}")
-                            return True, f"兑换成功! 服务器响应: {response_text}"
+                                if item_code:
+                                    item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
+                                    reward_info.append(f"{item_name}x{quantity}")
+                        
+                        if reward_info:
+                            rewards = "、".join(reward_info)
+                            return True, f"获得: {rewards}"
+
                     elif status_code == 403:
-                        return False, f"兑换码无效。"
+                        return False, "兑换码无效。"
+                    elif status_code == 461:
+                        return False, "兑换码售罄。"
                     elif status_code == 462:
-                        return False, f"兑换码已过期。"
+                        return False, "兑换码过期。"
                     elif status_code == 463:
-                        # 将超出兑换次数限制视为"有效"，这样可以更新过期日期
-                        return True, f"帐号超出兑换次数限制。"
+                        return False, "兑换码超限。"
+                    elif status_code == 464:
+                        return False, "兑换码非所有者。"
+                    elif status_code == 465:
+                        return False, "兑换码处理中。"
                     elif status_code == 466:
-                        return False, f"账号不存在。"
-                    else:
-                        # 可能需要重试的错误
-                        if status_code >= 500 or status_code == 429:
-                            retry_count += 1
-                            if retry_count <= max_retries:
-                                logger.warning(f"兑换请求失败 (状态码: {status_code})，将在 {retry_delay} 秒后重试 (第 {retry_count}/{max_retries} 次)")
-                                await asyncio.sleep(retry_delay)
-                                # 每次重试增加延迟时间
-                                retry_delay *= 1.5
-                                continue
-                        return False, f"服务器返回错误 (状态码: {status_code}): {response_text}"
+                        return False, "账号不存在。"
+                    elif status_code == 469:
+                        return False, "服务器DDOS。"
+                    elif status_code == 503:
+                        return False, "服务器错误。"
                 
         except aiohttp.ClientError as e:
             retry_count += 1
             if retry_count <= max_retries:
                 logger.warning(f"兑换请求发生网络错误: {e}，将在 {retry_delay} 秒后重试 (第 {retry_count}/{max_retries} 次)")
                 await asyncio.sleep(retry_delay)
-                # 每次重试增加延迟时间
                 retry_delay *= 1.5
                 continue
             logger.error(f"兑换请求发生网络错误 (最终尝试): {e}")
@@ -171,7 +143,6 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
             if retry_count <= max_retries:
                 logger.warning(f"兑换请求超时，将在 {retry_delay} 秒后重试 (第 {retry_count}/{max_retries} 次)")
                 await asyncio.sleep(retry_delay)
-                # 每次重试增加延迟时间
                 retry_delay *= 1.5
                 continue
             logger.error("兑换请求超时 (最终尝试)")
@@ -180,7 +151,6 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
             logger.error(f"兑换过程中发生未知错误: {e}")
             return False, f"处理兑换请求时发生错误: {str(e)}"
             
-    # 如果到达这里，说明已经重试了最大次数但仍然失败
     return False, f"经过 {max_retries} 次重试后仍然失败"
 
 
@@ -210,7 +180,6 @@ async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items:
     for item in coupon_items:
         await queue.put(item)
     
-    # 定义工作函数
     async def worker():
         nonlocal skipped_count
         while not queue.empty():
@@ -225,21 +194,13 @@ async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items:
                     skipped_count += 1
                     status = coupon_history[code]["status"]
                     message = coupon_history[code].get("message", "")
-                    
-                    # 根据历史记录中的状态显示不同的图标
-                    if "帐号超出兑换次数限制" in message:
-                        status_emoji = "⚠️超出限制"
-                    elif status == "成功":
-                        status_emoji = "✅已兑换"
-                    else:
-                        status_emoji = "⏭️已处理"
-                        
+
                     results.append({
                         "code": code,
                         "desc": desc,
                         "status": "已兑换",
-                        "result": f"{code} ({desc}): {status_emoji}\n{message}",
-                        "is_skipped": True
+                        "result": f"{code} ({desc})\n{message}",
+                        "skipped": True
                     })
                     queue.task_done()
                     continue
@@ -247,23 +208,20 @@ async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items:
                 # 执行兑换
                 success, result = await redeem_coupon(app_id, player_id, code, event)
                 
-                # 特殊处理超出兑换次数限制的情况
-                is_limit_exceeded = "帐号超出兑换次数限制" in result
+                is_limit_exceeded = "兑换码超限" in result
                 
                 # 状态文本和表情
                 if is_limit_exceeded:
-                    status = "超出限制"  # 实际上这是成功的识别，但显示为"超出限制"
-                    status_emoji = "⚠️超出限制"
+                    status = "超限"
                 else:
                     status = "成功" if success else "失败"
-                    status_emoji = "✅成功" if success else "❎失败"
                 
                 results.append({
                     "code": code,
                     "desc": desc,
                     "status": status,
-                    "result": f"{code} ({desc}): {status_emoji}\n{result}",
-                    "is_skipped": False,
+                    "result": f"{code} ({desc})\n{result}",
+                    "skipped": False,
                     "success": success,
                     "message": result
                 })
@@ -271,16 +229,6 @@ async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items:
                 queue.task_done()
             except Exception as e:
                 logger.error(f"处理兑换码时发生错误: {e}")
-                if "item" in locals():
-                    results.append({
-                        "code": item.get("code", "未知"),
-                        "desc": item.get("desc", "无描述"),
-                        "status": "错误",
-                        "result": f"{item.get('code', '未知')} ({item.get('desc', '无描述')}): ❌错误\n处理兑换时发生错误: {str(e)}",
-                        "is_skipped": False,
-                        "success": False,
-                        "message": f"处理兑换时发生错误: {str(e)}"
-                    })
                 queue.task_done()
     
     # 创建并启动工作任务

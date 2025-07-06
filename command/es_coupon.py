@@ -2,23 +2,19 @@ from ..library.utils import *
 
 
 @es_coupon.handle()
-async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
+async def handle_coupon(bot: Bot, event: Event):
     """处理兑换码指令"""
 
     user_id = event.get_user_id()
-    
-    # 获取用户的所有账号
     user_accounts = await EversoulUser.get_all_user_accounts(int(user_id))
     
     if not user_accounts:
-        # 用户未绑定，发送绑定提示
         bind_msg = (
             f"未绑定游戏账号，无法进行兑换。\n"
             "请使用 es绑定 [地区+ID] 绑定账号"
         )
         await es_coupon.finish(message=bind_msg, reply_message=True)
     
-    # 读取所有兑换码
     try:
         with open(COUPON_YAML_PATH, "r", encoding="utf-8") as f:
             coupon_data = yaml.safe_load(f)
@@ -30,10 +26,8 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
     if not coupon_items:
         await es_coupon.finish(message="当前没有可用的兑换码", reply_message=True)
 
-    # 获取当前时间，用于检查兑换码是否过期
     current_date = datetime.now().strftime("%Y-%m-%d")
     
-    # 分类兑换码
     valid_coupons = []
     expired_coupons = []
     
@@ -44,12 +38,11 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         if not code:
             continue
             
-        # 如果日期已过期，标记为过期，但不再尝试兑换
         if expiry_date and expiry_date < current_date:
-            item["is_expired"] = True
+            item["expired"] = True
             expired_coupons.append(item)
         else:
-            item["is_expired"] = False
+            item["expired"] = False
             valid_coupons.append(item)
     
     # 现在只使用有效的兑换码，不再尝试过期的
@@ -67,74 +60,21 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         reply_message=True
     )
     
-    # 准备合并转发消息
     forward_messages = []
     
-    # 添加兑换开始信息
-    forward_messages.append({
-        "type": "node",
-        "data": {
-            "name": "Eversoul Helper",
-            "uin": event.self_id,
-            "content": f"兑换码兑换结果 ({len(all_coupons)}个兑换码，{accounts_count}个账号)"
-        }
-    })
-    
-    # 记录需要更新过期日期的兑换码
-    codes_to_update = []
-    
-    # 用于统计各类型结果数量
-    total_success_results = 0
-    total_limit_results = 0
-    total_failed_results = 0
-    total_skipped_results = 0
-    
-    # 获取所有已兑换历史
     all_coupon_histories = {}
     for account in user_accounts:
         player_id = account.get("player_id")
         history = await EversoulUser.get_coupon_history(int(user_id), str(player_id))
         all_coupon_histories[player_id] = history
     
-    # 寻找已过期但限制兑换的码
-    expired_limit_codes = []
-    for item in all_coupons:
-        if item.get("is_expired", False):
-            code = item.get("code")
-            # 检查是否在任何账号的历史中有超出限制记录
-            for player_id, history in all_coupon_histories.items():
-                if code in history and "帐号超出兑换次数限制" in history[code].get("message", ""):
-                    if code not in expired_limit_codes:
-                        expired_limit_codes.append(code)
-    
-    # 如果找到这样的兑换码，添加一个提示
-    if expired_limit_codes:
-        forward_messages.append({
-            "type": "node",
-            "data": {
-                "name": "Eversoul Helper",
-                "uin": event.self_id,
-                "content": f"发现 {len(expired_limit_codes)} 个已过期但显示为超出兑换限制的兑换码，将尝试更新日期并重新兑换"
-            }
-        })
-        
-        for code in expired_limit_codes:
-            # 同时更新兑换码列表中的状态
-            for item in all_coupons:
-                if item.get("code") == code:
-                    item["is_expired"] = False
-
-    
-    # 为每个账号执行兑换
     for account_index, account in enumerate(user_accounts):
         app_id = account.get("app_id")
         player_id = account.get("player_id")
         
-        # 获取服务器名称
         server_code = next((k for k, v in SERVER_APP_ID_MAPPING.items() if v == app_id), "未知")
         server_name = SERVER_NAME_MAPPING.get(server_code, app_id)
         
-        # 账号信息
         account_info = f"账号{account_index+1}/{accounts_count}: {server_name}, ID: {player_id}"
         forward_messages.append({
             "type": "node",
@@ -144,22 +84,11 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                 "content": f"开始为 {account_info} 兑换"
             }
         })
-        
-        # 获取该账号的兑换历史
         coupon_history = await EversoulUser.get_coupon_history(int(user_id), str(player_id))
-        
-        # 对于已更新日期的特殊兑换码，从历史记录中移除，确保它们会被重新尝试兑换
-        if expired_limit_codes:
-            for code in expired_limit_codes:
-                if code in coupon_history:
-                    del coupon_history[code]
-        
-        # 使用并发执行兑换
-        results, skipped_count = await redeem_coupons_concurrently(
+        results, _ = await redeem_coupons_concurrently(
             str(app_id), str(player_id), all_coupons, event, coupon_history, max_workers=100
         )
         
-        # 对结果进行排序：成功的在前，超出限制的其次，失败的放最后
         sorted_results = []
         success_results = []
         limit_results = []
@@ -167,25 +96,17 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         skipped_results = []
         
         for result_item in results:
-            if result_item.get("is_skipped", False):
+            if result_item.get("skipped", False):
                 skipped_results.append(result_item)
             elif result_item.get("status") == "成功":
                 success_results.append(result_item)
-            elif result_item.get("status") == "超出限制":
+            elif result_item.get("status") == "超限":
                 limit_results.append(result_item)
             else:
                 failed_results.append(result_item)
         
-        # 更新总计数
-        total_success_results += len(success_results)
-        total_limit_results += len(limit_results)
-        total_failed_results += len(failed_results)
-        total_skipped_results += len(skipped_results)
-        
-        # 按顺序合并结果
         sorted_results = success_results + limit_results + failed_results + skipped_results
         
-        # 合并同一类别的结果到一条消息中
         if success_results:
             success_content = "\n".join([result_item["result"] for result_item in success_results])
             forward_messages.append({
@@ -233,7 +154,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
         # 更新兑换历史和检查是否需要更新过期日期
         for result_item in sorted_results:
             # 如果不是跳过的结果，需要更新兑换历史
-            if not result_item.get("is_skipped", False):
+            if not result_item.get("skipped", False):
                 code = result_item["code"]
                 success = result_item.get("success", False)
                 message = result_item.get("message", "")
@@ -253,25 +174,13 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                         "time": current_time
                     }
                 )
-                
-                # 检查是否需要更新过期日期
-                for item in all_coupons:
-                    if item["code"] == code and item.get("is_expired", False):
-                        # 如果是超出兑换次数限制的情况，也需要更新过期日期
-                        if success or "帐号超出兑换次数限制" in message:
-                            # 如果过期码兑换成功或返回超出限制，需要更新日期
-                            if code not in codes_to_update:
-                                codes_to_update.append(code)
-    
-    # 添加兑换完成信息
+
     forward_messages.append({
         "type": "node",
         "data": {
             "name": "Eversoul Helper",
             "uin": event.self_id,
-            "content": f"共{accounts_count}个账号，{len(all_coupons)}个兑换码\n"
-                       f"✅成功: {total_success_results} | ⚠️超出限制: {total_limit_results}\n"
-                       f"❎失败: {total_failed_results} | ⏭️已兑换过: {total_skipped_results}"
+            "content": f"共{accounts_count}个账号，{len(all_coupons)}个兑换码"
         }
     })
     

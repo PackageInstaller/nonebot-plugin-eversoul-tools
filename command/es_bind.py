@@ -12,8 +12,8 @@ async def handle_bind(bot: Bot, event: Event, args: Message = CommandArg()):
         # 如果用户未提供参数，显示帮助信息
         help_msg = (
             "请按照以下格式绑定账号：\n"
-            "es绑定账号 [地区+ID]\n"
-            "例如：es绑定账号 kr734521179911(偷偷夹点私货,我的好友码)\n\n"
+            "es绑定 [地区+ID]\n"
+            "例如：es绑定 kr734521179911(韩服加我!)\n\n"
             "支持的地区代码：\n"
             "asia - 亚服\n"
             "kr - 韩服\n"
@@ -35,8 +35,8 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
     if not server_code or not player_id:
         help_msg = (
             "请按照以下格式绑定账号：\n"
-            "es绑定账号 [地区+ID]\n"
-            "例如：es绑定账号 kr734521179911(偷偷夹点私货,我的好友码)\n\n"
+            "es绑定 [地区+ID]\n"
+            "例如：es绑定 kr734521179911(韩服加我!)\n\n"
             "支持的地区代码：\n"
             "asia - 亚服\n"
             "kr - 韩服\n"
@@ -76,22 +76,13 @@ async def handle_binding(bot: Bot, event: Event, server_id_text: str):
     if not success:
         await es_bind.finish(message="数据库操作失败，请联系管理员", reply_message=True)
     
-    # 绑定成功
     server_name = SERVER_NAME_MAPPING.get(server_code, server_code)
     
-    # 添加当前账号列表信息
-    total_accounts = len(existing_accounts) + 1
     message = (
         f"账号绑定成功！\n"
         f"服务器：{server_name}\n"
         f"玩家ID：{player_id}\n\n"
     )
-    
-    if total_accounts > 1:
-        message += f"您当前已绑定了{total_accounts}个账号，使用es兑换码将会为所有账号兑换"
-    else:
-        message += "您可以继续绑定其他服务器账号，兑换码将会为所有账号兑换"
-    
     await es_bind.finish(
         message=message,
         reply_message=True

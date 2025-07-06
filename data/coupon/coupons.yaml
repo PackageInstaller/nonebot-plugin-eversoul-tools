@@ -90,8 +90,8 @@ coupons:
   date: '2025-04-07'
   desc: 伊迪丝迷宫乱斗的兑换码
 - code: CELEBRATE2HALF
-  date: '2025-08-06'
-  desc: 2.5周年兑换码
+  date: '2025-08-07'
+  desc: 2.5周年直播兑换码
 - code: DEMONNIA0710
   date: '2025-08-07'
   desc: 2.5周年多米尼克兑换码
@@ -102,7 +102,7 @@ coupons:
   date: '2025-08-07'
   desc: 2.5周年感谢救援者兑换码
 - code: 
-  date:
+  date: ''
   desc: 
 - code: 
   date: ''
