@@ -177,7 +177,7 @@ if hero_desc and hero_desc.get("birthday") else "？？？"}
 CV_KR：{get_character_cv(data, hero_desc)["kr"]}
 CV_JP：{get_character_cv(data, hero_desc)["ja"]}
 实装日期：{character_release_date}
-攻击范围：{atk_range if atk_range > 0 else "未知"}(4.0以下为近战)
+攻击范围：{atk_range if atk_range > 0 else "未知"}(4以下为近战)
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
