@@ -45,7 +45,7 @@ class EversoulUser:
                 # 创建服务器状态表
                 await db.execute(
                     """
-                    CREATE TABLE IF NOT EXISTS server_status (
+                    CREATE TABLE IF NOT EXISTS server (
                         server_type TEXT PRIMARY KEY,
                         version TEXT,
                         cdn_date TEXT,
@@ -73,16 +73,16 @@ class EversoulUser:
                         )
                         await db.commit()
                     
-                    # 检查server_status表是否存在
+                    # 检查server表是否存在
                     cursor = await db.execute(
-                        "SELECT name FROM sqlite_master WHERE type='table' AND name='server_status'"
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name='server'"
                     )
                     table_exists = await cursor.fetchone()
                     
                     if not table_exists:
                         await db.execute(
                             """
-                            CREATE TABLE server_status (
+                            CREATE TABLE server (
                                 server_type TEXT PRIMARY KEY,
                                 version TEXT,
                                 cdn_date TEXT,
@@ -92,7 +92,7 @@ class EversoulUser:
                             """
                         )
                         await db.commit()
-                        logger.info("数据库表 server_status 创建成功")
+                        logger.info("数据库表 server 创建成功")
             except Exception as e:
                 logger.error(f"升级数据库结构失败: {e}")
     
@@ -306,7 +306,7 @@ class EversoulUser:
             return False
     
     @classmethod
-    async def get_server_status(cls, server_type: str) -> Optional[Dict[str, Any]]:
+    async def get_server(cls, server_type: str) -> Optional[Dict[str, Any]]:
         """获取服务器状态
         
         Args:
@@ -320,7 +320,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 db.row_factory = aiosqlite.Row
                 cursor = await db.execute(
-                    "SELECT version, cdn_date, table_version FROM server_status WHERE server_type = ?",
+                    "SELECT version, cdn_date, table_version FROM server WHERE server_type = ?",
                     (server_type,)
                 )
                 row = await cursor.fetchone()
@@ -338,7 +338,7 @@ class EversoulUser:
         return None
     
     @classmethod
-    async def update_server_status(cls, server_type: str, version: str, 
+    async def update_server(cls, server_type: str, version: str, 
                                  cdn_date: str = "", table_version: int = 0) -> bool:
         """更新服务器状态
         
@@ -359,7 +359,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
                     """
-                    INSERT OR REPLACE INTO server_status 
+                    INSERT OR REPLACE INTO server 
                     (server_type, version, cdn_date, table_version, last_checked)
                     VALUES (?, ?, ?, ?, ?)
                     """,
