@@ -61,6 +61,7 @@ es_unbind = on_command("es解绑", aliases={"es解绑账号", "es账号解绑"},
 es_notice = on_fullmatch("es公告", priority=5, block=True)
 es_story_info = on_command("es故事信息", priority=5, block=True)
 es_account_info = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
+es_update_check = on_command("es检查更新", aliases={"es更新检查"},priority=5, block=True)
 
 # 数据相关
 from .es_data_utils import (
@@ -79,6 +80,12 @@ from .es_image_utils import (
     get_character_affection_cg, get_character_evertalk_cg,
     generate_level_cost_chart, generate_timeline_html,
     generate_potential_html
+)
+
+# 更新检查相关
+from .es_update_utils import (
+    EversoulUpdateChecker, check_eversoul_updates,
+    TableInfo, ReviewServerInfo, ServerStatus
 )
 
 # 文本相关

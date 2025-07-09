@@ -34,14 +34,13 @@ async def handle_es_range_ranking(bot: Bot, event: Event):
         
         range_info.sort(key=lambda x: x[1], reverse=True)
 
-        messages = [""]
         if range_info:
-            messages.append(f"【已知攻击范围】")
+            messages = ["【已知攻击范围】"]
             for i, (name, range_value) in enumerate(range_info, 1):
                 messages.append(f"{i}. {name}: {range_value}")
         
         if unknown_range:
-            messages.append(f"\n【未知攻击范围】")
+            messages.append("\n【未知攻击范围】")
             for i, name in enumerate(unknown_range, 1):
                 messages.append(f"{i}. {name}")
         
@@ -54,7 +53,6 @@ async def handle_es_range_ranking(bot: Bot, event: Event):
             }
         }]
         
-        # 发送消息
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
                 "send_group_forward_msg",
@@ -80,4 +78,4 @@ async def handle_es_range_ranking(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_range_ranking.finish(f"处理攻击范围排行时发生错误: {str(e)}") 
+            await es_range_ranking.finish(f"处理攻击范围排行时发生错误: {str(e)}")

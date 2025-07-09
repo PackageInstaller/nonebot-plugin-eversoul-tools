@@ -121,144 +121,158 @@ async def handle_es_help(bot: Bot, event: Event):
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/seal_icon_264141.png');"></span>es角色信息
+                            <td>
+                                es角色信息
                                 + 角色名</td>
                             <td>查询角色的详细信息</td>
                             <td>es角色信息大帝</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/chart_horizontal_bar_chart_icon_264072.png');"></span>es角色列表
+                            <td>
+                                es角色列表
                             </td>
                             <td>查询所有角色以及别名</td>
                             <td>es角色列表</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/award_icon_264050.png');"></span>es主线信息
+                            <td>
+                                es主线信息
                                 + 章节-关卡</td>
                             <td>查询主线关卡的详细信息</td>
                             <td>es主线信息31-60</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/calendar_icon_264055.png');"></span>es
-                                x 月事件</td>
+                            <td>
+                                esx月事件
+                            </td>
                             <td>查询x月的所有事件</td>
                             <td>es1月事件</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/bar_chart_graphic_statistics_icon_264070.png');"></span>es身高/体重排行
+                            <td>
+                                es身高/体重排行
                             </td>
                             <td>查询身高/体重排行</td>
                             <td>es身高排行</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/currency_dollar_icon_264089.png');"></span>es升级消耗
+                            <td>
+                                es升级消耗
                                 + 等级</td>
                             <td>查询指定等级的升级消耗</td>
                             <td>es升级消耗1000</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/vip_icon_264042.png');"></span>es方舟等级信息
+                            <td>
+                                es方舟等级信息
                                 + 等级</td>
                             <td>查询指定方舟等级的信息</td>
                             <td>es方舟等级信息500</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/coins_icon_264079.png');"></span>es超频消耗
+                            <td>
+                                es超频消耗
                                 + 等级</td>
                             <td>查询方舟超频到指定等级的消耗</td>
                             <td>es超频消耗10</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/chart_line_chart_statistics_icon_264073.png');"></span>es人类/野兽/妖精/不死/自由传送门信息
+                            <td>
+                                es人类/野兽/妖精/不死/自由传送门信息
                                 + 层数</td>
                             <td>查询传送门信息</td>
                             <td>es人类传送门信息10</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/gift_icon_264120.png');"></span>es突发礼包信息主线[章节]/[种类]传送门/起源塔/升阶
+                            <td>
+                                es突发礼包信息主线[章节]/[种类]传送门/起源塔/升阶
                             </td>
                             <td>查询突发礼包信息</td>
                             <td>es突发礼包信息主线31</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/medal_award_icon_264125.png');"></span>es礼品信息[品质][类型][种类]
+                            <td>
+                                es礼品信息[品质][类型][种类]
                             </td>
                             <td>查询礼品信息</td>
                             <td>es礼品信息粉1智力加速</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/suitcase_briefcase_icon_264149.png');"></span>es潜能信息
+                            <td>
+                                es潜能信息
                             </td>
                             <td>查询潜能信息</td>
                             <td>es潜能信息</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/vip_diamond_icon_264043.png');"></span>es恶灵信息
+                            <td>
+                                es恶灵信息
                                 + 恶灵ID</td>
                             <td>查询恶灵讨伐BOSS的详细信息</td>
                             <td>es恶灵信息66009</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/copyright_icon_264083.png');"></span>es数据源
+                            <td>
+                                es数据源
                                 + [review/live]</td>
                             <td>切换数据源，仅限超管，群主以及管理员可用</td>
                             <td>es数据源review</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/copper_coin_icon_264082.png');"></span>es兑换码
+                            <td>
+                                es兑换码
                             </td>
                             <td>兑换游戏礼包码</td>
                             <td>es兑换码</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/currency_shekel_icon_264103.png');"></span>es解绑账号
+                            <td>
+                                es解绑账号
                             </td>
                             <td>解除当前绑定的游戏账号</td>
                             <td>es解绑账号</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/diamond_icon_264107.png');"></span>es绑定账号
+                            <td>
+                                es绑定账号
                                 + [地区+ID]</td>
                             <td>手动绑定游戏账号，支持重新绑定</td>
                             <td>es绑定账号 kr123456789012</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/stock_icon_264148.png');"></span>es账号信息
+                            <td>
+                                es账号信息
                             </td>
                             <td>查看当前绑定的所有游戏账号信息</td>
                             <td>es账号信息</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/presentation_charts_icon_264128.png');"></span>es公告
+                            <td>
+                                es公告
                             </td>
                             <td>查询游戏公告</td>
                             <td>es公告</td>
                         </tr>
                         <tr>
-                            <td><span class="icon"
-                                    style="background-image: url('https://images.icon-icons.com/4235/PNG/96/flag_icon_264117.png');"></span>es故事信息
+                            <td>
+                                es故事信息
                                 + 数字ID</td>
                             <td>查询活动故事的详细信息</td>
                             <td>es故事信息12044</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                es攻击范围排行
+                            </td>
+                            <td>查询攻击范围排行</td>
+                            <td>es攻击范围排行</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                es检查更新
+                            </td>
+                            <td>手动检查服务器更新状态</td>
+                            <td>es检查更新</td>
                         </tr>
                     </tbody>
                 </table>

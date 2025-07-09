@@ -31,7 +31,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
                     """
-                    CREATE TABLE IF NOT EXISTS eversoul_users (
+                    CREATE TABLE IF NOT EXISTS _user (
                         user_id INTEGER NOT NULL,
                         app_id TEXT NOT NULL,
                         player_id TEXT NOT NULL,
@@ -41,13 +41,25 @@ class EversoulUser:
                     )
                     """
                 )
+                
+                # 创建服务器状态表
+                await db.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS server_status (
+                        server_type TEXT PRIMARY KEY,
+                        version TEXT,
+                        cdn_date TEXT,
+                        table_version INTEGER,
+                        last_checked TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                    """
+                )
                 await db.commit()
-                logger.info("数据库表 eversoul_users 创建成功")
         else:
             # 检查是否需要升级数据库结构
             try:
                 async with aiosqlite.connect(cls._db_path) as db:
-                    cursor = await db.execute("PRAGMA table_info(eversoul_users)")
+                    cursor = await db.execute("PRAGMA table_info(user)")
                     columns = await cursor.fetchall()
                     column_names = [col[1] for col in columns]
                     
@@ -55,12 +67,32 @@ class EversoulUser:
                     if "coupon_history" not in column_names:
                         await db.execute(
                             """
-                            ALTER TABLE eversoul_users
+                            ALTER TABLE user
                             ADD COLUMN coupon_history TEXT DEFAULT '{}'
                             """
                         )
                         await db.commit()
-                        logger.info("数据库表 eversoul_users 已更新，添加了 coupon_history 列")
+                    
+                    # 检查server_status表是否存在
+                    cursor = await db.execute(
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name='server_status'"
+                    )
+                    table_exists = await cursor.fetchone()
+                    
+                    if not table_exists:
+                        await db.execute(
+                            """
+                            CREATE TABLE server_status (
+                                server_type TEXT PRIMARY KEY,
+                                version TEXT,
+                                cdn_date TEXT,
+                                table_version INTEGER,
+                                last_checked TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                            )
+                            """
+                        )
+                        await db.commit()
+                        logger.info("数据库表 server_status 创建成功")
             except Exception as e:
                 logger.error(f"升级数据库结构失败: {e}")
     
@@ -84,7 +116,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
                     """
-                    INSERT OR REPLACE INTO eversoul_users 
+                    INSERT OR REPLACE INTO user
                     (user_id, app_id, player_id, update_time) 
                     VALUES (?, ?, ?, ?)
                     """,
@@ -112,7 +144,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 db.row_factory = aiosqlite.Row
                 cursor = await db.execute(
-                    "SELECT * FROM eversoul_users WHERE user_id = ? LIMIT 1",
+                    "SELECT * FROM user WHERE user_id = ? LIMIT 1",
                     (user_id,)
                 )
                 row = await cursor.fetchone()
@@ -139,7 +171,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 db.row_factory = aiosqlite.Row
                 cursor = await db.execute(
-                    "SELECT * FROM eversoul_users WHERE user_id = ?",
+                    "SELECT * FROM user WHERE user_id = ?",
                     (user_id,)
                 )
                 rows = await cursor.fetchall()
@@ -164,7 +196,7 @@ class EversoulUser:
             await cls.init_db()
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
-                    "DELETE FROM eversoul_users WHERE user_id = ?",
+                    "DELETE FROM user WHERE user_id = ?",
                     (user_id,)
                 )
                 await db.commit()
@@ -189,7 +221,7 @@ class EversoulUser:
             await cls.init_db()
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
-                    "DELETE FROM eversoul_users WHERE user_id = ? AND player_id = ?",
+                    "DELETE FROM user WHERE user_id = ? AND player_id = ?",
                     (user_id, player_id)
                 )
                 await db.commit()
@@ -215,7 +247,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 db.row_factory = aiosqlite.Row
                 cursor = await db.execute(
-                    "SELECT coupon_history FROM eversoul_users WHERE user_id = ? AND player_id = ?",
+                    "SELECT coupon_history FROM user WHERE user_id = ? AND player_id = ?",
                     (user_id, player_id)
                 )
                 row = await cursor.fetchone()
@@ -260,7 +292,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
                     """
-                    UPDATE eversoul_users
+                    UPDATE user
                     SET coupon_history = ?
                     WHERE user_id = ? AND player_id = ?
                     """,
@@ -271,4 +303,71 @@ class EversoulUser:
             return True
         except Exception as e:
             logger.error(f"更新兑换码历史失败: {e}")
+            return False
+    
+    @classmethod
+    async def get_server_status(cls, server_type: str) -> Optional[Dict[str, Any]]:
+        """获取服务器状态
+        
+        Args:
+            server_type: 服务器类型 ("live" 或 "review")
+            
+        Returns:
+            Optional[Dict[str, Any]]: 服务器状态信息
+        """
+        try:
+            await cls.init_db()
+            async with aiosqlite.connect(cls._db_path) as db:
+                db.row_factory = aiosqlite.Row
+                cursor = await db.execute(
+                    "SELECT version, cdn_date, table_version FROM server_status WHERE server_type = ?",
+                    (server_type,)
+                )
+                row = await cursor.fetchone()
+                
+                if row:
+                    return {
+                        "version": row["version"],
+                        "cdn_date": row["cdn_date"],
+                        "table_version": row["table_version"]
+                    }
+                    
+        except Exception as e:
+            logger.error(f"获取服务器状态失败: {e}")
+            
+        return None
+    
+    @classmethod
+    async def update_server_status(cls, server_type: str, version: str, 
+                                 cdn_date: str = "", table_version: int = 0) -> bool:
+        """更新服务器状态
+        
+        Args:
+            server_type: 服务器类型 ("live" 或 "review")
+            version: 版本号
+            cdn_date: CDN日期（仅Review服务器需要）
+            table_version: 表版本号
+            
+        Returns:
+            bool: 是否成功
+        """
+        try:
+            await cls.init_db()
+            
+            beijing_time = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
+            
+            async with aiosqlite.connect(cls._db_path) as db:
+                await db.execute(
+                    """
+                    INSERT OR REPLACE INTO server_status 
+                    (server_type, version, cdn_date, table_version, last_checked)
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (server_type, version, cdn_date, table_version, beijing_time)
+                )
+                await db.commit()
+                logger.info(f"服务器状态已更新: {server_type} - {version}")
+            return True
+        except Exception as e:
+            logger.error(f"更新服务器状态失败: {e}")
             return False 
