@@ -13,7 +13,7 @@ async def handle_potential_info(bot: Bot, event: Event):
         # 生成潜能信息HTML
         html = await generate_potential_html(data)
         # 转换为图片
-        pic = await html_to_pic(html, viewport={"width": 1000, "height": 10})
+        pic = await html_to_pic(html, viewport={"width": 1920, "height": 1080})
         await es_potential_info.finish(MessageSegment.image(pic))
 
     except Exception as e:

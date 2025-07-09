@@ -1528,7 +1528,7 @@ async def generate_potential_html(data: dict) -> str:
                     battle_power_per = get_battle_power_percentage(data, effect_no)
                     
                     if battle_power_per:
-                        html += f"<td class='value-cell'>{value}<br><span class='power-value'>战力+{battle_power_per}</span></td>"
+                        html += f"<td class='value-cell'>{value}<br><span class='power-value'>+{battle_power_per}</span></td>"
                     else:
                         html += f"<td>{value}</td>"
                 else:
