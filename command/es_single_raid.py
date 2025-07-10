@@ -144,8 +144,8 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                     if gimmick.get("raid_no") == raid_data.get("no"):
                         # 遍历所有gimmick_type和gimmick_value
                         i = 1
-                        while f"gimmick_type{i}" in gimmick and f"gimmick_value{i}" in gimmick:
-                            gimmick_value = gimmick.get(f"gimmick_value{i}")
+                        while f"gimmick_type_{i}" in gimmick and f"gimmick_value_{i}" in gimmick:
+                            gimmick_value = gimmick.get(f"gimmick_value_{i}")
                             # 在battle_buff中查找对应的buff
                             for buff in data["battle_buff"]["json"]:
                                 if buff.get("no") == gimmick_value:
