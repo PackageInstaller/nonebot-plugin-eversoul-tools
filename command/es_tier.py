@@ -40,7 +40,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
         # 获取套装效果对应的set_effect_no
         set_no = EFFECT_TYPE_MAPPING.get(set_type)
         set_effect = next((e for e in data["item_set_effect"]["json"] 
-                            if e.get("name") == set_no), None)
+                            if e.get("name") == set_no), {})
         
         if not all([grade_sno, stat_sno, set_effect]):
             await es_tier_info.finish("未找到对应的礼品信息")
@@ -122,7 +122,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                     if isinstance(value, float):
                         value_str = f"{value*100:.1f}%"
                     else:
-                        value_str = format_number(value)
+                        value_str = value
                         
                     
                     if i < 3:  # 基础属性

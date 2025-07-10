@@ -161,11 +161,19 @@ def clean_tags(text):
     # handle </color> format
     text = re.sub(r'</color>', '', text, flags=re.IGNORECASE)
     
+    # 处理 <color=XXXXXX> 格式（缺少#符号的情况）
+    # handle <color=XXXXXX> format (missing # symbol)
+    text = re.sub(r'<color=[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
+    
     # 处理 <COLOR=#XXXXXX> 格式
     # handle <COLOR=#XXXXXX> format
     text = re.sub(r'<COLOR=#[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
     # handle </COLOR> format
     text = re.sub(r'</COLOR>', '', text, flags=re.IGNORECASE)
+    
+    # 处理 <COLOR=XXXXXX> 格式（缺少#符号的情况）
+    # handle <COLOR=XXXXXX> format (missing # symbol)
+    text = re.sub(r'<COLOR=[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
     
     # 处理可能存在的空格
     # handle possible spaces
@@ -174,11 +182,22 @@ def clean_tags(text):
     text = re.sub(r'<COLOR\s*=#[A-Fa-f0-9]+\s*>', '', text, flags=re.IGNORECASE)
     text = re.sub(r'</COLOR\s*>', '', text, flags=re.IGNORECASE)
     
+    # 处理可能存在的空格（缺少#符号的情况）
+    # handle possible spaces (missing # symbol)
+    text = re.sub(r'<color\s*=[A-Fa-f0-9]+\s*>', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'<COLOR\s*=[A-Fa-f0-9]+\s*>', '', text, flags=re.IGNORECASE)
+    
     # 处理 <color="#XXXXXX"> 格式（带引号的情况）
     # handle <color="#XXXXXX"> format (with quotes)
     text = re.sub(r'<color="[#A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
     # handle <COLOR="#XXXXXX"> format (with quotes)
     text = re.sub(r'<COLOR="[#A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
+    
+    # 处理 <color="XXXXXX"> 格式（带引号但缺少#符号的情况）
+    # handle <color="XXXXXX"> format (with quotes but missing # symbol)
+    text = re.sub(r'<color="[A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
+    # handle <COLOR="XXXXXX"> format (with quotes but missing # symbol)
+    text = re.sub(r'<COLOR="[A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
     
     # 处理 <effect:none> 标签
     # handle <effect:none> tag
@@ -632,7 +651,7 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
         # special handling for function_key == 300 or 30
         if function_key == 300 or function_key == 30:
             skill_value = skill_code.get("value", 0)
-            value_as_int = int(skill_value) if isinstance(skill_value, float) and skill_value.is_integer() else skill_value
+            value_as_int = int(skill_value) 
             
             # 在SkillBuff中查找
             # find in SkillBuff
@@ -646,13 +665,12 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
                         # 使用BuffValueText的逻辑判断整数还是百分比
                         # use BuffValueText logic to determine integer or percentage
                         if get_buff_value_text_is_integer(buff_effect):
-                            return str(int(abs_value))
+                            return f"{abs_value:.0f}"
                         else:
                             percent_value = abs_value * 100
-                            rounded_value = round(percent_value, 1)
-                            if rounded_value.is_integer():
-                                return f"{int(rounded_value)}%"
-                            return f"{rounded_value}%"
+                            rounded_percent = round(percent_value, 2)
+                            formatted_string = f"{rounded_percent:.2f}"
+                            return f"{formatted_string.rstrip('0').rstrip('.')}%"
                     elif value_type == "DURATION":
                         duration = buff.get("duration", 0)
                         return str(int(abs(duration)))
@@ -671,7 +689,7 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
             # VALUE类型需要递归查找
             # VALUE type needs recursive lookup
             skill_value = skill_code.get("value", 0)
-            value_as_int = int(skill_value) if isinstance(skill_value, float) and skill_value.is_integer() else skill_value
+            value_as_int = int(skill_value)
             
             # 递归查找引用的SkillCode
             # recursively find referenced SkillCode
@@ -688,7 +706,7 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
                 # 如果引用的是SkillBuff类型
                 # if referencing SkillBuff type
                 if ref_function_key == 300 or ref_function_key == 30:
-                    ref_value_as_int = int(ref_value) if isinstance(ref_value, float) and ref_value.is_integer() else ref_value
+                    ref_value_as_int = int(ref_value)
                     for buff in data["skill_buff"]["json"]:
                         if buff["no"] == ref_value_as_int:
                             buff_value = buff.get("value", 0)
@@ -696,27 +714,24 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
                             abs_value = abs(buff_value)
                             
                             if get_buff_value_text_is_integer(buff_effect):
-                                return str(int(abs_value))
+                                return f"{abs_value:.0f}"
                             else:
                                 percent_value = abs_value * 100
-                                rounded_value = round(percent_value, 1)
-                                if rounded_value.is_integer():
-                                    return f"{int(rounded_value)}%"
-                                return f"{rounded_value}%"
-                            break
+                                rounded_percent = round(percent_value, 2)
+                                formatted_string = f"{rounded_percent:.2f}"
+                                return f"{formatted_string.rstrip('0').rstrip('.')}%"
                     return "？？？"
                 else:
                     # 直接使用引用代码的值
                     # directly use referenced code value
                     abs_value = abs(ref_value)
                     if get_code_value_text_is_integer(ref_function_key):
-                        return str(int(abs_value))
+                        return f"{abs_value:.0f}"
                     else:
                         percent_value = abs_value * 100
-                        rounded_value = round(percent_value, 1)
-                        if rounded_value.is_integer():
-                            return f"{int(rounded_value)}%"
-                        return f"{rounded_value}%"
+                        rounded_percent = round(percent_value, 2)
+                        formatted_string = f"{rounded_percent:.2f}"
+                        return f"{formatted_string.rstrip('0').rstrip('.')}%"
         
         # 常规处理逻辑
         # regular handling logic
@@ -725,13 +740,12 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
             abs_value = abs(skill_value)
             
             if get_code_value_text_is_integer(function_key):
-                return str(int(abs_value))
+                return f"{abs_value:.0f}"
             else:
                 percent_value = abs_value * 100
-                rounded_value = round(percent_value, 1)
-                if rounded_value.is_integer():
-                    return f"{int(rounded_value)}%"
-                return f"{rounded_value}%"
+                rounded_percent = round(percent_value, 2)
+                formatted_string = f"{rounded_percent:.2f}"
+                return f"{formatted_string.rstrip('0').rstrip('.')}%"
         elif value_type == "DURATION":
             duration = skill_code.get("duration", 0)
             return str(int(abs(duration)))
@@ -739,37 +753,52 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
     return "？？？"
 
 
-def get_code_value_text_is_integer(skill_effect_type):
-    """Determine whether the skill value should be formatted as integer in SkillTextUtil::GetCodeValueText
+def get_code_value_text_is_integer(effect_type):
+    """Determine whether the skill value should be formatted as integer in v
     
     Official logic from SkillTextUtil::GetCodeValueText:
-    if (type <= 0x1B && ((1 << type) & 0xC000010) != 0 || type - 1026 < 2)
+    if ( type <= SkillEffect__Enum_Purify && ((1 << type) & 0xC000010) != 0 || type - 1026 < 2 )
+    {
+        v32 = v23;
+        v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
+        v25 = "{0:0.##}";
+    }
+    else
+    {
+        v32 = v23 * 100.0;
+        v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
+        v25 = "{0:0.##}%";
+    }
     
     Args:
         skill_effect_type: SkillEffect enum value (function_key)
     Returns:
         bool: True if should format as integer, False if should format as percentage
     """
-    condition1 = (skill_effect_type <= 0x1B) and (((1 << skill_effect_type) & 0xC000010) != 0)
-    condition2 = (skill_effect_type >= 1026) and (skill_effect_type < 1028)
-    
-    return condition1 or condition2
+
+    return (effect_type <= 0x1B) and (((1 << effect_type) & 0xC000010) != 0 or ((effect_type- 1026) & 0xFFFFFFFF) < 2)
 
 
 def get_buff_value_text_is_integer(buff_type):
     """Determine whether the buff value should be formatted as integer in SkillTextUtil::GetBuffValueText
     
     Official logic from SkillTextUtil::GetBuffValueText:
-    if (type <= 10102) {
-        if ((type - 10101) >= 2 && type != 420)
-            goto LABEL_12;  // percentage
+    if ( type <= 10102 )
+    {
+        if ( (unsigned int)(type - 10101) >= 2 && type != 420 )
+        goto LABEL_12;
     LABEL_11:
-        // integer format
+        v32 = v23;
+        v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
+        v25 = "{0:0.##}";
+        goto LABEL_13;
     }
-    if ((type - 10106) <= 4 && ((1 << (type - 122)) & 0x13) != 0)
-        goto LABEL_11;  // integer
+    if ( (unsigned int)(type - 10106) <= 4 && ((1 << (type - 122)) & 0x13) != 0 )
+        goto LABEL_11;
     LABEL_12:
-        // percentage format
+    v32 = v23 * 100.0;
+    v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
+    v25 = "{0:0.##}%";
     
     Args:
         buff_type: buff effect type
@@ -777,17 +806,12 @@ def get_buff_value_text_is_integer(buff_type):
         bool: True if should format as integer, False if should format as percentage
     """
     if buff_type <= 10102:
-        # Special cases that format as integer
-        if buff_type in {10101, 10102, 420}:
-            return True
-        # All other values <= 10102 format as percentage
-        return False
-    
-    # For buff_type > 10102, check second condition
+        if ((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420:
+            return False
+        return True
+
     if (buff_type - 10106) <= 4 and ((1 << (buff_type - 122)) & 0x13) != 0:
         return True
-    
-    # Default to percentage format
     return False
 
 
@@ -1374,15 +1398,14 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                         
                         if name:  # 只添加有名称的物品. only add items with name
                             # 构建图片路径. build image path
-                            img_path = None
                             if prefab:
                                 for file in os.listdir(TOWN_DIR):
                                     if file.lower() == f"{prefab}.png":
                                         img_path = TOWN_DIR / file
                                         break
                                 
-                                if not os.path.exists(img_path):
-                                    img_path = None
+                                if not img_path:
+                                    img_path = ""
                             
                             objects_info.append((obj_no, name, grade, slot_type, desc, img_path, battle_power_per))
                         

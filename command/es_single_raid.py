@@ -190,10 +190,11 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
         basic_info = []
         
         # 获取立绘
-        portrait_path = get_character_portrait(data, hero_id, hero_name_en, raid=True)
+        portrait_paths = get_character_portrait(data, hero_id, hero_name_en, raid=True)
         basic_info.append(f"【恶灵讨伐：{hero_name_zh_tw}】")
-        if portrait_path:
-            basic_info.append(MessageSegment.image(f"file:///{portrait_path}"))
+        if portrait_paths:
+            # 只使用第一个头像
+            basic_info.append(MessageSegment.image(f"file:///{portrait_paths[0]}"))
         
         basic_info_text = f"""类型：{race_zh_tw} {hero_class_zh_tw}
 攻击方式：{sub_class_zh_tw}
