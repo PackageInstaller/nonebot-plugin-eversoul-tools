@@ -2000,7 +2000,7 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
     affinity_to_reduce = good_total_affinity - target_affinity
     
     # 如果好结局总好感度已经在区间内，直接返回好结局选项. if good ending total affinity is already within the range, return good ending options
-    if good_total_affinity <= normal_threshold and good_total_affinity >= bad_threshold:
+    if good_total_affinity < normal_threshold and good_total_affinity > bad_threshold:
         normal_end_note = f"注意：按照好结局选项选择即可达到一般结局条件（总好感度：{good_total_affinity}）"
         return [{
             "episode": 0,
@@ -2008,7 +2008,7 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
         }]
     
     # 如果坏结局总好感度已经在区间内，直接返回坏结局选项. if bad ending total affinity is already within the range, return bad ending options
-    if bad_total_affinity <= normal_threshold and bad_total_affinity >= bad_threshold:
+    if bad_total_affinity < normal_threshold and bad_total_affinity > bad_threshold:
         normal_end_note = f"注意：按照坏结局选项选择即可达到一般结局条件（总好感度：{bad_total_affinity}）"
         return [{
             "episode": 0,
@@ -2046,8 +2046,8 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
         bad_choice = diff_info["bad_choice"]
         diff = diff_info["diff"]
         
-        # 如果替换这个选项后总好感度仍然大于normal_threshold，则替换. if replacing this option makes total affinity still greater than normal_threshold, then replace
-        if current_affinity - diff >= bad_threshold:
+        # 如果替换这个选项后总好感度仍然大于bad_threshold，则替换. if replacing this option makes total affinity still greater than bad_threshold, then replace
+        if current_affinity - diff > bad_threshold:
             current_affinity -= diff
             normal_ending_choices[diff_info["index"]] = bad_choice
             choices_to_replace.append({
@@ -2059,14 +2059,14 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
             })
             
         # 如果总好感度已经在区间内，停止替换. if total affinity is already within the range, stop replacing
-        if current_affinity <= normal_threshold and current_affinity >= bad_threshold:
+        if current_affinity < normal_threshold and current_affinity > bad_threshold:
             break
     
     # 如果替换后总好感度仍然不在区间内，提供说明. if total affinity is still not within the range after replacement, provide explanation
     if current_affinity > normal_threshold:
         normal_end_note = f"警告：即使替换部分选项，总好感度({current_affinity})仍然超过一般结局上限({normal_threshold})，请额外注意控制好感度"
-    elif current_affinity < bad_threshold:
-        normal_end_note = f"警告：替换选项后总好感度({current_affinity})低于一般结局下限({bad_threshold})，请选择部分好结局选项"
+    elif current_affinity <= bad_threshold:
+        normal_end_note = f"警告：替换选项后总好感度({current_affinity})不满足一般结局条件（需大于{bad_threshold}），请选择部分好结局选项"
     else:
         normal_end_note = f"提示：按照以下选项选择可达到一般结局条件（预计总好感度：{current_affinity}）"
     
@@ -2245,8 +2245,8 @@ def format_character_story(episode_info, endings, is_test=False):
     
     if "bad" in endings:
         good_end.append(f"条件：好感度大于{normal_threshold}")
-        normal_end.append(f"条件：好感度{bad_threshold}-{normal_threshold}")
-        bad_end.append(f"条件：好感度低于{bad_threshold}")
+        normal_end.append(f"条件：好感度大于{bad_threshold}且小于{normal_threshold}")
+        bad_end.append(f"条件：好感度小于{bad_threshold}")
     
     # 收集所有章节的选项信息，用于计算总好感度. collect all episode choices info, for calculating total affinity
     all_episodes_choices = []
