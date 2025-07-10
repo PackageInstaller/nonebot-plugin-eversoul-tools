@@ -211,7 +211,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
             basic_info_text += f"\n\n有开场台词的角色：\n{chr(10).join(f'- {name}' for name in interaction_info)}"
             
         if special_heroes:
-            basic_info_text += f"\n\n特殊之人：\n{chr(10).join(f'- {name}' for name in special_heroes.values())}"
+            basic_info_text += f"\n\n羁绊角色：\n{chr(10).join(f'- {name}' for name in special_heroes.values())}"
 
         if delay_text:
             basic_info_text += f"\n\n特殊情况：开场{delay_seconds}秒后{delay_text}"
