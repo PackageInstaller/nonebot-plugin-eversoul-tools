@@ -2244,9 +2244,9 @@ def format_character_story(episode_info, endings, is_test=False):
     normal_threshold = endings.get('normal', 0)
     
     if "bad" in endings:
-        good_end.append(f"条件：好感度大于{normal_threshold}")
-        normal_end.append(f"条件：好感度大于{bad_threshold}且小于{normal_threshold}")
-        bad_end.append(f"条件：好感度小于{bad_threshold}")
+        good_end.append(f"条件：好感度 > {normal_threshold}")
+        normal_end.append(f"条件：好感度 > {bad_threshold} < {normal_threshold}")
+        bad_end.append(f"条件：好感度 < {bad_threshold}")
     
     # 收集所有章节的选项信息，用于计算总好感度. collect all episode choices info, for calculating total affinity
     all_episodes_choices = []
