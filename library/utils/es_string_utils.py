@@ -776,7 +776,7 @@ def get_code_value_text_is_integer(effect_type):
         bool: True if should format as integer, False if should format as percentage
     """
 
-    return (effect_type <= 0x1B) and (((1 << effect_type) & 0xC000010) != 0 or ((effect_type- 1026) & 0xFFFFFFFF) < 2)
+    return (effect_type <= 0x1B) and (((1 << effect_type) & 0xC000010) != 0 or ((effect_type - 1026) & 0xFFFFFFFF) < 2)
 
 
 def get_buff_value_text_is_integer(buff_type):
