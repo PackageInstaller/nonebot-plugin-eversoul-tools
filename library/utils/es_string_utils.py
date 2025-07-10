@@ -623,204 +623,145 @@ def get_character_similar_name(query, alias_map):
     return results
 
 
-def get_character_skill_value(data, value_id, value_type="VALUE"):
-    """get character skill value
-    
-    Args:
-        data: JSON data dictionary
-        value_id: skill id
-        value_type: value type ("VALUE" or "DURATION")
-    """
-    # 查找SkillCode
-    # find SkillCode
-    skill_code = None
-    for code in data["skill_code"]["json"]:
-        if code["no"] == value_id:
-            skill_code = code
-            break
-    
-    if not skill_code:
-        return "？？？"
-    
-    function_key = skill_code.get("function_key", 0)
-    
-    # 根据官方逻辑判断特殊处理的function_key
-    # determine special handling function_key according to official logic
-    if function_key > 29:
-        # function_key == 300 或 30 的特殊处理
-        # special handling for function_key == 300 or 30
-        if function_key == 300 or function_key == 30:
-            skill_value = skill_code.get("value", 0)
-            value_as_int = int(skill_value) 
-            
-            # 在SkillBuff中查找
-            # find in SkillBuff
-            for buff in data["skill_buff"]["json"]:
-                if buff["no"] == value_as_int:
-                    if value_type == "VALUE":
-                        buff_value = buff.get("value", 0)
-                        buff_effect = buff.get("buff_effect", 0)
-                        abs_value = abs(buff_value)
-                        
-                        # 使用BuffValueText的逻辑判断整数还是百分比
-                        # use BuffValueText logic to determine integer or percentage
-                        if get_buff_value_text_is_integer(buff_effect):
-                            return f"{abs_value:.0f}"
-                        else:
-                            percent_value = abs_value * 100
-                            rounded_percent = round(percent_value, 2)
-                            formatted_string = f"{rounded_percent:.2f}"
-                            return f"{formatted_string.rstrip('0').rstrip('.')}%"
-                    elif value_type == "DURATION":
-                        duration = buff.get("duration", 0)
-                        return str(int(abs(duration)))
-                    break
-            return "？？？"
-    else:
-        # function_key <= 29 的处理
-        # handling for function_key <= 29
-        if function_key in [25, 28, 29]:
-            # 特殊类型的处理逻辑
-            # special type handling logic
-            if value_type == "DURATION":
-                duration = skill_code.get("duration", 0)
-                return str(int(abs(duration)))
-            
-            # VALUE类型需要递归查找
-            # VALUE type needs recursive lookup
-            skill_value = skill_code.get("value", 0)
-            value_as_int = int(skill_value)
-            
-            # 递归查找引用的SkillCode
-            # recursively find referenced SkillCode
-            referenced_code = None
-            for code in data["skill_code"]["json"]:
-                if code["no"] == value_as_int:
-                    referenced_code = code
-                    break
-            
-            if referenced_code:
-                ref_function_key = referenced_code.get("function_key", 0)
-                ref_value = referenced_code.get("value", 0)
-                
-                # 如果引用的是SkillBuff类型
-                # if referencing SkillBuff type
-                if ref_function_key == 300 or ref_function_key == 30:
-                    ref_value_as_int = int(ref_value)
-                    for buff in data["skill_buff"]["json"]:
-                        if buff["no"] == ref_value_as_int:
-                            buff_value = buff.get("value", 0)
-                            buff_effect = buff.get("buff_effect", 0)
-                            abs_value = abs(buff_value)
-                            
-                            if get_buff_value_text_is_integer(buff_effect):
-                                return f"{abs_value:.0f}"
-                            else:
-                                percent_value = abs_value * 100
-                                rounded_percent = round(percent_value, 2)
-                                formatted_string = f"{rounded_percent:.2f}"
-                                return f"{formatted_string.rstrip('0').rstrip('.')}%"
-                    return "？？？"
-                else:
-                    # 直接使用引用代码的值
-                    # directly use referenced code value
-                    abs_value = abs(ref_value)
-                    if get_code_value_text_is_integer(ref_function_key):
-                        return f"{abs_value:.0f}"
-                    else:
-                        percent_value = abs_value * 100
-                        rounded_percent = round(percent_value, 2)
-                        formatted_string = f"{rounded_percent:.2f}"
-                        return f"{formatted_string.rstrip('0').rstrip('.')}%"
-        
-        # 常规处理逻辑
-        # regular handling logic
-        if value_type == "VALUE":
-            skill_value = skill_code.get("value", 0)
-            abs_value = abs(skill_value)
-            
-            if get_code_value_text_is_integer(function_key):
-                return f"{abs_value:.0f}"
-            else:
-                percent_value = abs_value * 100
-                rounded_percent = round(percent_value, 2)
-                formatted_string = f"{rounded_percent:.2f}"
-                return f"{formatted_string.rstrip('0').rstrip('.')}%"
-        elif value_type == "DURATION":
-            duration = skill_code.get("duration", 0)
-            return str(int(abs(duration)))
-    
-    return "？？？"
+def get_code_value_text_is_integer(effect_type: int) -> bool:
+    """SkillTextUtil::GetCodeValueText
 
-
-def get_code_value_text_is_integer(effect_type):
-    """Determine whether the skill value should be formatted as integer in v
-    
-    Official logic from SkillTextUtil::GetCodeValueText:
-    if ( type <= SkillEffect__Enum_Purify && ((1 << type) & 0xC000010) != 0 || type - 1026 < 2 )
-    {
-        v32 = v23;
-        v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
-        v25 = "{0:0.##}";
-    }
-    else
-    {
-        v32 = v23 * 100.0;
-        v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
-        v25 = "{0:0.##}%";
-    }
-    
     Args:
-        skill_effect_type: SkillEffect enum value (function_key)
+        effect_type: effect 类型
     Returns:
-        bool: True if should format as integer, False if should format as percentage
+        bool: 是否为整数
     """
 
-    return (effect_type <= 0x1B) and (((1 << effect_type) & 0xC000010) != 0 or ((effect_type - 1026) & 0xFFFFFFFF) < 2)
+    return (effect_type <= 0x1B and (((1 << effect_type) % 32) & 0xC000010) != 0) or ((effect_type - 1026) & 0xFFFFFFFF) < 2
 
 
-def get_buff_value_text_is_integer(buff_type):
-    """Determine whether the buff value should be formatted as integer in SkillTextUtil::GetBuffValueText
-    
-    Official logic from SkillTextUtil::GetBuffValueText:
-    if ( type <= 10102 )
-    {
-        if ( (unsigned int)(type - 10101) >= 2 && type != 420 )
-        goto LABEL_12;
-    LABEL_11:
-        v32 = v23;
-        v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
-        v25 = "{0:0.##}";
-        goto LABEL_13;
-    }
-    if ( (unsigned int)(type - 10106) <= 4 && ((1 << (type - 122)) & 0x13) != 0 )
-        goto LABEL_11;
-    LABEL_12:
-    v32 = v23 * 100.0;
-    v24 = (Object *)j_il2cpp_value_box_0(TypeInfo::System::Double, &v32, method);
-    v25 = "{0:0.##}%";
-    
+def get_buff_value_text_is_integer(buff_type: int) -> bool:
+    """SkillTextUtil::GetBuffValueText
+
     Args:
-        buff_type: buff effect type
+        buff_type: buff effect 类型
     Returns:
-        bool: True if should format as integer, False if should format as percentage
+        bool: 是否为整数
     """
     if buff_type <= 10102:
         if ((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420:
             return False
         return True
 
-    if (buff_type - 10106) <= 4 and ((1 << (buff_type - 122)) & 0x13) != 0:
+    if ((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << ((buff_type - 122) % 32)) & 0x13) != 0:
         return True
     return False
 
 
-def process_skill_description(data, description):
-    """process skill description
+def format_value(value: float, is_integer_format: bool) -> str:
+    """
+    格式化数值
+    Args:
+        value: 数值
+        is_integer_format: 是否为整数
+    Returns:
+        str: 格式化后的字符串
+    """
+    abs_value = abs(value)
+    if is_integer_format:
+        formatted_str = f"{abs_value:.2f}".rstrip('0').rstrip('.')
+        return formatted_str
+    else:
+        percent_value = abs_value * 100
+        formatted_str = f"{percent_value:.2f}".rstrip('0').rstrip('.')
+        return f"{formatted_str}%"
+
+def format_duration(duration: float) -> str:
+    """
+    格式化持续时间
+    Args:
+        duration: 持续时间
+    Returns:
+        str: 格式化后的字符串
+    """
+    if duration.is_integer():
+        return str(int(duration))
+    else:
+        return str(duration)
+
+def get_character_skill_value(data, value_id, value_type="VALUE"):
+    """获取角色技能值
     
     Args:
-        data: JSON data dictionary
-        description: skill description
+        data: json 数据
+        value_id: 技能值编号
+        value_type: 技能值类型
+    
+    Returns:
+        str: 技能值
+    """
+    try:
+        skill_id = int(value_id)
+    except (ValueError, TypeError):
+        return ""
+
+    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == skill_id), None)
+    
+    if not skill_code:
+        return ""
+
+    function_key = skill_code.get("function_key", 0)
+    
+    if function_key in (30, 300):
+        buff_id = int(skill_code.get("value", 0))
+        buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id), None)
+        if not buff_code:
+            return ""
+        
+        if value_type == "VALUE":
+            is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
+            return format_value(buff_code.get("value", 0), is_integer)
+        elif value_type == "DURATION":
+            return format_duration(buff_code.get("duration", 0))
+
+    # 递归处理引用技能
+    elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
+        if value_type == "DURATION":
+            return format_duration(skill_code.get("duration", 0))
+        
+        recursive_skill_id = int(skill_code.get("value", 0))
+        referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id), None)
+        
+        if not referenced_code:
+            return ""
+
+        ref_function_key = referenced_code.get("function_key", 0)
+        
+        if ref_function_key in (30, 300):
+            buff_id = int(skill_code.get("value", 0))
+            buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id), None)
+            if not buff_code:
+                return ""
+            is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
+            return format_value(buff_code.get("value", 0), is_integer)
+        else:
+            is_integer = get_code_value_text_is_integer(ref_function_key)
+            return format_value(referenced_code.get("value", 0), is_integer)
+
+    else:
+        if value_type == "VALUE":
+            is_integer = get_code_value_text_is_integer(function_key)
+            return format_value(skill_code.get("value", 0), is_integer)
+        elif value_type == "DURATION":
+            return format_duration(skill_code.get("duration", 0))
+
+    return ""
+
+
+def process_skill_description(data, description):
+    """处理技能描述
+    
+    Args:
+        data: json 数据
+        description: 技能描述
+
+    Returns:
+        str: 处理后的技能描述
     """
     def replace_value(match):
         value_id = int(match.group(1))
@@ -828,22 +769,21 @@ def process_skill_description(data, description):
         return get_character_skill_value(data, value_id, value_type)
     
     # 替换所有形如 <数字.VALUE> 或 <数字.DURATION> 的内容
-    # replace all content like <number.VALUE> or <number.DURATION>
     processed_desc = re.sub(r'<\s*(\d+)\.(VALUE|DURATION)\s*>', replace_value, description)
     return processed_desc
 
 
 def get_character_skill(data, skill_no, is_support=False, hero_data=None):
-    """get character skill
+    """获取角色技能
     
     Args:
-        data: JSON data dictionary
-        skill_no: skill no
-        is_support: is support skill
-        hero_data: hero data (used to get auxiliary partner skill info)
+        data: json 数据
+        skill_no: 技能编号
+        is_support: 是否为支援技能
+        hero_data: 角色数据 (用于获取辅助伙伴技能信息)
     
     Returns:
-        dict: include skill info
+        dict: 包含技能信息
     """
     skill_data_list = []
     skill_name_zh_tw = ""
@@ -854,16 +794,13 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
     skill_icon_info = None
     
     # 查找所有相同编号的技能数据
-    # find all skills with the same no
     for skill in data["skill"]["json"]:
         if skill["no"] == skill_no:
             skill_data_list.append(skill)
             # 只在第一次找到技能时获取图标信息
-            # only get icon info once
             if not skill_icon_info:
                 icon_prefab = skill.get("icon_prefab")
                 # 这里是适配数据表里面没有的转变形态技能的着色(光凯)
-                # here is to adapt the coloring of the transformation skill that is not in the data table
                 if icon_prefab == 14:
                     skill_icon_info = {
                         "icon": "Icon_Sub_Change",
@@ -1717,25 +1654,25 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
 
 
 def get_character_signature_value(data, level_group):
-    """get character signature value
+    """获取角色遗物值
     
     Args:
-        data: JSON data dictionary
-        level_group: signature level group id
+        data: json 数据
+        level_group: 遗物等级组编号
     
     Returns:
-        dict: signature attribute stats
+        dict: 包含遗物属性统计信息
     """
     max_level_data = None
     max_level = 0
     
-    # 这个遗物的最大等级（40或45）. this signature's max level (40 or 45)
+    # 这个遗物的最大等级（45）. 
     for level_data in data["signature_level"]["json"]:
         if level_data["group"] == level_group:
             if level_data["signature_level"] > max_level:
                 max_level = level_data["signature_level"]
     
-    # 再找到最大等级的数据. find the data with the max level
+    # 再找到最大等级的数据.
     for level_data in data["signature_level"]["json"]:
         if level_data["group"] == level_group and level_data["signature_level"] == max_level:
             max_level_data = level_data
@@ -1748,30 +1685,20 @@ def get_character_signature_value(data, level_group):
     for stat_key, stat_name in STAT_NAME_MAPPING.items():
         if stat_key in max_level_data and max_level_data[stat_key] != 0:
             value = max_level_data[stat_key]
-            if stat_key in ["hit", "dodge"]:
-                formatted_stats.append(f"{stat_name}：{int(value)}")
-            else:
-                # 处理百分比值，使用round避免浮点数精度问题. process percentage value, use round to avoid floating point precision problem
-                percent_value = round(value * 100, 1)
-                formatted_value = f"{percent_value:.1f}"
-                # 检查是否为整数（包括像29.0这样的值）. check if it is an integer (including values like 29.0)
-                if formatted_value.endswith('.0'):
-                    formatted_stats.append(f"{stat_name}：{int(percent_value)}%")
-                else:
-                    formatted_stats.append(f"{stat_name}：{formatted_value}%")
+            formatted_stats.append(f"{stat_name}：{format_value(value, False)}")
     
     return formatted_stats, max_level, max_level_data["battle_power_per"]
 
 
 def get_character_signature(data, hero_id):
-    """get character signature
+    """获取角色遗物
     
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
+        data: json 数据
+        hero_id: 角色编号
     
     Returns:
-        dict: include signature info
+        dict: 包含遗物信息
     """
     signature_data = None
     signature_name_zh_tw = ""
@@ -1792,17 +1719,17 @@ def get_character_signature(data, hero_id):
     skill_descriptions = []
     signature_bg_path = ""
     
-    # 在Signature.json中查找对应角色的遗物. find the corresponding signature in Signature.json
+    # 在Signature.json中查找对应角色的遗物.
     for signature in data["signature"]["json"]:
         if signature["hero_sno"] == hero_id:
             signature_data = signature
-            # 获取遗物图标路径. get signature icon path
+            # 获取遗物图标路径.
             if signature_bg_path := signature.get("signature_bg_path"):
                 signature_bg_path = f"Img_Signature_{signature_bg_path}.png"
             break
     
     if signature_data:
-        # 获取遗物名称. get signature name
+        # 获取遗物名称.
         for string in data["string_skill"]["json"]:
             if string["no"] == signature_data["signature_name_sno"]:
                 signature_name_zh_tw = string.get("zh_tw", "")
@@ -1811,7 +1738,7 @@ def get_character_signature(data, hero_id):
                 signature_name_en = string.get("en", "")
                 break
         
-        # 获取遗物技能名称. get signature skill name
+        # 获取遗物技能名称.
         for string in data["string_skill"]["json"]:
             if string["no"] == signature_data["skill_name_sno"]:
                 signature_title_zh_tw = string.get("zh_tw", "")
@@ -1820,10 +1747,10 @@ def get_character_signature(data, hero_id):
                 signature_title_en = string.get("en", "")
                 break
                 
-        # 获取遗物简介. get signature description
-        signature_desc_zh_tw = signature_desc_zh_cn = "无遗物简介信息"  # 设置默认值. set default value
+        # 获取遗物简介.
+        signature_desc_zh_tw = signature_desc_zh_cn = "无遗物简介信息"  # 设置默认值.
         signature_desc_kr = "유물 프로필 정보 없음"
-        signature_desc_en = "No signature description information"  # 设置默认值. set default value
+        signature_desc_en = "No signature description information"
         for string in data["string_skill"]["json"]:
             if string["no"] == signature_data["tooltip_explain_sno"]:
                 desc_tw = string.get("zh_tw", "")
@@ -1840,8 +1767,8 @@ def get_character_signature(data, hero_id):
                     signature_desc_en = desc_en
                 break
         
-        # 获取所有等级的技能描述. get all skill descriptions of all levels
-        for i in range(1, 8):  # 1-7级. 1-7 levels
+        # 获取所有等级的技能描述.
+        for i in range(1, 8):  # 1-7级.
             sno_key = f"skill_tooltip_sno{i}"
             if sno_key in signature_data:
                 tooltip_sno = signature_data[sno_key]
@@ -1852,56 +1779,29 @@ def get_character_signature(data, hero_id):
                         desc_kr = string.get("kr", "")
                         desc_en = string.get("en", "")
                         
-                        # 先清理颜色标签. clean color tags first
+                        # 先清理颜色标签.
                         desc_tw = clean_tags(desc_tw)
                         desc_cn = clean_tags(desc_cn)
                         desc_kr = clean_tags(desc_kr)
                         desc_en = clean_tags(desc_en)
                         
-                        # 处理数值标签，模拟官方parse逗号分隔的数值. process numeric tags, simulate official parse comma separated values
+                        # 处理数值标签
                         desc_tw = process_skill_description(data, desc_tw)
                         desc_cn = process_skill_description(data, desc_cn)
                         desc_kr = process_skill_description(data, desc_kr)
                         desc_en = process_skill_description(data, desc_en)
                         
-                        # 处理技能描述中可能包含的逗号分隔数值. process numeric values that may contain commas in skill description
-                        # 模拟官方Info_SignatureSkillInfos__Parse方法的行为. simulate official Info_SignatureSkillInfos__Parse method behavior
-                        def parse_comma_values(text):
-                            # 识别可能包含的逗号分隔数值，如"1,2,3". recognize possible comma separated values, such as "1,2,3"
-                            import re
-                            pattern = r'\b\d+(?:,\d+)*\b'
-                            
-                            def replace_parsed_values(match):
-                                values_str = match.group(0)
-                                # 分割字符串，过滤空值，转换为整数列表. split string, filter empty values, convert to integer list
-                                values = [int(v.strip()) for v in values_str.split(',') if v.strip()]
-                                # 返回处理后的字符串（例如可以添加格式或者直接显示）. return processed string (e.g. can add format or display directly)
-                                return ','.join(str(v) for v in values)
-                                
-                            return re.sub(pattern, replace_parsed_values, text)
-                        
-                        # 应用逗号分隔数值处理. apply comma separated values processing
-                        desc_tw = parse_comma_values(desc_tw)
-                        desc_cn = parse_comma_values(desc_cn)
-                        desc_kr = parse_comma_values(desc_kr)
-                        desc_en = parse_comma_values(desc_en)
-                        
-                        # 添加等级、品质信息. add level and grade info
-                        grade_sno = 110014 + i - 1  # 按顺序映射等级. map level in order
-                        level_name = SIGNATURE_GRADE_LEVEL_MAP.get(grade_sno, f"Level{i}")
                         
                         skill_descriptions.append({
                             "desc_zh_tw": desc_tw,
                             "desc_zh_cn": desc_cn,
                             "desc_kr": desc_kr,
                             "desc_en": desc_en,
-                            "level": i,
-                            "grade_sno": grade_sno,
-                            "level_name": level_name
+                            "level": i
                         })
                         break
         
-    # 修改返回值，添加图标路径. modify return value, add icon path
+    # 修改返回值，添加图标路径.
     if signature_data:
         level_group = signature_data.get("level_group")
         signature_stats = get_character_signature_value(data, level_group) if level_group else []
@@ -1932,7 +1832,7 @@ def get_character_signature(data, hero_id):
             "bg_path": signature_bg_path
         }
     
-    # 如果没有找到遗物数据，返回空字典. if no signature data is found, return empty dictionary
+    # 如果没有找到遗物数据，返回空字典.
     return {
         "name": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
         "title": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
