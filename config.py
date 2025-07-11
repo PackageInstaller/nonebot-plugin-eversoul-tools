@@ -145,16 +145,6 @@ SINGLE_RAID_GROGGY_TRIGGER_MAPPING = {
     207: "魅惑"
 }
 
-# 定义品质和等级的映射关系
-SIGNATURE_GRADE_LEVEL_MAP = {
-    110014: "SignatureLevel1",
-    110015: "SignatureLevel2", 
-    110016: "SignatureLevel3",
-    110017: "SignatureLevel4",
-    110018: "SignatureLevel5",
-    110019: "SignatureLevel6",
-    110020: "SignatureLevel7"
-}
 
 # 恶灵讨伐削减系数数组映射
 SINGLE_RAID_GROGGY_TRIGGER_ARRAY = [1, 2, 1, 1, 1, 3, 4]

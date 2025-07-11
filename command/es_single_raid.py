@@ -200,8 +200,8 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
 攻击方式：{sub_class_zh_tw}
 属性：{stat_zh_tw}
 等级：{boss_data.get('boss_max_level', 0)}
-护盾量：{format_number(boss_data.get('groggy_ratio', 0))}
-生命值：{format_number(final_hp)}
+护盾量：{boss_data.get('groggy_ratio', 0)}
+生命值：{final_hp}
 战斗时长：{battle_time}秒
 {season_info if season_info else ""}
 击杀奖励：

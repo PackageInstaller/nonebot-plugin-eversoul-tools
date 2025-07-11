@@ -82,7 +82,7 @@ async def handle_ark_info(bot: Bot, event: Event, args: Message = CommandArg()):
                                     if key.endswith('_rate'):
                                         ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{value*100:.2f}%")
                                     else:
-                                        ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{format_number(value)}")
+                                        ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{value}")
                     if not found_buff:
                         ark_msg.append("基础属性加成：数据未找到")
                 

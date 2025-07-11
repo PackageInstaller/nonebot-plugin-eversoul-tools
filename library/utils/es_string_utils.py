@@ -9,141 +9,8 @@ from difflib import get_close_matches
 from ...config import (
     TOWN_DIR, TRAIT_NAME_MAPPING, 
     PACKAGE_TYPE_MAPPING, STAT_NAME_MAPPING,
-    FORMATION_TYPE_MAPPING, SIGNATURE_GRADE_LEVEL_MAP
+    FORMATION_TYPE_MAPPING
 )
-
-
-def format_number(num):
-    """Convert numbers to Chinese units, accurate to two units
-    For example: 123456789 -> 120 million 34560000
-    For numbers that can be accurately expressed with one unit, still use one unit
-    For example: 50000000 -> 50 million
-    Support negative numbers
-    args:
-        num: number
-    return:
-        str: formatted number
-    exception:
-        None
-    """
-    # 处理负数情况
-    is_negative = False
-    if num < 0:
-        is_negative = True
-        num = abs(num)
-
-    units = [
-        "",
-        "万",
-        "亿",
-        "兆",
-        "京",
-        "垓",
-        "秭",
-        "穰",
-        "沟",
-        "涧",
-        "正",
-        "载",
-        "极",
-        "恒河沙",
-        "阿僧祗",
-        "那由他",
-        "不思议",
-        "无量大",
-        "万无量大",
-        "亿无量大",
-        "兆无量大",
-        "京无量大",
-        "垓无量大",
-        "秭无量大",
-        "穰无量大",
-        "沟无量大",
-        "涧无量大",
-        "正无量大",
-        "载无量大",
-        "极无量大",
-    ]
-    
-    # 千单位特殊处理
-    sub_units = ["", "十", "百", "千"]
-    
-    # 处理科学计数法
-    if "e" in str(num):
-        num = float(f"{num:.1f}")
-    
-    # 处理0和小数
-    if num == 0:
-        return "0"
-    if num < 1:
-        return str(round(num, 2))
-    
-    # 首先确定最大单位
-    def get_unit_level(n):
-        level = 0
-        while n >= 10000:
-            n /= 10000
-            level += 1
-        return n, level
-    
-    main_num, main_level = get_unit_level(num)
-    
-    # 检查是否需要显示第二个单位
-    # 判断条件：主单位的小数部分不为0，且数值足够大
-    main_int = int(main_num)
-    main_decimal = main_num - main_int
-    
-    # 如果没有小数部分或不足以表示第二个单位，直接返回一个单位
-    if main_decimal < 0.0001 or main_level == 0:
-        if main_level >= len(units):
-            main_level = len(units) - 1
-        result = f"{main_int}{units[main_level]}"
-        if is_negative:
-            return f"负{result}"
-        return result
-    
-    # 计算第二个单位
-    second_num = main_decimal * 10000  # 转换到下一个单位
-    
-    # 对于万以上单位，尝试使用千/百/十进行表示
-    if main_level > 0 and second_num < 10:
-        # 数值太小，不足以用第二个单位表示，直接使用一个单位
-        if main_level >= len(units):
-            main_level = len(units) - 1
-        result = f"{main_int}{units[main_level]}"
-        if is_negative:
-            return f"负{result}"
-        return result
-    
-    second_level = main_level - 1
-    
-    # 如果第二个单位是个位数（小于万），使用千/百/十表示
-    if second_level == 0:
-        # 确定sub_unit
-        sub_unit_index = 0
-        temp_num = second_num
-        while temp_num >= 10:
-            temp_num /= 10
-            sub_unit_index += 1
-            if sub_unit_index >= len(sub_units) - 1:
-                break
-        
-        second_display = int(second_num / (10 ** sub_unit_index))
-        
-        # 最终结果
-        if main_level >= len(units):
-            main_level = len(units) - 1
-        result = f"{main_int}{units[main_level]}{second_display}{sub_units[sub_unit_index]}"
-    else:
-        # 第二个单位是万及以上，直接使用
-        second_int = int(second_num)
-        if second_level >= len(units):
-            second_level = len(units) - 1
-        result = f"{main_int}{units[main_level]}{second_int}{units[second_level]}"
-    
-    if is_negative:
-        return f"负{result}"
-    return result
 
 
 def clean_tags(text):
@@ -204,6 +71,69 @@ def clean_tags(text):
     text = re.sub(r'<effect:none>', '', text, flags=re.IGNORECASE)
     
     return text
+
+
+def get_code_value_text_is_integer(effect_type: int) -> bool:
+    """SkillTextUtil::GetCodeValueText
+
+    Args:
+        effect_type: effect 类型
+    Returns:
+        bool: 是否为整数
+    """
+
+    return (effect_type <= 0x1B and (((1 << effect_type) % 32) & 0xC000010) != 0) or ((effect_type - 1026) & 0xFFFFFFFF) < 2
+
+
+def get_buff_value_text_is_integer(buff_type: int) -> bool:
+    """SkillTextUtil::GetBuffValueText
+
+    Args:
+        buff_type: buff effect 类型
+    Returns:
+        bool: 是否为整数
+    """
+    if buff_type <= 10102:
+        if ((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420:
+            return False
+        return True
+
+    if ((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << ((buff_type - 122) % 32)) & 0x13) != 0:
+        return True
+    return False
+
+
+def format_value(value: float, is_integer_format: bool) -> str:
+    """
+    格式化数值
+    Args:
+        value: 数值
+        is_integer_format: 是否为整数
+    Returns:
+        str: 格式化后的字符串
+    """
+    abs_value = abs(value)
+    if is_integer_format:
+        formatted_str = f"{abs_value:.2f}".rstrip('0').rstrip('.')
+        return formatted_str
+    else:
+        percent_value = abs_value * 100
+        formatted_str = f"{percent_value:.2f}".rstrip('0').rstrip('.')
+        return f"{formatted_str}%"
+
+
+def format_duration(duration: float) -> str:
+    """
+    格式化持续时间
+    Args:
+        duration: 持续时间
+    Returns:
+        str: 格式化后的字符串
+    """
+    if duration.is_integer():
+        return str(int(duration))
+    else:
+        return str(duration)
 
 
 def get_formation_type(formation_no):
@@ -373,27 +303,6 @@ def get_drop_item_rate(data, group_no):
     # sort by drop rate from high to low
     # 按掉落率从高到低排序
     return sorted(unique_items, key=lambda x: -x[2])
-
-
-def get_character_skill_type(data, type_no):
-    """get character skill type
-    
-    Args:
-        data: JSON data dictionary
-        type_no: skill type no
-    
-    Returns:
-        dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
-    """
-    for string in data["string_system"]["json"]:
-        if string["no"] == type_no:
-            return {
-                "zh_tw": string.get("zh_tw", ""),
-                "zh_cn": string.get("zh_cn", ""),
-                "kr": string.get("kr", ""),
-                "en": string.get("en", "")
-            }
-    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_string_item(data, item_no):
@@ -608,7 +517,7 @@ def get_character_similar_name(query, alias_map):
     
     # 使用 difflib 查找相似名称
     # use difflib to find similar names
-    similar_names = get_close_matches(query, all_names, n=3, cutoff=0.4)
+    similar_names = get_close_matches(query, all_names, n=3, cutoff=0.3)
     
     # 收集匹配到的角色信息
     # collect matched character info
@@ -623,68 +532,7 @@ def get_character_similar_name(query, alias_map):
     return results
 
 
-def get_code_value_text_is_integer(effect_type: int) -> bool:
-    """SkillTextUtil::GetCodeValueText
-
-    Args:
-        effect_type: effect 类型
-    Returns:
-        bool: 是否为整数
-    """
-
-    return (effect_type <= 0x1B and (((1 << effect_type) % 32) & 0xC000010) != 0) or ((effect_type - 1026) & 0xFFFFFFFF) < 2
-
-
-def get_buff_value_text_is_integer(buff_type: int) -> bool:
-    """SkillTextUtil::GetBuffValueText
-
-    Args:
-        buff_type: buff effect 类型
-    Returns:
-        bool: 是否为整数
-    """
-    if buff_type <= 10102:
-        if ((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420:
-            return False
-        return True
-
-    if ((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << ((buff_type - 122) % 32)) & 0x13) != 0:
-        return True
-    return False
-
-
-def format_value(value: float, is_integer_format: bool) -> str:
-    """
-    格式化数值
-    Args:
-        value: 数值
-        is_integer_format: 是否为整数
-    Returns:
-        str: 格式化后的字符串
-    """
-    abs_value = abs(value)
-    if is_integer_format:
-        formatted_str = f"{abs_value:.2f}".rstrip('0').rstrip('.')
-        return formatted_str
-    else:
-        percent_value = abs_value * 100
-        formatted_str = f"{percent_value:.2f}".rstrip('0').rstrip('.')
-        return f"{formatted_str}%"
-
-def format_duration(duration: float) -> str:
-    """
-    格式化持续时间
-    Args:
-        duration: 持续时间
-    Returns:
-        str: 格式化后的字符串
-    """
-    if duration.is_integer():
-        return str(int(duration))
-    else:
-        return str(duration)
-
-def get_character_skill_value(data, value_id, value_type="VALUE"):
+def get_character_skill_value(data, value_id, value_type) -> str:
     """获取角色技能值
     
     Args:
@@ -695,30 +543,19 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
     Returns:
         str: 技能值
     """
-    try:
-        skill_id = int(value_id)
-    except (ValueError, TypeError):
-        return ""
 
-    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == skill_id), None)
-    
-    if not skill_code:
-        return ""
-
+    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == int(value_id)), None)
     function_key = skill_code.get("function_key", 0)
-    
+    # 处理buff技能
     if function_key in (30, 300):
         buff_id = int(skill_code.get("value", 0))
         buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id), None)
-        if not buff_code:
-            return ""
         
         if value_type == "VALUE":
             is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
             return format_value(buff_code.get("value", 0), is_integer)
         elif value_type == "DURATION":
             return format_duration(buff_code.get("duration", 0))
-
     # 递归处理引用技能
     elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
         if value_type == "DURATION":
@@ -726,23 +563,17 @@ def get_character_skill_value(data, value_id, value_type="VALUE"):
         
         recursive_skill_id = int(skill_code.get("value", 0))
         referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id), None)
-        
-        if not referenced_code:
-            return ""
-
         ref_function_key = referenced_code.get("function_key", 0)
         
         if ref_function_key in (30, 300):
             buff_id = int(skill_code.get("value", 0))
             buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id), None)
-            if not buff_code:
-                return ""
             is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
             return format_value(buff_code.get("value", 0), is_integer)
         else:
             is_integer = get_code_value_text_is_integer(ref_function_key)
             return format_value(referenced_code.get("value", 0), is_integer)
-
+    # 处理其他技能类型
     else:
         if value_type == "VALUE":
             is_integer = get_code_value_text_is_integer(function_key)

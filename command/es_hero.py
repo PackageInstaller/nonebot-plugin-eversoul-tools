@@ -333,7 +333,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
             if skill_no := hero_data.get(skill_key):
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
-                        skill_type_data = get_character_skill_type(data, skill["type"])
+                        skill_type_data = get_string_system(data, skill["type"])
                         skill_type_zh_tw = skill_type_data["zh_tw"]
                         skill_type_zh_cn = skill_type_data["zh_cn"]
                         skill_type_kr = skill_type_data["kr"]

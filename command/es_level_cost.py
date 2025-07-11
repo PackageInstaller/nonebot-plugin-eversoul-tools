@@ -47,18 +47,18 @@ async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()
         
         # 添加累计消耗信息
         text_msg.append("【累计消耗】")
-        text_msg.append(f"金币：{format_number(level_data.get('sum_gold', 0))}")
-        text_msg.append(f"魔力粉尘：{format_number(level_data.get('sum_mana_dust', 0))}")
-        if 'sum_mana_crystal' in level_data:
-            text_msg.append(f"魔力水晶：{format_number(level_data.get('sum_mana_crystal', 0))}")
+        text_msg.append(f"金币：{level_data.get('sum_gold', 0)}")
+        text_msg.append(f"魔力粉尘：{level_data.get('sum_mana_dust', 0)}")
+        if "sum_mana_crystal" in level_data:
+            text_msg.append(f"魔力水晶：{level_data.get('sum_mana_crystal', 0)}")
         
         # 如果有下一级数据，添加升级消耗信息
         if next_level_data:
             text_msg.append(f"\n【升级到 {target_level + 1} 级需要】")
-            text_msg.append(f"金币：{format_number(next_level_data.get('gold', 0))}")
-            text_msg.append(f"魔力粉尘：{format_number(next_level_data.get('mana_dust', 0))}")
+            text_msg.append(f"金币：{next_level_data.get('gold', 0)}")
+            text_msg.append(f"魔力粉尘：{next_level_data.get('mana_dust', 0)}")
             if 'mana_crystal' in next_level_data:
-                text_msg.append(f"魔力水晶：{format_number(next_level_data.get('mana_crystal', 0))}")
+                text_msg.append(f"魔力水晶：{next_level_data.get('mana_crystal', 0)}")
         
         messages.append({
             "type": "node",

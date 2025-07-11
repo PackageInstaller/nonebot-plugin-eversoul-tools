@@ -90,7 +90,7 @@ from .es_update_utils import (
 
 # 文本相关
 from .es_string_utils import (
-    clean_tags, format_number, get_drop_item_rate,
+    clean_tags, get_drop_item_rate,
     get_string_character, get_string_system,
     get_character_lost_item, format_character_story, get_cash_pack, get_string_item, 
     get_formation_type, get_character_skill, get_character_skill_value,
@@ -99,7 +99,7 @@ from .es_string_utils import (
     get_character_keyword_source, get_character_keyword_location,
     get_character_arbeit, get_character_soullink, get_character_story,
     get_character_keyword, get_character_town_object, get_character_town_object_task,
-    get_character_signature, get_character_signature_value, get_character_skill_type,
+    get_character_signature, get_character_signature_value,
     get_base_battle_power, calculate_battle_power, get_character_skill_pattern,
     get_character_attack_range
 )

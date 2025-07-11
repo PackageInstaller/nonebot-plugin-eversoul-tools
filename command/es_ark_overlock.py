@@ -116,41 +116,41 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
         
         # 对于最大等级，显示最大等级的消耗（而不是升到最大等级+1的消耗，因为没有这个等级）
         if target_level == max_level:
-            cost_msg = [f"当前等级消耗：\n{format_number(last_level_cost)} 魔力水晶"]
+            cost_msg = [f"当前等级消耗：\n{last_level_cost} 魔力水晶"]
             # 添加魔力粉尘消耗
             if last_extra_items:
                 for item_no, amount in last_extra_items.items():
                     item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
-                    cost_msg.append(f"{format_number(amount)} {item_name}")
+                    cost_msg.append(f"{amount}{item_name}")
             detail_msg.append("\n".join(cost_msg))
         else:
-            cost_msg = [f"当前等级消耗：\n{format_number(current_level_cost)} 魔力水晶"]
+            cost_msg = [f"当前等级消耗：\n{current_level_cost} 魔力水晶"]
             # 添加魔力粉尘消耗
             if current_extra_items:
                 for item_no, amount in current_extra_items.items():
                     item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
-                    cost_msg.append(f"{format_number(amount)} {item_name}")
+                    cost_msg.append(f"{amount}{item_name}")
             detail_msg.append("\n".join(cost_msg))
         
         # 添加下一级消耗信息（如果有）
         if target_level < max_level:
-            next_cost_msg = [f"下一级消耗：\n{format_number(next_level_cost)} 魔力水晶"]
+            next_cost_msg = [f"下一级消耗：\n{next_level_cost} 魔力水晶"]
             # 添加魔力粉尘消耗
             if next_extra_items:
                 for item_no, amount in next_extra_items.items():
                     item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
-                    next_cost_msg.append(f"{format_number(amount)} {item_name}")
+                    next_cost_msg.append(f"{amount}{item_name}")
             detail_msg.append("\n".join(next_cost_msg))
         else:
             detail_msg.append("已达到最大超频等级")
         
         # 添加总消耗
-        total_cost_msg = [f"\n总超频消耗（1-{target_level}级）：\n{format_number(total_cost)} 魔力水晶"]
+        total_cost_msg = [f"\n总超频消耗（1-{target_level}级）：\n{total_cost} 魔力水晶"]
         # 添加魔力粉尘总消耗
         if total_extra_items:
             for item_no, amount in total_extra_items.items():
                 item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
-                total_cost_msg.append(f"{format_number(amount)} {item_name}")
+                total_cost_msg.append(f"{amount}{item_name}")
         detail_msg.append("\n".join(total_cost_msg))
         messages.append("\n".join(detail_msg))
 
