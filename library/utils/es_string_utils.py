@@ -136,6 +136,28 @@ def format_duration(duration: float) -> str:
         return str(duration)
 
 
+def process_skill_description(data, description):
+    """处理技能描述
+    
+    Args:
+        data: json 数据
+        description: 技能描述
+
+    Returns:
+        str: 处理后的技能描述
+    """
+    def replace_value(match):
+        value_id = int(match.group(1))
+        value_type = match.group(2)
+        return get_character_skill_value(data, value_id, value_type)
+    
+    # 清理颜色标签
+    clean_description = clean_tags(description)
+    # 替换所有形如 <数字.VALUE> 或 <数字.DURATION> 的内容
+    processed_desc = re.sub(r'<\s*(\d+)\.(VALUE|DURATION)\s*>', replace_value, clean_description)
+    return processed_desc
+
+
 def get_formation_type(formation_no):
     """get formation type
     
@@ -544,12 +566,12 @@ def get_character_skill_value(data, value_id, value_type) -> str:
         str: 技能值
     """
 
-    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == int(value_id)), None)
+    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == int(value_id)))
     function_key = skill_code.get("function_key", 0)
     # 处理buff技能
     if function_key in (30, 300):
         buff_id = int(skill_code.get("value", 0))
-        buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id), None)
+        buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
         
         if value_type == "VALUE":
             is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
@@ -562,12 +584,12 @@ def get_character_skill_value(data, value_id, value_type) -> str:
             return format_duration(skill_code.get("duration", 0))
         
         recursive_skill_id = int(skill_code.get("value", 0))
-        referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id), None)
+        referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id))
         ref_function_key = referenced_code.get("function_key", 0)
         
         if ref_function_key in (30, 300):
             buff_id = int(skill_code.get("value", 0))
-            buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id), None)
+            buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
             is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
             return format_value(buff_code.get("value", 0), is_integer)
         else:
@@ -582,26 +604,6 @@ def get_character_skill_value(data, value_id, value_type) -> str:
             return format_duration(skill_code.get("duration", 0))
 
     return ""
-
-
-def process_skill_description(data, description):
-    """处理技能描述
-    
-    Args:
-        data: json 数据
-        description: 技能描述
-
-    Returns:
-        str: 处理后的技能描述
-    """
-    def replace_value(match):
-        value_id = int(match.group(1))
-        value_type = match.group(2)
-        return get_character_skill_value(data, value_id, value_type)
-    
-    # 替换所有形如 <数字.VALUE> 或 <数字.DURATION> 的内容
-    processed_desc = re.sub(r'<\s*(\d+)\.(VALUE|DURATION)\s*>', replace_value, description)
-    return processed_desc
 
 
 def get_character_skill(data, skill_no, is_support=False, hero_data=None):
@@ -670,11 +672,6 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                     desc_cn = string.get("zh_cn", "")
                     desc_kr = string.get("kr", "")
                     desc_en = string.get("en", "")
-                    # 清理颜色标签. clean color tags
-                    desc_tw = clean_tags(desc_tw)
-                    desc_cn = clean_tags(desc_cn)
-                    desc_kr = clean_tags(desc_kr)
-                    desc_en = clean_tags(desc_en)
                     # 处理数值标签. process value tags
                     desc_tw = process_skill_description(data, desc_tw)
                     desc_cn = process_skill_description(data, desc_cn)
@@ -761,11 +758,6 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                         desc_cn = string.get("zh_cn", "")
                         desc_kr = string.get("kr", "")
                         desc_en = string.get("en", "")
-                        # 清理颜色标签. clean color tags
-                        desc_tw = clean_tags(desc_tw)
-                        desc_cn = clean_tags(desc_cn)
-                        desc_kr = clean_tags(desc_kr)
-                        desc_en = clean_tags(desc_en)
                         # 处理数值标签. process value tags
                         desc_tw = process_skill_description(data, desc_tw)
                         desc_cn = process_skill_description(data, desc_cn)
@@ -1609,13 +1601,6 @@ def get_character_signature(data, hero_id):
                         desc_cn = string.get("zh_cn", "")
                         desc_kr = string.get("kr", "")
                         desc_en = string.get("en", "")
-                        
-                        # 先清理颜色标签.
-                        desc_tw = clean_tags(desc_tw)
-                        desc_cn = clean_tags(desc_cn)
-                        desc_kr = clean_tags(desc_kr)
-                        desc_en = clean_tags(desc_en)
-                        
                         # 处理数值标签
                         desc_tw = process_skill_description(data, desc_tw)
                         desc_cn = process_skill_description(data, desc_cn)
@@ -2323,19 +2308,24 @@ def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False)
         if not pattern_data:
             return []
         
-        # 收集所有pattern键. collect all pattern keys
+        for hero in data["hero"]["json"]:
+            if hero.get("hero_id") == hero_no:
+                hero_base_attack = hero.get("base_attack")
+                break
+        
+        # 收集所有pattern键
         pattern_keys = [key for key in pattern_data.keys() if key.startswith("pattern")]
-        # 处理两种格式：pattern1 和 pattern_1
+        # 处理两种格式
         pattern_keys.sort(key=lambda x: int(x.replace("pattern", "").replace("_", "")))
-        # 获取技能顺序. get skill pattern
+        # 获取技能顺序
         skill_pattern = []
         for key in pattern_keys:
             skill_no = pattern_data.get(key)
-            if skill_no == hero_no:
-                # 普通攻击. normal attack
+            if skill_no == hero_base_attack:
+                # 普通攻击
                 skill_pattern.append(("普通攻击", True))
             else:
-                # 获取技能名称. get skill name
+                # 获取技能名称
                 skill_name = ""
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
@@ -2367,16 +2357,13 @@ def get_character_attack_range(data: dict, hero_id: int) -> float:
     
     Returns:
         float: 攻击范围，如果没有找到则返回0.0
+
+    游戏用的是三维欧几里得距离，公式：
+    sqrtf((z - z')^2 + (x - x')^2 + (y - y')^2) <= attackRange
+
     """
-    try:
-        # 在skill数据中查找该角色的技能
-        for skill in data["skill"]["json"]:
-            if skill.get("no") == hero_id and skill.get("range"):
-                return float(skill.get("range"))
-        
-        # 如果没有找到有range的技能，返回0.0
-        return 0.0
-        
-    except Exception as e:
-        logger.error(f"获取角色攻击范围时发生错误: {e}, hero_id: {hero_id}")
-        return 0.0
+    for skill in data["skill"]["json"]:
+        if skill.get("no") == hero_id and skill.get("range"):
+            return float(skill.get("range", 0))
+
+    return 0.0
