@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_switch_source.handle()
-async def handle_switch_source(event: GroupMessageEvent, args: Message = CommandArg()):
+async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
     # 获取参数
     args = str(args).strip().lower()
     

@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_stats.handle()
-async def handle_es_stats(bot: Bot, event: Event):
+async def handle(bot: Bot, event: Event):
     try:
         # 获取匹配的类型（身高或体重）
         stat_type = event.get_plaintext()[2:4]  # 获取"身高"或"体重"

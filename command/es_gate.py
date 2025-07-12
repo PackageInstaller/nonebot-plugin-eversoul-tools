@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_gate.handle()
-async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()):
+async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()):
     try:
         # 获取传送门类型和关卡编号
         gate_type = matched[0]
@@ -137,7 +137,7 @@ async def handle_gate_info(bot: Bot, event: Event, matched: Tuple[Any, ...] = Re
         forward_msgs = [{
             "type": "node",
             "data": {
-                "name": "Gate Info",
+                "name": "Eversoul Info",
                 "uin": bot.self_id,
                 "content": "\n".join(all_messages)
             }

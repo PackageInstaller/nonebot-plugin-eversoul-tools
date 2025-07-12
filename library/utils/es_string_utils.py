@@ -73,16 +73,16 @@ def clean_tags(text):
     return text
 
 
-def get_code_value_text_is_integer(effect_type: int) -> bool:
+def get_code_value_text_is_integer(function_key: int) -> bool:
     """SkillTextUtil::GetCodeValueText
 
     Args:
-        effect_type: effect 类型
+        function_key: function key
     Returns:
         bool: 是否为整数
     """
 
-    return (effect_type <= 0x1B and (((1 << effect_type) % 32) & 0xC000010) != 0) or ((effect_type - 1026) & 0xFFFFFFFF) < 2
+    return (function_key <= 0x1B and ((1 << function_key) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
 
 
 def get_buff_value_text_is_integer(buff_type: int) -> bool:
@@ -94,12 +94,13 @@ def get_buff_value_text_is_integer(buff_type: int) -> bool:
         bool: 是否为整数
     """
     if buff_type <= 10102:
-        if ((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420:
+        if (((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420):
             return False
         return True
 
-    if ((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << ((buff_type - 122) % 32)) & 0x13) != 0:
+    if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and (1 << (buff_type - 122) & 0x13) != 0):
         return True
+
     return False
 
 
@@ -568,17 +569,16 @@ def get_character_skill_value(data, value_id, value_type) -> str:
 
     skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == int(value_id)))
     function_key = skill_code.get("function_key", 0)
-    # 处理buff技能
+
     if function_key in (30, 300):
         buff_id = int(skill_code.get("value", 0))
         buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
         
         if value_type == "VALUE":
-            is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
-            return format_value(buff_code.get("value", 0), is_integer)
+            return format_value(buff_code.get("value", 0), get_buff_value_text_is_integer(buff_code.get("buff_effect", 0)))
         elif value_type == "DURATION":
             return format_duration(buff_code.get("duration", 0))
-    # 递归处理引用技能
+
     elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
         if value_type == "DURATION":
             return format_duration(skill_code.get("duration", 0))
@@ -588,18 +588,15 @@ def get_character_skill_value(data, value_id, value_type) -> str:
         ref_function_key = referenced_code.get("function_key", 0)
         
         if ref_function_key in (30, 300):
-            buff_id = int(skill_code.get("value", 0))
+            buff_id = int(referenced_code.get("value", 0))
             buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
-            is_integer = get_buff_value_text_is_integer(buff_code.get("buff_effect", 0))
-            return format_value(buff_code.get("value", 0), is_integer)
+            return format_value(buff_code.get("value", 0), get_buff_value_text_is_integer(buff_code.get("buff_effect", 0)))
         else:
-            is_integer = get_code_value_text_is_integer(ref_function_key)
-            return format_value(referenced_code.get("value", 0), is_integer)
-    # 处理其他技能类型
+            return format_value(referenced_code.get("value", 0), get_code_value_text_is_integer(ref_function_key))
+
     else:
         if value_type == "VALUE":
-            is_integer = get_code_value_text_is_integer(function_key)
-            return format_value(skill_code.get("value", 0), is_integer)
+            return format_value(skill_code.get("value", 0), get_code_value_text_is_integer(function_key))
         elif value_type == "DURATION":
             return format_duration(skill_code.get("duration", 0))
 

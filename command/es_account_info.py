@@ -1,8 +1,8 @@
 from ..library.utils import *
 
 
-@es_account_info.handle()
-async def handle_account_info(bot: Bot, event: Event):
+@es_account.handle()
+async def handle(bot: Bot, event: Event):
     """
     处理查询账号信息命令
     参数:
@@ -28,7 +28,7 @@ async def handle_account_info(bot: Bot, event: Event):
     user_accounts = await EversoulUser.get_all_user_accounts(int(user_id))
     
     if not user_accounts:
-        await es_account_info.finish(message="您尚未绑定过账号，请使用 es绑定账号 命令进行绑定", reply_message=True)
+        await es_account.finish(message="您尚未绑定过账号，请使用 es绑定账号 命令进行绑定", reply_message=True)
     
     
     # 构建账号信息列表
@@ -43,4 +43,4 @@ async def handle_account_info(bot: Bot, event: Event):
     reply_msg = f"您绑定的账号如下 (共{len(user_accounts)}个):\n\n"
     reply_msg += "\n".join(account_info_list)
     
-    await es_account_info.finish(message=reply_msg, reply_message=True)
+    await es_account.finish(message=reply_msg, reply_message=True)

@@ -1,8 +1,8 @@
 from ..library.utils import *
 
 
-@es_potential_info.handle()
-async def handle_potential_info(bot: Bot, event: Event):
+@es_potential.handle()
+async def handle(bot: Bot, event: Event):
     """处理潜能信息查询"""
     try:
         # 获取群组ID
@@ -14,7 +14,7 @@ async def handle_potential_info(bot: Bot, event: Event):
         html = await generate_potential_html(data)
         # 转换为图片
         pic = await html_to_pic(html, viewport={"width": 1920, "height": 1080})
-        await es_potential_info.finish(MessageSegment.image(pic))
+        await es_potential.finish(MessageSegment.image(pic))
 
     except Exception as e:
         if not isinstance(e, FinishedException):
@@ -28,4 +28,4 @@ async def handle_potential_info(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_potential_info.finish(f"处理潜能信息时发生错误: {str(e)}")
+            await es_potential.finish(f"处理潜能信息时发生错误: {str(e)}")

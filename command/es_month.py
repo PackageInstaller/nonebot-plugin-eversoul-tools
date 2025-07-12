@@ -77,14 +77,12 @@ async def handle_es_month(bot: Bot, event: Event):
             if isinstance(event, GroupMessageEvent):
                 await bot.send_group_msg(
                     group_id=event.group_id,
-                    message=MessageSegment.image(png_pic),
-                    reply_message=True
+                    message=MessageSegment.image(png_pic)
                 )
             else:
                 await bot.send_private_msg(
-                    user_id=event.get_user_id(),
-                    message=MessageSegment.image(png_pic),
-                    reply_message=True
+                    user_id=int(event.get_user_id()),
+                    message=MessageSegment.image(png_pic)
                 )
         else:
             await es_month.finish(f"{target_month}月份没有事件哦~")

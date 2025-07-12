@@ -21,3 +21,4 @@ from .es_ark_overlock import *
 from .es_notice import *
 from .es_story_info import *
 from .es_update_check import *
+from .es_hero_skill import *

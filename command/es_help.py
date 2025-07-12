@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_help.handle()
-async def handle_es_help(bot: Bot, event: Event):
+async def handle(bot: Bot, event: Event):
     html = """
     <!DOCTYPE html>
     <html lang="zh-CN">
@@ -126,6 +126,13 @@ async def handle_es_help(bot: Bot, event: Event):
                                 + 角色名</td>
                             <td>查询角色的详细信息</td>
                             <td>es角色信息大帝</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                es技能信息
+                                + 角色名</td>
+                            <td>查询角色的技能信息</td>
+                            <td>es技能信息大帝</td>
                         </tr>
                         <tr>
                             <td>

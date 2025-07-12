@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_single_raid.handle()
-async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg()):
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取hero_id参数
         hero_id_text = args.extract_plain_text().strip()
@@ -238,7 +238,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                 forward_msgs.append({
                     "type": "node",
                     "data": {
-                        "name": "EverSoul Evil Raid",
+                        "name": "Eversoul Info",
                         "uin": bot.self_id,
                         "content": msg
                     }
@@ -248,7 +248,7 @@ async def handle_single_raid(bot: Bot, event: Event, args: Message = CommandArg(
                 forward_msgs.append({
                     "type": "node",
                     "data": {
-                        "name": "EverSoul Evil Raid",
+                        "name": "Eversoul Info",
                         "uin": bot.self_id,
                         "content": "\n".join(str(x) for x in msg)
                     }

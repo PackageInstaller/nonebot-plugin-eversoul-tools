@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_update_check.handle()
-async def handle_manual_update_check():
+async def handle():
     """处理手动检查更新的命令"""
     
     result = await check_eversoul_updates()

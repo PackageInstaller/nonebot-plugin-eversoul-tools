@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_level_cost.handle()
-async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()):
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取目标等级
         target_level = args.extract_plain_text().strip()
@@ -63,7 +63,7 @@ async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()
         messages.append({
             "type": "node",
             "data": {
-                "name": "EverSoul Level Cost",
+                "name": "Eversoul Info",
                 "uin": bot.self_id,
                 "content": "\n".join(text_msg)
             }
@@ -74,7 +74,7 @@ async def handle_level_cost(bot: Bot, event: Event, args: Message = CommandArg()
         messages.append({
             "type": "node",
             "data": {
-                "name": "EverSoul Level Cost Chart",
+                "name": "Eversoul Info",
                 "uin": bot.self_id,
                 "content": chart
             }

@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_range_ranking.handle()
-async def handle_es_range_ranking(bot: Bot, event: Event):
+async def handle(bot: Bot, event: Event):
     try:
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id

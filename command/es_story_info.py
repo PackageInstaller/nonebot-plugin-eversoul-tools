@@ -1,14 +1,14 @@
 from ..library.utils import *
 
 
-@es_story_info.handle()
-async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandArg()):
+@es_story.handle()
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取用户输入的ID
         story_match = args.extract_plain_text().strip()
         
         if not story_match:
-            await es_story_info.finish("请输入正确的格式：es故事信息+数字ID")
+            await es_story.finish("请输入正确的格式：es故事信息+数字ID")
         
         target_id = int(story_match)
         
@@ -29,7 +29,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
                 calendar_events.append(event_item)
         
         if not calendar_events:
-            await es_story_info.finish(f"未找到ID为 {target_id} 的活动信息")
+            await es_story.finish(f"未找到ID为 {target_id} 的活动信息")
         
         # 收集所有相关的故事信息
         all_story_info = []
@@ -75,7 +75,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
                         all_story_info.append(story_info)
         
         if not all_story_info:
-            await es_story_info.finish(f"未找到ID为 {target_id} 的故事信息")
+            await es_story.finish(f"未找到ID为 {target_id} 的故事信息")
         
         # 生成合并转发消息
         forward_msgs = []
@@ -91,7 +91,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
             forward_msgs.append({
                 "type": "node",
                 "data": {
-                    "name": "Eversoul Story",
+                    "name": "Eversoul Info",
                     "uin": bot.self_id,
                     "content": "\n".join(overview_msg)
                 }
@@ -122,7 +122,7 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
                 forward_msgs.append({
                     "type": "node",
                     "data": {
-                        "name": "Eversoul Story",
+                        "name": "Eversoul Info",
                         "uin": bot.self_id,
                         "content": "\n".join(episode_parts)
                     }
@@ -154,4 +154,4 @@ async def handle_es_story_info(bot: Bot, event: Event, args: Message = CommandAr
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_story_info.finish(f"处理故事信息查询时发生错误: {str(e)}") 
+            await es_story.finish(f"处理故事信息查询时发生错误: {str(e)}") 

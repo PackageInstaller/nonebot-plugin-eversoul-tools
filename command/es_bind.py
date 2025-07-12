@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_bind.handle()
-async def handle_bind(bot: Bot, event: Event, args: Message = CommandArg()):
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     """处理绑定账号指令"""
     
     # 获取输入的账号信息
@@ -22,10 +22,10 @@ async def handle_bind(bot: Bot, event: Event, args: Message = CommandArg()):
         )
         await es_bind.finish(message=help_msg, reply_message=True)
     
-    await handle_binding(bot, event, server_id_text)
+    await handle_bind(bot, event, server_id_text)
         
 
-async def handle_binding(bot: Bot, event: Event, server_id_text: str):
+async def handle_bind(bot: Bot, event: Event, server_id_text: str):
     """处理实际绑定操作"""
     user_id = event.get_user_id()
     

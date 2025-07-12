@@ -1,13 +1,13 @@
 from ..library.utils import *
 
 
-@es_ark_info.handle()
-async def handle_ark_info(bot: Bot, event: Event, args: Message = CommandArg()):
+@es_ark_level.handle()
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取目标等级
         target_level = args.extract_plain_text().strip()
         if not target_level:
-            await es_ark_info.finish("请输入正确的格式：es方舟等级信息+等级")
+            await es_ark_level.finish("请输入正确的格式：es方舟等级信息+等级")
         target_level = int(target_level)
         
         # 加载数据
@@ -111,7 +111,7 @@ async def handle_ark_info(bot: Bot, event: Event, args: Message = CommandArg()):
             forward_msgs.append({
                 "type": "node",
                 "data": {
-                    "name": "EverSoul Ark Info",
+                    "name": "Eversoul Info",
                     "uin": bot.self_id,
                     "content": msg
                 }
@@ -144,4 +144,4 @@ async def handle_ark_info(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_ark_info.finish(f"处理方舟等级信息时发生错误: {str(e)}")
+            await es_ark_level.finish(f"处理方舟等级信息时发生错误: {str(e)}")

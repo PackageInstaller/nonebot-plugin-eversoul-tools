@@ -1,14 +1,14 @@
 from ..library.utils import *
 
 
-@es_tier_info.handle()
-async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg()):
+@es_tier.handle()
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 解析参数
         args_text = args.extract_plain_text().strip()
         match = re.match(r'^(粉|红\+?)(\d*)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)$', args_text)
         if not match:
-            await es_tier_info.finish("格式错误！请使用如：es礼品信息粉1智力加速\n具体格式参考:\n(粉|红+数字)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)")
+            await es_tier.finish("格式错误！请使用如：es礼品信息粉1智力加速\n具体格式参考:\n(粉|红+数字)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)")
             
         # 获取参数
         grade, level, stat_type, set_type = match.groups()
@@ -43,7 +43,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                             if e.get("name") == set_no), {})
         
         if not all([grade_sno, stat_sno, set_effect]):
-            await es_tier_info.finish("未找到对应的礼品信息")
+            await es_tier.finish("未找到对应的礼品信息")
             
         # 查找符合条件的礼品
         items = []
@@ -55,7 +55,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 items.append(item)
         
         if not items:
-            await es_tier_info.finish("未找到符合条件的礼品")
+            await es_tier.finish("未找到符合条件的礼品")
             
         messages = []
         for item in items:
@@ -184,7 +184,7 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
             forward_msgs.append({
                 "type": "node",
                 "data": {
-                    "name": "Tier Info",
+                    "name": "Eversoul Info",
                     "uin": bot.self_id,
                     "content": msg
                 }
@@ -216,5 +216,5 @@ async def handle_tier_info(bot: Bot, event: Event, args: Message = CommandArg())
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_tier_info.finish(f"处理礼品信息时发生错误: {str(e)}")
+            await es_tier.finish(f"处理礼品信息时发生错误: {str(e)}")
 

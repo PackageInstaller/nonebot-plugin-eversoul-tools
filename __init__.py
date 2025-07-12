@@ -1,3 +1,26 @@
+#                            _ooOoo_
+#                           o8888888o
+#                           88" . "88
+#                           (| -_- |)
+#                            O\ = /O
+#                        ____/`---'\____
+#                      .   ' \\| |# `.
+#                       / \\||| : |||# \
+#                     / _||||| -:- |||||- \
+#                       | | \\\ - #/ | |
+#                     | \_| ''\---/'' | |
+#                      \ .-\__ `-` ___/-. /
+#                   ___`. .' /--.--\ `. . __
+#                ."" '< `.___\_<|>_/___.' >'"".
+#               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+#                 \ \ `-. \_ __\ /__ _/ .-` / /
+#         ======`-.____`-.___\_____/___.-`____.-'======
+#                            `=---='
+#
+#         .............................................
+#                  佛祖保佑             永无BUG
+#          Praise the Omnissiah, may the code be bug-free
+
 import nonebot
 from nonebot.plugin import PluginMetadata
 from nonebot.log import logger
@@ -13,7 +36,7 @@ __plugin_meta__ = PluginMetadata(
     usage='请使用 es命令列表 指令查看使用方法',
     type='application',
     config=Config,
-    homepage='https://github.com/PackageInstaller/nonebot-plugin-eversoul-tools',
+    homepage='https:#github.com/PackageInstaller/nonebot-plugin-eversoul-tools',
     supported_adapters={'~onebot.v11'}
 )
 

@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_hero_list.handle()
-async def handle_hero_list(bot: Bot, event: Event):
+async def handle(bot: Bot, event: Event):
     """处理角色列表查询"""
     try:
         # 加载数据
@@ -63,7 +63,7 @@ async def handle_hero_list(bot: Bot, event: Event):
                 forward_msgs.append({
                     "type": "node",
                     "data": {
-                        "name": "Character List",
+                        "name": "Eversoul Info",
                         "uin": bot.self_id,
                         "content": msg
                     }

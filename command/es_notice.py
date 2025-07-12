@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_notice.handle()
-async def handle_es_notice(bot: Bot, event: Event):
+async def handle(bot: Bot, event: Event):
     try:
         # 获取版本号
         try:

@@ -79,7 +79,7 @@ async def handle_coupon(bot: Bot, event: Event):
         forward_messages.append({
             "type": "node",
             "data": {
-                "name": "Eversoul Helper",
+                "name": "Eversoul Info",
                 "uin": event.self_id,
                 "content": f"开始为 {account_info} 兑换"
             }
@@ -112,7 +112,7 @@ async def handle_coupon(bot: Bot, event: Event):
             forward_messages.append({
                 "type": "node",
                 "data": {
-                    "name": "Eversoul Helper",
+                    "name": "Eversoul Info",
                     "uin": event.self_id,
                     "content": success_content
                 }
@@ -123,7 +123,7 @@ async def handle_coupon(bot: Bot, event: Event):
             forward_messages.append({
                 "type": "node",
                 "data": {
-                    "name": "Eversoul Helper",
+                    "name": "Eversoul Info",
                     "uin": event.self_id,
                     "content": limit_content
                 }
@@ -134,7 +134,7 @@ async def handle_coupon(bot: Bot, event: Event):
             forward_messages.append({
                 "type": "node",
                 "data": {
-                    "name": "Eversoul Helper",
+                    "name": "Eversoul Info",
                     "uin": event.self_id,
                     "content": failed_content
                 }
@@ -145,7 +145,7 @@ async def handle_coupon(bot: Bot, event: Event):
             forward_messages.append({
                 "type": "node",
                 "data": {
-                    "name": "Eversoul Helper",
+                    "name": "Eversoul Info",
                     "uin": event.self_id,
                     "content": skipped_content
                 }
@@ -178,7 +178,7 @@ async def handle_coupon(bot: Bot, event: Event):
     forward_messages.append({
         "type": "node",
         "data": {
-            "name": "Eversoul Helper",
+            "name": "Eversoul Info",
             "uin": event.self_id,
             "content": f"共{accounts_count}个账号，{len(all_coupons)}个兑换码"
         }

@@ -2,7 +2,7 @@ from ..library.utils import *
 
 
 @es_ark_overclock.handle()
-async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandArg()):
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取目标超频等级
         target_level = args.extract_plain_text().strip()
@@ -167,7 +167,7 @@ async def handle_ark_overclock(bot: Bot, event: Event, args: Message = CommandAr
             forward_msgs.append({
                 "type": "node",
                 "data": {
-                    "name": "EverSoul Ark Overclock",
+                    "name": "Eversoul Info",
                     "uin": bot.self_id,
                     "content": msg
                 }

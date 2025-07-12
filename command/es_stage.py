@@ -1,8 +1,8 @@
 from ..library.utils import *
 
 
-@es_stage_info.handle()
-async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()):
+@es_stage.handle()
+async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取参数文本
         stage_text = args.extract_plain_text().strip()
@@ -13,7 +13,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         # 检查格式
         match = re.match(r'^(\d+)-(\d+)$', stage_text)
         if not match:
-            await es_stage_info.finish("请输入正确的关卡编号！")
+            await es_stage.finish("请输入正确的关卡编号！")
         
         area_no = int(match.group(1))
         stage_no = int(match.group(2))
@@ -35,7 +35,7 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
         stage_data = main_stage
         
         if not main_stage:
-            await es_stage_info.finish(f"未找到关卡 {area_no}-{stage_no} 的信息")
+            await es_stage.finish(f"未找到关卡 {area_no}-{stage_no} 的信息")
 
         messages = []
         basic_info = []
@@ -168,4 +168,4 @@ async def handle_stage_info(bot: Bot, event: Event, args: Message = CommandArg()
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_stage_info.finish(f"处理关卡信息时发生错误: {str(e)}")
+            await es_stage.finish(f"处理关卡信息时发生错误: {str(e)}")
