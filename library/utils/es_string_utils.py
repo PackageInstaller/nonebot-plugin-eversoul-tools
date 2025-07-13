@@ -184,7 +184,7 @@ def get_string_by_type(data, string_type, no):
     json_key = f"string_{string_type}"
     
     if json_key not in data:
-        return {"zh_tw": "", "zh_cn": "", "kr": "", "en": "", "ja": ""}
+        return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
     
     for string in data[json_key]["json"]:
         if string["no"] == no:
@@ -192,11 +192,10 @@ def get_string_by_type(data, string_type, no):
                 "zh_tw": string.get("zh_tw", ""),
                 "zh_cn": string.get("zh_cn", ""),
                 "kr": string.get("kr", ""),
-                "en": string.get("en", ""),
-                "ja": string.get("ja", "")
+                "en": string.get("en", "")
             }
 
-    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": "", "ja": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
 def get_string_character(data, hero_no, special=False):
@@ -1705,7 +1704,10 @@ def get_character_story(data, hero_id):
                     
                     talk_no = talk.get("no")
                     if talk_no is not None:
-                        choice_text_zh_tw, choice_text_zh_cn, choice_text_kr, choice_text_en = get_string_by_type(data, "talk", talk_no)
+                        choice_text_zh_tw = get_string_by_type(data, "talk", talk_no)["zh_tw"]
+                        choice_text_zh_cn = get_string_by_type(data, "talk", talk_no)["zh_cn"]
+                        choice_text_kr = get_string_by_type(data, "talk", talk_no)["kr"]
+                        choice_text_en = get_string_by_type(data, "talk", talk_no)["en"]
                     
                     position_type = talk.get("position_type", 0)
                     if position_type not in choices:
@@ -1728,7 +1730,10 @@ def get_character_story(data, hero_id):
             episode_title_en = ""
             episode_name_sno = episode.get("episode_name_sno")
             if episode_name_sno is not None:
-                episode_title_zh_tw, episode_title_zh_cn, episode_title_kr, episode_title_en = get_string_by_type(data, "talk", episode_name_sno)
+                episode_title_zh_tw = get_string_by_type(data, "talk", episode_name_sno)["zh_tw"]
+                episode_title_zh_cn = get_string_by_type(data, "talk", episode_name_sno)["zh_cn"]
+                episode_title_kr = get_string_by_type(data, "talk", episode_name_sno)["kr"]
+                episode_title_en = get_string_by_type(data, "talk", episode_name_sno)["en"]
             
             episode_info.append({
                 "episode": episode.get("episode", 0),

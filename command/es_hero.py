@@ -141,9 +141,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             nickname_zh_tw = nickname_data["zh_tw"]
             nickname_kr = nickname_data["kr"]
         
-        # 繁体中文版本
         basic_info_msg = []
-        # 头像（基础头像和皮肤头像）
         portrait_paths = get_character_portrait(data, hero_id, hero_name_en) 
         basic_info_msg.append("【基础信息】")
         if portrait_paths:
@@ -196,7 +194,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                     for img_path, display_name_zh_tw, display_name_zh_cn, display_name_kr,\
                         display_name_en, condition_tw, condition_cn, condition_kr, condition_en in images:
                         image_msg.append(f"{display_name_zh_tw}\n解锁条件: {condition_tw}")
-                        image_msg.append(MessageSegment.image(f"file:///{str(img_path.absolute())}"))
+                        image_msg.append(MessageSegment.image(f"file:///{img_path}"))
                     messages.append("\n".join(str(x) for x in image_msg))
                 break
 
@@ -366,4 +364,3 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_hero.finish(f"处理角色信息时发生错误: {str(e)}")
