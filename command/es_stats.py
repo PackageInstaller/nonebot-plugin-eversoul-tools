@@ -112,4 +112,3 @@ async def handle(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_stats.finish(f"处理{stat_type}排行时发生错误: {str(e)}")

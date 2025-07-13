@@ -194,4 +194,3 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_cash_pack.finish(f"处理突发礼包信息时发生错误: {str(e)}")

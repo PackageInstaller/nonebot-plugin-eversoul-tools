@@ -34,27 +34,12 @@ async def handle(bot: Bot, event: Event):
                     return
 
                 # 处理通知信息
-                messages = []
+                notice_messages = []
                 for notice in notices:
-                    # 转换时间戳为datetime对象
-                    start_time = datetime.fromtimestamp(notice["periodBeginTime"] / 1000)
-                    end_time = datetime.fromtimestamp(notice["periodEndTime"] / 1000)
-                    
-                    # 格式化时间
-                    start_time_str = start_time.strftime("%Y-%m-%d %H:%M")
-                    end_time_str = end_time.strftime("%Y-%m-%d %H:%M")
-                    
-                    # 获取通知类型
                     notice_type = notice.get("noticeType", "未知类型")
-                    
-                    # 获取通知内容
                     content = notice.get("msg", "无内容")
-                    
-                    # 构建消息
                     message = [
                         f"【通知类型】{notice_type}\n",
-                        # f"【开始时间】{start_time_str}\n",
-                        # f"【结束时间】{end_time_str}\n",
                         f"【通知内容】\n{content}\n"
                     ]
                     
@@ -62,13 +47,12 @@ async def handle(bot: Bot, event: Event):
                     if notice.get("link"):
                         message.append(f"【详情链接】{notice['link']}\n")
                     
-                    messages.append("\n".join(message))
+                    notice_messages.append("\n".join(message))
 
                 try:
-                    await bot.send(event, Message(message), reply_message=True)
+                    await bot.send(event, Message(notice_messages), reply_message=True)
                 except Exception as e:
                     logger.error(f"发送消息失败: {str(e)}")
-                    await es_notice.finish(f"发送消息失败: {str(e)}")
 
     except Exception as e:
         if not isinstance(e, FinishedException):
@@ -82,5 +66,4 @@ async def handle(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_notice.finish(f"处理通知信息时发生错误: {str(e)}")
 

@@ -4,16 +4,16 @@ from ..library.utils import *
 @es_switch_source.handle()
 async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
     # 获取参数
-    args = str(args).strip().lower()
+    args_str = str(args).strip().lower()
     
     # 获取群组ID
     group_id = str(event.group_id)
     
-    if not args:
+    if not args_str:
         group_data_source = get_group_data_source(group_id)["type"]
         await es_switch_source.finish(f"当前群组数据源为{group_data_source}")
     
-    if args not in ["live", "review"]:
+    if args_str not in ["live", "review"]:
         await es_switch_source.finish("参数错误！请使用 'live' 或 'review'")
     
     # 确保CURRENT_DATA_SOURCE包含default配置
@@ -26,10 +26,10 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         CURRENT_DATA_SOURCE[group_id] = CURRENT_DATA_SOURCE["default"].copy()
     
     # 更新群组的数据源类型
-    CURRENT_DATA_SOURCE[group_id]["type"] = args
+    CURRENT_DATA_SOURCE[group_id]["type"] = args_str
     
     # 根据类型选择对应的路径配置
-    if args == "live":
+    if args_str == "live":
         if plugin_config.eversoul_live_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(plugin_config.eversoul_live_path)
         else:
@@ -41,7 +41,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
             await es_switch_source.finish("未配置review数据源路径，请在env中设置eversoul_review_path")
     
     # 使用DATA_DIR中的别名文件
-    CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = CONFIG_DIR/ f"{args}_hero_aliases.yaml"
+    CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = CONFIG_DIR/ f"{args_str}_hero_aliases.yaml"
     
     try:
         # 保存配置到文件
@@ -58,6 +58,5 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_switch_source.finish(f"切换数据源时发生错误: {str(e)}")
     
-    await es_switch_source.finish(f"已为当前群组切换到{args}数据源")
+    await es_switch_source.finish(f"已为当前群组切换到{args_str}数据源")

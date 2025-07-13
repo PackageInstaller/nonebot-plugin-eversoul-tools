@@ -28,4 +28,3 @@ async def handle(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_potential.finish(f"处理潜能信息时发生错误: {str(e)}")

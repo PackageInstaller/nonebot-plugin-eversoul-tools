@@ -119,15 +119,15 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 实装日期
         character_release_date = get_character_release_date(data, hero_id)
         # 类型
-        race_zh_tw = get_string_system(data, hero_data["race_sno"])["zh_tw"]
+        race_zh_tw = get_string_by_type(data, "system", hero_data["race_sno"])["zh_tw"]
         # 职业
-        hero_class_zh_tw = get_string_system(data, hero_data["class_sno"])["zh_tw"]
+        hero_class_zh_tw = get_string_by_type(data, "system", hero_data["class_sno"])["zh_tw"]
         # 攻击方式
-        sub_class_zh_tw = get_string_system(data, hero_data["sub_class_sno"])["zh_tw"]
+        sub_class_zh_tw = get_string_by_type(data, "system", hero_data["sub_class_sno"])["zh_tw"]
         # 属性
-        stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_tw"]
+        stat_zh_tw = get_string_by_type(data, "system", hero_data["stat_sno"])["zh_tw"]
         # 品质
-        grade_zh_tw = get_string_system(data, hero_data["grade_sno"])["zh_tw"]
+        grade_zh_tw = get_string_by_type(data, "system", hero_data["grade_sno"])["zh_tw"]
 
         atk_range = get_character_attack_range(data, hero_id)
         
@@ -284,7 +284,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
         # 添加专属领地物品信息
         town_objects = get_character_town_object(data, hero_id, is_test)
         if town_objects:
-            objects_msg = ["【专属领地物品】"]
+            objects_msg: list = ["【专属领地物品】"]
             for obj_no, name, grade, slot_type, desc, img_path, battle_power_per in town_objects:
                 if img_path and os.path.exists(img_path):
                     objects_msg.append(MessageSegment.image(f"file:///{img_path}"))

@@ -13,7 +13,7 @@ from ...config import (
     CG_DIR, SOUL_DIR, CUSTOM_FONT
 )
 from .es_string_utils import (
-    get_string_item, get_string_character, get_string_ui
+    get_string_item, get_string_character, get_string_by_type
 )
 from nonebot.adapters.onebot.v11 import (
     MessageSegment
@@ -561,8 +561,8 @@ def get_calendar_event(data, target_month, current_year):
                         banner_path = f"{banner_raw}_ZH_TW.png"
                     # 如果找到name_sno，从StringUI中获取名称
                     if name_sno:
-                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
-                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
+                        event_name_tw = get_string_by_type(data, "ui", name_sno)["zh_tw"]
+                        event_name_cn = get_string_by_type(data, "ui", name_sno)["zh_cn"]
                         break
                     break
         else:
@@ -572,8 +572,8 @@ def get_calendar_event(data, target_month, current_year):
                     name_sno = event.get("name_sno")
                     if name_sno:
                         # 从StringUI中获取名称
-                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
-                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
+                        event_name_tw = get_string_by_type(data, "ui", name_sno)["zh_tw"]
+                        event_name_cn = get_string_by_type(data, "ui", name_sno)["zh_cn"]
                         break
                     break
             
@@ -583,8 +583,8 @@ def get_calendar_event(data, target_month, current_year):
                     name_sno = event.get("name_sno")
                     if name_sno:
                         # 从StringUI中获取名称并处理换行
-                        event_name_tw = get_string_ui(data, name_sno)["zh_tw"]
-                        event_name_cn = get_string_ui(data, name_sno)["zh_cn"]
+                        event_name_tw = get_string_by_type(data, "ui", name_sno)["zh_tw"]
+                        event_name_cn = get_string_by_type(data, "ui", name_sno)["zh_cn"]
                         break
                     break
         

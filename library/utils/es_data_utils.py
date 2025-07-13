@@ -596,8 +596,8 @@ def load_data_source_config():
         except Exception as e:
             logger.error(f"创建默认数据源配置文件失败: {e}")
     
-    if hasattr(plugin_config, 'eversoul_group_config') and plugin_config.eversoul_group_config:
-        for group_id, group_settings in plugin_config.eversoul_group_config.items():
+    if hasattr(plugin_config, 'eversoul_group_config') and getattr(plugin_config, 'eversoul_group_config', None):
+        for group_id, group_settings in getattr(plugin_config, 'eversoul_group_config', {}).items():
             if group_id not in CURRENT_DATA_SOURCE:
                 CURRENT_DATA_SOURCE[group_id] = CURRENT_DATA_SOURCE["default"].copy()
 

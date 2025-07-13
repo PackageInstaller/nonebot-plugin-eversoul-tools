@@ -84,7 +84,10 @@ async def handle_unbind_emoji(bot: Bot, event: NoticeEvent):
         if event.notice_type == "group_msg_emoji_like":
             message_id = event.dict().get('message_id')
             user_id = str(event.dict().get('user_id'))
-            emoji_id = event.dict().get('likes')[0].get('emoji_id')
+            likes = event.dict().get('likes')
+            if not likes:
+                return
+            emoji_id = likes[0].get('emoji_id')
             
             # 检查是否是解绑投票
             if message_id in unbind_votes:

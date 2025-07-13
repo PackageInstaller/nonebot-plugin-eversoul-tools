@@ -108,9 +108,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         skill_keys = ["skill_no_1", "skill_no_2", "skill_no_3", "skill_no_4",  "ultimate_skill_no", "support_skill_no"]
         
         # 获取并显示技能释放顺序
-        skill_pattern = get_character_skill_pattern(data, hero_id, is_test)
+        skill_pattern = get_character_skill_pattern(data, hero_id)
         if skill_pattern:
-            pattern_text = ["▼ 技能释放顺序(仅供参考,具体情况以实际为准)"]
+            pattern_text = ["▼ 技能释放顺序"]
             for i, (skill_name, is_normal) in enumerate(skill_pattern, 1):
                 pattern_text.append(f"{i}. {skill_name}")
             messages.append("\n".join(pattern_text))
@@ -120,7 +120,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if skill_no := hero_data.get(skill_key):
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
-                        skill_type_data = get_string_system(data, skill["type"])
+                        skill_type_data = get_string_by_type(data, "system", skill["type"])
                         skill_type_zh_tw = skill_type_data["zh_tw"]
                         skill_type_zh_cn = skill_type_data["zh_cn"]
                         skill_type_kr = skill_type_data["kr"]
@@ -154,45 +154,22 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 
                 skill_text.append(MessageSegment.image(colored_icon))
             
-            # 适配文本获取逻辑：优先使用zh_tw，如果为空则根据is_test决定
             skill_type_text = skill_type_zh_tw if skill_type_zh_tw else (skill_type_kr if is_test else skill_type_zh_tw)
             skill_name_text = skill_info["name"]["zh_tw"] if skill_info["name"]["zh_tw"] else (skill_info["name"]["kr"] if is_test else skill_info["name"]["zh_tw"])
             
-            # 如果是支援技能，使用新的格式
             if skill_info["is_support"]:
-                # 分类存储主要和辅助效果
                 main_effects = []
-                support_effects = []
-                
-                # 对效果进行分类
                 for desc in skill_info["descriptions"]:
                     if desc.get("type") == "main_partner":
-                        # 从desc_zh_tw中去除前缀，优先使用zh_tw，为空时根据is_test决定
-                        desc_text = desc["desc_zh_tw"].replace("主要夥伴：", "") if desc["desc_zh_tw"] else (desc["desc_kr"].replace("메인 파트너：", "") if is_test else desc["desc_zh_tw"])
+                        desc_text = desc["desc_zh_tw"] if desc["desc_zh_tw"] else (desc["desc_kr"] if is_test else desc["desc_zh_tw"])
                         main_effects.append(desc_text)
-                    elif desc.get("type") == "support_partner":
-                        # 从desc_zh_tw中去除前缀，优先使用zh_tw，为空时根据is_test决定
-                        desc_text = desc["desc_zh_tw"].replace("輔助夥伴：", "") if desc["desc_zh_tw"] else (desc["desc_kr"].replace("서브 파트너：", "") if is_test else desc["desc_zh_tw"])
-                        support_effects.append(desc_text)
                 
-                # 如果有主要效果，添加主要效果部分
                 if main_effects:
-                    skill_text.append("▼ 主要伙伴效果")
                     skill_text.append(f"【{skill_type_text}】{skill_name_text}")
                     skill_text.extend(main_effects)
-                
-                # 如果有辅助效果，添加辅助效果部分
-                if support_effects:
-                    skill_text.append("▼ 辅助伙伴效果")
-                    if not main_effects:  # 如果之前没有显示过技能名称，在这里显示
-                        skill_text.append(f"【{skill_type_text}】{skill_name_text}")
-                    skill_text.extend(support_effects)
             else:
-                # 非支援技能保持原有格式
-                # 只在第一级显示技能类型和名称
                 skill_text.append(f"【{skill_type_text}】{skill_name_text}")
                 for i, desc in enumerate(skill_info["descriptions"]):
-                    # 适配描述文本获取逻辑：优先使用zh_tw，如果为空则根据is_test决定
                     desc_text = desc["desc_zh_tw"] if desc["desc_zh_tw"] else (desc["desc_kr"] if is_test else desc["desc_zh_tw"])
                     hero_level = desc.get("hero_level", 1)
                     unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
@@ -200,8 +177,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             
             messages.append("\n".join(str(x) for x in skill_text))
 
-        
-        # 获取并添加遗物信息
         signature_info = get_character_signature(data, hero_id)
         if signature_info["name"]["kr"]:
             signature_stats = signature_info["stats"]
@@ -210,19 +185,15 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             signature_bg_path = signature_info["bg_path"]
             signature_img_path = str(SOUL_DIR / signature_bg_path)
 
-            # 遗物信息 - 优先使用zh_tw，为空时根据is_test决定
             signature_msg = []
             signature_msg.append(f"【遺物信息】")
-            # 检查图片是否存在并添加
             if os.path.exists(signature_img_path):
                 signature_msg.append(MessageSegment.image(f"file:///{signature_img_path}"))
             
-            # 适配文本获取逻辑：优先使用zh_tw，如果为空则根据is_test决定
             signature_name_text = signature_info["name"]["zh_tw"] if signature_info["name"]["zh_tw"] else (signature_info["name"]["kr"] if is_test else signature_info["name"]["zh_tw"])
             signature_desc_text = signature_info["description"]["zh_tw"] if signature_info["description"]["zh_tw"] else (signature_info["description"]["kr"] if is_test else signature_info["description"]["zh_tw"])
             signature_title_text = signature_info["title"]["zh_tw"] if signature_info["title"]["zh_tw"] else (signature_info["title"]["kr"] if is_test else signature_info["title"]["zh_tw"])
             
-            # 组装描述信息
             skill_descriptions_text = []
             for i, skill in enumerate(signature_info["skills"]):
                 desc_text = skill["desc_zh_tw"] if skill["desc_zh_tw"] else (skill["desc_kr"] if is_test else skill["desc_zh_tw"])
@@ -239,10 +210,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             signature_msg.append(signature_info_text)
             messages.append("\n".join(str(x) for x in signature_msg))
 
-        # 构建转发消息
         forward_msgs = []
         for msg in messages:
-            # 如果消息是字符串，直接添加
             if isinstance(msg, str):
                 forward_msgs.append({
                     "type": "node",
@@ -253,7 +222,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     }
                 })
 
-        # 如果消息是列表（包含图片），将其合并
             elif isinstance(msg, list):
                 forward_msgs.append({
                     "type": "node",
@@ -264,7 +232,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     }
                 })
 
-        # 发送合并转发消息
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
                 "send_group_forward_msg",
@@ -290,4 +257,3 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_hero.finish(f"处理角色信息时发生错误: {str(e)}")

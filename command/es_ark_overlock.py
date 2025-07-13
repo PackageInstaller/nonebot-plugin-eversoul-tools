@@ -199,4 +199,3 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await bot.send(event, f"处理方舟超频信息时发生错误: {str(e)}")

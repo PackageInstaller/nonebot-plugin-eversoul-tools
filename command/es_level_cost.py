@@ -38,6 +38,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if level_data and next_level_data:
                 break
         
+        if not level_data:
+            await es_level_cost.finish(f"未找到等级 {target_level} 的数据")
+        
         # 构建消息列表
         messages = []
         
@@ -106,4 +109,3 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_level_cost.finish(f"处理升级消耗查询时发生错误: {str(e)}")

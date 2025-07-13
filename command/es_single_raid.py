@@ -64,10 +64,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             hero_name_en = name_data["en"]
 
         # 获取基础属性
-        race_zh_tw = get_string_system(data, hero_data["race_sno"])["zh_tw"]
-        hero_class_zh_tw = get_string_system(data, hero_data["class_sno"])["zh_tw"]
-        sub_class_zh_tw = get_string_system(data, hero_data["sub_class_sno"])["zh_tw"]
-        stat_zh_tw = get_string_system(data, hero_data["stat_sno"])["zh_tw"]
+        race_zh_tw = get_string_by_type(data, "system", hero_data["race_sno"])["zh_tw"]
+        hero_class_zh_tw = get_string_by_type(data, "system", hero_data["class_sno"])["zh_tw"]
+        sub_class_zh_tw = get_string_by_type(data, "system", hero_data["sub_class_sno"])["zh_tw"]
+        stat_zh_tw = get_string_by_type(data, "system", hero_data["stat_sno"])["zh_tw"]
         
         # 获取战斗时长
         battle_time = 0
@@ -80,7 +80,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 获取讨伐攻略
         guide_text = ""
         if raid_data and raid_data.get("guide_sno"):
-            guide_data = get_string_ui(data, raid_data.get("guide_sno"))
+            guide_data = get_string_by_type(data, "ui", raid_data.get("guide_sno"))
             guide_text = guide_data["zh_tw"]
         
         # 获取血量倍数
@@ -119,7 +119,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 # 在single_raid_season中查找赛季名称
                 for season in data["single_raid_season"]["json"]:
                     if season.get("no") == latest_schedule.get("season_no"):
-                        season_name = get_string_ui(data, season.get("season_name_no"))
+                        season_name = get_string_by_type(data, "ui", season.get("season_name_no"))
                         season_info = f"赛季：{season_name['zh_tw']}"
                         break
         
@@ -160,7 +160,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                     # 检查是否有delay
                                     if buff.get("delay"):
                                         delay_seconds = buff.get("delay")
-                                        delay_text = get_string_ui(data, buff.get("buff_tooltip_sno"))['zh_tw']
+                                        delay_text = get_string_by_type(data, "ui", buff.get("buff_tooltip_sno"))['zh_tw']
                             i += 1
         
         # 获取护盾削减系数和解除眩晕时间
@@ -226,7 +226,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 添加攻略
         if guide_text:
-            basic_info.append(f"\n【讨伐攻略】\n{clean_tags(guide_text)}")
+            basic_info.append(f"\n【讨伐攻略】\n{clean_rich_text(guide_text)}")
         
         messages.append("\n".join(str(x) for x in basic_info))
         
@@ -279,4 +279,3 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_single_raid.finish(f"处理恶灵讨伐信息时发生错误: {str(e)}") 

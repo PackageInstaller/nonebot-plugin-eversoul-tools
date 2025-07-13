@@ -8,12 +8,11 @@ from nonebot.log import logger
 from difflib import get_close_matches
 from ...config import (
     TOWN_DIR, TRAIT_NAME_MAPPING, 
-    PACKAGE_TYPE_MAPPING, STAT_NAME_MAPPING,
-    FORMATION_TYPE_MAPPING
+    PACKAGE_TYPE_MAPPING, STAT_NAME_MAPPING, FORMATION_TYPE_MAPPING
 )
 
 
-def clean_tags(text):
+def clean_rich_text(text):
     """clean text tags
     
     Args:
@@ -153,7 +152,7 @@ def process_skill_description(data, description):
         return get_character_skill_value(data, value_id, value_type)
     
     # 清理颜色标签
-    clean_description = clean_tags(description)
+    clean_description = clean_rich_text(description)
     # 替换所有形如 <数字.VALUE> 或 <数字.DURATION> 的内容
     processed_desc = re.sub(r'<\s*(\d+)\.(VALUE|DURATION)\s*>', replace_value, clean_description)
     return processed_desc
@@ -171,67 +170,33 @@ def get_formation_type(formation_no):
     return FORMATION_TYPE_MAPPING.get(formation_no, "")
 
 
-def get_string_system(data, no):
-    """get string system
+def get_string_by_type(data, string_type, no):
+    """get string by type
     
     Args:
-        data: JSON data dictionary
+        data: JSON 数据字典
+        string_type: string 类型 (system, ui, talk, skill)
         no: string no
         
     Returns:
-        dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
+        dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
     """
-    for string in data["string_system"]["json"]:
+    json_key = f"string_{string_type}"
+    
+    if json_key not in data:
+        return {"zh_tw": "", "zh_cn": "", "kr": "", "en": "", "ja": ""}
+    
+    for string in data[json_key]["json"]:
         if string["no"] == no:
             return {
                 "zh_tw": string.get("zh_tw", ""),
                 "zh_cn": string.get("zh_cn", ""),
                 "kr": string.get("kr", ""),
-                "en": string.get("en", "")
+                "en": string.get("en", ""),
+                "ja": string.get("ja", "")
             }
-    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
-
-def get_string_ui(data, no):
-    """get string ui
-    
-    Args:
-        data: JSON data dictionary
-        no: string no
-        
-    Returns:
-        dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
-    """
-    for string in data["string_ui"]["json"]:
-        if string["no"] == no:
-            return {
-                "zh_tw": string.get("zh_tw", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
-                "zh_cn": string.get("zh_cn", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
-                "kr": string.get("kr", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' '),
-                "en": string.get("en", "").replace('\\r\\n', ' ').replace('\r\n', ' ').replace('\n', ' ')
-            }
-    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
-
-
-def get_string_talk(data, no):
-    """get string talk
-    
-    Args:
-        data: JSON data dictionary
-        no: string no
-        
-    Returns:
-        dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
-    """
-    for string in data["string_talk"]["json"]:
-        if string["no"] == no:
-            return {
-                "zh_tw": string.get("zh_tw", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
-                "zh_cn": string.get("zh_cn", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
-                "kr": string.get("kr", "").replace('\\r\\n', '\n').replace('\r\n', '\n'),
-                "en": string.get("en", "").replace('\\r\\n', '\n').replace('\r\n', '\n')
-            }
-    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
+    return {"zh_tw": "", "zh_cn": "", "kr": "", "en": "", "ja": ""}
 
 
 def get_string_character(data, hero_no, special=False):
@@ -302,12 +267,10 @@ def get_drop_item_rate(data, group_no):
             if item_no:
                 item_name = get_string_item(data, item_no)
                 # 转换掉落率 (1 = 0.001%)
-                # convert drop rate (1 = 0.001%)
                 rate_percent = drop_rate * 0.001
                 drop_items.append((item_name, amount, rate_percent))
     
     # 名称作为键，保存概率最高的物品
-    # name as key, save the item with the highest probability
     name_to_best_item = {}
     
     for item in drop_items:
@@ -315,15 +278,12 @@ def get_drop_item_rate(data, group_no):
         item_rate = item[2]
         
         # 如果名称还没有记录，或者当前概率更高，则更新
-        # if the name is not recorded, or the current probability is higher, then update
         if item_name not in name_to_best_item or item_rate > name_to_best_item[item_name][2]:
             name_to_best_item[item_name] = item
     
     # 将字典值转换为列表
-    # convert dictionary values to list
     unique_items = list(name_to_best_item.values())
     
-    # sort by drop rate from high to low
     # 按掉落率从高到低排序
     return sorted(unique_items, key=lambda x: -x[2])
 
@@ -340,13 +300,11 @@ def get_string_item(data, item_no):
         dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
     """
     # 在Item.json中查找物品
-    # find the item in Item.json
     for item in data["item"]["json"]:
-        if item["no"] == item_no:
+        if item["no"] == int(item_no):
             name_sno = item.get("name_sno")
             if name_sno:
                 # 在StringItem.json中查找物品名称
-                # find the item name in StringItem.json
                 for string in data["string_item"]["json"]:
                     if string.get("no") == name_sno:
                         return {
@@ -481,32 +439,14 @@ def get_character_prefer_gift(data, hero_id):
         None
     """
     # 在HeroGift.json中查找角色的喜好礼物
-    # find the character's prefer gift in HeroGift.json
     gift_items = []
     for gift in data["hero_gift"]["json"]:
         if gift.get("hero_no") == hero_id:
             # 获取prefer_gift_items字符串并分割成列表
-            # get prefer_gift_items string and split into list
             prefer_items = gift.get("prefer_gift_items", "").split(",")
             prefer_items = [item.strip() for item in prefer_items if item.strip()]
-            # process each item_no
-            # 对每个物品ID进行处理
             for item_no in prefer_items:
-                # 在Item.json中查找物品信息
-                # find the item in Item.json
-                for item in data["item"]["json"]:
-                    if str(item.get("no")) == item_no:
-                        # 获取物品名称
-                        # get item name
-                        name_sno = item.get("name_sno")
-                        if name_sno:
-                            # 在StringItem.json中查找物品名称
-                            # find the item name in StringItem.json
-                            for string in data["string_item"]["json"]:
-                                if string.get("no") == name_sno:
-                                    gift_items.append(string.get("zh_tw", ""))
-                                    break
-                        break
+                gift_items.append(get_string_item(data, item_no)["zh_tw"])
     
     return "、".join(gift_items) if gift_items else "？？？"
 
@@ -520,30 +460,22 @@ def get_character_similar_name(query, alias_map):
     Returns:
         list: character similar name list [(name, aliases), ...]
     """
-    # 创建反向映射：hero_id -> (name, aliases)
-    # create reverse mapping: hero_id -> (name, aliases)
     hero_map = {}
     for name, hero_id in alias_map.items():
         if hero_id not in hero_map:
             hero_map[hero_id] = [name, []]
         else:
-            if len(hero_map[hero_id][1]) == 0:  # 第一个名字是主名称. the first name is main name
+            if len(hero_map[hero_id][1]) == 0:
                 hero_map[hero_id][1].append(name)
             else:
                 hero_map[hero_id][1].append(name)
     
-    # 收集所有可能的名称（主名称和别名）
-    # collect all possible names (main name and aliases)
     all_names = []
     for name, hero_id in alias_map.items():
         all_names.append(name)
-    
-    # 使用 difflib 查找相似名称
-    # use difflib to find similar names
+
     similar_names = get_close_matches(query, all_names, n=3, cutoff=0.3)
     
-    # 收集匹配到的角色信息
-    # collect matched character info
     results = []
     for similar_name in similar_names:
         hero_id = alias_map[similar_name]
@@ -623,11 +555,9 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
     skill_descriptions = []
     skill_icon_info = None
     
-    # 查找所有相同编号的技能数据
     for skill in data["skill"]["json"]:
         if skill["no"] == skill_no:
             skill_data_list.append(skill)
-            # 只在第一次找到技能时获取图标信息
             if not skill_icon_info:
                 icon_prefab = skill.get("icon_prefab")
                 # 这里是适配数据表里面没有的转变形态技能的着色(光凯)
@@ -646,116 +576,41 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
                             break
     
     if skill_data_list:
-        # 获取技能名称
-        # get skill name
-        for string in data["string_skill"]["json"]:
-            if string["no"] == skill_data_list[0]["name_sno"]:
-                skill_name_zh_tw = string.get("zh_tw", "")
-                skill_name_zh_cn = string.get("zh_cn", "")
-                skill_name_kr = string.get("kr", "")
-                skill_name_en = string.get("en", "")
-                break
+        skill_name_zh_tw = get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])["zh_tw"]
+        skill_name_zh_cn = get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])["zh_cn"]
+        skill_name_kr = get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])["kr"]
+        skill_name_en = get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])["en"]
         
         if is_support:
-            # 找出最高等级的技能数据
-            # find the highest level skill data
             max_level_skill = max(skill_data_list, key=lambda x: x.get("level", 0))
-            
-            # 获取主要伙伴技能描述
-            # get main partner skill description
-            for string in data["string_skill"]["json"]:
-                if string["no"] == max_level_skill["tooltip_sno"]:
-                    desc_tw = string.get("zh_tw", "")
-                    desc_cn = string.get("zh_cn", "")
-                    desc_kr = string.get("kr", "")
-                    desc_en = string.get("en", "")
-                    # 处理数值标签. process value tags
-                    desc_tw = process_skill_description(data, desc_tw)
-                    desc_cn = process_skill_description(data, desc_cn)
-                    desc_kr = process_skill_description(data, desc_kr)
-                    desc_en = process_skill_description(data, desc_en)
-                    skill_descriptions.append({
-                        "desc_zh_tw": f"主要夥伴：{desc_tw}",
-                        "desc_zh_cn": f"主要伙伴：{desc_cn}",
-                        "desc_kr": f"메인 파트너：{desc_kr}",
-                        "desc_en": f"Main Partner Effect：{desc_en}",
-                        "type": "main_partner"
-                    })
-                    break
-            
-            # 如果提供了hero_data，获取辅助伙伴技能描述
-            # if hero_data is provided, get auxiliary partner skill description
-            if hero_data:
-                sub_class_sno = hero_data.get("sub_class_sno")
-                max_grade_sno = hero_data.get("max_grade_sno")
-                
-                if sub_class_sno and max_grade_sno:
-                    # 在WorldRaidPartnerBuff中查找匹配的buff
-                    # find matching buff in WorldRaidPartnerBuff.json
-                    for buff in data["world_raid_partner_buff"]["json"]:
-                        if (buff["sub_class"] == sub_class_sno and 
-                            buff["grade"] == max_grade_sno):
-                            buff_sno = buff.get("buff_sno")
-                            buff_no = buff.get("buff_no")
-                            
-                            if buff_sno and buff_no:
-                                # 获取buff数值. get buff value
-                                buff_values = []  # 改用列表存储数值. use list to store values
-                                for content_buff in data["contents_buff"]["json"]:
-                                    # find the buff in contents_buff.json
-                                    if content_buff.get("no") == buff_no:
-                                        # 遍历所有属性，按顺序收集非零数值. traverse all attributes, collect non-zero values in order
-                                        for key, value in content_buff.items():
-                                            if (isinstance(value, (int, float)) and 
-                                                value != 0 and 
-                                                key != "no"):  # 排除 no 字段. exclude no field
-                                                # 根据数值大小判断是否为百分比，取绝对值
-                                                # determine if it is an integer or percentage based on value
-                                                if abs(value) < 20:  # 小于等于20的按百分比处理. less than or equal to 20 is processed as percentage
-                                                    buff_values.append(int(abs(value) * 100))
-                                                else:  # 大于20的按整数处理. greater than 20 is processed as integer
-                                                    buff_values.append(int(abs(value)))
-                                
-                                # 在StringUI中查找描述文本. find description text in StringUI.json
-                                for string in data["string_ui"]["json"]:
-                                    if string["no"] == buff_sno:
-                                        desc_tw = string.get("zh_tw", "")
-                                        desc_cn = string.get("zh_cn", "")
-                                        desc_kr = string.get("kr", "")
-                                        desc_en = string.get("en", "")
-                                        
-                                        # 正则表达式找出所有占位符. find all placeholders using regex
-                                        placeholders = re.findall(r'{([^}]+)}', desc_tw)
-                                        
-                                        # 按顺序替换所有占位符. replace all placeholders in order
-                                        for i, value in enumerate(buff_values):
-                                            if i < len(placeholders):
-                                                placeholder = f"{{{placeholders[i]}}}"
-                                                desc_tw = desc_tw.replace(placeholder, str(value))
-                                                desc_cn = desc_cn.replace(placeholder, str(value))
-                                                desc_kr = desc_kr.replace(placeholder, str(value))
-                                                desc_en = desc_en.replace(placeholder, str(value))
-                                        
-                                        skill_descriptions.append({
-                                            "desc_zh_tw": f"輔助夥伴：{desc_tw}",
-                                            "desc_zh_cn": f"辅助伙伴：{desc_cn}",
-                                            "desc_kr": f"서브 파트너：{desc_kr}",
-                                            "desc_en": f"Support Effect：{desc_en}",
-                                            "type": "support_partner"
-                                        })
-                                        break
-                            break
+
+            desc_tw = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["zh_tw"]
+            desc_cn = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["zh_cn"]
+            desc_kr = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["kr"]
+            desc_en = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["en"]
+            # 处理数值标签. 
+            desc_tw = process_skill_description(data, desc_tw)
+            desc_cn = process_skill_description(data, desc_cn)
+            desc_kr = process_skill_description(data, desc_kr)
+            desc_en = process_skill_description(data, desc_en)
+            skill_descriptions.append({
+                "desc_zh_tw": desc_tw,
+                "desc_zh_cn": desc_cn,
+                "desc_kr": desc_kr,
+                "desc_en": desc_en,
+                "type": "main_partner"
+            })
         else:
-            # 非支援技能，获取所有等级的技能描述. non-support skill, get skill description for all levels
+            # 非支援技能，获取所有等级的技能描述
             for skill_data in skill_data_list:
-                hero_level = skill_data.get("hero_level", 1)  # 获取技能解锁等级. get skill unlock level
+                hero_level = skill_data.get("hero_level", 1)  # 获取技能解锁等级
                 for string in data["string_skill"]["json"]:
                     if string["no"] == skill_data["tooltip_sno"]:
                         desc_tw = string.get("zh_tw", "")
                         desc_cn = string.get("zh_cn", "")
                         desc_kr = string.get("kr", "")
                         desc_en = string.get("en", "")
-                        # 处理数值标签. process value tags
+                        # 处理数值标签
                         desc_tw = process_skill_description(data, desc_tw)
                         desc_cn = process_skill_description(data, desc_cn)
                         desc_kr = process_skill_description(data, desc_kr)
@@ -1009,10 +864,10 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
                 favor_point = points[grade_index]
                     
                 trip_keywords.append({
-                    "name": get_string_ui(data, keyword_info.get("keyword_string"))["kr" if is_test else "zh_tw"],
+                    "name": get_string_by_type(data, "ui", keyword_info.get("keyword_string"))["kr" if is_test else "zh_tw"],
                     "type": keyword_type,
                     "favor_point": favor_point,
-                    "grade": get_string_system(data, grade_sno)["zh_tw"],
+                    "grade": get_string_by_type(data, "system", grade_sno)["zh_tw"],
                     "source": get_character_keyword_source(
                         data, 
                         keyword_info.get("keyword_source", 0),
@@ -1150,7 +1005,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
                                     desc_text = zh_tw if zh_tw else (kr if is_test else zh_tw)
-                                    desc = clean_tags(desc_text)
+                                    desc = clean_rich_text(desc_text)
                                     break
                         
                         if name:  # 只添加有名称的物品. only add items with name
@@ -1666,7 +1521,6 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
         bad_threshold: bad threshold
         normal_threshold: normal threshold
     """
-    # 提取好结局和坏结局的选项及其好感度. extract good and bad ending choices and their affinity
     good_ending_choices = []
     bad_ending_choices = []
     
@@ -1674,7 +1528,6 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
         episode_choices = episode_data["choices"]
         episode_num = episode_data["episode"]
         
-        # 按talk_index分组. group by talk_index
         choices_by_index = {}
         for choice in episode_choices:
             talk_index = choice["talk_index"]
@@ -1682,37 +1535,31 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
                 choices_by_index[talk_index] = []
             choices_by_index[talk_index].append(choice)
         
-        # 为每个talk_index找出好结局和坏结局的选项. find good and bad ending choices for each talk_index
         for talk_index, choices in choices_by_index.items():
-            # 好结局选择最高好感度. good ending choice with highest affinity
             max_affinity = max(c["affinity"] for c in choices)
             good_choices = [c for c in choices if c["affinity"] == max_affinity]
             good_ending_choices.append({
                 "episode": episode_num,
                 "talk_index": talk_index,
-                "choice": good_choices[0],  # 取第一个最高好感度选项. take the first highest affinity option
+                "choice": good_choices[0],
                 "affinity": max_affinity
             })
             
-            # 坏结局选择最低好感度. bad ending choice with lowest affinity
             min_affinity = min(c["affinity"] for c in choices)
             bad_choices = [c for c in choices if c["affinity"] == min_affinity]
             bad_ending_choices.append({
                 "episode": episode_num,
                 "talk_index": talk_index,
-                "choice": bad_choices[0],  # 取第一个最低好感度选项. take the first lowest affinity option
+                "choice": bad_choices[0],
                 "affinity": min_affinity
             })
     
-    # 计算好结局和坏结局的总好感度. calculate total affinity of good and bad endings
     good_total_affinity = sum(choice["affinity"] for choice in good_ending_choices)
     bad_total_affinity = sum(choice["affinity"] for choice in bad_ending_choices)
     
-    # 计算需要减少的好感度，使总好感度落在一般结局区间内. calculate affinity to reduce, so that total affinity falls within the normal ending range
-    target_affinity = (bad_threshold + normal_threshold) / 2  # 取区间中点作为目标. take the midpoint as the target
+    target_affinity = (bad_threshold + normal_threshold) / 2
     affinity_to_reduce = good_total_affinity - target_affinity
     
-    # 如果好结局总好感度已经在区间内，直接返回好结局选项. if good ending total affinity is already within the range, return good ending options
     if good_total_affinity < normal_threshold and good_total_affinity > bad_threshold:
         normal_end_note = f"注意：按照好结局选项选择即可达到一般结局条件（总好感度：{good_total_affinity}）"
         return [{
@@ -1720,7 +1567,6 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
             "choices": [normal_end_note]
         }]
     
-    # 如果坏结局总好感度已经在区间内，直接返回坏结局选项. if bad ending total affinity is already within the range, return bad ending options
     if bad_total_affinity < normal_threshold and bad_total_affinity > bad_threshold:
         normal_end_note = f"注意：按照坏结局选项选择即可达到一般结局条件（总好感度：{bad_total_affinity}）"
         return [{
@@ -1728,13 +1574,12 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
             "choices": [normal_end_note]
         }]
     
-    # 计算好结局和坏结局选项的好感度差值. calculate affinity difference between good and bad ending choices
     choice_diffs = []
     for i in range(len(good_ending_choices)):
         good_choice = good_ending_choices[i]
         bad_choice = bad_ending_choices[i]
         diff = good_choice["affinity"] - bad_choice["affinity"]
-        if diff > 0:  # 只考虑有差异的选项. only consider options with difference
+        if diff > 0:
             choice_diffs.append({
                 "index": i,
                 "diff": diff,
@@ -1742,14 +1587,11 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
                 "bad_choice": bad_choice
             })
     
-    # 按差值从大到小排序. sort by difference in descending order
     choice_diffs.sort(key=lambda x: x["diff"], reverse=True)
     
-    # 创建一般结局选项列表（初始为好结局选项）. create normal ending choices list (initially good ending choices)
     normal_ending_choices = good_ending_choices.copy()
     current_affinity = good_total_affinity
     
-    # 替换部分选项，使总好感度落在区间内. replace some options, so that total affinity falls within the range
     choices_to_replace = []
     for diff_info in choice_diffs:
         if current_affinity <= normal_threshold:
@@ -1759,7 +1601,6 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
         bad_choice = diff_info["bad_choice"]
         diff = diff_info["diff"]
         
-        # 如果替换这个选项后总好感度仍然大于bad_threshold，则替换. if replacing this option makes total affinity still greater than bad_threshold, then replace
         if current_affinity - diff > bad_threshold:
             current_affinity -= diff
             normal_ending_choices[diff_info["index"]] = bad_choice
@@ -1771,11 +1612,9 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
                 "diff": diff
             })
             
-        # 如果总好感度已经在区间内，停止替换. if total affinity is already within the range, stop replacing
         if current_affinity < normal_threshold and current_affinity > bad_threshold:
             break
     
-    # 如果替换后总好感度仍然不在区间内，提供说明. if total affinity is still not within the range after replacement, provide explanation
     if current_affinity > normal_threshold:
         normal_end_note = f"警告：即使替换部分选项，总好感度({current_affinity})仍然超过一般结局上限({normal_threshold})，请额外注意控制好感度"
     elif current_affinity <= bad_threshold:
@@ -1783,7 +1622,6 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
     else:
         normal_end_note = f"提示：按照以下选项选择可达到一般结局条件（预计总好感度：{current_affinity}）"
     
-    # 按章节组织一般结局选项. organize normal ending choices by episode
     normal_choices_by_episode = {}
     for choice in normal_ending_choices:
         episode = choice["episode"]
@@ -1791,25 +1629,20 @@ def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_t
             normal_choices_by_episode[episode] = []
         normal_choices_by_episode[episode].append(choice)
     
-    # 格式化结果. format result
     result = [{
         "episode": 0,
         "choices": [normal_end_note]
     }]
     
-    # 如果有需要特别替换的选项，添加说明. if there are options to be replaced, add explanation
     if choices_to_replace:
         replace_notes = ["需要替换的选项："]
         for replace in choices_to_replace:
             replace_notes.append(f"EP{replace['episode']}：将 {replace['from_choice']} 替换为 {replace['to_choice']}")
         result[0]["choices"].extend(replace_notes)
     
-    # 添加每章节的选项. add options for each episode
     for episode, choices in normal_choices_by_episode.items():
-        # 按talk_index排序. sort by talk_index
         choices.sort(key=lambda x: x["talk_index"])
         
-        # 提取选项文本. extract choice text
         choice_texts = [choice["choice"]["text"] for choice in choices]
         
         result.append({
@@ -1828,11 +1661,9 @@ def get_character_story(data, hero_id):
         hero_id: hero id
     """
     try:
-        # 收集所有相关的故事信息. collect all related story info
         story_episodes = []
         ending_episodes = []
         
-        # 从Story_Info中获取所有相关剧情. get all related story info from Story_Info
         for story in data["story_info"]["json"]:
             if ("act" in story and story["act"] == hero_id):
                 if story["episode"] in [8, 9, 10]:
@@ -1840,11 +1671,9 @@ def get_character_story(data, hero_id):
                 else:
                     story_episodes.append(story)
         
-        # 如果没有8-10中的任意一个，则无好感故事. if none of 8-10, then no good ending story
         if not ending_episodes:
             return False, [], {}
         
-        # 获取结局信息. get ending info
         endings = {}
         for episode in ending_episodes:
             if "ending_affinity" in episode:
@@ -1855,24 +1684,17 @@ def get_character_story(data, hero_id):
                 elif episode["episode"] == 10:
                     endings["good"] = episode["ending_affinity"]
         
-        # 如果没有找到任何结局信息，返回False. if no ending info is found, return False
         if not endings:
             return False, [], {}
         
-        # 收集每个章节的信息. collect info for each episode
         episode_info = []
         for episode in story_episodes:
-            # 获取选项和好感度. get options and affinity
-            choices = {}  # 使用字典来按position_type分组. use dictionary to group by position_type
-            
-            # 先找出所有有好感度的选项的talk_index. first find all talk_indexes with affinity
+            choices = {}
             valid_talk_indexes = set()
             for talk in data["talk"]["json"]:
                 if talk.get("group_no") == episode.get("talk_group") and "affinity_point" in talk:
                     valid_talk_indexes.add(talk.get("talk_index", 0))
             
-            # 收集所有相关选项（包括有好感度和对应talk_index的无好感度选项）. 
-            # collect all related options (including options with affinity and corresponding talk_indexes without affinity)
             for talk in data["talk"]["json"]:
                 if (talk.get("group_no") == episode.get("talk_group") and 
                     talk.get("talk_index", 0) in valid_talk_indexes):
@@ -1881,18 +1703,10 @@ def get_character_story(data, hero_id):
                     choice_text_kr = ""
                     choice_text_en = ""
                     
-                    # 安全获取对话文本. safe get choice text
                     talk_no = talk.get("no")
                     if talk_no is not None:
-                        for string in data["string_talk"]["json"]:
-                            if string.get("no") == talk_no:
-                                choice_text_zh_tw = string.get("zh_tw", "")
-                                choice_text_zh_cn = string.get("zh_cn", "")
-                                choice_text_kr = string.get("kr", "")
-                                choice_text_en = string.get("en", "")
-                                break
+                        choice_text_zh_tw, choice_text_zh_cn, choice_text_kr, choice_text_en = get_string_by_type(data, "talk", talk_no)
                     
-                    # 按position_type分组存储选项. store options by position_type
                     position_type = talk.get("position_type", 0)
                     if position_type not in choices:
                         choices[position_type] = []
@@ -1908,22 +1722,14 @@ def get_character_story(data, hero_id):
                         "group_no": talk.get("group_no")
                     })
             
-            # 获取章节标题. get episode title
             episode_title_zh_tw = ""
             episode_title_zh_cn = ""
             episode_title_kr = ""
             episode_title_en = ""
             episode_name_sno = episode.get("episode_name_sno")
             if episode_name_sno is not None:
-                for string in data["string_talk"]["json"]:
-                    if string.get("no") == episode_name_sno:
-                        episode_title_zh_tw = string.get("zh_tw", "")
-                        episode_title_zh_cn = string.get("zh_cn", "")
-                        episode_title_kr = string.get("kr", "")
-                        episode_title_en = string.get("en", "")
-                        break
+                episode_title_zh_tw, episode_title_zh_cn, episode_title_kr, episode_title_en = get_string_by_type(data, "talk", episode_name_sno)
             
-            # 添加章节信息. add episode info
             episode_info.append({
                 "episode": episode.get("episode", 0),
                 "zh_tw_title": episode_title_zh_tw,
@@ -1947,26 +1753,21 @@ def format_character_story(episode_info, endings, is_test=False):
         endings: endings
         is_test: is test
     """
-    # 创建三个结局的信息列表. create list of info for three endings
     good_end = ["😃好结局攻略："]
     normal_end = ["🙂一般结局攻略："]
     bad_end = ["🥲坏结局攻略："]
     
-    # 添加结局条件. add ending conditions
     bad_threshold = endings.get('bad', 0)
     normal_threshold = endings.get('normal', 0)
     
     if "bad" in endings:
         good_end.append(f"条件：好感度 > {normal_threshold}")
-        normal_end.append(f"条件：好感度 > {bad_threshold} < {normal_threshold}")
+        normal_end.append(f"条件：{bad_threshold} < 好感度 < {normal_threshold}")
         bad_end.append(f"条件：好感度 < {bad_threshold}")
     
-    # 收集所有章节的选项信息，用于计算总好感度. collect all episode choices info, for calculating total affinity
     all_episodes_choices = []
-    
-    # 添加各章节信息. add info for each episode
+
     for ep in episode_info:
-        # 收集所有选项. collect all options
         all_choices = []
         for position_type, choices in ep["choices"].items():
             for choice in choices:
@@ -1977,8 +1778,7 @@ def format_character_story(episode_info, endings, is_test=False):
                 choice_info = {
                     "talk_index": talk_index,
                     "choice_group": choice["choice_group"],
-                    # 清理好感选项里面的富文本标签. clean rich text tags in affinity options
-                    "text": f"（{choice['choice_group']}）{clean_tags(choice['zh_tw_text'] if choice['zh_tw_text'] else (choice['kr_text' if is_test else 'zh_tw_text']))}({affinity_str})",
+                    "text": f"（{choice['choice_group']}）{clean_rich_text(choice['zh_tw_text'] if choice['zh_tw_text'] else (choice['kr_text' if is_test else 'zh_tw_text']))}({affinity_str})",
                     "affinity": affinity,
                     "position_type": position_type,
                     "group_no": choice.get("group_no"),
@@ -1989,44 +1789,33 @@ def format_character_story(episode_info, endings, is_test=False):
         if not all_choices:
             continue
         
-        # 保存本章节的所有选项. save all options for this episode
         all_episodes_choices.append({
             "episode": ep['episode'],
             "title": ep['zh_tw_title'] if ep['zh_tw_title'] else (ep['kr_title'] if is_test else ep['zh_tw_title']),
             "choices": all_choices
         })
         
-        # 为每个结局添加章节标题. add episode title for each ending
         title = ep['zh_tw_title'] if ep['zh_tw_title'] else (ep['kr_title'] if is_test else ep['zh_tw_title'])
         good_end.append(f"\nEP{ep['episode']}：{title}")
         normal_end.append(f"\nEP{ep['episode']}：{title}")
         bad_end.append(f"\nEP{ep['episode']}：{title}")
-
-        # 按talk_index排序所有选项. sort all options by talk_index
         all_choices.sort(key=lambda x: x["talk_index"])
-        
-        # 处理好结局选项. handle good ending options
         good_choices = []
         current_index = None
         current_group = []
         
         for choice in all_choices:
             if current_index != choice["talk_index"]:
-                # 处理上一组的选项. handle previous group of options
                 if current_group:
-                    # 找出最高好感度的选项. find option with highest affinity
                     max_affinity = max((c["affinity"] for c in current_group))
-                    # 只添加最高好感度的选项. only add option with highest affinity
                     for c in current_group:
                         if c["affinity"] == max_affinity:
                             good_choices.append(c["text"])
-                # 开始新的一组. start new group
                 current_index = choice["talk_index"]
                 current_group = [choice]
             else:
                 current_group.append(choice)
         
-        # 处理最后一组. handle last group
         if current_group:
             max_affinity = max((c["affinity"] for c in current_group))
             for c in current_group:
@@ -2035,26 +1824,21 @@ def format_character_story(episode_info, endings, is_test=False):
         
         good_end.extend(good_choices)
         
-        # 处理坏结局选项. handle bad ending options
         bad_choices = []
         current_index = None
         current_group = []
         
         for choice in all_choices:
             if current_index != choice["talk_index"]:
-                # 处理上一组的选项. handle previous group of options
                 if current_group:
-                    # 首先查找是否有负数好感度的选项. first check if there are options with negative affinity
                     min_affinity = min((c["affinity"] for c in current_group))
                     if min_affinity < 0:
-                        # 找出所有具有最小负数好感度的选项. find all options with minimum negative affinity
                         min_aff_choices = [c["text"] for c in current_group if c["affinity"] == min_affinity]
                         if len(min_aff_choices) > 1:
                             bad_choices.append("或者".join(min_aff_choices))
                         else:
                             bad_choices.extend(min_aff_choices)
                     else:
-                        # 如果没有负数好感度，查找0好感度的选项. if no negative affinity, find options with 0 affinity
                         zero_choices = [c["text"] for c in current_group if c["affinity"] == 0]
                         if zero_choices:
                             if len(zero_choices) > 1:
@@ -2062,7 +1846,6 @@ def format_character_story(episode_info, endings, is_test=False):
                             else:
                                 bad_choices.extend(zero_choices)
                         else:
-                            # 如果既没有负数也没有0，则选择最小的正数好感度. if neither negative nor 0, select option with minimum positive affinity
                             min_positive = min((c["affinity"] for c in current_group))
                             min_pos_choices = [c["text"] for c in current_group if c["affinity"] == min_positive]
                             if len(min_pos_choices) > 1:
@@ -2070,13 +1853,11 @@ def format_character_story(episode_info, endings, is_test=False):
                             else:
                                 bad_choices.extend(min_pos_choices)
                 
-                # 开始新的一组. start new group
                 current_index = choice["talk_index"]
                 current_group = [choice]
             else:
                 current_group.append(choice)
         
-        # 处理最后一组. handle last group
         if current_group:
             min_affinity = min((c["affinity"] for c in current_group))
             if min_affinity < 0:
@@ -2102,22 +1883,17 @@ def format_character_story(episode_info, endings, is_test=False):
         
         bad_end.extend(bad_choices)
 
-    # 计算一般结局的选项. calculate normal ending choices
     normal_choices_by_episode = calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_threshold)
     
-    # 添加一般结局的选项到结果中. add normal ending choices to result
     for episode_data in normal_choices_by_episode:
         episode_num = episode_data["episode"]
         choices = episode_data["choices"]
         
-        # 找到对应章节在normal_end中的位置. find position in normal_end
         for i, line in enumerate(normal_end):
             if line.startswith(f"\nEP{episode_num}："):
-                # 在章节标题后添加选项. add options after episode title
                 normal_end[i+1:i+1] = choices
                 break
     
-    # 合并所有结局信息. merge all ending info
     result = ["【好感故事攻略】"]
     result.extend(good_end)
     result.extend([""] + normal_end)
@@ -2173,8 +1949,6 @@ def get_base_battle_power(data: dict, entity_type: int, level: int) -> int:
                 except ValueError:
                     level_per_value = 0.0
         
-        # 计算战力，向下取整. calculate battle power, round down
-        # 公式：base + (level_value + level_per_value * level) * (level - 1).
         battle_power = int(base_value + (level_value + level_per_value * level) * (level - 1))
         return battle_power
     
@@ -2210,14 +1984,14 @@ def calculate_battle_power(data: dict, entity_type: int, level: int, grade: int,
         level_grade_value = get_hero_level_grade_value(data, level)
         
         total_power = (
-            base_power +                                # 基础战力. base power
-            (level_grade_value - 1.0) * base_power +    # 等级加成. level grade bonus
-            (grade_value - 1.0) * base_power +          # 品质加成. grade bonus
-            equipment_power +                           # 装备战力. equipment power
-            equipment_power_per * base_power +          # 装备战力百分比. equipment power percent
-            signature_power_per * base_power +          # 遗物战力百分比. signature power percent
-            contents_buff_power +                       # 内容buff战力. contents buff power
-            contents_buff_power_per * base_power        # 内容buff战力百分比. contents buff power percent
+            base_power +
+            (level_grade_value - 1.0) * base_power +
+            (grade_value - 1.0) * base_power +
+            equipment_power +
+            equipment_power_per * base_power +
+            signature_power_per * base_power +
+            contents_buff_power +
+            contents_buff_power_per * base_power
         )
 
         if total_power == float('inf'):
@@ -2285,7 +2059,7 @@ def get_hero_level_grade_value(data: dict, level: int) -> float:
         return 1.0
 
 
-def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False) -> list:
+def get_character_skill_pattern(data: dict, hero_no: int) -> list:
     """get character skill pattern
     
     Args:
@@ -2296,7 +2070,6 @@ def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False)
         list: skill pattern list, each element is (skill name, is normal attack)
     """
     try:
-        # 查找角色的技能释放顺序. find skill pattern
         pattern_data = None
         for pattern in data["skill_pattern"]["json"]:
             if pattern.get("hero_no") == hero_no:
@@ -2310,30 +2083,20 @@ def get_character_skill_pattern(data: dict, hero_no: int, is_test: bool = False)
                 hero_base_attack = hero.get("base_attack")
                 break
         
-        # 收集所有pattern键
         pattern_keys = [key for key in pattern_data.keys() if key.startswith("pattern")]
-        # 处理两种格式
         pattern_keys.sort(key=lambda x: int(x.replace("pattern", "").replace("_", "")))
-        # 获取技能顺序
         skill_pattern = []
         for key in pattern_keys:
             skill_no = pattern_data.get(key)
             if skill_no == hero_base_attack:
-                # 普通攻击
                 skill_pattern.append(("普通攻击", True))
             else:
-                # 获取技能名称
                 skill_name = ""
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
                         if "name_sno" not in skill:
                             break
-                        for string in data["string_skill"]["json"]:
-                            if string["no"] == skill["name_sno"]:
-                                zh_tw = string.get("zh_tw", "")
-                                kr = string.get("kr", "")
-                                skill_name = zh_tw if zh_tw else (kr if is_test else zh_tw)
-                                break
+                        skill_name = get_string_by_type(data, "skill", skill["name_sno"])["zh_tw"]
                         if skill_name:
                             skill_pattern.append((skill_name, False))
                         break

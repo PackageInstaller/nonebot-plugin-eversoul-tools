@@ -37,7 +37,7 @@ async def handle(bot: Bot, event: Event):
                 continue
                 
             # 获取种族名称
-            race_data = get_string_system(data, hero_data["race_sno"])
+            race_data = get_string_by_type(data, "system", hero_data["race_sno"])
             race_tw = race_data["zh_tw"]
             if not race_tw:
                 continue
@@ -93,4 +93,3 @@ async def handle(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_hero_list.finish(f"处理角色列表时发生错误: {str(e)}")

@@ -100,7 +100,7 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                         hero_name_data = get_string_character(data, hero_no, special=True)
                         hero_name_zh_tw = hero_name_data["zh_tw"]
                         
-                        grade_data = get_string_system(data, team.get(f"hero_grade_{i}"))
+                        grade_data = get_string_by_type(data, "system", team.get(f"hero_grade_{i}"))
                         grade_name_zh_tw = grade_data["zh_tw"]
                         
                         level = team.get(f"level_{i}", 0)
@@ -169,4 +169,3 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_gate.finish(f"处理传送门信息时发生错误: {str(e)}")

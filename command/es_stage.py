@@ -31,11 +31,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     drop_group_no = stage.get("item_drop_group_no")
                     break  # 找到主线关卡就直接跳出
         
-        # 优先使用主线关卡，如果没有则使用其他关卡
-        stage_data = main_stage
-        
         if not main_stage:
             await es_stage.finish(f"未找到关卡 {area_no}-{stage_no} 的信息")
+        
+        stage_data = main_stage
 
         messages = []
         basic_info = []
@@ -106,7 +105,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         hero_name_data = get_string_character(data, hero_no, special=True)
                         hero_name_zh_tw = hero_name_data["zh_tw"]
                         
-                        grade_data = get_string_system(data, team.get(grade_key))
+                        grade_data = get_string_by_type(data, "system", team.get(grade_key))
                         grade_name_zh_tw = grade_data["zh_tw"]
                         
                         level = team.get(level_key, 0)
@@ -168,4 +167,3 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_stage.finish(f"处理关卡信息时发生错误: {str(e)}")

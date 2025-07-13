@@ -54,35 +54,15 @@ async def handle_es_month(bot: Bot, event: Event):
                 viewport={"width": 1800, "height": 1000}
             )
             
-            # try:
-            #     img = Image.open(BytesIO(png_pic))
-            #     webp_buffer = BytesIO()
-            #     img.save(webp_buffer, format="WEBP", quality=10)
-            #     webp_pic = webp_buffer.getvalue()
-
-            #     if isinstance(event, GroupMessageEvent):
-            #         await bot.send_group_msg(
-            #             group_id=event.group_id,
-            #             message=MessageSegment.image(webp_pic),
-            #             reply_message=True
-            #         )
-            #     else:
-            #         await bot.send_private_msg(
-            #             user_id=event.user_id,
-            #             message=MessageSegment.image(webp_pic),
-            #             reply_message=True
-            #         )
-            # except Exception as e:
-            # logger.error(f"转换图片格式时发生错误: {str(e)}")
             if isinstance(event, GroupMessageEvent):
                 await bot.send_group_msg(
                     group_id=event.group_id,
-                    message=MessageSegment.image(png_pic)
+                    message=Message(MessageSegment.image(png_pic))
                 )
             else:
                 await bot.send_private_msg(
                     user_id=int(event.get_user_id()),
-                    message=MessageSegment.image(png_pic)
+                    message=Message(MessageSegment.image(png_pic))
                 )
         else:
             await es_month.finish(f"{target_month}月份没有事件哦~")
@@ -99,4 +79,3 @@ async def handle_es_month(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-            await es_month.finish(f"处理月度事件查询时发生错误: {str(e)}")
