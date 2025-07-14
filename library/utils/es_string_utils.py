@@ -88,48 +88,17 @@ def clean_rich_text(text):
     return text
 
 
-def get_code_value_text_is_integer(function_key: int) -> bool:
-    """SkillTextUtil::GetCodeValueText
-
-    Args:
-        function_key: function key
-    Returns:
-        bool: 是否为整数
-    """
-
-    return (function_key <= 0x1B and ((1 << function_key) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
-
-
-def get_buff_value_text_is_integer(buff_type: int) -> bool:
-    """SkillTextUtil::GetBuffValueText
-
-    Args:
-        buff_type: buff effect 类型
-    Returns:
-        bool: 是否为整数
-    """
-    if buff_type <= 10102:
-        if (((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420):
-            return False
-        return True
-
-    if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and (1 << (buff_type - 122) & 0x13) != 0):
-        return True
-
-    return False
-
-
-def format_value(value: float, is_integer_format: bool) -> str:
+def format_value(value: float, integer_format: bool) -> str:
     """
     格式化数值
     Args:
         value: 数值
-        is_integer_format: 是否为整数
+        integer_format: 是否为整数
     Returns:
         str: 格式化后的字符串
     """
     abs_value = abs(value)
-    if is_integer_format:
+    if integer_format:
         formatted_str = f"{abs_value:.2f}".rstrip('0').rstrip('.')
         return formatted_str
     else:
@@ -152,6 +121,36 @@ def format_duration(duration: float) -> str:
         return str(duration)
 
 
+def get_code_value_text(function_key: int, value: float) -> str:
+    """SkillTextUtil::GetCodeValueText
+
+    Args:
+        function_key: function key
+        value: 数值
+    Returns:
+        str: 格式化后的字符串
+    """
+    return format_value(value, function_key <= 0x1B and ((1 << function_key) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
+
+
+def get_buff_value_text(buff_type: int, value: float) -> str:
+    """SkillTextUtil::GetBuffValueText
+
+    Args:
+        buff_type: buff effect 类型
+        value: 数值
+    Returns:
+        str: 格式化后的字符串
+    """
+
+    if buff_type <= 10102:
+        return format_value(value, not (((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420))
+    elif (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and (1 << (buff_type - 122) & 0x13) != 0):
+        return format_value(value, True)
+    else:
+        return ""
+
+
 def process_skill_description(data, description):
     """处理技能描述
     
@@ -163,9 +162,9 @@ def process_skill_description(data, description):
         str: 处理后的技能描述
     """
     def replace_value(match):
-        value_id = int(match.group(1))
-        value_type = match.group(2)
-        return get_character_skill_value(data, value_id, value_type)
+        no = int(match.group(1))
+        type = match.group(2)
+        return get_character_skill_value(data, no, type)
     
     # 清理颜色标签
     clean_description = clean_rich_text(description)
@@ -502,7 +501,7 @@ def get_character_similar_name(query, alias_map):
     return results
 
 
-def get_character_skill_value(data, value_id, value_type) -> str:
+def get_character_skill_value(data, no: int, type: str) -> str:
     """获取角色技能值
     
     Args:
@@ -514,37 +513,35 @@ def get_character_skill_value(data, value_id, value_type) -> str:
         str: 技能值
     """
 
-    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == int(value_id)))
+    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == no))
     function_key = skill_code.get("function_key", 0)
 
     if function_key in (30, 300):
-        buff_id = int(skill_code.get("value", 0))
+        buff_id = skill_code.get("value", 0)
         buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
         
-        if value_type == "VALUE":
-            return format_value(buff_code.get("value", 0), get_buff_value_text_is_integer(buff_code.get("buff_effect", 0)))
-        elif value_type == "DURATION":
+        if type == "VALUE":
+            return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
+        elif type == "DURATION":
             return format_duration(buff_code.get("duration", 0))
-
     elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
-        if value_type == "DURATION":
+        if type == "DURATION":
             return format_duration(skill_code.get("duration", 0))
         
-        recursive_skill_id = int(skill_code.get("value", 0))
+        recursive_skill_id = skill_code.get("value", 0)
         referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id))
         ref_function_key = referenced_code.get("function_key", 0)
         
         if ref_function_key in (30, 300):
-            buff_id = int(referenced_code.get("value", 0))
+            buff_id = referenced_code.get("value", 0)
             buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
-            return format_value(buff_code.get("value", 0), get_buff_value_text_is_integer(buff_code.get("buff_effect", 0)))
+            return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
         else:
-            return format_value(referenced_code.get("value", 0), get_code_value_text_is_integer(ref_function_key))
-
+            return get_code_value_text(ref_function_key, referenced_code.get("value", 0))
     else:
-        if value_type == "VALUE":
-            return format_value(skill_code.get("value", 0), get_code_value_text_is_integer(function_key))
-        elif value_type == "DURATION":
+        if type == "VALUE":
+            return get_code_value_text(function_key, skill_code.get("value", 0))
+        elif type == "DURATION":
             return format_duration(skill_code.get("duration", 0))
 
     return ""
