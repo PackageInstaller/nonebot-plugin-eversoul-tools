@@ -1366,21 +1366,6 @@ def get_character_signature(data, hero_id):
     Returns:
         dict: 包含遗物信息
     """
-    signature_data = None
-    signature_name_zh_tw = ""
-    signature_name_zh_cn = ""
-    signature_name_kr = ""
-    signature_name_en = ""
-
-    signature_title_zh_tw = ""
-    signature_title_zh_cn = ""
-    signature_title_kr = ""
-    signature_title_en = ""
-
-    signature_desc_zh_tw = ""
-    signature_desc_zh_cn = ""
-    signature_desc_kr = ""
-    signature_desc_en = ""
 
     skill_descriptions = []
     signature_bg_path = ""
@@ -1395,24 +1380,21 @@ def get_character_signature(data, hero_id):
             break
     
     if signature_data:
-        signature_name = get_string_by_type(data, "signature", signature_data["signature_name_sno"])
+        signature_name = get_string_by_type(data, "skill", signature_data["signature_name_sno"])
         signature_name_zh_tw = signature_name["zh_tw"]
         signature_name_zh_cn = signature_name["zh_cn"]
         signature_name_kr = signature_name["kr"]
         signature_name_en = signature_name["en"]
         
         # 获取遗物技能名称.
-        signature_title = get_string_by_type(data, "signature", signature_data["skill_name_sno"])
+        signature_title = get_string_by_type(data, "skill", signature_data["skill_name_sno"])
         signature_title_zh_tw = signature_title["zh_tw"]
         signature_title_zh_cn = signature_title["zh_cn"]
         signature_title_kr = signature_title["kr"]
         signature_title_en = signature_title["en"]
                 
-        # 获取遗物简介.
-        signature_desc_zh_tw = signature_desc_zh_cn = "无遗物简介信息"  # 设置默认值.
-        signature_desc_kr = "유물 프로필 정보 없음"
-        signature_desc_en = "No signature description information"
-        signature_desc = get_string_by_type(data, "signature", signature_data["tooltip_explain_sno"])
+
+        signature_desc = get_string_by_type(data, "skill", signature_data["tooltip_explain_sno"])
         signature_desc_zh_tw = signature_desc["zh_tw"]
         signature_desc_zh_cn = signature_desc["zh_cn"]
         signature_desc_kr = signature_desc["kr"]
@@ -1423,7 +1405,7 @@ def get_character_signature(data, hero_id):
             sno_key = f"skill_tooltip_sno{i}"
             if sno_key in signature_data:
                 tooltip_sno = signature_data[sno_key]
-                desc = get_string_by_type(data, "signature", tooltip_sno)
+                desc = get_string_by_type(data, "skill", tooltip_sno)
                 desc_tw = desc["zh_tw"]
                 desc_cn = desc["zh_cn"]
                 desc_kr = desc["kr"]
