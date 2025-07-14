@@ -8,16 +8,11 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         hero_name = args.extract_plain_text().strip()
         if not hero_name:
             await es_hero.finish("请输入角色名！")
-        
-        # 获取群组ID
-        group_id = 0
+
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         
-        # 加载数据
         config = get_group_data_source(group_id)
-        
-        # 加载数据
         data = load_json_data(group_id)
         
         # 加载别名配置和原始别名数据
@@ -26,7 +21,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         alias_map = load_aliases(group_id)
         
         # 判断是否为测试模式
-        is_test = config["type"] == "review"
+        is_review = config["type"] == "review"
 
         # 尝试从别名映射中获取hero_id
         hero_id = alias_map.get(hero_name)
@@ -199,7 +194,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                 break
 
         # 获取灵魂链接信息，
-        soullink_info = get_character_soullink(data, hero_id, is_test)
+        soullink_info = get_character_soullink(data, hero_id, is_review)
         if soullink_info:
             for link in soullink_info:
                 link_msg = ["【灵魂链接】"]
@@ -243,16 +238,16 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                 intro_kr = intro_data["kr"]
                 intro_en = intro_data["en"]
                 if intro_zh_tw or intro_kr:
-                    intro_text = intro_zh_tw if intro_zh_tw else (intro_kr if is_test else intro_zh_tw)
+                    intro_text = select_text_by_priority(intro_zh_tw, intro_kr, is_review)
                     messages.append("【自我介绍】\n" + intro_text)
         
         # 添加好感故事攻略
         has_story, episode_info, endings = get_character_story(data, hero_id)
         if has_story:
-                messages.append(format_character_story(episode_info, endings, is_test))
+                messages.append(format_character_story(episode_info, endings, is_review))
         
         # 添加角色关键字信息
-        keyword_info = get_character_keyword(data, hero_id, is_test=False)
+        keyword_info = get_character_keyword(data, hero_id, is_review=False)
         if keyword_info:
             messages.append(keyword_info)
         
@@ -280,7 +275,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
             messages.append("".join(str(x) for x in illust_msg))
 
         # 添加专属领地物品信息
-        town_objects = get_character_town_object(data, hero_id, is_test)
+        town_objects = get_character_town_object(data, hero_id, is_review)
         if town_objects:
             objects_msg: list = ["【专属领地物品】"]
             for obj_no, name, grade, slot_type, desc, img_path, battle_power_per in town_objects:
@@ -297,7 +292,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                     objects_msg.append(f"战力百分比：{battle_power_per}")
                 
                 # 添加可进行的任务信息
-                tasks = get_character_town_object_task(data, obj_no, is_test)
+                tasks = get_character_town_object_task(data, obj_no, is_review)
                 if tasks:
                     objects_msg.append("\n可进行的打工：")
                     for task in tasks:

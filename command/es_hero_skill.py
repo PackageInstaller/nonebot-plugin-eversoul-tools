@@ -26,7 +26,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         alias_map = load_aliases(group_id)
         
         # 判断是否为测试模式
-        is_test = config["type"] == "review"
+        is_review = config["type"] == "review"
 
         # 尝试从别名映射中获取hero_id
         hero_id = alias_map.get(hero_name)
@@ -127,7 +127,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         skill_type_en = skill_type_data["en"]
                         # 判断是否为支援技能
                         is_support = (skill_key == "support_skill_no")
-                        skill_info = get_character_skill(data, skill_no, is_support, hero_data)
+                        skill_info = get_character_skill(data, skill_no, is_support)
                         skill_types.append((skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, skill_type_en, skill_info))
                         break
         
@@ -154,14 +154,14 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 
                 skill_text.append(MessageSegment.image(colored_icon))
             
-            skill_type_text = skill_type_zh_tw if skill_type_zh_tw else (skill_type_kr if is_test else skill_type_zh_tw)
-            skill_name_text = skill_info["name"]["zh_tw"] if skill_info["name"]["zh_tw"] else (skill_info["name"]["kr"] if is_test else skill_info["name"]["zh_tw"])
+            skill_type_text = select_text_by_priority(skill_type_zh_tw, skill_type_kr, is_review)
+            skill_name_text = select_text_by_priority(skill_info["name"]["zh_tw"], skill_info["name"]["kr"], is_review)
             
             if skill_info["is_support"]:
                 main_effects = []
                 for desc in skill_info["descriptions"]:
                     if desc.get("type") == "main_partner":
-                        desc_text = desc["desc_zh_tw"] if desc["desc_zh_tw"] else (desc["desc_kr"] if is_test else desc["desc_zh_tw"])
+                        desc_text = select_text_by_priority(desc["desc_zh_tw"], desc["desc_kr"], is_review)
                         main_effects.append(desc_text)
                 
                 if main_effects:
@@ -170,7 +170,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             else:
                 skill_text.append(f"【{skill_type_text}】{skill_name_text}")
                 for i, desc in enumerate(skill_info["descriptions"]):
-                    desc_text = desc["desc_zh_tw"] if desc["desc_zh_tw"] else (desc["desc_kr"] if is_test else desc["desc_zh_tw"])
+                    desc_text = select_text_by_priority(desc["desc_zh_tw"], desc["desc_kr"], is_review)
                     hero_level = desc.get("hero_level", 1)
                     unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
                     skill_text.append(f"等级{i+1}：{desc_text}{unlock_text}\n")
@@ -190,13 +190,13 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if os.path.exists(signature_img_path):
                 signature_msg.append(MessageSegment.image(f"file:///{signature_img_path}"))
             
-            signature_name_text = signature_info["name"]["zh_tw"] if signature_info["name"]["zh_tw"] else (signature_info["name"]["kr"] if is_test else signature_info["name"]["zh_tw"])
-            signature_desc_text = signature_info["description"]["zh_tw"] if signature_info["description"]["zh_tw"] else (signature_info["description"]["kr"] if is_test else signature_info["description"]["zh_tw"])
-            signature_title_text = signature_info["title"]["zh_tw"] if signature_info["title"]["zh_tw"] else (signature_info["title"]["kr"] if is_test else signature_info["title"]["zh_tw"])
+            signature_name_text = select_text_by_priority(signature_info["name"]["zh_tw"], signature_info["name"]["kr"], is_review)
+            signature_desc_text = select_text_by_priority(signature_info["description"]["zh_tw"], signature_info["description"]["kr"], is_review)
+            signature_title_text = select_text_by_priority(signature_info["title"]["zh_tw"], signature_info["title"]["kr"], is_review)
             
             skill_descriptions_text = []
             for i, skill in enumerate(signature_info["skills"]):
-                desc_text = skill["desc_zh_tw"] if skill["desc_zh_tw"] else (skill["desc_kr"] if is_test else skill["desc_zh_tw"])
+                desc_text = select_text_by_priority(skill["desc_zh_tw"], skill["desc_kr"], is_review)
                 skill_descriptions_text.append(f"等級{i+1}：{desc_text}")
             
             signature_info_text = f"""{signature_name_text}

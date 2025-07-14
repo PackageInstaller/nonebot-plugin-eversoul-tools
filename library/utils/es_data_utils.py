@@ -376,7 +376,6 @@ def load_json_data(group_id: int):
     config = get_group_data_source(group_id)
     logger.info(f"当前使用的数据源配置: {config}")
     json_path = config["json_path"]
-    
     # 检查json_path是否有效
     if not json_path:
         logger.error("数据源路径未配置，无法加载游戏数据")
@@ -478,7 +477,6 @@ def load_json_data(group_id: int):
             logger.error(f"加载JSON文件出错: {filename}, 错误: {e}")
             data[key] = {"json": []}  # 提供一个空的默认值
     return data
-
 
 def load_data_source_config():
     """加载数据源配置文件"""

@@ -12,6 +12,22 @@ from ...config import (
 )
 
 
+def select_text_by_priority(zh_tw: str, kr: str, is_review: bool = False) -> str:
+    """根据优先级选择文本
+    
+    优先级：zh_tw > (is_review ? kr : zh_tw)
+    
+    Args:
+        zh_tw: 繁体中文文本
+        kr: 韩文文本
+        is_review: 是否为测试模式
+    
+    Returns:
+        str: 选择的文本
+    """
+    return zh_tw if zh_tw else (kr if is_review else zh_tw)
+
+
 def clean_rich_text(text):
     """clean text tags
     
@@ -534,14 +550,14 @@ def get_character_skill_value(data, value_id, value_type) -> str:
     return ""
 
 
-def get_character_skill(data, skill_no, is_support=False, hero_data=None):
+def get_character_skill(data, skill_no, is_support=False):
     """获取角色技能
     
     Args:
         data: json 数据
         skill_no: 技能编号
         is_support: 是否为支援技能
-        hero_data: 角色数据 (用于获取辅助伙伴技能信息)
+        is_review: 是否为测试模式
     
     Returns:
         dict: 包含技能信息
@@ -636,13 +652,13 @@ def get_character_skill(data, skill_no, is_support=False, hero_data=None):
     }
 
 
-def get_character_keyword_location(data: dict, keyword_get_details: int, is_test: bool = False) -> str:
+def get_character_keyword_location(data: dict, keyword_get_details: int, is_review: bool = False) -> str:
     """get character keyword location
     
     Args:
         data: JSON data dictionary
         keyword_get_details: keyword get details
-        is_test: is test
+        is_review: is test
     """    
     # 如果没有keyword_get_details或为0，返回"通用"
     # if keyword_get_details is not provided or is 0, return "通用"
@@ -664,11 +680,11 @@ def get_character_keyword_location(data: dict, keyword_get_details: int, is_test
     if location_data:
         zh_tw = location_data.get("zh_tw", "")
         kr = location_data.get("kr", "")
-        return zh_tw if zh_tw else (kr if is_test else zh_tw)
+        return select_text_by_priority(zh_tw, kr, is_review)
     return ""
 
 
-def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword_get_details: int, is_test: bool = False) -> str:
+def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword_get_details: int, is_review: bool = False) -> str:
     """get character lost item
     
     Args:
@@ -676,7 +692,7 @@ def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword
         hero_no: hero no
         keyword_type: keyword type
         keyword_get_details: keyword get details
-        is_test: is test
+        is_review: is test
     """
     try:
         # 在TownLostItem.json中查找对应条目. find the corresponding item in TownLostItem.json
@@ -696,8 +712,8 @@ def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword
                 # find the choice talk in Talk.json
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
-                                if s.get("no") == choice_talk.get("no")), "")
+                    action = next(select_text_by_priority(s.get("zh_tw"), s.get("kr"), is_review) for s in data["string_talk"]["json"] 
+                                if s.get("no") == choice_talk.get("no"))
                     return f"{action}"
 
         elif quest_type == 2: # 击杀魔物. kill monster
@@ -705,8 +721,8 @@ def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    action = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
-                                if s.get("no") == choice_talk.get("no")), "")
+                    action = next(select_text_by_priority(s.get("zh_tw"), s.get("kr"), is_review) for s in data["string_talk"]["json"] 
+                                if s.get("no") == choice_talk.get("no"))
                     return f"{action}"
 
         elif quest_type == 3: # 外出获取. get out
@@ -716,8 +732,8 @@ def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_trip]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    location = next((s.get("kr" if is_test else "zh_tw", "") for s in data["string_talk"]["json"] 
-                                if s.get("no") == choice_talk.get("no")), "")
+                    location = next(select_text_by_priority(s.get("zh_tw"), s.get("kr"), is_review) for s in data["string_talk"]["json"] 
+                                if s.get("no") == choice_talk.get("no"))
                     if location:
                         return f"{location}"
         
@@ -751,7 +767,7 @@ def get_character_keyword_point(data: dict, keyword_type: str) -> list:
     return [20, 40, 60]  # 默认值. default value
 
 
-def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int, keyword_type: int = 0, is_test: bool = False) -> str:
+def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int, keyword_type: int = 0, is_review: bool = False) -> str:
     """get character keyword source
     
     Args:
@@ -760,14 +776,12 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
         details: details
         hero_no: hero no
         keyword_type: keyword type
-        is_test: is test
+        is_review: is test
     """
-    # 优先获取zh_tw，当zh_tw为空时再根据is_test判断. get zh_tw first, then check is_test
-    source_data = next((s for s in data["string_ui"]["json"] if s["no"] == source_sno), None)
+    # 优先获取zh_tw，当zh_tw为空时再根据is_review判断. get zh_tw first, then check is_review
+    source_data = get_string_by_type(data, "ui", source_sno)
     if source_data:
-        zh_tw = source_data.get("zh_tw", "")
-        kr = source_data.get("kr", "")
-        source = zh_tw if zh_tw else (kr if is_test else zh_tw)
+        source = select_text_by_priority(source_data["zh_tw"], source_data["kr"], is_review)
     else:
         source = ""
     
@@ -776,7 +790,7 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
         
     # 检查是否是遗失物品. check if it is lost item
     if hero_no and keyword_type:
-        lost_item = get_character_lost_item(data, hero_no, keyword_type, details, is_test)
+        lost_item = get_character_lost_item(data, hero_no, keyword_type, details, is_review)
         if lost_item:
             return lost_item
         
@@ -790,7 +804,7 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
             if location_data:
                 zh_tw = location_data.get("zh_tw", "")
                 kr = location_data.get("kr", "")
-                location_name = zh_tw if zh_tw else (kr if is_test else zh_tw)
+                location_name = select_text_by_priority(zh_tw, kr, is_review)
             else:
                 location_name = "未知"
             return f"在{location_name}解锁"
@@ -827,13 +841,13 @@ def get_character_keyword_source(data: dict, source_sno: int, details: int, hero
     return source
 
 
-def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> str:
+def get_character_keyword(data: dict, hero_id: int, is_review: bool = False) -> str:
     """get character keyword
     
     Args:
         data: JSON data dictionary
         hero_id: hero id
-        is_test: is test
+        is_review: is test
     """
     trip_keywords = []
     keyword_msgs = []
@@ -863,7 +877,7 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
                 favor_point = points[grade_index]
                     
                 trip_keywords.append({
-                    "name": get_string_by_type(data, "ui", keyword_info.get("keyword_string"))["kr" if is_test else "zh_tw"],
+                    "name": get_string_by_type(data, "ui", keyword_info.get("keyword_string"))[select_text_by_priority("zh_tw", "kr", is_review)],
                     "type": keyword_type,
                     "favor_point": favor_point,
                     "grade": get_string_by_type(data, "system", grade_sno)["zh_tw"],
@@ -873,7 +887,7 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
                         keyword_info.get("keyword_get_details", 0),
                         hero_id,
                         keyword_info.get("keyword_type"),
-                        is_test
+                        is_review
                     ),
                     "keyword_get_details": keyword_info.get("keyword_get_details")
                 })
@@ -891,7 +905,7 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
         for keyword in bad_keywords:
             msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息
-            if location := get_character_keyword_location(data, keyword.get("keyword_get_details"), is_test):
+            if location := get_character_keyword_location(data, keyword.get("keyword_get_details"), is_review):
                 msg += f"\n  地点：{location}"
             keyword_msgs.append(msg)
     
@@ -904,7 +918,7 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
         for keyword in normal_keywords:
             msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息. add location info
-            if location := get_character_keyword_location(data, keyword.get("keyword_get_details"), is_test):
+            if location := get_character_keyword_location(data, keyword.get("keyword_get_details"), is_review):
                 msg += f"\n  地点：{location}"
             keyword_msgs.append(msg)
         
@@ -917,7 +931,7 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
         for keyword in (k for k in good_keywords if k["source"]):
             msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息. add location info
-            if location := get_character_keyword_location(data, keyword.get("keyword_get_details"), is_test):
+            if location := get_character_keyword_location(data, keyword.get("keyword_get_details"), is_review):
                 msg += f"\n  地点：{location}"
             if keyword["source"]:
                 msg += f"\n  条件：{keyword['source']}"
@@ -926,7 +940,7 @@ def get_character_keyword(data: dict, hero_id: int, is_test: bool = False) -> st
     return "\n".join(keyword_msgs)
 
 
-def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
+def get_character_town_object(data: dict, hero_id: int, is_review=False) -> list:
     """get character town object
     
     Args:
@@ -970,7 +984,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                                 if string.get("no") == name_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    name = zh_tw if zh_tw else (kr if is_test else zh_tw)
+                                    name = select_text_by_priority(zh_tw, kr, is_review)
                                     break
                         
                         # 获取物品品质. get item grade
@@ -981,7 +995,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                                 if string.get("no") == grade_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    grade = zh_tw if zh_tw else (kr if is_test else zh_tw)
+                                    grade = select_text_by_priority(zh_tw, kr, is_review)
                                     break
                         
                         # 获取物品类型. get item type
@@ -992,7 +1006,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                                 if string.get("no") == slot_limit_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    slot_type = zh_tw if zh_tw else (kr if is_test else zh_tw)
+                                    slot_type = select_text_by_priority(zh_tw, kr, is_review)
                                     break
                         
                         # 获取物品描述并清理颜色标签. get item description and clean color tags
@@ -1003,7 +1017,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
                                 if string.get("no") == desc_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    desc_text = zh_tw if zh_tw else (kr if is_test else zh_tw)
+                                    desc_text = select_text_by_priority(zh_tw, kr, is_review)
                                     desc = clean_rich_text(desc_text)
                                     break
                         
@@ -1027,7 +1041,7 @@ def get_character_town_object(data: dict, hero_id: int, is_test=False) -> list:
         return []
 
 
-def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> list:
+def get_character_town_object_task(data: dict, obj_no: int, is_review=False) -> list:
     """get character town object task
     
     Args:
@@ -1058,7 +1072,7 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                                 if string.get("no") == rarity_sno:
                                     rarity_zh_tw = string.get("zh_tw", "")
                                     rarity_kr = string.get("kr", "")
-                                    rarity = rarity_zh_tw if rarity_zh_tw else (rarity_kr if is_test else rarity_zh_tw)
+                                    rarity = select_text_by_priority(rarity_zh_tw, rarity_kr, is_review)
                                     break
                         
                         # 获取任务名称. get task name
@@ -1069,7 +1083,7 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                                 if string.get("no") == name_sno:
                                     name_zh_tw = string.get("zh_tw", "")
                                     name_kr = string.get("kr", "")
-                                    name = name_zh_tw if name_zh_tw else (name_kr if is_test else name_zh_tw)
+                                    name = select_text_by_priority(name_zh_tw, name_kr, is_review)
                                     break
                                     
                         # 获取所需时间. get required time
@@ -1092,13 +1106,9 @@ def get_character_town_object_task(data: dict, obj_no: int, is_test=False) -> li
                                     if item.get("no") == item_no:
                                         name_sno = item.get("name_sno")
                                         if name_sno:
-                                            for string in data["string_item"]["json"]:
-                                                if string.get("no") == name_sno:
-                                                    item_name_zh_tw = string.get("zh_tw", "")
-                                                    item_name_kr = string.get("kr", "")
-                                                    item_name = item_name_zh_tw if item_name_zh_tw else (item_name_kr if is_test else item_name_zh_tw)
-                                                    rewards.append(f"{item_name}x{item_amount}")
-                                                    break
+                                            item_name = get_string_by_type(data, "item", name_sno)
+                                            item_name = select_text_by_priority(item_name["zh_tw"], item_name["kr"], is_review)
+                                            rewards.append(f"{item_name}x{item_amount}")
                         
                         # 添加任务信息. add task info
                         tasks_info.append({
@@ -1147,16 +1157,13 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
             
             # 获取礼包名称和描述. get package name and description
             name_sno = shop_item.get("name_sno")
-            package_name = next((s.get("zh_tw", "未知礼包") for s in data["string_cashshop"]["json"] 
-                                if s["no"] == name_sno), "未知礼包")
+            package_name = get_string_by_type(data, "cashshop", name_sno)["zh_tw"]
             
             info_sno = shop_item.get("item_info_sno")
-            package_desc = next((s.get("zh_tw", "") for s in data["string_cashshop"]["json"] 
-                                if s["no"] == info_sno), "")
+            package_desc = get_string_by_type(data, "cashshop", info_sno)["zh_tw"]
             
             desc_sno = shop_item.get("desc_sno")
-            limit_desc = next((s.get("zh_tw", "").format(shop_item.get("limit_buy", 0)) 
-                                for s in data["string_ui"]["json"] if s["no"] == desc_sno), "")
+            limit_desc = get_string_by_type(data, "ui", desc_sno)["zh_tw"].format(shop_item.get("limit_buy", 0))
             
             # 基本信息部分. basic info
             basic_info = [
@@ -1201,13 +1208,13 @@ def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
     return messages
 
 
-def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> list:
+def get_character_soullink(data: dict, hero_id: int, is_review: bool = False) -> list:
     """get character soullink
     
     Args:
         data: JSON data dictionary
         hero_id: hero id
-        is_test: is test
+        is_review: is test
     """
     soullink_info = []
     
@@ -1230,17 +1237,11 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
         
         # 获取灵魂链接标题和故事. get soul link title and story
         # 优先使用zh_tw内容的逻辑. use zh_tw content logic first
-        title_data = next((s for s in data["string_character"]["json"] 
-                            if s["no"] == link.get("group_title")), {})
-        title_zh_tw = title_data.get("zh_tw", "")
-        title_kr = title_data.get("kr", "")
-        title = title_zh_tw if title_zh_tw else (title_kr if is_test else title_zh_tw)
+        title = get_string_by_type(data, "character", link.get("group_title"))
+        title = select_text_by_priority(title["zh_tw"], title["kr"], is_review)
         
-        story_data = next((s for s in data["string_character"]["json"] 
-                            if s["no"] == link.get("group_story")), {})
-        story_zh_tw = story_data.get("zh_tw", "")
-        story_kr = story_data.get("kr", "")
-        story = story_zh_tw if story_zh_tw else (story_kr if is_test else story_zh_tw)
+        story = get_string_by_type(data, "character", link.get("group_story"))
+        story = select_text_by_priority(story["zh_tw"], story["kr"], is_review)
         
         # 获取所有角色名称. get all hero names
         hero_names = []
@@ -1248,7 +1249,7 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
             name_data = get_string_character(data, hid, special=True)
             name_zh_tw = name_data["zh_tw"]
             name_kr = name_data["kr"]
-            name = name_zh_tw if name_zh_tw else (name_kr if is_test else name_zh_tw)
+            name = select_text_by_priority(name_zh_tw, name_kr, is_review)
             if name:
                 hero_names.append(name)
                 
@@ -1266,22 +1267,13 @@ def get_character_soullink(data: dict, hero_id: int, is_test: bool = False) -> l
             for item in collection_items:
                 # 获取条件文本，修改为优先使用zh_tw内容的逻辑. get condition text, modify to use zh_tw content logic first
                 condition_string_no = item.get("condition_string")
-                condition_data = next((s for s in data["string_ui"]["json"] 
-                                        if s["no"] == condition_string_no), {})
-                condition_zh_tw = condition_data.get("zh_tw", "")
-                condition_kr = condition_data.get("kr", "")
+                condition_data = get_string_by_type(data, "ui", condition_string_no)
+                condition_text = select_text_by_priority(condition_data["zh_tw"], condition_data["kr"], is_review)
                 
-                condition_text = ""
-                if condition_zh_tw:
-                    condition_text = condition_zh_tw.format(
-                        item.get("condition_count", 0),
-                        item.get("condition_count", 0)
-                    )
-                elif is_test and condition_kr:
-                    condition_text = condition_kr.format(
-                        item.get("condition_count", 0),
-                        item.get("condition_count", 0)
-                    )
+                condition_text = condition_text.format(
+                    item.get("condition_count", 0),
+                    item.get("condition_count", 0)
+                )
                 
                 # 获取buff效果. get buff effects
                 buff_effects = []
@@ -1403,70 +1395,52 @@ def get_character_signature(data, hero_id):
             break
     
     if signature_data:
-        # 获取遗物名称.
-        for string in data["string_skill"]["json"]:
-            if string["no"] == signature_data["signature_name_sno"]:
-                signature_name_zh_tw = string.get("zh_tw", "")
-                signature_name_zh_cn = string.get("zh_cn", "")
-                signature_name_kr = string.get("kr", "")
-                signature_name_en = string.get("en", "")
-                break
+        signature_name = get_string_by_type(data, "signature", signature_data["signature_name_sno"])
+        signature_name_zh_tw = signature_name["zh_tw"]
+        signature_name_zh_cn = signature_name["zh_cn"]
+        signature_name_kr = signature_name["kr"]
+        signature_name_en = signature_name["en"]
         
         # 获取遗物技能名称.
-        for string in data["string_skill"]["json"]:
-            if string["no"] == signature_data["skill_name_sno"]:
-                signature_title_zh_tw = string.get("zh_tw", "")
-                signature_title_zh_cn = string.get("zh_cn", "")
-                signature_title_kr = string.get("kr", "")
-                signature_title_en = string.get("en", "")
-                break
+        signature_title = get_string_by_type(data, "signature", signature_data["skill_name_sno"])
+        signature_title_zh_tw = signature_title["zh_tw"]
+        signature_title_zh_cn = signature_title["zh_cn"]
+        signature_title_kr = signature_title["kr"]
+        signature_title_en = signature_title["en"]
                 
         # 获取遗物简介.
         signature_desc_zh_tw = signature_desc_zh_cn = "无遗物简介信息"  # 设置默认值.
         signature_desc_kr = "유물 프로필 정보 없음"
         signature_desc_en = "No signature description information"
-        for string in data["string_skill"]["json"]:
-            if string["no"] == signature_data["tooltip_explain_sno"]:
-                desc_tw = string.get("zh_tw", "")
-                desc_cn = string.get("zh_cn", "")
-                desc_kr = string.get("kr", "")
-                desc_en = string.get("en", "")
-                if desc_tw.strip():
-                    signature_desc_zh_tw = desc_tw
-                if desc_cn.strip():
-                    signature_desc_zh_cn = desc_cn
-                if desc_kr.strip():
-                    signature_desc_kr = desc_kr
-                if desc_en.strip():
-                    signature_desc_en = desc_en
-                break
+        signature_desc = get_string_by_type(data, "signature", signature_data["tooltip_explain_sno"])
+        signature_desc_zh_tw = signature_desc["zh_tw"]
+        signature_desc_zh_cn = signature_desc["zh_cn"]
+        signature_desc_kr = signature_desc["kr"]
+        signature_desc_en = signature_desc["en"]
         
         # 获取所有等级的技能描述.
         for i in range(1, 8):  # 1-7级.
             sno_key = f"skill_tooltip_sno{i}"
             if sno_key in signature_data:
                 tooltip_sno = signature_data[sno_key]
-                for string in data["string_skill"]["json"]:
-                    if string["no"] == tooltip_sno:
-                        desc_tw = string.get("zh_tw", "")
-                        desc_cn = string.get("zh_cn", "")
-                        desc_kr = string.get("kr", "")
-                        desc_en = string.get("en", "")
-                        # 处理数值标签
-                        desc_tw = process_skill_description(data, desc_tw)
-                        desc_cn = process_skill_description(data, desc_cn)
-                        desc_kr = process_skill_description(data, desc_kr)
-                        desc_en = process_skill_description(data, desc_en)
-                        
-                        
-                        skill_descriptions.append({
-                            "desc_zh_tw": desc_tw,
-                            "desc_zh_cn": desc_cn,
-                            "desc_kr": desc_kr,
-                            "desc_en": desc_en,
-                            "level": i
-                        })
-                        break
+                desc = get_string_by_type(data, "signature", tooltip_sno)
+                desc_tw = desc["zh_tw"]
+                desc_cn = desc["zh_cn"]
+                desc_kr = desc["kr"]
+                desc_en = desc["en"]
+                # 处理数值标签
+                desc_tw = process_skill_description(data, desc_tw)
+                desc_cn = process_skill_description(data, desc_cn)
+                desc_kr = process_skill_description(data, desc_kr)
+                desc_en = process_skill_description(data, desc_en)
+
+                skill_descriptions.append({
+                    "desc_zh_tw": desc_tw,
+                    "desc_zh_cn": desc_cn,
+                    "desc_kr": desc_kr,
+                    "desc_en": desc_en,
+                    "level": i
+                })
         
     # 修改返回值，添加图标路径.
     if signature_data:
@@ -1750,13 +1724,13 @@ def get_character_story(data, hero_id):
         return False, [], {}
 
 
-def format_character_story(episode_info, endings, is_test=False):
+def format_character_story(episode_info, endings, is_review=False):
     """format character story
     
     Args:
         episode_info: episode info
         endings: endings
-        is_test: is test
+        is_review: is test
     """
     good_end = ["😃好结局攻略："]
     normal_end = ["🙂一般结局攻略："]
@@ -1783,7 +1757,7 @@ def format_character_story(episode_info, endings, is_test=False):
                 choice_info = {
                     "talk_index": talk_index,
                     "choice_group": choice["choice_group"],
-                    "text": f"（{choice['choice_group']}）{clean_rich_text(choice['zh_tw_text'] if choice['zh_tw_text'] else (choice['kr_text' if is_test else 'zh_tw_text']))}({affinity_str})",
+                    "text": f"（{choice['choice_group']}）{clean_rich_text(select_text_by_priority(choice['zh_tw_text'], choice['kr_text'], is_review))}({affinity_str})",
                     "affinity": affinity,
                     "position_type": position_type,
                     "group_no": choice.get("group_no"),
@@ -1796,11 +1770,11 @@ def format_character_story(episode_info, endings, is_test=False):
         
         all_episodes_choices.append({
             "episode": ep['episode'],
-            "title": ep['zh_tw_title'] if ep['zh_tw_title'] else (ep['kr_title'] if is_test else ep['zh_tw_title']),
+            "title": select_text_by_priority(ep['zh_tw_title'], ep['kr_title'], is_review),
             "choices": all_choices
         })
         
-        title = ep['zh_tw_title'] if ep['zh_tw_title'] else (ep['kr_title'] if is_test else ep['zh_tw_title'])
+        title = select_text_by_priority(ep['zh_tw_title'], ep['kr_title'], is_review)
         good_end.append(f"\nEP{ep['episode']}：{title}")
         normal_end.append(f"\nEP{ep['episode']}：{title}")
         bad_end.append(f"\nEP{ep['episode']}：{title}")
@@ -2030,7 +2004,7 @@ def get_hero_grade_value(data: dict, grade: int) -> float:
     except Exception as e:
         logger.error(f"获取角色品质加成值时发生错误: {e}")
         return 0.85
-    
+
 
 def get_hero_level_grade_value(data: dict, level: int) -> float:
     """get hero level grade value
