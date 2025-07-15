@@ -28,64 +28,19 @@ def select_text_by_priority(zh_tw: str, kr: str, is_review: bool = False) -> str
     return zh_tw if zh_tw else (kr if is_review else zh_tw)
 
 
-def clean_rich_text(text):
-    """clean text tags
+def clean_rich_text(text: str) -> str:
+    """
+    清理富文本标签
     
     Args:
-        text: text
+        text: 包含富文本标签的输入字符串
     
     Returns:
-        str: cleaned text
+        清理后的字符串
     """
-    # 处理 <color=#XXXXXX> 格式
-    # handle <color=#XXXXXX> format
-    text = re.sub(r'<color=#[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
-    # handle </color> format
-    text = re.sub(r'</color>', '', text, flags=re.IGNORECASE)
+    pattern = r'</?color\s*(?:=\s*"?#?[A-Fa-f0-9]+"?\s*)?>|<effect:none>'
     
-    # 处理 <color=XXXXXX> 格式（缺少#符号的情况）
-    # handle <color=XXXXXX> format (missing # symbol)
-    text = re.sub(r'<color=[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
-    
-    # 处理 <COLOR=#XXXXXX> 格式
-    # handle <COLOR=#XXXXXX> format
-    text = re.sub(r'<COLOR=#[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
-    # handle </COLOR> format
-    text = re.sub(r'</COLOR>', '', text, flags=re.IGNORECASE)
-    
-    # 处理 <COLOR=XXXXXX> 格式（缺少#符号的情况）
-    # handle <COLOR=XXXXXX> format (missing # symbol)
-    text = re.sub(r'<COLOR=[A-Fa-f0-9]+>', '', text, flags=re.IGNORECASE)
-    
-    # 处理可能存在的空格
-    # handle possible spaces
-    text = re.sub(r'<color\s*=#[A-Fa-f0-9]+\s*>', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'</color\s*>', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'<COLOR\s*=#[A-Fa-f0-9]+\s*>', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'</COLOR\s*>', '', text, flags=re.IGNORECASE)
-    
-    # 处理可能存在的空格（缺少#符号的情况）
-    # handle possible spaces (missing # symbol)
-    text = re.sub(r'<color\s*=[A-Fa-f0-9]+\s*>', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'<COLOR\s*=[A-Fa-f0-9]+\s*>', '', text, flags=re.IGNORECASE)
-    
-    # 处理 <color="#XXXXXX"> 格式（带引号的情况）
-    # handle <color="#XXXXXX"> format (with quotes)
-    text = re.sub(r'<color="[#A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
-    # handle <COLOR="#XXXXXX"> format (with quotes)
-    text = re.sub(r'<COLOR="[#A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
-    
-    # 处理 <color="XXXXXX"> 格式（带引号但缺少#符号的情况）
-    # handle <color="XXXXXX"> format (with quotes but missing # symbol)
-    text = re.sub(r'<color="[A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
-    # handle <COLOR="XXXXXX"> format (with quotes but missing # symbol)
-    text = re.sub(r'<COLOR="[A-Fa-f0-9]+"\s*>', '', text, flags=re.IGNORECASE)
-    
-    # 处理 <effect:none> 标签
-    # handle <effect:none> tag
-    text = re.sub(r'<effect:none>', '', text, flags=re.IGNORECASE)
-    
-    return text
+    return re.sub(pattern, '', text, flags=re.IGNORECASE)
 
 
 def format_value(value: float, integer_format: bool) -> str:
@@ -119,6 +74,52 @@ def format_duration(duration: float) -> str:
         return str(int(duration))
     else:
         return str(duration)
+
+
+def get_character_skill_description(data, no: int, type: str) -> str:
+    """获取角色技能值
+    
+    Args:
+        data: json 数据
+        value_id: 技能值编号
+        value_type: 技能值类型
+    
+    Returns:
+        str: 格式化后的技能描述
+    """
+
+    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == no))
+    function_key = skill_code.get("function_key", 0)
+
+    if function_key in (30, 300):
+        buff_id = skill_code.get("value", 0)
+        buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
+        
+        if type == "VALUE":
+            return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
+        elif type == "DURATION":
+            return format_duration(buff_code.get("duration", 0))
+    elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
+        if type == "DURATION":
+            return format_duration(skill_code.get("duration", 0))
+        
+        recursive_skill_id = skill_code.get("value", 0)
+        referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id))
+        ref_function_key = referenced_code.get("function_key", 0)
+        
+        if ref_function_key in (30, 300):
+            buff_id = referenced_code.get("value", 0)
+            buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
+            return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
+        else:
+            return get_code_value_text(ref_function_key, referenced_code.get("value", 0))
+    else:
+        if type == "VALUE":
+            return get_code_value_text(function_key, skill_code.get("value", 0))
+        elif type == "DURATION":
+            return format_duration(skill_code.get("duration", 0))
+
+    return ""
 
 
 def get_code_value_text(function_key: int, value: float) -> str:
@@ -164,7 +165,7 @@ def process_skill_description(data, description):
     def replace_value(match):
         no = int(match.group(1))
         type = match.group(2)
-        return get_character_skill_value(data, no, type)
+        return get_character_skill_description(data, no, type)
     
     # 清理颜色标签
     clean_description = clean_rich_text(description)
@@ -499,52 +500,6 @@ def get_character_similar_name(query, alias_map):
             results.append((main_name, aliases))
     
     return results
-
-
-def get_character_skill_value(data, no: int, type: str) -> str:
-    """获取角色技能值
-    
-    Args:
-        data: json 数据
-        value_id: 技能值编号
-        value_type: 技能值类型
-    
-    Returns:
-        str: 技能值
-    """
-
-    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == no))
-    function_key = skill_code.get("function_key", 0)
-
-    if function_key in (30, 300):
-        buff_id = skill_code.get("value", 0)
-        buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
-        
-        if type == "VALUE":
-            return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
-        elif type == "DURATION":
-            return format_duration(buff_code.get("duration", 0))
-    elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
-        if type == "DURATION":
-            return format_duration(skill_code.get("duration", 0))
-        
-        recursive_skill_id = skill_code.get("value", 0)
-        referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id))
-        ref_function_key = referenced_code.get("function_key", 0)
-        
-        if ref_function_key in (30, 300):
-            buff_id = referenced_code.get("value", 0)
-            buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
-            return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
-        else:
-            return get_code_value_text(ref_function_key, referenced_code.get("value", 0))
-    else:
-        if type == "VALUE":
-            return get_code_value_text(function_key, skill_code.get("value", 0))
-        elif type == "DURATION":
-            return format_duration(skill_code.get("duration", 0))
-
-    return ""
 
 
 def get_character_skill(data, skill_no, is_support=False):

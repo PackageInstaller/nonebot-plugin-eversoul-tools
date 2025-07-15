@@ -95,7 +95,7 @@ from .es_string_utils import (
     select_text_by_priority, clean_rich_text, get_drop_item_rate,
     get_string_character, get_string_by_type,
     get_character_lost_item, format_character_story, get_cash_pack, get_string_item, 
-    get_formation_type, get_character_skill, get_character_skill_value,
+    get_formation_type, get_character_skill,
     get_character_similar_name, get_character_release_date, get_character_cv,
     get_character_keyword_point, get_character_prefer_gift,
     get_character_keyword_source, get_character_keyword_location,
