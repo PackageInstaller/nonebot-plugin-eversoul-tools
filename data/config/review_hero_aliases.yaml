@@ -544,7 +544,7 @@ names:
     kr_name: 바이스
     en_name: Weiss
     ja_name: ヴァイス
-    aliases: [薇丝]
+    aliases: [薇丝, 白丝]
     hero_id: 4150
   - zh_tw_name: 佩特拉（覺魂）
     zh_cn_name: 佩特拉（狂喜）

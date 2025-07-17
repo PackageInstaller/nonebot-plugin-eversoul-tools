@@ -91,14 +91,15 @@ def get_character_skill_description(data, no: int, type: str) -> str:
     skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == no))
     function_key = skill_code.get("function_key", 0)
 
-    if function_key in (30, 300):
-        buff_id = skill_code.get("value", 0)
-        buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
-        
-        if type == "VALUE":
-            return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
-        elif type == "DURATION":
-            return format_duration(buff_code.get("duration", 0))
+    if function_key > 29:
+        if function_key in (30, 300):
+            buff_id = skill_code.get("value", 0)
+            buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
+            
+            if type == "VALUE":
+                return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
+            elif type == "DURATION":
+                return format_duration(buff_code.get("duration", 0))
     elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
         if type == "DURATION":
             return format_duration(skill_code.get("duration", 0))
@@ -113,11 +114,10 @@ def get_character_skill_description(data, no: int, type: str) -> str:
             return get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
         else:
             return get_code_value_text(ref_function_key, referenced_code.get("value", 0))
-    else:
-        if type == "VALUE":
-            return get_code_value_text(function_key, skill_code.get("value", 0))
-        elif type == "DURATION":
-            return format_duration(skill_code.get("duration", 0))
+    if type == "VALUE":
+        return get_code_value_text(function_key, skill_code.get("value", 0))
+    elif type == "DURATION":
+        return format_duration(skill_code.get("duration", 0))
 
     return ""
 
@@ -143,13 +143,17 @@ def get_buff_value_text(buff_type: int, value: float) -> str:
     Returns:
         str: 格式化后的字符串
     """
-
+    print(buff_type, value)
     if buff_type <= 10102:
-        return format_value(value, not (((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420))
-    elif (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and (1 << (buff_type - 122) & 0x13) != 0):
+        if (((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420):
+            return format_value(value, False)
+        else:
+            return format_value(value, True)
+
+    if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and (1 << (buff_type - 122) & 0x13) != 0):
         return format_value(value, True)
     else:
-        return ""
+        return format_value(value, False)
 
 
 def process_skill_description(data, description):
