@@ -42,7 +42,19 @@ GATE_TYPE_MAPPING = {
     "不死": 8
 }
 
-# 属性限制映射
+
+# 整数属性映射
+INTEGER_STAT_MAPPING = {
+    "attack": "攻击力",
+    "defence": "防御力",
+    "hp": "体力",
+    "hit": "命中",
+    "dodge": "闪避",
+    "attack_speed": "攻击速度"
+}
+
+
+# 属性限制映射，rate代表这是百分比数值的意思，但是字段是一样的
 STAT_NAME_MAPPING = {
     "attack_rate": "攻击力",
     "attack": "攻击力",

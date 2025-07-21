@@ -126,8 +126,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         skill_type_kr = skill_type_data["kr"]
                         skill_type_en = skill_type_data["en"]
                         # 判断是否为支援技能
-                        is_support = (skill_key == "support_skill_no")
-                        skill_info = get_character_skill(data, skill_no, is_support)
+                        support = (skill_key == "support_skill_no")
+                        skill_info = get_character_skill(data, skill_no, support)
                         skill_types.append((skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, skill_type_en, skill_info))
                         break
         
@@ -157,10 +157,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             skill_type_text = select_text_by_priority(skill_type_zh_tw, skill_type_kr, is_review)
             skill_name_text = select_text_by_priority(skill_info["name"]["zh_tw"], skill_info["name"]["kr"], is_review)
             
-            if skill_info["is_support"]:
+            if skill_info["support"]:
                 main_effects = []
                 for desc in skill_info["descriptions"]:
-                    if desc.get("type") == "main_partner":
+                    if desc.get("type") == "support":
                         desc_text = select_text_by_priority(desc["desc_zh_tw"], desc["desc_kr"], is_review)
                         main_effects.append(desc_text)
                 

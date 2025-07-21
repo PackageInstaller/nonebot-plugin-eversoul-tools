@@ -8,7 +8,7 @@ from nonebot.log import logger
 from difflib import get_close_matches
 from ...config import (
     TOWN_DIR, TRAIT_NAME_MAPPING, 
-    PACKAGE_TYPE_MAPPING, STAT_NAME_MAPPING, FORMATION_TYPE_MAPPING
+    PACKAGE_TYPE_MAPPING, STAT_NAME_MAPPING, FORMATION_TYPE_MAPPING, INTEGER_STAT_MAPPING
 )
 
 
@@ -195,7 +195,7 @@ def get_string_by_type(data, string_type, no):
     
     Args:
         data: JSON 数据字典
-        string_type: string 类型 (system, ui, talk, skill)
+        string_type: string 类型的都行
         no: string no
         
     Returns:
@@ -506,14 +506,13 @@ def get_character_similar_name(query, alias_map):
     return results
 
 
-def get_character_skill(data, skill_no, is_support=False):
+def get_character_skill(data, skill_no, support=False):
     """获取角色技能
     
     Args:
         data: json 数据
         skill_no: 技能编号
-        is_support: 是否为支援技能
-        is_review: 是否为测试模式
+        support: 是否为支援技能
     
     Returns:
         dict: 包含技能信息
@@ -552,48 +551,35 @@ def get_character_skill(data, skill_no, is_support=False):
         skill_name_kr = get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])["kr"]
         skill_name_en = get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])["en"]
         
-        if is_support:
-            max_level_skill = max(skill_data_list, key=lambda x: x.get("level", 0))
-
-            desc_tw = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["zh_tw"]
-            desc_cn = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["zh_cn"]
-            desc_kr = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["kr"]
-            desc_en = get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["en"]
-            # 处理数值标签. 
-            desc_tw = process_skill_description(data, desc_tw)
-            desc_cn = process_skill_description(data, desc_cn)
-            desc_kr = process_skill_description(data, desc_kr)
-            desc_en = process_skill_description(data, desc_en)
+        if support:
+            # 支援技能，获取最高等级的技能描述
+            max_level_skill = max(skill_data_list, key=lambda x: x.get("level", 1))
+            desc_tw = process_skill_description(data, get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["zh_tw"])
+            desc_cn = process_skill_description(data, get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["zh_cn"])
+            desc_kr = process_skill_description(data, get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["kr"])
+            desc_en = process_skill_description(data, get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])["en"])
             skill_descriptions.append({
                 "desc_zh_tw": desc_tw,
                 "desc_zh_cn": desc_cn,
                 "desc_kr": desc_kr,
                 "desc_en": desc_en,
-                "type": "main_partner"
+                "type": "support"
             })
         else:
             # 非支援技能，获取所有等级的技能描述
             for skill_data in skill_data_list:
-                hero_level = skill_data.get("hero_level", 1)  # 获取技能解锁等级
-                for string in data["string_skill"]["json"]:
-                    if string["no"] == skill_data["tooltip_sno"]:
-                        desc_tw = string.get("zh_tw", "")
-                        desc_cn = string.get("zh_cn", "")
-                        desc_kr = string.get("kr", "")
-                        desc_en = string.get("en", "")
-                        # 处理数值标签
-                        desc_tw = process_skill_description(data, desc_tw)
-                        desc_cn = process_skill_description(data, desc_cn)
-                        desc_kr = process_skill_description(data, desc_kr)
-                        desc_en = process_skill_description(data, desc_en)
-                        skill_descriptions.append({
-                            "desc_zh_tw": desc_tw,
-                            "desc_zh_cn": desc_cn,
-                            "desc_kr": desc_kr,
-                            "desc_en": desc_en,
-                            "hero_level": hero_level
-                        })
-                        break
+                hero_level = skill_data.get("hero_level", 1)
+                desc_tw = process_skill_description(data, get_string_by_type(data, "skill", skill_data["tooltip_sno"])["zh_tw"])
+                desc_cn = process_skill_description(data, get_string_by_type(data, "skill", skill_data["tooltip_sno"])["zh_cn"])
+                desc_kr = process_skill_description(data, get_string_by_type(data, "skill", skill_data["tooltip_sno"])["kr"])
+                desc_en = process_skill_description(data, get_string_by_type(data, "skill", skill_data["tooltip_sno"])["en"])
+                skill_descriptions.append({
+                    "desc_zh_tw": desc_tw,
+                    "desc_zh_cn": desc_cn,
+                    "desc_kr": desc_kr,
+                    "desc_en": desc_en,
+                    "hero_level": hero_level
+                })
     
     return {
         "name": {
@@ -604,7 +590,7 @@ def get_character_skill(data, skill_no, is_support=False):
         },
         "descriptions": skill_descriptions,
         "icon_info": skill_icon_info,
-        "is_support": is_support
+        "support": support
     }
 
 
@@ -1174,15 +1160,15 @@ def get_character_soullink(data: dict, hero_id: int, is_review: bool = False) ->
     """
     soullink_info = []
     
-    # 查找所有包含该角色的灵魂链接. find all soul links that contain the character
+    # 查找所有包含该角色的灵魂链接
     for link in data["soullink"]["json"]:
-        # 动态查找所有hero槽位键. dynamic find all hero slot keys
+        # 动态查找所有hero槽位键
         hero_keys = [key for key in link.keys() if key.startswith("group_hero") and link[key] == hero_id]
         
         if not hero_keys:
-            continue  # 如果没有找到包含目标角色的槽位，跳过此链接. if no hero slot is found, skip this link
+            continue  # 如果没有找到包含目标角色的槽位，跳过此链接
         
-        # 收集所有角色ID. collect all hero ids
+        # 收集所有角色ID
         hero_ids = []
         for key in link.keys():
             if key.startswith("group_hero") and link[key] > 0:
@@ -1191,15 +1177,14 @@ def get_character_soullink(data: dict, hero_id: int, is_review: bool = False) ->
         if not hero_ids:
             continue
         
-        # 获取灵魂链接标题和故事. get soul link title and story
-        # 优先使用zh_tw内容的逻辑. use zh_tw content logic first
+        # 获取灵魂链接标题和故事.
         title = get_string_by_type(data, "character", link.get("group_title"))
         title = select_text_by_priority(title["zh_tw"], title["kr"], is_review)
         
         story = get_string_by_type(data, "character", link.get("group_story"))
         story = select_text_by_priority(story["zh_tw"], story["kr"], is_review)
         
-        # 获取所有角色名称. get all hero names
+        # 获取所有角色名称
         hero_names = []
         for hid in hero_ids:
             name_data = get_string_character(data, hid, special=True)
@@ -1209,11 +1194,11 @@ def get_character_soullink(data: dict, hero_id: int, is_review: bool = False) ->
             if name:
                 hero_names.append(name)
                 
-        # 获取收集效果. get collection effects
+        # 获取收集效果
         collection_effects = []
         
         if collection_id := link.get("Collection"):
-            # 按condition_list排序. sort by condition_list
+            # 按condition_list排序
             collection_items = sorted(
                 [item for item in data["soullink_collection"]["json"] 
                     if item.get("collection_group") == collection_id],
@@ -1221,7 +1206,7 @@ def get_character_soullink(data: dict, hero_id: int, is_review: bool = False) ->
             )
             
             for item in collection_items:
-                # 获取条件文本，修改为优先使用zh_tw内容的逻辑. get condition text, modify to use zh_tw content logic first
+                # 获取条件文本
                 condition_string_no = item.get("condition_string")
                 condition_data = get_string_by_type(data, "ui", condition_string_no)
                 condition_text = select_text_by_priority(condition_data["zh_tw"], condition_data["kr"], is_review)
@@ -1231,23 +1216,22 @@ def get_character_soullink(data: dict, hero_id: int, is_review: bool = False) ->
                     item.get("condition_count", 0)
                 )
                 
-                # 获取buff效果. get buff effects
+                # 获取buff效果
                 buff_effects = []
                 if buff_no := item.get("contents_buff_no"):
                     buff = next((b for b in data["contents_buff"]["json"] 
                                 if b.get("no") == buff_no), None)
                     if buff:
-                        # 处理所有属性，包括战力加成. process all attributes, including battle power bonus
+                        # 处理所有属性，包括战力加成
                         for key, value in buff.items():
-                            if key in STAT_NAME_MAPPING and value != 0:
-                                # 获取属性名称，优先使用zh_tw. get attribute name, use zh_tw first
+                            if key in STAT_NAME_MAPPING:
                                 stat_name = STAT_NAME_MAPPING[key]
-                                if value < 1:  # 小于1的显示为百分比. less than 1 is displayed as percentage
-                                    buff_effects.append(f"{stat_name}：{value*100:.1f}%")
+                                if key in INTEGER_STAT_MAPPING:
+                                    buff_effects.append(f"{stat_name}：{format_value(value, True)}%")
                                 else:
-                                    buff_effects.append(f"{stat_name}：{int(value)}")
+                                    buff_effects.append(f"{stat_name}：{format_value(value, False)}")
                         
-                        # 战力百分比加成. battle power percentage bonus
+                        # 战力百分比加成
                         battle_power_per = buff.get("battle_power_per", 0)
                         if battle_power_per != 0:
                             buff_effects.append(f"战力百分比加成：{battle_power_per}")
@@ -1326,51 +1310,40 @@ def get_character_signature(data, hero_id):
     skill_descriptions = []
     signature_bg_path = ""
     
-    # 在Signature.json中查找对应角色的遗物.
+    # 在Signature中查找对应角色的遗物.
     for signature in data["signature"]["json"]:
         if signature["hero_sno"] == hero_id:
             signature_data = signature
-            # 获取遗物图标路径.
             if signature_bg_path := signature.get("signature_bg_path"):
                 signature_bg_path = f"Img_Signature_{signature_bg_path}.png"
             break
     
     if signature_data:
-        signature_name = get_string_by_type(data, "skill", signature_data["signature_name_sno"])
-        signature_name_zh_tw = signature_name["zh_tw"]
-        signature_name_zh_cn = signature_name["zh_cn"]
-        signature_name_kr = signature_name["kr"]
-        signature_name_en = signature_name["en"]
-        
+        # 获取遗物名称.
+        signature_name_zh_tw = get_string_by_type(data, "skill", signature_data["signature_name_sno"])["zh_tw"]
+        signature_name_zh_cn = get_string_by_type(data, "skill", signature_data["signature_name_sno"])["zh_cn"]
+        signature_name_kr = get_string_by_type(data, "skill", signature_data["signature_name_sno"])["kr"]
+        signature_name_en = get_string_by_type(data, "skill", signature_data["signature_name_sno"])["en"]
         # 获取遗物技能名称.
-        signature_title = get_string_by_type(data, "skill", signature_data["skill_name_sno"])
-        signature_title_zh_tw = signature_title["zh_tw"]
-        signature_title_zh_cn = signature_title["zh_cn"]
-        signature_title_kr = signature_title["kr"]
-        signature_title_en = signature_title["en"]
-                
-
-        signature_desc = get_string_by_type(data, "skill", signature_data["tooltip_explain_sno"])
-        signature_desc_zh_tw = signature_desc["zh_tw"]
-        signature_desc_zh_cn = signature_desc["zh_cn"]
-        signature_desc_kr = signature_desc["kr"]
-        signature_desc_en = signature_desc["en"]
-        
+        signature_title_zh_tw = get_string_by_type(data, "skill", signature_data["skill_name_sno"])["zh_tw"]
+        signature_title_zh_cn = get_string_by_type(data, "skill", signature_data["skill_name_sno"])["zh_cn"]
+        signature_title_kr = get_string_by_type(data, "skill", signature_data["skill_name_sno"])["kr"]
+        signature_title_en = get_string_by_type(data, "skill", signature_data["skill_name_sno"])["en"]
+        # 获取遗物描述.
+        signature_desc_zh_tw = get_string_by_type(data, "skill", signature_data["tooltip_explain_sno"])["zh_tw"]
+        signature_desc_zh_cn = get_string_by_type(data, "skill", signature_data["tooltip_explain_sno"])["zh_cn"]
+        signature_desc_kr = get_string_by_type(data, "skill", signature_data["tooltip_explain_sno"])["kr"]
+        signature_desc_en = get_string_by_type(data, "skill", signature_data["tooltip_explain_sno"])["en"]
         # 获取所有等级的技能描述.
-        for i in range(1, 8):  # 1-7级.
+        for i in range(1, 8):
             sno_key = f"skill_tooltip_sno{i}"
             if sno_key in signature_data:
                 tooltip_sno = signature_data[sno_key]
-                desc = get_string_by_type(data, "skill", tooltip_sno)
-                desc_tw = desc["zh_tw"]
-                desc_cn = desc["zh_cn"]
-                desc_kr = desc["kr"]
-                desc_en = desc["en"]
                 # 处理数值标签
-                desc_tw = process_skill_description(data, desc_tw)
-                desc_cn = process_skill_description(data, desc_cn)
-                desc_kr = process_skill_description(data, desc_kr)
-                desc_en = process_skill_description(data, desc_en)
+                desc_tw = process_skill_description(data, get_string_by_type(data, "skill", tooltip_sno)["zh_tw"])
+                desc_cn = process_skill_description(data, get_string_by_type(data, "skill", tooltip_sno)["zh_cn"])
+                desc_kr = process_skill_description(data, get_string_by_type(data, "skill", tooltip_sno)["kr"])
+                desc_en = process_skill_description(data, get_string_by_type(data, "skill", tooltip_sno)["en"])
 
                 skill_descriptions.append({
                     "desc_zh_tw": desc_tw,
@@ -1379,8 +1352,7 @@ def get_character_signature(data, hero_id):
                     "desc_en": desc_en,
                     "level": i
                 })
-        
-    # 修改返回值，添加图标路径.
+    # 添加图标路径.
     if signature_data:
         level_group = signature_data.get("level_group")
         signature_stats = get_character_signature_value(data, level_group) if level_group else []
@@ -1411,7 +1383,6 @@ def get_character_signature(data, hero_id):
             "bg_path": signature_bg_path
         }
     
-    # 如果没有找到遗物数据，返回空字典.
     return {
         "name": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
         "title": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
