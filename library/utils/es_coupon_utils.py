@@ -70,8 +70,7 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
     while retry_count <= max_retries:
         try:
             async with aiohttp.ClientSession() as session:
-                # 设置超时时间
-                timeout = aiohttp.ClientTimeout(total=10)
+                timeout = aiohttp.ClientTimeout(total=5)
                 async with session.post(url, headers=headers, json=payload, timeout=timeout) as response:
                     response_text = await response.text()
                     status_code = response.status
@@ -83,7 +82,7 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                         response_data = json.loads(response_text)
                         reward_info = []
                         
-                        data = load_json_data(group_id)
+                        data = await load_json_data(group_id)
                         if "item" in response_data:
                             item = response_data["item"]
                             item_code = item.get("itemCode")
@@ -91,7 +90,7 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                                 item_code = int(item_code)
                             quantity = item.get("quantity", 1)
                             if item_code:
-                                item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
+                                item_name = (await get_string_item(data, item_code)).get("zh_tw", "")
                                 reward_info.append(f"{item_name}x{quantity}")
                         
                         if "others" in response_data and isinstance(response_data["others"], list):
@@ -102,7 +101,7 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                                 quantity = other_item.get("quantity", 1)
 
                                 if item_code:
-                                    item_name = get_string_item(data, item_code).get("zh_tw", "未知物品")
+                                    item_name = (await get_string_item(data, item_code)).get("zh_tw", "")
                                     reward_info.append(f"{item_name}x{quantity}")
                         
                         if reward_info:
@@ -117,32 +116,22 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                         return False, "❎兑换码过期"
                     elif status_code == 463:
                         return False, "❎兑换码超限"
-                    elif status_code == 464:
-                        return False, "❎兑换码非所有者"
-                    elif status_code == 465:
-                        return False, "❎兑换码处理中"
                     elif status_code == 466:
                         return False, "❎账号不存在"
-                    elif status_code == 469:
-                        return False, "❎服务器DDOS"
                     elif status_code == 503:
                         return False, "❎服务器错误"
                 
         except aiohttp.ClientError as e:
             retry_count += 1
             if retry_count <= max_retries:
-                logger.warning(f"兑换请求发生网络错误: {e}，将在 {retry_delay} 秒后重试 (第 {retry_count}/{max_retries} 次)")
                 await asyncio.sleep(retry_delay)
                 continue
-            logger.error(f"兑换请求发生网络错误 (最终尝试): {e}")
             return False, f"网络请求错误: {str(e)}"
         except asyncio.TimeoutError:
             retry_count += 1
             if retry_count <= max_retries:
-                logger.warning(f"兑换请求超时，将在 {retry_delay} 秒后重试 (第 {retry_count}/{max_retries} 次)")
                 await asyncio.sleep(retry_delay)
                 continue
-            logger.error("兑换请求超时 (最终尝试)")
             return False, "请求超时，服务器未响应"
 
 
@@ -169,28 +158,24 @@ async def redeem_coupons_concurrently(app_id: str, player_id: str, coupon_items:
     
     async def worker():
         while not queue.empty():
-            try:
-                item = await queue.get()
-                code = item["code"]
-                desc = item.get("desc", "无描述")
-                
-                success, result = await redeem_coupon(app_id, player_id, code, event)
-                
-                status = "成功" if success else "失败"
-                
-                results.append({
-                    "code": code,
-                    "desc": desc,
-                    "status": status,
-                    "result": f"{code}\n({desc})\n{result}",
-                    "success": success,
-                    "message": result
-                })
-                
-                queue.task_done()
-            except Exception as e:
-                logger.error(f"处理兑换码时发生错误: {e}")
-                queue.task_done()
+            item = await queue.get()
+            code = item["code"]
+            desc = item.get("desc", "无描述")
+            
+            success, result = await redeem_coupon(app_id, player_id, code, event)
+            
+            status = "成功" if success else "失败"
+            
+            results.append({
+                "code": code,
+                "desc": desc,
+                "status": status,
+                "result": f"{code}\n({desc})\n{result}",
+                "success": success,
+                "message": result
+            })
+            
+            queue.task_done()
     
     tasks = []
     for _ in range(min(max_workers, len(coupon_items))):
