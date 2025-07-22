@@ -10,11 +10,11 @@ async def handle(bot: Bot, event: Event):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 加载别名配置
         aliases_data = {}
-        config = get_group_data_source(group_id)
+        config = await get_group_data_source(group_id)
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             aliases_data = yaml.safe_load(f)
         
@@ -37,7 +37,7 @@ async def handle(bot: Bot, event: Event):
                 continue
                 
             # 获取种族名称
-            race_data = get_string_by_type(data, "system", hero_data["race_sno"])
+            race_data = await get_string_by_type(data, "system", hero_data["race_sno"])
             race_tw = race_data["zh_tw"]
             if not race_tw:
                 continue

@@ -19,7 +19,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         stage_no = int(match.group(2))
         
         # 加载数据
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 查找关卡信息
         main_stage = None
@@ -55,7 +55,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             item_key = f"item_no_{i}"
             amount_key = f"amount_{i}"
             if item_no := stage_data.get(item_key):
-                item_name = get_string_item(data, item_no)
+                item_name = await get_string_item(data, item_no)
                 amount = stage_data.get(amount_key, 0)
                 fixed_items.append(f"{item_name['zh_tw']}x{amount}")
         
@@ -66,7 +66,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         stage_no = stage_data["no"]
 
         # 获取主线突发礼包信息
-        cash_item_messages = get_cash_pack(data, "stage", stage_data)
+        cash_item_messages = await get_cash_pack(data, "stage", stage_data)
         messages.extend(cash_item_messages)
 
         # 查找敌方队伍信息
@@ -82,7 +82,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             
             for team in battle_teams:
                 team_info = [f"敌方队伍 {team.get('team_no', '?')}："]
-                team_info.append(f"阵型：{get_formation_type(team.get('formation_type'))}")
+                team_info.append(f"阵型：{await get_formation_type(team.get('formation_type'))}")
                 hero_positions = []
                 first_valid_hero = None
                 
@@ -102,10 +102,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                 "level": team.get(level_key, 0)
                             }
                         
-                        hero_name_data = get_string_character(data, hero_no, special=True)
+                        hero_name_data = await get_string_character(data, hero_no, special=True)
                         hero_name_zh_tw = hero_name_data["zh_tw"]
                         
-                        grade_data = get_string_by_type(data, "system", team.get(grade_key))
+                        grade_data = await get_string_by_type(data, "system", team.get(grade_key))
                         grade_name_zh_tw = grade_data["zh_tw"]
                         
                         level = team.get(level_key, 0)
@@ -116,13 +116,13 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     level = first_valid_hero["level"]
                     grade = first_valid_hero["grade"]
                     hero_count = len(hero_positions)
-                    team_battle_power = calculate_battle_power(data, 2, level, grade) * hero_count
+                    team_battle_power = await calculate_battle_power(data, 2, level, grade) * hero_count
                     team_info.append(f"队伍战力：{team_battle_power}")
                 
                 messages.append("\n".join(team_info))
                 
         # 获取掉落率信息
-        drop_items = get_drop_item_rate(data, drop_group_no)
+        drop_items = await get_drop_item_rate(data, drop_group_no)
         if drop_items:
             drop_info = [f"掉落物品概率如下：\n"]
             for item_name, amount, rate in drop_items:

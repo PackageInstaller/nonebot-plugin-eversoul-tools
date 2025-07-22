@@ -6,11 +6,11 @@ async def handle(bot: Bot, event: Event):
     try:
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         range_info = []
         unknown_range = []
-        config = get_group_data_source(group_id)
+        config = await get_group_data_source(group_id)
         
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             hero_aliases_data = yaml.safe_load(f)
@@ -23,9 +23,9 @@ async def handle(bot: Bot, event: Event):
                 if not hero_id:
                     continue
                 
-                char_name_data = get_string_character(data, hero_id, special=True)
+                char_name_data = await get_string_character(data, hero_id, special=True)
                 char_name_zh_tw = char_name_data["zh_tw"]
-                attack_range = get_character_attack_range(data, hero_id)
+                attack_range = await get_character_attack_range(data, hero_id)
                 
                 if attack_range > 0:
                     range_info.append((char_name_zh_tw, attack_range))

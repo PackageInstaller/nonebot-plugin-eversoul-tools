@@ -32,7 +32,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         messages = []
         
         if item_type == "主线":
@@ -50,7 +50,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     if stage_no_id:
                         # 构建一个包含no的字典. build a dictionary containing no
                         stage_info = {"no": stage_no_id}
-                        package_msgs = get_cash_pack(data, "stage", stage_info)
+                        package_msgs = await get_cash_pack(data, "stage", stage_info)
                         if package_msgs:
                             messages.append(f"主线关卡 {area_no}-{stage_no}:")
                             messages.extend(package_msgs)
@@ -92,7 +92,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                 break
                         
                         # 获取通关礼包信息. get pass gift info
-                        package_msgs = get_cash_pack(data, "barrier", stage)  # 直接传入stage对象
+                        package_msgs = await get_cash_pack(data, "barrier", stage)  # 直接传入stage对象
                         if package_msgs:
                             messages.append(f"{stage_name}:")
                             messages.extend(package_msgs)
@@ -136,7 +136,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         original_type_value = package["type_value"]
                         # 修改type_value以匹配get_cash_item_info的处理逻辑. modify type_value to match the processing logic of get_cash_item_info
                         package["type_value"] = str(tower_no)
-                        package_msgs = get_cash_pack(data, "tower", dummy_info)
+                        package_msgs = await get_cash_pack(data, "tower", dummy_info)
                         # 还原原始type_value. restore original type_value
                         package["type_value"] = original_type_value
                         messages.extend(package_msgs)
@@ -147,7 +147,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 if shop_item.get("type") == "grade_eternal":
                     # 构建一个简单的字典来匹配get_cash_item_info的参数要求. build a simple dictionary to match the parameters of get_cash_item_info
                     dummy_info = {"no": shop_item.get("type_value")}
-                    package_msgs = get_cash_pack(data, "grade_eternal", dummy_info)
+                    package_msgs = await get_cash_pack(data, "grade_eternal", dummy_info)
                     if package_msgs:
                         messages.extend(package_msgs)
         

@@ -18,7 +18,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
 
         # 获取品质对应的grade_sno
         grade_map = {"粉": "不朽", "红+": "永恆＋"}
@@ -119,10 +119,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 # 前三个是基础属性，之后的是额外属性
                 for i, (stat, value) in enumerate(stat_items):
                     stat_display = STAT_NAME_MAPPING[stat]
-                    if isinstance(value, float):
-                        value_str = f"{value*100:.1f}%"
+                    if stat in TIER_INTEGER_STAT_MAPPING:
+                        value_str = await format_value(value, True)
                     else:
-                        value_str = value
+                        value_str = await format_value(value, False)
                         
                     
                     if i < 3:  # 基础属性
@@ -153,9 +153,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     if stat in STAT_NAME_MAPPING and value:
                         has_2set = True
                         stat_display = STAT_NAME_MAPPING[stat]
-                        msg.append(f"・ {stat_display}：{value*100:.1f}%")
+                        msg.append(f"・ {stat_display}：{await format_value(value, False)}")
                         if 'battle_power_per' in set2_buff:
-                            msg.append(f"战力百分比：{set2_buff['battle_power_per']}")
+                            msg.append(f"・ 战力百分比：{set2_buff['battle_power_per']}")
                 if not has_2set:
                     msg.append("・ 无效果")
                 
@@ -166,9 +166,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     if stat in STAT_NAME_MAPPING and value:
                         has_4set = True
                         stat_display = STAT_NAME_MAPPING[stat]
-                        msg.append(f"・ {stat_display}：{value*100:.1f}%")
+                        msg.append(f"・ {stat_display}：{await format_value(value, False)}")
                         if 'battle_power_per' in set4_buff:
-                            msg.append(f"战力百分比：{set4_buff['battle_power_per']}")
+                            msg.append(f"・ 战力百分比：{set4_buff['battle_power_per']}")
                 if not has_4set:
                     msg.append("・ 无效果")
                 

@@ -6,14 +6,15 @@ from pathlib import Path
 from io import BytesIO
 from datetime import datetime
 from PIL import Image
-from matplotlib.ticker import FuncFormatter
 from ...config import (
     BANNER_DIR, STICKER_DIR, 
     HERO_NAME_MAPPING, EVERTALK_DIR, 
-    CG_DIR, SOUL_DIR, CUSTOM_FONT
+    CG_DIR, SOUL_DIR, CUSTOM_FONT,
+    HERO_OPTION_BUFF_REVERSE_MAPPING
 )
 from .es_string_utils import (
-    get_string_item, get_string_character, get_string_by_type
+    get_string_item, get_string_character, get_string_by_type,
+    get_stat_string_in_hero_option
 )
 from nonebot.adapters.onebot.v11 import (
     MessageSegment
@@ -24,7 +25,7 @@ import matplotlib.pyplot as plt
 
 
 
-def apply_color_to_icon(icon_path: str, color: str) -> bytes:
+async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
     """对图标应用颜色
     
     Args:
@@ -56,7 +57,7 @@ def apply_color_to_icon(icon_path: str, color: str) -> bytes:
         return output.getvalue()
     
 
-def get_character_portrait(data, hero_id, hero_name_en, raid=False):
+async def get_character_portrait(data, hero_id, hero_name_en, raid=False):
     """获取角色头像（包括基础头像和所有皮肤头像），动态查找所有皮肤。
     
     Args:
@@ -96,7 +97,7 @@ def get_character_portrait(data, hero_id, hero_name_en, raid=False):
 
 
 
-def get_character_illustration(data, hero_id):
+async def get_character_illustration(data, hero_id):
     """获取角色立绘
     
     Args:
@@ -117,29 +118,18 @@ def get_character_illustration(data, hero_id):
             name_sno = costume.get("name_sno")
             type_sno = costume.get("type_sno")  # 获取时装的type_sno
             if portrait_path and name_sno and type_sno:
-                # 从StringItem.json获取立绘名称
-                for string in data["string_item"]["json"]:
-                    if string["no"] == name_sno:
-                        costume_name_zh_tw = string.get("zh_tw", "")
-                        costume_name_zh_cn = string.get("zh_cn", "")
-                        costume_name_kr = string.get("kr", "")
-                        costume_name_en = string.get("en", "")
-                        if costume_name_zh_tw or costume_name_kr:
-                            # 从StringUI.json获取解锁条件
-                            condition_tw = ""
-                            condition_cn = ""
-                            condition_kr = ""
-                            condition_en = ""
-                            for ui_string in data["string_ui"]["json"]:
-                                if ui_string["no"] == type_sno:
-                                    condition_tw = ui_string.get("zh_tw", "")
-                                    condition_cn = ui_string.get("zh_cn", "")
-                                    condition_kr = ui_string.get("kr", "")
-                                    condition_en = ui_string.get("en", "")
-                                    break
-                            costume_info[portrait_path] = (costume_name_zh_tw, costume_name_zh_cn, costume_name_kr, costume_name_en,\
-                                                            condition_tw, condition_cn, condition_kr, condition_en)
-                        break
+                costume_name_zh_tw = (await get_string_by_type(data, "item", name_sno)).get("zh_tw", "")
+                costume_name_zh_cn = (await get_string_by_type(data, "item", name_sno)).get("zh_cn", "")
+                costume_name_kr = (await get_string_by_type(data, "item", name_sno)).get("kr", "")
+                costume_name_en = (await get_string_by_type(data, "item", name_sno)).get("en", "")
+                if costume_name_zh_tw or costume_name_kr:
+                    condition_tw = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                    condition_cn = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                    condition_kr = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                    condition_en = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                costume_info[portrait_path] = (costume_name_zh_tw, costume_name_zh_cn, costume_name_kr, costume_name_en,\
+                                                condition_tw, condition_cn, condition_kr, condition_en)
+
     
     # 查找匹配的图片
     images = []
@@ -241,7 +231,7 @@ def get_character_illustration(data, hero_id):
     return images  # 不对整个列表进行排序，保持原始立绘在前，旧设立绘在后
 
 
-def get_character_affection_cg(data, hero_id):
+async def get_character_affection_cg(data, hero_id):
     """获取角色好感CG
     
     Args:
@@ -299,7 +289,7 @@ def get_character_affection_cg(data, hero_id):
     return images
 
 
-def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path, str]]:
+async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path, str]]:
     """获取角色的EverPhone插图
     
     Args:
@@ -329,7 +319,7 @@ def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path, str]
     return evertalk_illusts
 
 
-def get_schedule_event(data, target_month, current_year, schedule_prefix, event_type):
+async def get_schedule_event(data, target_month, current_year, schedule_prefix, event_type):
     """获取活动日程事件信息
     
     Args:
@@ -430,7 +420,7 @@ def get_schedule_event(data, target_month, current_year, schedule_prefix, event_
     return events
 
 
-def get_mail_event(data, target_month, current_year):
+async def get_mail_event(data, target_month, current_year):
     """获取邮箱事件信息"""
     mail_events = []
     now = datetime.now()
@@ -459,15 +449,15 @@ def get_mail_event(data, target_month, current_year):
         sender_name_tw = "未知"
         sender_name_en = "Unknown"
         if sender_sno := mail.get("sender_sno"):
-            sender_data = get_string_character(data, sender_sno, special=True)
+            sender_data = await get_string_character(data, sender_sno, special=True)
             sender_name_tw = sender_data["zh_tw"]
             sender_name_en = sender_data["en"]
         
         # 获取标题和描述
-        title_data = get_string_character(data, mail.get("title_sno", 0)) or "无标题"
+        title_data = await get_string_character(data, mail.get("title_sno", 0)) or "无标题"
         title_tw = title_data["zh_tw"] if isinstance(title_data, dict) else "无标题"
         
-        desc_data = get_string_character(data, mail.get("desc_sno", 0)) or "无描述"
+        desc_data = await get_string_character(data, mail.get("desc_sno", 0)) or "无描述"
         desc_tw = desc_data["zh_tw"] if isinstance(desc_data, dict) else "无描述"
         
         # 处理奖励信息
@@ -478,7 +468,7 @@ def get_mail_event(data, target_month, current_year):
             
             if reward_no := mail.get(reward_no_key):
                 amount = mail.get(reward_amount_key, 0)
-                item_name = get_string_item(data, reward_no)
+                item_name = await get_string_item(data, reward_no)
                 if item_name and amount:
                     rewards.append(f"{item_name['zh_tw']}x{amount}")
         
@@ -507,7 +497,7 @@ def get_mail_event(data, target_month, current_year):
     return mail_events
 
 
-def get_calendar_event(data, target_month, current_year):
+async def get_calendar_event(data, target_month, current_year):
     """获取一般活动信息"""
     calendar_events_with_date = []
     now = datetime.now()
@@ -561,8 +551,7 @@ def get_calendar_event(data, target_month, current_year):
                         banner_path = f"{banner_raw}_ZH_TW.png"
                     # 如果找到name_sno，从StringUI中获取名称
                     if name_sno:
-                        event_name_tw = get_string_by_type(data, "ui", name_sno)["zh_tw"]
-                        event_name_cn = get_string_by_type(data, "ui", name_sno)["zh_cn"]
+                        event_name_tw = (await get_string_by_type(data, "ui", name_sno)).get("zh_tw", "")
                         break
                     break
         else:
@@ -572,8 +561,7 @@ def get_calendar_event(data, target_month, current_year):
                     name_sno = event.get("name_sno")
                     if name_sno:
                         # 从StringUI中获取名称
-                        event_name_tw = get_string_by_type(data, "ui", name_sno)["zh_tw"]
-                        event_name_cn = get_string_by_type(data, "ui", name_sno)["zh_cn"]
+                        event_name_tw = (await get_string_by_type(data, "ui", name_sno)).get("zh_tw", "")
                         break
                     break
             
@@ -582,9 +570,7 @@ def get_calendar_event(data, target_month, current_year):
                 if event.get("schedule_key") == schedule_key:
                     name_sno = event.get("name_sno")
                     if name_sno:
-                        # 从StringUI中获取名称并处理换行
-                        event_name_tw = get_string_by_type(data, "ui", name_sno)["zh_tw"]
-                        event_name_cn = get_string_by_type(data, "ui", name_sno)["zh_cn"]
+                        event_name_tw = (await get_string_by_type(data, "ui", name_sno)).get("zh_tw", "")
                         break
                     break
         
@@ -648,7 +634,7 @@ def get_calendar_event(data, target_month, current_year):
 
 
 
-def format_event_content(event_text):
+async def format_event_content(event_text):
     """格式化事件内容，提取banner信息"""
     lines = event_text.split('\n')
     formatted_lines = []
@@ -664,14 +650,13 @@ def format_event_content(event_text):
                 if not line.startswith("名称："):
                     formatted_lines.append(line)
     
-    # 返回一个字典，包含内容和banner路径
     return {
         "content": "<br>".join(formatted_lines),
         "banner": banner_path
     }
 
 
-def get_potential_value(data: dict, effect_no: int, level: int) -> str:
+async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> str:
     """获取潜能数值
     
     Args:
@@ -682,39 +667,23 @@ def get_potential_value(data: dict, effect_no: int, level: int) -> str:
     Returns:
         str: 格式化后的数值
     """
-    try:
-        if str(effect_no).startswith('4'):
-            # 从ContentsBuff中获取数值
-            for buff in data["contents_buff"]["json"]:
-                if buff.get("no") == effect_no:
-                    # 遍历所有属性，忽略特定字段
-                    ignore_keys = ["no", "battle_power_per", "hero_level_base"]
-                    for key, value in buff.items():
-                        if key not in ignore_keys and isinstance(value, (int, float)):
-                            if value < 1 and key not in ["attack", "defence"]:
-                                # 百分比处理
-                                return f"{value * 100:.1f}%"
-                            else:
-                                # 对于attack等属性，如果是小数就保留一位小数
-                                if value < 1 and key in ["attack", "defence"]:
-                                    return f"{value:.1f}"
-                                else:
-                                    return str(int(value))
-        else:
-            # 从SkillBuff中获取数值
-            for buff in data["skill_buff"]["json"]:
-                if buff.get("no") == effect_no:
-                    value = buff.get("value", 0)
-                    if value < 1:  # 小于1的按百分比处理
-                        return f"{value * 100:.1f}%"
-                    else:  # 大于等于1的按整数处理
-                        return str(int(value))
-    except Exception as e:
-        logger.error(f"处理潜能数值时发生错误: {e}, effect_no: {effect_no}, level: {level}")
-    return "-"
+
+    if effect_type == 1:
+        for buff in data["contents_buff"]["json"]:
+            if buff.get("no") == effect_no:
+                ignore_keys = ["no", "battle_power_per", "hero_level_base"]
+                for key, value in buff.items():
+                    if key not in ignore_keys:
+                        return await get_stat_string_in_hero_option(value, key)
+    else:
+        for buff in data["skill_buff"]["json"]:
+            if buff.get("no") == effect_no:
+                value = buff.get("value", 0)
+                key = HERO_OPTION_BUFF_REVERSE_MAPPING.get(buff.get("buff_effect", 0), 0)
+                return await get_stat_string_in_hero_option(value, key)
 
 
-def generate_event_html(event, event_type):
+async def generate_event_html(event, event_type):
     """生成事件HTML，包括内容和banner图片"""
     # 首先调用 format_event_content 获取格式化的内容和banner路径
     event_data = format_event_content(event)
@@ -741,7 +710,7 @@ def generate_event_html(event, event_type):
     return html
 
 
-def get_event_name(event):
+async def get_event_name(event):
     """获取事件名称"""
     lines = event.split('\n')
     
@@ -767,7 +736,7 @@ def get_event_name(event):
     return "未知活动"
 
 
-def get_event_type_class(event: str) -> str:
+async def get_event_type_class(event: str) -> str:
     """根据事件内容返回对应的CSS类名"""
     if "【主要活动】" in event:
         return "main"
@@ -820,7 +789,7 @@ async def generate_timeline_html(month: int, events: list) -> str:
     special_events_with_date.sort(key=lambda x: x[0])
     mail_events_with_date.sort(key=lambda x: x[0])
     special_events = [event for _, event in special_events_with_date]
-    mail_events = [event for _, event in mail_events_with_date]
+    # mail_events = [event for _, event in mail_events_with_date]
     
     html = f"""
     <!DOCTYPE html>
@@ -1061,11 +1030,11 @@ async def generate_timeline_html(month: int, events: list) -> str:
                     {''.join([f"""
                     <div class="event-card main-event">
                         <div class="content">
-                            <div class="event-author">{get_event_name(event)}</div>
-                            <div class="event-time">{get_event_time(event)}</div>
-                            <div class="event-content">{get_event_description(event)}</div>
+                            <div class="event-author">{await get_event_name(event)}</div>
+                            <div class="event-time">{await get_event_time(event)}</div>
+                            <div class="event-content">{await get_event_description(event)}</div>
                         </div>
-                        <img src="{get_event_banner(event)}" alt="{get_event_name(event)}" class="event-img">
+                        <img src="{await get_event_banner(event)}" alt="{await get_event_name(event)}" class="event-img">
                     </div>
                     """ for event in special_events])}
                 </div>
@@ -1083,11 +1052,11 @@ async def generate_timeline_html(month: int, events: list) -> str:
                     {''.join([f"""
                     <div class="event-card calendar-event">
                         <div class="content">
-                            <div class="event-author">{get_event_name(event)}</div>
-                            <div class="event-time">{get_event_time(event)}</div>
-                            <div class="event-content">{get_event_description(event)}</div>
+                            <div class="event-author">{await get_event_name(event)}</div>
+                            <div class="event-time">{await get_event_time(event)}</div>
+                            <div class="event-content">{await get_event_description(event)}</div>
                         </div>
-                        <img src="{get_event_banner(event)}" alt="{get_event_name(event)}" class="event-img">
+                        <img src="{await get_event_banner(event)}" alt="{await get_event_name(event)}" class="event-img">
                     </div>
                     """ for event in normal_events])}
                 </div>
@@ -1099,7 +1068,8 @@ async def generate_timeline_html(month: int, events: list) -> str:
     """
     return html
 
-def get_event_time(event):
+
+async def get_event_time(event):
     """获取事件时间"""
     lines = event.split('\n')
     for line in lines:
@@ -1115,7 +1085,8 @@ def get_event_time(event):
                 return time_str
     return "时间未知"
 
-def get_event_description(event):
+
+async def get_event_description(event):
     """获取事件描述"""
     lines = event.split('\n')
     description_lines = []
@@ -1134,7 +1105,8 @@ def get_event_description(event):
     
     return "\n".join(description_lines)
 
-def get_event_banner(event):
+
+async def get_event_banner(event):
     """获取事件banner图片路径"""
     lines = event.split('\n')
     for line in lines:
@@ -1149,6 +1121,7 @@ def get_event_banner(event):
                 return str(BANNER_DIR / banner_path)
     # 如果没有找到banner图片，返回默认图片
     return str(BANNER_DIR / "banner_No_Image.png")
+
 
 async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegment:
     """生成主方舟等级与超频等级关系图以及超频等级升级消耗图
@@ -1231,7 +1204,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                     filtered_levels.append(level)
                     filtered_costs.append(item_data["costs"][i])
             if filtered_levels:  # 只保留有数据的物品
-                item_name = get_string_item(data, item_no).get("zh_tw", "")
+                item_name = (await get_string_item(data, item_no)).get("zh_tw", "")
                 if not item_name:
                     item_name = f"{item_no}"
                 filtered_extra_items_data[item_no] = {
@@ -1338,7 +1311,6 @@ async def generate_level_cost_chart(data: dict) -> MessageSegment:
         mana_dust_costs = []
         mana_crystal_costs = []
         
-        # 按等级排序
         sorted_levels = sorted([item for item in data["level"]["json"] if "level" in item], 
                                 key=lambda x: x["level"])
         
@@ -1350,7 +1322,6 @@ async def generate_level_cost_chart(data: dict) -> MessageSegment:
                 mana_dust_costs.append(item.get("mana_dust", 0))
                 mana_crystal_costs.append(item.get("mana_crystal", 0) if "mana_crystal" in item else 0)
         
-        # 创建三个子图
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 18))
         
         # 计算合适的x轴刻度间隔
@@ -1385,28 +1356,19 @@ async def generate_level_cost_chart(data: dict) -> MessageSegment:
         ax3.plot(levels, mana_crystal_costs, 'r-', marker='o', markersize=2)
         ax3.set_title('魔力水晶消耗统计', fontproperties=CUSTOM_FONT)
         ax3.set_xlabel('等级', fontproperties=CUSTOM_FONT)
-        ax3.set_ylabel('消耗数量（万）', fontproperties=CUSTOM_FONT)
+        ax3.set_ylabel('消耗数量', fontproperties=CUSTOM_FONT)
         ax3.grid(True, linestyle='--', alpha=0.7)
         ax3.set_xticks(range(0, max_level+1, x_interval))
         ax3.tick_params(axis='x', rotation=45)
         
-        # 将魔力水晶的数值转换为"万"为单位
-        def format_func(x, p):
-            return f"{x/10000:.1f}"
-        ax3.yaxis.set_major_formatter(FuncFormatter(format_func))
-        
-        # 调整子图之间的间距和整体布局
         plt.tight_layout(pad=3.0)
         
         buffer = BytesIO()
         plt.savefig(buffer, format='webp', dpi=300, bbox_inches='tight')
         plt.close()
         
-        # 获取bytes数据
         buffer.seek(0)
         image_bytes = buffer.getvalue()
-        
-        # 返回MessageSegment对象
         return MessageSegment.image(image_bytes)
         
     except Exception as e:
@@ -1414,7 +1376,7 @@ async def generate_level_cost_chart(data: dict) -> MessageSegment:
         return MessageSegment.text("生成统计图失败")
 
 
-def get_battle_power_percentage(data: dict, effect_no: int) -> float:
+async def get_battle_power_percentage(data: dict, effect_type: int, effect_no: int) -> float:
     """获取潜能对应的战力百分比
     
     Args:
@@ -1424,15 +1386,11 @@ def get_battle_power_percentage(data: dict, effect_no: int) -> float:
     Returns:
         float: 战力百分比，如果没有找到则返回None
     """
-    try:
-        if str(effect_no).startswith('4'):
-            # 从ContentsBuff中获取战力百分比
-            for buff in data["contents_buff"]["json"]:
-                if buff.get("no") == effect_no:
-                    return buff.get("battle_power_per", 0)
-    except Exception as e:
-        logger.error(f"获取战力百分比时发生错误: {e}, effect_no: {effect_no}")
-    return 0
+    if effect_type == 1:
+        for buff in data["contents_buff"]["json"]:
+            if buff.get("no") == effect_no:
+                return buff.get("battle_power_per", 0)
+
 
 
 async def generate_potential_html(data: dict) -> str:
@@ -1449,6 +1407,7 @@ async def generate_potential_html(data: dict) -> str:
                     potentials[tooltip_sno] = []
                 potentials[tooltip_sno].append((
                     option.get("level", 0),
+                    option.get("effect_type", 0),
                     option.get("effect_no1", 0),
                     option.get("option", 0)
                 ))
@@ -1457,7 +1416,7 @@ async def generate_potential_html(data: dict) -> str:
         potential_names = {}  # {tooltip_sno: name}
         for string in data["string_ui"]["json"]:
             if string.get("no") in potentials:
-                potential_names[string["no"]] = string.get("zh_tw", "未知潜能")
+                potential_names[string["no"]] = string.get("zh_tw", "")
         
         # 生成HTML
         html = """
@@ -1505,28 +1464,22 @@ async def generate_potential_html(data: dict) -> str:
                     <th>潜能名称</th>
         """
         
-        # 添加等级列
-        max_level = max(level for tooltip_sno in potentials for level, _, _ in potentials[tooltip_sno])
+        # 等级列
+        max_level = max(level for tooltip_sno in potentials for level, _, _, _ in potentials[tooltip_sno])
         for level in range(1, max_level + 1):
             html += f"<th>Lv.{level}</th>"
         
         html += "</tr>"
         
-        # 添加潜能数据
         for tooltip_sno, name in sorted(potential_names.items(), key=lambda x: x[0]):  # 修改排序键为x[0]
             html += f"<tr><td class='potential-name'>{name}</td>"
-            
-            # 获取该潜能的所有等级数据
-            level_data = {level: (effect_no, option) for level, effect_no, option in potentials[tooltip_sno]}
-            
-            # 填充每个等级的数值
+            level_data = {level: (effect_type, effect_no, option) for level, effect_type, effect_no, option in potentials[tooltip_sno]}
             for level in range(1, max_level + 1):
                 if level in level_data:
-                    effect_no, option = level_data[level]
-                    value = get_potential_value(data, effect_no, level)
-                    # 获取战力百分比
-                    battle_power_per = get_battle_power_percentage(data, effect_no)
-                    
+                    effect_type, effect_no, option = level_data[level]
+                    value = await get_potential_value(data, effect_type, effect_no)
+                    battle_power_per = await get_battle_power_percentage(data, effect_type, effect_no)
+
                     if battle_power_per:
                         html += f"<td class='value-cell'>{value}<br><span class='power-value'>+{battle_power_per}</span></td>"
                     else:

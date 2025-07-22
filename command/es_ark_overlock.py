@@ -15,7 +15,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 查找超频信息
         current_level_cost = 0
@@ -120,7 +120,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             # 添加魔力粉尘消耗
             if last_extra_items:
                 for item_no, amount in last_extra_items.items():
-                    item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
+                    item_name = (await get_string_item(data, item_no)).get("zh_tw", "")
                     cost_msg.append(f"{amount}{item_name}")
             detail_msg.append("\n".join(cost_msg))
         else:
@@ -128,7 +128,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             # 添加魔力粉尘消耗
             if current_extra_items:
                 for item_no, amount in current_extra_items.items():
-                    item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
+                    item_name = (await get_string_item(data, item_no)).get("zh_tw", "")
                     cost_msg.append(f"{amount}{item_name}")
             detail_msg.append("\n".join(cost_msg))
         
@@ -138,7 +138,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             # 添加魔力粉尘消耗
             if next_extra_items:
                 for item_no, amount in next_extra_items.items():
-                    item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
+                    item_name = (await get_string_item(data, item_no)).get("zh_tw", "")
                     next_cost_msg.append(f"{amount}{item_name}")
             detail_msg.append("\n".join(next_cost_msg))
         else:
@@ -149,14 +149,14 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 添加魔力粉尘总消耗
         if total_extra_items:
             for item_no, amount in total_extra_items.items():
-                item_name = get_string_item(data, item_no).get("zh_tw", "未知物品")
+                item_name = (await get_string_item(data, item_no)).get("zh_tw", "")
                 total_cost_msg.append(f"{amount}{item_name}")
         detail_msg.append("\n".join(total_cost_msg))
         messages.append("\n".join(detail_msg))
 
         # 添加统计图
         chart_msg = []
-        chart_msg.append("\n【等级关系统计图】")
+        chart_msg.append("【等级关系统计图】")
         chart = await generate_ark_level_chart(data, target_level)
         chart_msg.append(chart)
         messages.append("\n".join(str(x) for x in chart_msg))

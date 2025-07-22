@@ -19,7 +19,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 加载数据
         # load the data
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 第一步：在event_info中查找name_sno相符的所有内容
         # first step: find all event_info that match the condition
@@ -36,7 +36,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 获取活动名称
         # get the event name
-        event_name = get_string_by_type(data, "ui", target_id).get("zh_tw", f"活动ID {target_id}")
+        event_name = await get_string_by_type(data, "ui", target_id).get("zh_tw", f"活动ID {target_id}")
         
         for calendar_event in calendar_events:
             event_type = calendar_event.get("event_type")
@@ -106,13 +106,13 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 # 获取章节标题
                 episode_title = ""
                 if episode_name_sno:
-                    title_data = get_string_by_type(data, "talk", episode_name_sno)
+                    title_data = await get_string_by_type(data, "talk", episode_name_sno)
                     episode_title = title_data.get("zh_tw", "")
                 
                 # 获取章节大意
                 episode_summary = ""
                 if episode_skip_sno:
-                    summary_data = get_string_by_type(data, "talk", episode_skip_sno)
+                    summary_data = await get_string_by_type(data, "talk", episode_skip_sno)
                     episode_summary = summary_data.get("zh_tw", "")
                 
                 episode_parts = [f"第 {episode_num} 章：{episode_title}"]

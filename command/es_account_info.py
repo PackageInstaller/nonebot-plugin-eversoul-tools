@@ -34,7 +34,7 @@ async def handle(bot: Bot, event: Event):
     # 构建账号信息列表
     account_info_list = []
     for i, account in enumerate(user_accounts):
-        server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
+        server_name = SERVER_NAME_MAPPING.get(SERVER_NAME_REVEERSE_MAPPING.get(account["app_id"], "未知"), account["app_id"])
         
         account_info = f"{i+1}. {server_name} - {account['player_id']}"
         account_info_list.append(account_info)

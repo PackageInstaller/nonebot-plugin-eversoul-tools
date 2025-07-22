@@ -20,7 +20,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             group_id = event.group_id
         
         # 加载数据
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 查找角色数据
         hero_data = None
@@ -57,17 +57,17 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         hero_name_kr = ""
         hero_name_en = ""
         if hero_data["name_sno"]:
-            name_data = get_string_character(data, hero_data["name_sno"])
+            name_data = await get_string_character(data, hero_data["name_sno"])
             hero_name_zh_tw = name_data["zh_tw"]
             hero_name_zh_cn = name_data["zh_cn"]
             hero_name_kr = name_data["kr"]
             hero_name_en = name_data["en"]
 
         # 获取基础属性
-        race_zh_tw = get_string_by_type(data, "system", hero_data["race_sno"])["zh_tw"]
-        hero_class_zh_tw = get_string_by_type(data, "system", hero_data["class_sno"])["zh_tw"]
-        sub_class_zh_tw = get_string_by_type(data, "system", hero_data["sub_class_sno"])["zh_tw"]
-        stat_zh_tw = get_string_by_type(data, "system", hero_data["stat_sno"])["zh_tw"]
+        race_zh_tw = (await get_string_by_type(data, "system", hero_data["race_sno"])).get("zh_tw", "")
+        hero_class_zh_tw = (await get_string_by_type(data, "system", hero_data["class_sno"])).get("zh_tw", "")
+        sub_class_zh_tw = (await get_string_by_type(data, "system", hero_data["sub_class_sno"])).get("zh_tw", "")
+        stat_zh_tw = (await get_string_by_type(data, "system", hero_data["stat_sno"])).get("zh_tw", "")
         
         # 获取战斗时长
         battle_time = 0
@@ -80,7 +80,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 获取讨伐攻略
         guide_text = ""
         if raid_data and raid_data.get("guide_sno"):
-            guide_data = get_string_by_type(data, "ui", raid_data.get("guide_sno"))
+            guide_data = await get_string_by_type(data, "ui", raid_data.get("guide_sno"))
             guide_text = guide_data["zh_tw"]
         
         # 获取血量倍数
@@ -96,12 +96,12 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 获取奖励信息
         reward_items = []
         if boss_data.get("reward_item1_no"):
-            item_name = get_string_item(data, boss_data.get("reward_item1_no"))
+            item_name = await get_string_item(data, boss_data.get("reward_item1_no"))
             item_amount = boss_data.get("reward_item1_amount", 0)
             reward_items.append(f"{item_name['zh_tw']}x{item_amount}")
         
         if boss_data.get("reward_item2_no"):
-            item_name = get_string_item(data, boss_data.get("reward_item2_no"))
+            item_name = await get_string_item(data, boss_data.get("reward_item2_no"))
             item_amount = boss_data.get("reward_item2_amount", 0)
             reward_items.append(f"{item_name['zh_tw']}x{item_amount}")
         
@@ -119,7 +119,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 # 在single_raid_season中查找赛季名称
                 for season in data["single_raid_season"]["json"]:
                     if season.get("no") == latest_schedule.get("season_no"):
-                        season_name = get_string_by_type(data, "ui", season.get("season_name_no"))
+                        season_name = await get_string_by_type(data, "ui", season.get("season_name_no"))
                         season_info = f"赛季：{season_name['zh_tw']}"
                         break
         
@@ -133,7 +133,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             for interaction in data["single_raid_boss_interaction_detail"]["json"]:
                 if interaction.get("interaction_no") == raid_data.get("level_group"):
                     # 获取角色名称
-                    hero_name = get_string_character(data, interaction.get("hero_no"), special=True)
+                    hero_name = await get_string_character(data, interaction.get("hero_no"), special=True)
                     if hero_name:
                         interaction_info.append(hero_name["zh_tw"])
             
@@ -153,14 +153,14 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                     specific_target = buff.get("specific_target")
                                     if specific_target:
                                         # 获取角色名称
-                                        hero_name = get_string_character(data, specific_target, special=True)
+                                        hero_name = await get_string_character(data, specific_target, special=True)
                                         if hero_name:
                                             special_hero = hero_name["zh_tw"]
                                         special_heroes[specific_target] = special_hero
                                     # 检查是否有delay
                                     if buff.get("delay"):
                                         delay_seconds = buff.get("delay")
-                                        delay_text = get_string_by_type(data, "ui", buff.get("buff_tooltip_sno"))['zh_tw']
+                                        delay_text = await get_string_by_type(data, "ui", buff.get("buff_tooltip_sno"))['zh_tw']
                             i += 1
         
         # 获取护盾削减系数和解除眩晕时间
@@ -176,7 +176,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         # 计算数组索引
                         array_index = status_code - 201
                         # 检查该索引位置的值是否在type中
-                        type_value = SINGLE_RAID_GROGGY_TRIGGER_ARRAY[array_index]
+                        type_value = SINGLE_RAID_GROGGY_TRIGGER_MAPPING[array_index]
                         type_key = f"type_{type_value}"
                         value_key = f"value_{type_value}"
                         
@@ -190,7 +190,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         basic_info = []
         
         # 获取立绘
-        portrait_paths = get_character_portrait(data, hero_id, hero_name_en, raid=True)
+        portrait_paths = await get_character_portrait(data, hero_id, hero_name_en, raid=True)
         basic_info.append(f"【恶灵讨伐：{hero_name_zh_tw}】")
         if portrait_paths:
             # 只使用第一个头像

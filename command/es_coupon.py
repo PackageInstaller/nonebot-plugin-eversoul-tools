@@ -45,13 +45,11 @@ async def handle_coupon(bot: Bot, event: Event):
             item["expired"] = False
             valid_coupons.append(item)
     
-    # 现在只使用有效的兑换码，不再尝试过期的
     all_coupons = valid_coupons
     
     if not all_coupons:
         await es_coupon.finish(message="全部兑换码已过期！", reply_message=True)
     
-    # 显示用户信息
     accounts_count = len(user_accounts)
     reply_text = f"开始为您的{accounts_count}个账号兑换{len(all_coupons)}个兑换码，请耐心等待..."
     
@@ -85,27 +83,21 @@ async def handle_coupon(bot: Bot, event: Event):
             }
         })
         coupon_history = await EversoulUser.get_coupon_history(int(user_id), str(player_id))
-        results, _ = await redeem_coupons_concurrently(
+        results = await redeem_coupons_concurrently(
             str(app_id), str(player_id), all_coupons, event, coupon_history, max_workers=100
         )
         
         sorted_results = []
         success_results = []
-        limit_results = []
         failed_results = []
-        skipped_results = []
         
         for result_item in results:
-            if result_item.get("skipped", False):
-                skipped_results.append(result_item)
-            elif result_item.get("status") == "成功":
+            if result_item.get("status") == "成功":
                 success_results.append(result_item)
-            elif result_item.get("status") == "超限":
-                limit_results.append(result_item)
             else:
                 failed_results.append(result_item)
         
-        sorted_results = success_results + limit_results + failed_results + skipped_results
+        sorted_results = success_results + failed_results
         
         if success_results:
             success_content = "\n".join([result_item["result"] for result_item in success_results])
@@ -118,16 +110,6 @@ async def handle_coupon(bot: Bot, event: Event):
                 }
             })
         
-        if limit_results:
-            limit_content = "\n".join([result_item["result"] for result_item in limit_results])
-            forward_messages.append({
-                "type": "node",
-                "data": {
-                    "name": "Eversoul Info",
-                    "uin": event.self_id,
-                    "content": limit_content
-                }
-            })
         
         if failed_results:
             failed_content = "\n".join([result_item["result"] for result_item in failed_results])
@@ -140,40 +122,25 @@ async def handle_coupon(bot: Bot, event: Event):
                 }
             })
         
-        if skipped_results:
-            skipped_content = "\n".join([result_item["result"] for result_item in skipped_results])
-            forward_messages.append({
-                "type": "node",
-                "data": {
-                    "name": "Eversoul Info",
-                    "uin": event.self_id,
-                    "content": skipped_content
-                }
-            })
-            
-        # 更新兑换历史和检查是否需要更新过期日期
         for result_item in sorted_results:
-            # 如果不是跳过的结果，需要更新兑换历史
-            if not result_item.get("skipped", False):
-                code = result_item["code"]
-                success = result_item.get("success", False)
-                message = result_item.get("message", "")
-                
-                # 记录兑换状态
-                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                status_text = "成功" if success else "失败"
-                
-                # 更新兑换历史
-                await EversoulUser.update_coupon_history(
-                    int(user_id), 
-                    str(player_id), 
-                    code, 
-                    {
-                        "status": status_text,
-                        "message": message,
-                        "time": current_time
-                    }
-                )
+            code = result_item["code"]
+            success = result_item.get("success", False)
+            message = result_item.get("message", "")
+            
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            status_text = "成功" if success else "失败"
+            
+            # 更新兑换历史
+            await EversoulUser.update_coupon_history(
+                int(user_id), 
+                str(player_id), 
+                code, 
+                {
+                    "status": status_text,
+                    "message": message,
+                    "time": current_time
+                }
+            )
 
     forward_messages.append({
         "type": "node",

@@ -1,10 +1,10 @@
+from enum import IntEnum
 from matplotlib.font_manager import FontProperties
 from pathlib import Path
 from pydantic import BaseModel, model_validator
 from typing import ClassVar
 from nonebot import get_driver, get_plugin_config
 from nonebot.log import logger
-import sys
 
 driver = get_driver()
 
@@ -42,17 +42,15 @@ GATE_TYPE_MAPPING = {
     "不死": 8
 }
 
-
-# 整数属性映射
-INTEGER_STAT_MAPPING = {
-    "attack": "攻击力",
-    "defence": "防御力",
-    "hp": "体力",
-    "hit": "命中",
-    "dodge": "闪避",
-    "attack_speed": "攻击速度"
+# 装备的数值整数属性映射
+TIER_INTEGER_STAT_MAPPING = {
+    "max_hp", "attack", "defence", "hit", "dodge"
 }
 
+# 灵魂链接的数值整数属性映射
+SOULLINK_INTEGER_STAT_MAPPING = {
+    "attack", "defence", "hp", "hit", "dodge"
+}
 
 # 属性限制映射，rate代表这是百分比数值的意思，但是字段是一样的
 STAT_NAME_MAPPING = {
@@ -127,6 +125,42 @@ HERO_NAME_MAPPING = {
     "Mephistopheles (Dawn)": "MephistoDawn"
 }
 
+# 潜能buff类型
+HERO_OPTION_BUFF_MAPPING = {
+    "attack": 0,
+    "attack_rate": 1,
+    "defence": 2,
+    "defence_rate": 3,
+    "hp": 4,
+    "hp_rate": 5,
+    "critical_rate": 6,
+    "critical_power": 7,
+    "hit": 8,
+    "dodge": 9,
+    "physical_resist": 10,
+    "magic_resist": 11,
+    "life_leech": 12,
+    "attack_speed": 13,
+    "mana_crystal": 14,
+    "mana_dust": 15,
+    "gold": 16,
+    "attack_per_level": 17,
+    "defence_per_level": 18,
+    "hp_per_level": 19,
+    "critical_resist": 801,
+    "life_leech_buff": 1001,
+    "human_type_damage": 1802,
+    "furry_type_damage": 1803,
+    "undead_type_damage": 1804,
+    "elf_type_damage": 1805,
+    "angel_type_damage": 1806,
+    "demon_type_damage": 1807,
+    "chaos_type_damage": 1808
+}
+
+# 潜能buff类型的反向映射
+HERO_OPTION_BUFF_REVERSE_MAPPING = {v: k for k, v in HERO_OPTION_BUFF_MAPPING.items()}
+
 # 礼包类型映射
 PACKAGE_TYPE_MAPPING = {
     'barrier': '通关礼包',
@@ -136,10 +170,10 @@ PACKAGE_TYPE_MAPPING = {
 }
 
 SERVER_APP_ID_MAPPING = {
-    "asia": "743491",  # 亚服
-    "kr": "743487",    # 韩服
-    "en": "750066",    # 欧美服
-    "jp": "981921"     # 日服
+    "asia": 743491,  # 亚服
+    "kr": 743487,    # 韩服
+    "en": 750066,    # 欧美服
+    "jp": 981921     # 日服
 }
 
 SERVER_NAME_MAPPING = {
@@ -157,11 +191,12 @@ SINGLE_RAID_GROGGY_TRIGGER_MAPPING = {
     207: "魅惑"
 }
 
-
 # 恶灵讨伐削减系数数组映射
-SINGLE_RAID_GROGGY_TRIGGER_ARRAY = [1, 2, 1, 1, 1, 3, 4]
+SINGLE_RAID_GROGGY_TRIGGER_MAPPING = [1, 2, 1, 1, 1, 3, 4]
+
 # app_id到服务器名称的反向映射
-APP_ID_TO_SERVER_NAME = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
+SERVER_NAME_REVERSE_MAPPING = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
+
 # 资源路径
 RESOURCE_DIR = Path(__file__).parent / "resource"
 # 添加数据源配置文件路径

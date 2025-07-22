@@ -39,14 +39,14 @@ async def init_plugin():
             logger.error(f"初始化配置文件出错: {e}")
     else:
         logger.info("配置文件不存在，将创建默认配置")
-    load_data_source_config()
+    await load_data_source_config()
     try:
-        generate_aliases()
+        await generate_aliases()
     except Exception as e:
         logger.error(f"生成别名文件时出错: {e}")
 
 
-def sync_aliases(file1: Path, file2: Path) -> None:
+async def sync_aliases(file1: Path, file2: Path) -> None:
     """同步两个yaml文件中的别名，将file1中的别名完全同步到file2
     
     Args:
@@ -109,7 +109,7 @@ def sync_aliases(file1: Path, file2: Path) -> None:
     except Exception as e:
         logger.error(f"同步出错: {e}")
 
-def generate_aliases() -> None:
+async def generate_aliases() -> None:
     """生成别名文件"""
     # 检查配置是否存在
     if plugin_config.eversoul_live_path is None:
@@ -128,7 +128,7 @@ def generate_aliases() -> None:
     try:
         live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
         live_monster_aliases = CONFIG_DIR / "live_monster_aliases.yaml"
-        live_hero_count, live_monster_count = process_json_files(live_json_path, live_hero_aliases, live_monster_aliases)
+        live_hero_count, live_monster_count = await process_json_files(live_json_path, live_hero_aliases, live_monster_aliases)
         if live_hero_count > 0 or live_monster_count > 0:
             logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_monster_count} 个怪物条目")
         else:
@@ -139,7 +139,7 @@ def generate_aliases() -> None:
     try:
         review_hero_aliases = CONFIG_DIR / "review_hero_aliases.yaml"
         review_monster_aliases = CONFIG_DIR / "review_monster_aliases.yaml"
-        review_hero_count, review_monster_count = process_json_files(review_json_path, review_hero_aliases, review_monster_aliases)
+        review_hero_count, review_monster_count = await process_json_files(review_json_path, review_hero_aliases, review_monster_aliases)
         if review_hero_count > 0 or review_monster_count > 0:
             logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_monster_count} 个怪物条目")
         else:
@@ -148,13 +148,13 @@ def generate_aliases() -> None:
         logger.error(f"处理review别名文件时出错: {e}")
 
     try:
-        sync_aliases(live_hero_aliases, review_hero_aliases)
-        sync_aliases(live_monster_aliases, review_monster_aliases)
+        await sync_aliases(live_hero_aliases, review_hero_aliases)
+        await sync_aliases(live_monster_aliases, review_monster_aliases)
     except Exception as e:
         logger.error(f"同步别名时出错: {e}")
 
 
-def process_json_files(json_path: Path, hero_output_file: Path, monster_output_file: Path) -> Tuple[int, int]:
+async def process_json_files(json_path: Path, hero_output_file: Path, monster_output_file: Path) -> Tuple[int, int]:
     """处理JSON文件生成别名文件
     
     Args:
@@ -315,9 +315,9 @@ def process_json_files(json_path: Path, hero_output_file: Path, monster_output_f
 
 
 # 加载别名配置文件
-def load_aliases(group_id=None):
+async def load_aliases(group_id=None):
     """加载角色别名配置"""
-    config = get_group_data_source(group_id)
+    config = await get_group_data_source(group_id)
     hero_alias_file = config["hero_alias_file"]
     
     if not hero_alias_file.exists():
@@ -363,7 +363,7 @@ def load_aliases(group_id=None):
     return alias_map
 
 # 加载所需的JSON文件
-def load_json_data(group_id: int):
+async def load_json_data(group_id: int):
     """
     load json data
     
@@ -373,7 +373,7 @@ def load_json_data(group_id: int):
     Returns:
         dict: json data
     """
-    config = get_group_data_source(group_id)
+    config = await get_group_data_source(group_id)
     logger.info(f"当前使用的数据源配置: {config}")
     json_path = config["json_path"]
     # 检查json_path是否有效
@@ -478,7 +478,7 @@ def load_json_data(group_id: int):
             data[key] = {"json": []}  # 提供一个空的默认值
     return data
 
-def load_data_source_config():
+async def load_data_source_config():
     """加载数据源配置文件"""
     global CURRENT_DATA_SOURCE
     
@@ -580,7 +580,7 @@ def load_data_source_config():
                 # 如果有更新，保存配置
                 if config_updated:
                     try:
-                        save_data_source_config(CURRENT_DATA_SOURCE)
+                        await save_data_source_config(CURRENT_DATA_SOURCE)
                         logger.info("检测到配置路径更新，已更新配置文件")
                     except Exception as e:
                         logger.error(f"更新配置文件失败: {e}")
@@ -590,7 +590,7 @@ def load_data_source_config():
     
     if not file_config_loaded:
         try:
-            save_data_source_config(CURRENT_DATA_SOURCE)
+            await save_data_source_config(CURRENT_DATA_SOURCE)
         except Exception as e:
             logger.error(f"创建默认数据源配置文件失败: {e}")
     
@@ -626,12 +626,12 @@ def load_data_source_config():
                 CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = Path(group_settings["hero_alias_file"])
         
         try:
-            save_data_source_config(CURRENT_DATA_SOURCE)
+            await save_data_source_config(CURRENT_DATA_SOURCE)
         except Exception as e:
             logger.error(f"更新数据源配置文件失败: {e}")
 
 
-def save_data_source_config(config):
+async def save_data_source_config(config):
     """保存数据源配置"""
     try:
         # 读取现有配置（如果存在）
@@ -666,7 +666,7 @@ def save_data_source_config(config):
         logger.error(f"保存数据源配置出错: {e}")
 
 
-def get_group_data_source(group_id):
+async def get_group_data_source(group_id):
     """获取群组的数据源配置
     
     Args:

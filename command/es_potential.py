@@ -9,7 +9,7 @@ async def handle(bot: Bot, event: Event):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         # 生成潜能信息HTML
         html = await generate_potential_html(data)
         # 转换为图片

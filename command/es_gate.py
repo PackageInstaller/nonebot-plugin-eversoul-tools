@@ -13,7 +13,7 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 从Barrier.json获取传送门基本信息
         barrier_info = None
@@ -68,7 +68,7 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                 item_no = gate_info.get(f"item_no_{i}")
                 amount = gate_info.get(f"amount_{i}")
                 if item_no and amount:
-                    item_name = get_string_item(data, item_no)
+                    item_name = await get_string_item(data, item_no)
                     rewards.append(f"・{item_name['zh_tw']}x{amount}")
             
             if rewards:
@@ -76,7 +76,7 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                 messages.extend(rewards)
             
             # 获取通关礼包信息
-            cash_item_messages = get_cash_pack(data, "barrier", gate_info)
+            cash_item_messages = await get_cash_pack(data, "barrier", gate_info)
             messages.extend(cash_item_messages)
             
             # 获取敌方队伍信息
@@ -89,7 +89,7 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                 battle_teams.sort(key=lambda x: x.get("team_no", 0))
                 for team in battle_teams:
                     messages.append(f"\n【敌方队伍 {team.get('team_no', '?')}】")
-                    messages.append(f"▼ 阵型：{get_formation_type(team.get('formation_type'))}")
+                    messages.append(f"▼ 阵型：{await get_formation_type(team.get('formation_type'))}")
                     
                     # 添加每个角色的信息
                     for i in range(1, 6):
@@ -97,10 +97,10 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                         if not hero_no:
                             continue
                             
-                        hero_name_data = get_string_character(data, hero_no, special=True)
+                        hero_name_data = await get_string_character(data, hero_no, special=True)
                         hero_name_zh_tw = hero_name_data["zh_tw"]
                         
-                        grade_data = get_string_by_type(data, "system", team.get(f"hero_grade_{i}"))
+                        grade_data = await get_string_by_type(data, "system", team.get(f"hero_grade_{i}"))
                         grade_name_zh_tw = grade_data["zh_tw"]
                         
                         level = team.get(f"level_{i}", 0)
@@ -113,10 +113,9 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                         if equip_no := team.get(f"hero_equip_{i}"):
                             equip_data = next((e for e in data["stage_equip"]["json"] if e["no"] == equip_no), None)
                             if equip_data:
-                                messages.append("・装备：")
                                 for slot in range(1, 5):
                                     if item_no := equip_data.get(f"slot_{slot}"):
-                                        item_name = get_string_item(data, item_no)
+                                        item_name = await get_string_item(data, item_no)
                                         level = equip_data.get(f"level_{slot}", 0)
                                         messages.append(f"・{item_name['zh_tw']} Lv.{level}")
                         

@@ -63,6 +63,7 @@ es_notice = on_fullmatch("es公告", priority=5, block=True)
 es_story = on_command("es故事信息", priority=5, block=True)
 es_account = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
 es_update_check = on_command("es检查更新", aliases={"es更新检查"}, priority=5, block=True)
+emoji_vote = on_notice(priority=1, block=False)
 
 
 # 数据相关
@@ -92,7 +93,7 @@ from .es_update_utils import (
 
 # 文本相关
 from .es_string_utils import (
-    select_text_by_priority, clean_rich_text, get_drop_item_rate,
+    format_value, select_text_by_priority, clean_rich_text, get_drop_item_rate,
     get_string_character, get_string_by_type,
     get_character_lost_item, format_character_story, get_cash_pack, get_string_item, 
     get_formation_type, get_character_skill,

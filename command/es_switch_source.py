@@ -10,7 +10,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
     group_id = str(event.group_id)
     
     if not args_str:
-        group_data_source = get_group_data_source(group_id)["type"]
+        group_data_source = (await get_group_data_source(group_id)).get("type", "")
         await es_switch_source.finish(f"当前群组数据源为{group_data_source}")
     
     if args_str not in ["live", "review"]:
@@ -45,7 +45,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
     
     try:
         # 保存配置到文件
-        save_data_source_config(CURRENT_DATA_SOURCE)
+        await save_data_source_config(CURRENT_DATA_SOURCE)
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback

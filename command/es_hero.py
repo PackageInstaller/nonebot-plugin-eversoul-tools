@@ -12,13 +12,13 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         
-        config = get_group_data_source(group_id)
-        data = load_json_data(group_id)
+        config = await get_group_data_source(group_id)
+        data = await load_json_data(group_id)
         
         # 加载别名配置和原始别名数据
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             aliases_data = yaml.safe_load(f)
-        alias_map = load_aliases(group_id)
+        alias_map = await load_aliases(group_id)
         
         # 判断是否为测试模式
         is_review = config["type"] == "review"
@@ -104,7 +104,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             await es_hero.finish("未找到该角色信息")     
         # 获取角色名称
         if hero_data["name_sno"]:
-            name_data = get_string_character(data, hero_data["name_sno"])
+            name_data = await get_string_character(data, hero_data["name_sno"])
             hero_name_zh_tw = name_data["zh_tw"]
             hero_name_zh_cn = name_data["zh_cn"]
             hero_name_kr = name_data["kr"]
@@ -112,19 +112,19 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             
 
         # 实装日期
-        character_release_date = get_character_release_date(data, hero_id)
+        character_release_date = await get_character_release_date(data, hero_id)
         # 类型
-        race_zh_tw = get_string_by_type(data, "system", hero_data["race_sno"])["zh_tw"]
+        race_zh_tw = (await get_string_by_type(data, "system", hero_data["race_sno"])).get("zh_tw", "")
         # 职业
-        hero_class_zh_tw = get_string_by_type(data, "system", hero_data["class_sno"])["zh_tw"]
+        hero_class_zh_tw = (await get_string_by_type(data, "system", hero_data["class_sno"])).get("zh_tw", "")
         # 攻击方式
-        sub_class_zh_tw = get_string_by_type(data, "system", hero_data["sub_class_sno"])["zh_tw"]
+        sub_class_zh_tw = (await get_string_by_type(data, "system", hero_data["sub_class_sno"])).get("zh_tw", "")
         # 属性
-        stat_zh_tw = get_string_by_type(data, "system", hero_data["stat_sno"])["zh_tw"]
+        stat_zh_tw = (await get_string_by_type(data, "system", hero_data["stat_sno"])).get("zh_tw", "")
         # 品质
-        grade_zh_tw = get_string_by_type(data, "system", hero_data["grade_sno"])["zh_tw"]
+        grade_zh_tw = (await get_string_by_type(data, "system", hero_data["grade_sno"])).get("zh_tw", "")
 
-        atk_range = get_character_attack_range(data, hero_id)
+        atk_range = await get_character_attack_range(data, hero_id)
         
         # 构建消息列表
         messages = []
@@ -132,12 +132,12 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         nickname_kr = ""
         if hero_desc and isinstance(hero_desc, dict):
             nick_name_sno = hero_desc.get("nick_name_sno")
-            nickname_data = get_string_character(data, nick_name_sno)
+            nickname_data = await get_string_character(data, nick_name_sno)
             nickname_zh_tw = nickname_data["zh_tw"]
             nickname_kr = nickname_data["kr"]
         
         basic_info_msg = []
-        portrait_paths = get_character_portrait(data, hero_id, hero_name_en) 
+        portrait_paths = await get_character_portrait(data, hero_id, hero_name_en) 
         basic_info_msg.append("【基础信息】")
         if portrait_paths:
             for portrait_path in portrait_paths:
@@ -148,10 +148,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 属性：{stat_zh_tw}
 品质：{grade_zh_tw}
 隶属：{
-    get_string_character(data, hero_desc.get("union_sno", 0), special=True)["zh_tw"] 
+    (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") 
     if hero_desc is not None and hero_desc.get("union_sno") is not None and 
-       get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
-       get_string_character(data, hero_desc.get("union_sno", 0), special=True).get("zh_tw", "") != ""
+       await get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
+       (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") != ""
     else "？？？"
 }
 身高：{hero_desc.get("height", "？？？") if hero_desc else "？？？"}cm
@@ -159,16 +159,16 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 生日：{str(hero_desc.get("birthday", "？？？")).zfill(4)[:2]\
 if hero_desc else "？？？"}.{str(hero_desc.get("birthday", "？？？")).zfill(4)[2:]\
 if hero_desc and hero_desc.get("birthday") else "？？？"}
-星座：{get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-兴趣：{get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-特殊特长：{get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-喜欢的东西：{get_string_character(data, hero_desc.get("like_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-讨厌的东西：{get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)["zh_tw"] if hero_desc else "？？？"}
-喜好礼物：{get_character_prefer_gift(data, hero_id)}
-初始打工属性：{get_character_arbeit(data, hero_id)["initial"]}
-满级打工属性：{get_character_arbeit(data, hero_id)["max"]}
-CV_KR：{get_character_cv(data, hero_desc)["kr"]}
-CV_JP：{get_character_cv(data, hero_desc)["ja"]}
+星座：{(await get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
+兴趣：{(await get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
+特殊特长：{(await get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
+喜欢的东西：{(await get_string_character(data, hero_desc.get("like_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
+讨厌的东西：{(await get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
+喜好礼物：{await get_character_prefer_gift(data, hero_id)}
+初始打工属性：{(await get_character_arbeit(data, hero_id)).get("initial", "？？？")}
+满级打工属性：{(await get_character_arbeit(data, hero_id)).get("max", "？？？")}
+CV_KR：{(await get_character_cv(data, hero_desc)).get("kr", "？？？")}
+CV_JP：{(await get_character_cv(data, hero_desc)).get("ja", "？？？")}
 实装日期：{character_release_date}
 攻击范围：{atk_range if atk_range > 0 else "未知"}(4以下为近战)
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
@@ -182,7 +182,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
         # 添加立绘
         for char in data["string_character"]["json"]:
             if char["no"] == hero_data["name_sno"]:
-                images = get_character_illustration(data, hero_id)
+                images = await get_character_illustration(data, hero_id)
                 if images:
                     image_msg = []
                     image_msg.append("【立绘】")
@@ -194,7 +194,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                 break
 
         # 获取灵魂链接信息，
-        soullink_info = get_character_soullink(data, hero_id, is_review)
+        soullink_info = await get_character_soullink(data, hero_id, is_review)
         if soullink_info:
             for link in soullink_info:
                 link_msg = ["【灵魂链接】"]
@@ -232,27 +232,27 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
         if hero_desc and isinstance(hero_desc, dict):
             intro_sno = hero_desc.get("introduction_sno")
             if intro_sno:
-                intro_data = get_string_character(data, intro_sno)
+                intro_data = await get_string_character(data, intro_sno)
                 intro_zh_tw = intro_data["zh_tw"]
                 intro_zh_cn = intro_data["zh_cn"]
                 intro_kr = intro_data["kr"]
                 intro_en = intro_data["en"]
                 if intro_zh_tw or intro_kr:
-                    intro_text = select_text_by_priority(intro_zh_tw, intro_kr, is_review)
+                    intro_text = await select_text_by_priority(intro_zh_tw, intro_kr, is_review)
                     messages.append("【自我介绍】\n" + intro_text)
         
         # 添加好感故事攻略
-        has_story, episode_info, endings = get_character_story(data, hero_id)
+        has_story, episode_info, endings = await get_character_story(data, hero_id)
         if has_story:
-                messages.append(format_character_story(episode_info, endings, is_review))
+                messages.append(await format_character_story(episode_info, endings, is_review))
         
         # 添加角色关键字信息
-        keyword_info = get_character_keyword(data, hero_id, is_review=False)
+        keyword_info = await get_character_keyword(data, hero_id, is_review=False)
         if keyword_info:
             messages.append(keyword_info)
         
         # 好感故事CG
-        cg_images = get_character_affection_cg(data, hero_id)
+        cg_images = await get_character_affection_cg(data, hero_id)
         if cg_images:
             cg_msg = []
             cg_msg.append("【好感CG】\n")
@@ -266,7 +266,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
             messages.append("".join(str(x) for x in cg_msg))
 
         # EverPhone插图
-        evertalk_illusts = get_character_evertalk_cg(data, hero_id)
+        evertalk_illusts = await get_character_evertalk_cg(data, hero_id)
         if evertalk_illusts:
             illust_msg = []
             illust_msg.append("【EverPhone插图】")
@@ -275,7 +275,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
             messages.append("".join(str(x) for x in illust_msg))
 
         # 添加专属领地物品信息
-        town_objects = get_character_town_object(data, hero_id, is_review)
+        town_objects = await get_character_town_object(data, hero_id, is_review)
         if town_objects:
             objects_msg: list = ["【专属领地物品】"]
             for obj_no, name, grade, slot_type, desc, img_path, battle_power_per in town_objects:
@@ -292,7 +292,7 @@ CV_JP：{get_character_cv(data, hero_desc)["ja"]}
                     objects_msg.append(f"战力百分比：{battle_power_per}")
                 
                 # 添加可进行的任务信息
-                tasks = get_character_town_object_task(data, obj_no, is_review)
+                tasks = await get_character_town_object_task(data, obj_no, is_review)
                 if tasks:
                     objects_msg.append("\n可进行的打工：")
                     for task in tasks:

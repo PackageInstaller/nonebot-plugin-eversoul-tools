@@ -12,12 +12,12 @@ async def handle(bot: Bot, event: Event):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 收集角色信息
         stats_info = []
         unknown_stats = []
-        config = get_group_data_source(group_id)
+        config = await get_group_data_source(group_id)
         # 读取hero_aliases.yaml获取角色信息
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             hero_aliases_data = yaml.safe_load(f)
@@ -33,7 +33,7 @@ async def handle(bot: Bot, event: Event):
                     continue
                 
                 # 获取角色名称
-                char_name_data = get_string_character(data, hero_id, special=True)
+                char_name_data = await get_string_character(data, hero_id, special=True)
                 char_name_zh_tw = char_name_data["zh_tw"]
                 char_name_zh_cn = char_name_data["zh_cn"]
                 char_name_kr = char_name_data["kr"]

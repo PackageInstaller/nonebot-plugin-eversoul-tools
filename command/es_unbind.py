@@ -1,9 +1,7 @@
 from ..library.utils import *
 
 
-emoji_vote = on_notice(priority=1, block=False)
 unbind_votes: Dict[str, Dict] = {}
-
 
 
 @es_unbind.handle()
@@ -26,7 +24,7 @@ async def handle_unbind(bot: Bot, event: Event):
     for i, account in enumerate(user_accounts):
         if i < len(emoji_list):
             # 获取服务器名称
-            server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
+            server_name = SERVER_NAME_MAPPING.get(SERVER_NAME_REVERSE_MAPPING.get(account["app_id"], "未知"), account["app_id"])
             account_list.append(f"{emoji_list[i]} {server_name} {account['player_id']}")
     
     account_list.append("✨ 确认解绑")
@@ -60,7 +58,7 @@ async def handle_unbind(bot: Bot, event: Event):
     await asyncio.sleep(0.2)
     await bot.call_api("set_msg_emoji_like", message_id=message_id, emoji_id="10060")  # 取消
     
-    asyncio.create_task(unbind_timer(bot, event, message_id, 60))
+    asyncio.create_task(await unbind_timer(bot, event, message_id, 60))
 
 async def unbind_timer(bot: Bot, event: Event, message_id: str, timeout: int):
     """解绑投票定时器"""
@@ -113,7 +111,6 @@ async def handle_unbind_emoji(bot: Bot, event: NoticeEvent):
                     unbind_votes.pop(message_id, None)
                     
                 elif emoji_id in vote_data["emoji_to_index"]:  # 数字选择
-                    # 使用emoji_to_index映射获取选择的索引
                     index = vote_data["emoji_to_index"][emoji_id]
                     accounts = vote_data["accounts"]
                     
@@ -127,38 +124,22 @@ async def handle_unbind_emoji(bot: Bot, event: NoticeEvent):
 
 async def finalize_unbind(bot: Bot, event: Event, vote_data: Dict):
     """完成解绑操作"""
-    try:
-        user_id = vote_data["user_id"]
-        selected_indices = vote_data["selected"]
-        accounts = vote_data["accounts"]
-        
-        # 解绑选中的账号
-        success_count = 0
-        fail_count = 0
-        unbind_results = []
-        
-        for index in selected_indices:
-            account = accounts[index]
-            success = await EversoulUser.delete_specific_account(int(user_id), account["player_id"])
-            
-            if success:
-                success_count += 1
-                server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
-                unbind_results.append(f"✅ {server_name} {account['player_id']}")
-            else:
-                fail_count += 1
-                server_name = SERVER_NAME_MAPPING.get(APP_ID_TO_SERVER_NAME.get(account["app_id"], "未知"), account["app_id"])
-                unbind_results.append(f"❎ {server_name} {account['player_id']}")
-        
-        # 构建结果消息
-        result_msg = f"解绑结果：\n"
-        result_msg += "\n".join(unbind_results)
-        
-        await bot.send(event, result_msg, reply_message=True)
-        
-        # 清理投票状态
-        unbind_votes.pop(vote_data["message_id"], None)
-        
-    except Exception as e:
-        logger.error(f"完成解绑操作时发生错误: {e}")
-        await bot.send(event, "解绑过程中发生错误，请联系管理员", reply_message=True)
+
+    user_id = vote_data["user_id"]
+    selected_indices = vote_data["selected"]
+    accounts = vote_data["accounts"]
+    unbind_results = []
+    
+    for index in selected_indices:
+        account = accounts[index]
+        success = await EversoulUser.delete_specific_account(int(user_id), account["player_id"])
+        server_name = SERVER_NAME_MAPPING.get(SERVER_NAME_REVERSE_MAPPING.get(account["app_id"], "未知"), account["app_id"])
+
+        if success:
+            unbind_results.append(f"✅ {server_name} {account['player_id']}")
+        else:
+            unbind_results.append(f"❎ {server_name} {account['player_id']}")
+    
+    result_msg = "\n".join(unbind_results)
+    await bot.send(event, result_msg, reply_message=True)
+    unbind_votes.pop(vote_data["message_id"], None)

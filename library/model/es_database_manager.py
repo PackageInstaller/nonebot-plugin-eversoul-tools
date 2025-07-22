@@ -33,8 +33,8 @@ class EversoulUser:
                     """
                     CREATE TABLE IF NOT EXISTS _user (
                         user_id INTEGER NOT NULL,
-                        app_id TEXT NOT NULL,
-                        player_id TEXT NOT NULL,
+                        app_id INTEGER NOT NULL,
+                        player_id INTEGER NOT NULL,
                         update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         coupon_history TEXT DEFAULT '{}',
                         PRIMARY KEY (user_id, player_id)

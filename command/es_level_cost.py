@@ -15,7 +15,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 找出最大等级
         max_level = 0

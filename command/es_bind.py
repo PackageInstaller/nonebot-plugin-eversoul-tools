@@ -30,7 +30,7 @@ async def handle_bind(bot: Bot, event: Event, server_id_text: str):
     user_id = event.get_user_id()
     
     # 解析服务器和ID
-    server_code, player_id = parse_server_id(server_id_text)
+    server_code, player_id = await parse_server_id(server_id_text)
     
     if not server_code or not player_id:
         help_msg = (

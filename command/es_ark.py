@@ -15,7 +15,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = load_json_data(group_id)
+        data = await load_json_data(group_id)
         
         # 存储不同类型的方舟信息
         ark_types = {
@@ -46,8 +46,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 continue
                 
             # 获取方舟类型名称
-            type_name = next((s.get("zh_tw", "未知类型") for s in data["string_system"]["json"] 
-                            if s["no"] == core_type), "未知类型")
+            type_name = (await get_string_by_type(data, "system", core_type)).get("zh_tw", "")
             
             # 主方舟名称适配
             if type_name == "所有":
@@ -60,8 +59,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 item_name = "未知材料"
                 for item in data["item"]["json"]:
                     if item["no"] == ark.get("pay_item_no"):
-                        item_name = next((s.get("zh_tw", "未知材料") for s in data["string_item"]["json"] 
-                                       if s["no"] == item.get("name_sno")), "未知材料")
+                        item_name = (await get_string_by_type(data, "item", item.get("name_sno"))).get("zh_tw", "")
                         break
                 
                 ark_msg.append(f"升级消耗：{item_name}x{ark.get('pay_amount', 0)}")
@@ -80,9 +78,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                             for key, value in buff.items():
                                 if key in STAT_NAME_MAPPING and value != 0:
                                     if key.endswith('_rate'):
-                                        ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{value*100:.2f}%")
+                                        ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{await format_value(value, False)}")
                                     else:
-                                        ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{value}")
+                                        ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{await format_value(value, True)}")
                     if not found_buff:
                         ark_msg.append("基础属性加成：数据未找到")
                 
@@ -99,7 +97,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                 ark_msg.append(f"・ 每级战斗力加成：{buff.get('battle_power_per')}")
                             for key, value in buff.items():
                                 if key in STAT_NAME_MAPPING and value != 0:
-                                    ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{value*100:.2f}%")
+                                    ark_msg.append(f"・ {STAT_NAME_MAPPING[key]}：{await format_value(value, True)}")
                     if not found_buff:
                         ark_msg.append("特殊属性加成：数据未找到")
             
