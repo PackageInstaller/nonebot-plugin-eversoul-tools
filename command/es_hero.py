@@ -92,6 +92,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         for hero in data["hero"]["json"]:
             if hero["hero_id"] == hero_id:
                 hero_data = hero
+                hero_thumbnail = hero.get("thumbnail_item")
                 break
         
         # 查找角色描述数据
@@ -137,11 +138,17 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             nickname_kr = nickname_data["kr"]
         
         basic_info_msg = []
-        portrait_paths = await get_character_portrait(data, hero_id, hero_name_en) 
+        portrait_paths = await get_character_portrait(data, hero_id, hero_thumbnail) 
         basic_info_msg.append("【基础信息】")
         if portrait_paths:
             for portrait_path in portrait_paths:
                 basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
+                
+        # 获取CV信息
+        cv_info = await get_character_cv(data, hero_desc)
+        cv_kr = cv_info.get("kr")
+        cv_jp = cv_info.get("ja")
+        
         basic_info_zh_tw = f"""{nickname_zh_tw if nickname_zh_tw != "" else nickname_kr}・{hero_name_zh_tw if hero_name_zh_tw != "" else hero_name_kr}
 类型：{race_zh_tw} {hero_class_zh_tw}
 攻击方式：{sub_class_zh_tw}
@@ -167,8 +174,13 @@ if hero_desc and hero_desc.get("birthday") else "？？？"}
 喜好礼物：{await get_character_prefer_gift(data, hero_id)}
 初始打工属性：{(await get_character_arbeit(data, hero_id)).get("initial", "？？？")}
 满级打工属性：{(await get_character_arbeit(data, hero_id)).get("max", "？？？")}
-CV_KR：{(await get_character_cv(data, hero_desc)).get("kr", "？？？")}
-CV_JP：{(await get_character_cv(data, hero_desc)).get("ja", "？？？")}
+CV_KR：{cv_kr}"""
+
+        # 只有当CV_JP不是"？？？"时才添加CV_JP行
+        if cv_jp != "？？？":
+            basic_info_zh_tw += f"\nCV_JP：{cv_jp}"
+            
+        basic_info_zh_tw += f"""
 实装日期：{character_release_date}
 攻击范围：{atk_range if atk_range > 0 else "未知"}(4以下为近战)
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
@@ -177,7 +189,7 @@ CV_JP：{(await get_character_cv(data, hero_desc)).get("ja", "？？？")}
 暴击率：{hero_data.get('critical_rate', 0) * 100:.1f}% + {hero_data.get('inc_critical_rate', 0) * 100:.3f}%/级
 暴击威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
         basic_info_msg.append(basic_info_zh_tw)
-        messages.append("\n".join(str(x) for x in basic_info_msg))
+        messages.append("".join(str(x) for x in basic_info_msg))
 
         # 添加立绘
         for char in data["string_character"]["json"]:

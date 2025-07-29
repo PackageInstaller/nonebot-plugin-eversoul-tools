@@ -57,35 +57,26 @@ async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
         return output.getvalue()
     
 
-async def get_character_portrait(data, hero_id, hero_name_en, raid=False):
+async def get_character_portrait(data, hero_id, hero_thumbnail, raid=False):
     """获取角色头像（包括基础头像和所有皮肤头像），动态查找所有皮肤。
     
     Args:
         data: JSON数据字典 (保留以备将来使用或用于查找基础头像).
         hero_id: 角色ID (保留以备将来使用或用于查找基础头像).
-        hero_name_en: 角色英文名称.
+        hero_thumbnail: 角色缩略图id.
         raid: 是否为恶灵讨伐.
     Returns:
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
     portraits = []
     
-    base_name = HERO_NAME_MAPPING.get(hero_name_en, hero_name_en) if raid else hero_name_en
+    for thumbnail in data["thumbnail"]["json"]:
+        if thumbnail.get("no") == hero_thumbnail:
+            base_name = thumbnail.get("icon_path", "")
+            break
+            
     suffix = "_Raid_512.png" if raid else "_512.png"
-    
-    base_portrait_path = SOUL_DIR / f"{base_name}{suffix}"
-    
-    if base_portrait_path.exists():
-        portraits.append(str(base_portrait_path))
-    else:
-        for costume in data.get("item_costume", {}).get("json", []):
-            if costume.get("hero_no") == hero_id:
-                portrait_path = costume.get("portrait_path", "")
-                if portrait_path:
-                    portrait_file = SOUL_DIR / f"{portrait_path}_512.png"
-                    if portrait_file.exists():
-                        portraits.append(str(portrait_file))
-                        break
+    portraits.append(str(SOUL_DIR / f"{base_name}{suffix}"))
 
     costume_pattern = f"{base_name}_Costume*{suffix}"
     costume_paths = sorted(SOUL_DIR.glob(costume_pattern))
@@ -223,12 +214,11 @@ async def get_character_illustration(data, hero_id):
                 result_dict[original_base_name].append((file, display_name_tw, display_name_cn, display_name_kr, display_name_en,\
                                 condition_tw, condition_cn, condition_kr, condition_en))
     
-    # 将结果字典转换为列表，按基础名称排序，但保持每个基础名称内的顺序
     result_dict_sorted = dict(sorted(result_dict.items()))
     for base_name, entries in result_dict_sorted.items():
         images.extend(entries)
     
-    return images  # 不对整个列表进行排序，保持原始立绘在前，旧设立绘在后
+    return images  # 原始立绘在前，旧设立绘在后
 
 
 async def get_character_affection_cg(data, hero_id):

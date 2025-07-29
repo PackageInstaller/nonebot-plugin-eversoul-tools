@@ -158,7 +158,7 @@ names:
     kr_name: 도라
     en_name: Dora
     ja_name: ドーラ
-    aliases: [熊熊]
+    aliases: [熊熊, 朵拉]
     hero_id: 1110
   - zh_tw_name: 智河
     zh_cn_name: 智河
@@ -376,7 +376,7 @@ names:
     kr_name: 미리암
     en_name: Miriam
     ja_name: ミリアム
-    aliases: [米粒, 小米]
+    aliases: [米粒, 小米, 米粮]
     hero_id: 3090
   - zh_tw_name: 克羅伊
     zh_cn_name: 克罗伊
@@ -579,7 +579,7 @@ names:
     kr_name: 유리아
     en_name: Yuria
     ja_name: ユリア
-    aliases: [女王, 王女, 尤利娅, 尤莉娅]
+    aliases: [女王, 王女, 尤利娅, 尤莉娅, 尤莉亚, 尤利雅]
     hero_id: 5030
   - zh_tw_name: 韓羽
     zh_cn_name: 韩羽

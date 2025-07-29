@@ -109,17 +109,17 @@ async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Ev
                             return True, f"✅获得: {rewards}"
 
                     elif status_code == 403:
-                        return False, "❎兑换码无效"
+                        return False, "❎兑换码无效\n"
                     elif status_code == 461:
-                        return False, "❎兑换码售罄"
+                        return False, "❎兑换码售罄\n"
                     elif status_code == 462:
-                        return False, "❎兑换码过期"
+                        return False, "❎兑换码过期\n"
                     elif status_code == 463:
-                        return False, "❎兑换码超限"
+                        return False, "❎兑换码超限\n"
                     elif status_code == 466:
-                        return False, "❎账号不存在"
+                        return False, "❎账号不存在\n"
                     elif status_code == 503:
-                        return False, "❎服务器错误"
+                        return False, "❎服务器错误\n"
                 
         except aiohttp.ClientError as e:
             retry_count += 1

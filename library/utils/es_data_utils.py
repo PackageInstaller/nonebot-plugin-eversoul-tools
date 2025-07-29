@@ -447,6 +447,7 @@ async def load_json_data(group_id: int):
         "string_town": "StringTown.json", # 地点文本, town text
         "town_lost_item": "TownLostItem.json", # 遗失物品, town lost item
         "town_buff": "TownBuff.json", # 专属领地物品buff, town buff
+        "thumbnail": "Thumbnail.json", # 缩略图, thumbnail
         "arbeit_fairy_level": "ArbeitFairyLevel.json", # 打工等级, arbeit fairy level
         "tower": "Tower.json", # 起源塔, tower
         "contents_buff": "ContentsBuff.json", # buff数值内容, buff value

@@ -45,7 +45,7 @@ async def clean_rich_text(text: str) -> str:
     return re.sub(pattern, '', text, flags=re.IGNORECASE)
 
 
-async def format_value(value: float, integer_format: bool) -> str:
+async def format_value(value: float, integer: bool) -> str:
     """
     格式化数值
     Args:
@@ -55,7 +55,7 @@ async def format_value(value: float, integer_format: bool) -> str:
         str: 格式化后的字符串
     """
     abs_value = abs(value)
-    if integer_format:
+    if integer:
         formatted_str = f"{abs_value:.2f}".rstrip('0').rstrip('.')
         return formatted_str
     else:
@@ -133,7 +133,7 @@ async def get_code_value_text(function_key: int, value: float) -> str:
     Returns:
         str: 格式化后的字符串
     """
-    return await format_value(value, function_key <= 0x1B and ((1 << function_key) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
+    return await format_value(value, function_key <= 0x1B and (((1 << function_key) % 32) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
 
 
 async def get_buff_value_text(buff_type: int, value: float) -> str:
@@ -151,7 +151,7 @@ async def get_buff_value_text(buff_type: int, value: float) -> str:
         else:
             return await format_value(value, True)
 
-    if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and (1 << (buff_type - 122) & 0x13) != 0):
+    if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << (buff_type - 122) % 32)& 0x13) != 0):
         return await format_value(value, True)
     else:
         return await format_value(value, False)
@@ -201,7 +201,6 @@ async def process_skill_description(data, description):
     """
 
     processed_text = await clean_rich_text(description)
-
     placeholder_pattern = r'<\s*(\d+)\.(VALUE|DURATION)\s*>'
     matches = list(re.finditer(placeholder_pattern, processed_text))
     
