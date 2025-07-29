@@ -45,7 +45,7 @@ async def clean_rich_text(text: str) -> str:
     return re.sub(pattern, '', text, flags=re.IGNORECASE)
 
 
-async def format_value(value: float, integer: bool) -> str:
+async def format_value(value: float, integer: bool = True) -> str:
     """
     格式化数值
     Args:
@@ -133,7 +133,8 @@ async def get_code_value_text(function_key: int, value: float) -> str:
     Returns:
         str: 格式化后的字符串
     """
-    return await format_value(value, function_key <= 0x1B and (((1 << function_key) % 32) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
+    return await format_value(value, function_key <= 0x1B and (((1 << function_key) % 32) & 0xC000010) != 0 or \
+        ((function_key - 1026) & 0xFFFFFFFF) < 2)
 
 
 async def get_buff_value_text(buff_type: int, value: float) -> str:
@@ -260,38 +261,48 @@ async def get_string_by_type(data, string_type, no):
     return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
+
+async def get_character_birthday(data, birthday: int) -> str:
+        """
+        获取格式化后的生日字符串
+        Args:
+            data: JSON 数据字典
+            birthday: 生日
+        Returns:
+            str: 格式化的生日字符串
+        """
+
+        template = (await get_string_by_type(data, "ui", 10625)).get("zh_tw")
+        # 0x51EB851F 是 2^37 / 100 的向上取整，用来模拟除 100，加快运算
+        # (0x51EB851F * birthday >> 37) 等价于 birthday / 100
+        # (0x51EB851F * birthday >> 63) 用来提取最高位
+        # 原始代码为
+        # v41 = 0x51EB851FLL * Birthday;
+        # v44 = (v41 >> 37) + ((unsigned __int64)v41 >> 63);
+        # v117 = Birthday % 0x64;
+        month = (0x51EB851F * birthday >> 37) % 32 + ((0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF) % 64
+        day = birthday % 0x64
+        return template.format(str(month), str(day))
+
+
 async def get_string_character(data, hero_no, special=False):
     """get string character
     
     Args:
-        data: JSON data dictionary
+        data: JSON 数据字典
         hero_no: hero no
-        special: special, used when the text cannot be directly obtained from string_character
+        special: 当文本无法直接从 string_character 中获取时使用
     Returns:
-        dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
-
-    get string character
-    args:
-        data: JSON data dictionary
-        hero_no: hero no
-        special: special
-    return:
-        dict: string character
-    exception:
-        None
+        dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
     """
     name_sno = hero_no
     
     if special:
-        # 在角色模式下，先找到hero_no对应的name_sno
-        # in character mode, first find the name_sno corresponding to hero_no
         for hero in data["hero"]["json"]:
             if hero["no"] == hero_no:
                 name_sno = hero.get("name_sno")
                 break
     
-    # 根据name_sno查找对应的文本
-    # find the corresponding text according to name_sno
     for char in data["string_character"]["json"]:
         if char["no"] == name_sno:
             return {

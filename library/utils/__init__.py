@@ -104,7 +104,7 @@ from .es_string_utils import (
     get_character_keyword, get_character_town_object, get_character_town_object_task,
     get_character_signature, get_character_signature_value,
     get_base_battle_power, calculate_battle_power, get_character_skill_pattern,
-    get_character_attack_range
+    get_character_attack_range, get_character_birthday
 )
 
 # 兑换码相关

@@ -171,26 +171,16 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 if groggy.get("single_raid_boss_no") == boss_data.get("no"):
                     # 获取解除眩晕时间
                     recovery_duration = groggy.get("recovery_duration", 0)
-                    
-                    for status_code, status_name in SINGLE_RAID_GROGGY_TRIGGER_MAPPING.items():
-                        # 计算数组索引
-                        array_index = status_code - 201
-                        # 检查该索引位置的值是否在type中
-                        type_value = SINGLE_RAID_GROGGY_TRIGGER_MAPPING[array_index]
-                        type_key = f"type_{type_value}"
-                        value_key = f"value_{type_value}"
-                        
-                        # 如果type和value都存在
-                        if type_key in groggy and value_key in groggy:
-                            value = groggy.get(value_key)
-                            groggy_info.append(f"{status_name}类技能：{value}")
+                    for buff_type , status_name in SINGLE_RAID_GROGGY_TYPE_MAPPING.items():
+                        if ( (buff_type - 201) & 0xFFFFFFFF <= 6 and (((0x63 >> ((buff_type + 55) % 32)) & 1) != 0 )):
+                            groggy_info.append(f"{status_name}类技能：{await format_value(groggy.get(f"value_{SINGLE_RAID_GROGGY_REDUCE_MAPPING[buff_type - 201]}"))}")
         
         # 构建消息
         messages = []
         basic_info = []
         
         # 获取立绘
-        portrait_paths = await get_character_portrait(data, hero_id, hero_name_en, raid=True)
+        portrait_paths = await get_character_portrait(data, hero_data["prefab_path"])
         basic_info.append(f"【恶灵讨伐：{hero_name_zh_tw}】")
         if portrait_paths:
             # 只使用第一个头像
@@ -200,7 +190,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 攻击方式：{sub_class_zh_tw}
 属性：{stat_zh_tw}
 等级：{boss_data.get('boss_max_level', 0)}
-护盾量：{boss_data.get('groggy_ratio', 0)}
+护盾量：{await format_value(boss_data.get('groggy_ratio', 0), True)}
 生命值：{final_hp}
 战斗时长：{battle_time}秒
 {season_info if season_info else ""}

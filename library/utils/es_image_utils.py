@@ -57,32 +57,39 @@ async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
         return output.getvalue()
     
 
-async def get_character_portrait(data, hero_id, hero_thumbnail, raid=False):
+async def get_character_portrait(data, prefab_path):
     """获取角色头像（包括基础头像和所有皮肤头像），动态查找所有皮肤。
     
     Args:
         data: JSON数据字典 (保留以备将来使用或用于查找基础头像).
         hero_id: 角色ID (保留以备将来使用或用于查找基础头像).
-        hero_thumbnail: 角色缩略图id.
-        raid: 是否为恶灵讨伐.
+        prefab_path: 角色预设头像路径.
     Returns:
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
     portraits = []
-    
-    for thumbnail in data["thumbnail"]["json"]:
-        if thumbnail.get("no") == hero_thumbnail:
-            base_name = thumbnail.get("icon_path", "")
+
+    # 获取基础头像
+    for costume in data["item_costume"]["json"]:
+        if costume.get("no") == prefab_path:
+            base_name = costume.get("portrait_path", "")
+            controller_path = costume.get("portrait_path", "") # controller_path与 portrait_path相同
             break
             
-    suffix = "_Raid_512.png" if raid else "_512.png"
-    portraits.append(str(SOUL_DIR / f"{base_name}{suffix}"))
+    portraits.append(str(SOUL_DIR / f"{base_name}_512.png"))
 
-    costume_pattern = f"{base_name}_Costume*{suffix}"
-    costume_paths = sorted(SOUL_DIR.glob(costume_pattern))
-    
-    for path in costume_paths:
-        portraits.append(str(path))
+    # 获取皮肤头像
+    if controller_path:
+        costume_portraits = []
+        for costume in data["item_costume"]["json"]:
+            if (costume.get("controller_path") == controller_path and 
+                costume.get("no") != prefab_path and costume.get("icon_path") != ""):  # 排除基础时装本身
+                portrait_path = costume.get("portrait_path", "")
+                if portrait_path:
+                    costume_portraits.append(portrait_path)
+        
+        for portrait_name in sorted(costume_portraits):
+            portraits.append(str(SOUL_DIR / f"{portrait_name}_512.png"))
         
     return portraits
 
@@ -113,11 +120,10 @@ async def get_character_illustration(data, hero_id):
                 costume_name_zh_cn = (await get_string_by_type(data, "item", name_sno)).get("zh_cn", "")
                 costume_name_kr = (await get_string_by_type(data, "item", name_sno)).get("kr", "")
                 costume_name_en = (await get_string_by_type(data, "item", name_sno)).get("en", "")
-                if costume_name_zh_tw or costume_name_kr:
-                    condition_tw = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
-                    condition_cn = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
-                    condition_kr = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
-                    condition_en = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                condition_tw = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                condition_cn = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                condition_kr = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
+                condition_en = (await get_string_by_type(data, "ui", type_sno)).get("zh_tw", "")
                 costume_info[portrait_path] = (costume_name_zh_tw, costume_name_zh_cn, costume_name_kr, costume_name_en,\
                                                 condition_tw, condition_cn, condition_kr, condition_en)
 

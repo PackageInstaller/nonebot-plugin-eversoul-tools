@@ -92,7 +92,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         for hero in data["hero"]["json"]:
             if hero["hero_id"] == hero_id:
                 hero_data = hero
-                hero_thumbnail = hero.get("thumbnail_item")
                 break
         
         # 查找角色描述数据
@@ -138,8 +137,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             nickname_kr = nickname_data["kr"]
         
         basic_info_msg = []
-        portrait_paths = await get_character_portrait(data, hero_id, hero_thumbnail) 
         basic_info_msg.append("【基础信息】")
+        portrait_paths = await get_character_portrait(data, hero_data["prefab_path"]) 
         if portrait_paths:
             for portrait_path in portrait_paths:
                 basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
@@ -163,9 +162,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 }
 身高：{hero_desc.get("height", "？？？") if hero_desc else "？？？"}cm
 体重：{hero_desc.get("weight", "？？？") if hero_desc else "？？？"}kg
-生日：{str(hero_desc.get("birthday", "？？？")).zfill(4)[:2]\
-if hero_desc else "？？？"}.{str(hero_desc.get("birthday", "？？？")).zfill(4)[2:]\
-if hero_desc and hero_desc.get("birthday") else "？？？"}
+生日：{await get_character_birthday(data, hero_desc.get("birthday", 0)) if hero_desc else "？？？"}
 星座：{(await get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
 兴趣：{(await get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
 特殊特长：{(await get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
@@ -175,14 +172,12 @@ if hero_desc and hero_desc.get("birthday") else "？？？"}
 初始打工属性：{(await get_character_arbeit(data, hero_id)).get("initial", "？？？")}
 满级打工属性：{(await get_character_arbeit(data, hero_id)).get("max", "？？？")}
 CV_KR：{cv_kr}"""
-
-        # 只有当CV_JP不是"？？？"时才添加CV_JP行
         if cv_jp != "？？？":
             basic_info_zh_tw += f"\nCV_JP：{cv_jp}"
-            
+        
         basic_info_zh_tw += f"""
 实装日期：{character_release_date}
-攻击范围：{atk_range if atk_range > 0 else "未知"}(4以下为近战)
+攻击范围：{atk_range if atk_range > 0 else "？？？"}
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
