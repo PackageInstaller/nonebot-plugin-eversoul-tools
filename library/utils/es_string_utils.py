@@ -45,12 +45,45 @@ async def clean_rich_text(text: str) -> str:
     return re.sub(pattern, '', text, flags=re.IGNORECASE)
 
 
-async def format_value(value: float, integer: bool = True) -> str:
+async def concat_color_text(buff_type: int, value: float, type: str, integer: bool = True, use_color_text: bool = False) -> str:
+    """
+    拼接颜色文本
+    Args:
+        buff_type: buff effect 类型
+        value: 数值
+        type: 类型
+        integer: 是否为整数
+        use_color_text: 是否使用颜色文本
+    Returns:
+        str: 拼接后的字符串
+    """
+    if type == "buff":
+        if use_color_text:
+            color_code = await get_buff_value_color_text(buff_type, value)
+            if color_code:
+                return f"<color={color_code}>{await format_value(value, integer)}</color>"
+            else:
+                return await format_value(value, integer)
+        else:
+            return await format_value(value, integer)
+    elif type == "code":
+        if use_color_text:
+            color_code = await get_code_value_color_text(buff_type)
+            if color_code:
+                return f"<color={color_code}>{await format_value(value, integer)}</color>"
+            else:
+                return await format_value(value, integer)
+        else:
+            return await format_value(value, integer)
+
+
+
+async def format_value(value: float, integer: bool) -> str:
     """
     格式化数值
     Args:
         value: 数值
-        integer_format: 是否为整数
+        integer: 是否为整数
     Returns:
         str: 格式化后的字符串
     """
@@ -133,11 +166,31 @@ async def get_code_value_text(function_key: int, value: float) -> str:
     Returns:
         str: 格式化后的字符串
     """
-    return await format_value(value, function_key <= 0x1B and (((1 << function_key) % 32) & 0xC000010) != 0 or \
-        ((function_key - 1026) & 0xFFFFFFFF) < 2)
+    integer = (function_key <= 0x1B and (((1 << function_key) % 32) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
+    return await concat_color_text(function_key, value, "code", integer, False)
 
 
-async def get_buff_value_text(buff_type: int, value: float) -> str:
+async def get_code_value_color_text(function_key: int) -> str:
+    """
+    SkillTextUtil::GetCodeValueColorText
+    Args:
+        function_key: function key (对应 SkillEffect 枚举值)
+    Returns:
+        str: 颜色代码
+    """
+    if function_key in [1, 2, 9, 10, 11, 14, 15, 16, 17, 19, 21, 24, 32, 47, 1002]:
+        return "#E67373" # 红色
+    elif function_key in [3, 12, 13, 18, 20, 22]:
+        return "#00CC27" # 绿色
+    elif function_key in [4, 5, 6]:
+        return "#4ABFD3" # 蓝色
+    elif function_key in [26, 27] or (function_key & 0xFFFFFFFE) == 0x402:
+        return "#FFFFFF" # 白色
+    else:
+        return ""
+
+
+async def get_buff_value_text(buff_type: int, value: float, use_color_text: bool = False) -> str:
     """SkillTextUtil::GetBuffValueText
 
     Args:
@@ -148,14 +201,100 @@ async def get_buff_value_text(buff_type: int, value: float) -> str:
     """
     if buff_type <= 10102:
         if (((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420):
-            return await format_value(value, False)
+            return await concat_color_text(buff_type, value, "buff", False, False)
         else:
-            return await format_value(value, True)
+            return await concat_color_text(buff_type, value, "buff", True, False)
 
-    if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << (buff_type - 122) % 32)& 0x13) != 0):
-        return await format_value(value, True)
+    if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << (buff_type - 122) % 32) & 0x13) != 0):
+        return await concat_color_text(buff_type, value, "buff", True, False)
     else:
-        return await format_value(value, False)
+        return await concat_color_text(buff_type, value, "buff", False, False)
+
+
+async def get_buff_value_color_text(buff_type: int, value: float) -> str:
+    """
+    SkillTextUtil::GetBuffValueColorText
+
+    Args:
+        buff_type: buff effect 类型
+        value: 数值
+    
+    Returns:
+        str: 颜色代码
+    """
+    if buff_type > 1402:
+        if buff_type > 2304:
+            if buff_type <= 3002:
+                if ((buff_type - 2901) & 0xFFFFFFFF) > 0xF or (((1 << (buff_type - 85)) % 32) & 0xFC3F == 0) and (buff_type - 3001) & 0xFFFFFFFF >= 2:
+                    return ""
+            elif buff_type <= 10111:
+                if ( buff_type != 3401 and (buff_type - 10101) & 0xFFFFFFFF > 0xA):
+                    return ""
+            elif ((buff_type - 10301) & 0xFFFFFFFF >= 2 and (buff_type - 10201) & 0xFFFFFFFF > 1):
+                return ""
+            if value < 0.0:
+                return "#B778FF" # 紫色
+            return "#EDA900" # 黄色
+        if buff_type > 1702:
+            if buff_type > 1906:
+                if ( (buff_type - 2301) & 0xFFFFFFFF > 3 or buff_type == 2303 ):
+                    return ""
+                if value < 0.0:
+                    return "#B778FF" # 紫色
+                return "#EDA900" # 黄色
+            if buff_type != 1703:
+                if ( (buff_type - 1901) & 0xFFFFFFFF <= 5 ):
+                    if value < 0.0:
+                        return "#B778FF" # 紫色
+                    return "#EDA900" # 黄色
+                return ""
+            return "#00CC27" # 绿色
+        if buff_type == 1501:
+            return "#EDA900" # 黄色
+        if buff_type == 1502:
+            return "#B778FF" # 紫色
+        if buff_type != 1702:
+            return ""
+        return "#E67373" # 红色
+    
+    if buff_type <= 503:
+        if buff_type <= 313:
+            if ((buff_type - 101) & 0xFFFFFFFF < 0xB ):
+                if value < 0.0:
+                    return "#B778FF" # 紫色
+                return "#EDA900" # 黄色
+            if ((buff_type - 301) & 0xFFFFFFFF >= 0xD or ((0x1E3F >> (buff_type - 45) % 32) & 1) == 0 ):
+                return ""
+            return "#E67373"
+        
+        if buff_type <= 411:
+            if ((buff_type - 401) & 0xFFFFFFFF > 0xA or (((1 << (buff_type + 111)) % 32) & 0x601) == 0 ):
+                return ""
+            return "#00CC27" # 绿色
+        if buff_type == 420:
+            return "#4ABFD3" # 蓝色
+        if ((buff_type - 501) & 0xFFFFFFFF > 2 ):
+            return ""
+        return "#368AFF" # 蓝色
+
+    if buff_type > 802:
+        if buff_type <= 1101:
+            if ( (buff_type - 1001) & 0xFFFFFFFF >= 2  and buff_type != 1101 ):
+                return ""
+        elif ((buff_type - 1401) & 0xFFFFFFFF >= 2 and  buff_type != 1202 ):
+            return ""
+        if value < 0.0:
+            return "#B778FF" # 紫色
+        return "#EDA900" # 黄色
+    
+    if ((buff_type - 511) & 0xFFFFFFFF < 2):
+        return "#368AFF" # 蓝色
+    if (buff_type != 801 and buff_type != 802):
+        return ""
+    if value >= 0.0:
+        return "#B778FF" # 紫色
+    return "#FFDF24" # 黄色
+
 
 
 async def get_stat_string_in_hero_option(value: float, buff_type: str) -> str:
@@ -189,19 +328,23 @@ async def get_stat_string_in_hero_option(value: float, buff_type: str) -> str:
         return ""
 
 
-async def process_skill_description(data, description):
+async def process_skill_description(data, description, use_color_text: bool):
     """
     处理技能描述
     
     Args:
         data: json 数据
         description: 技能描述
+        use_color_text: 是否使用颜色文本，True时保留富文本格式，False时清理富文本
 
     Returns:
         str: 处理后的技能描述
     """
 
-    processed_text = await clean_rich_text(description)
+    if use_color_text:
+        processed_text = description
+    else:
+        processed_text = await clean_rich_text(description)
     placeholder_pattern = r'<\s*(\d+)\.(VALUE|DURATION)\s*>'
     matches = list(re.finditer(placeholder_pattern, processed_text))
     
@@ -276,10 +419,6 @@ async def get_character_birthday(data, birthday: int) -> str:
         # 0x51EB851F 是 2^37 / 100 的向上取整，用来模拟除 100，加快运算
         # (0x51EB851F * birthday >> 37) 等价于 birthday / 100
         # (0x51EB851F * birthday >> 63) 用来提取最高位
-        # 原始代码为
-        # v41 = 0x51EB851FLL * Birthday;
-        # v44 = (v41 >> 37) + ((unsigned __int64)v41 >> 63);
-        # v117 = Birthday % 0x64;
         month = (0x51EB851F * birthday >> 37) % 32 + ((0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF) % 64
         day = birthday % 0x64
         return template.format(str(month), str(day))
@@ -607,10 +746,10 @@ async def get_character_skill(data, skill_no, support=False):
         if support:
             # 支援技能，获取最高等级的技能描述
             max_level_skill = max(skill_data_list, key=lambda x: x.get("level", 1))
-            desc_tw = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("zh_tw", ""))
-            desc_cn = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("zh_cn", ""))
-            desc_kr = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("kr", ""))
-            desc_en = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("en", ""))
+            desc_tw = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("zh_tw", ""), False)
+            desc_cn = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("zh_cn", ""), False)
+            desc_kr = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("kr", ""), False)
+            desc_en = await process_skill_description(data, (await get_string_by_type(data, "skill", max_level_skill["tooltip_sno"])).get("en", ""), False)
             skill_descriptions.append({
                 "desc_zh_tw": desc_tw,
                 "desc_zh_cn": desc_cn,
@@ -622,10 +761,10 @@ async def get_character_skill(data, skill_no, support=False):
             # 非支援技能，获取所有等级的技能描述
             for skill_data in skill_data_list:
                 hero_level = skill_data.get("hero_level", 1)
-                desc_tw = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("zh_tw", ""))
-                desc_cn = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("zh_cn", ""))
-                desc_kr = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("kr", ""))
-                desc_en = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("en", ""))
+                desc_tw = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("zh_tw", ""), False)
+                desc_cn = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("zh_cn", ""), False)
+                desc_kr = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("kr", ""), False)
+                desc_en = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("en", ""), False)
                 skill_descriptions.append({
                     "desc_zh_tw": desc_tw,
                     "desc_zh_cn": desc_cn,
@@ -1388,10 +1527,10 @@ async def get_character_signature(data, hero_id):
             if sno_key in signature_data:
                 tooltip_sno = signature_data[sno_key]
                 # 处理数值标签
-                desc_tw = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("zh_tw", ""))
-                desc_cn = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("zh_cn", ""))
-                desc_kr = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("kr", ""))
-                desc_en = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("en", ""))
+                desc_tw = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("zh_tw", ""), False)
+                desc_cn = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("zh_cn", ""), False)
+                desc_kr = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("kr", ""), False)
+                desc_en = await process_skill_description(data, (await get_string_by_type(data, "skill", tooltip_sno)).get("en", ""), False)
 
                 skill_descriptions.append({
                     "desc_zh_tw": desc_tw,

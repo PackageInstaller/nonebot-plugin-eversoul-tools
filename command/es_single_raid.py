@@ -50,20 +50,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if raid.get("level_group") == level_group:
                 raid_data = raid
                 break
-        
-        # 获取角色名称
-        hero_name_zh_tw = ""
-        hero_name_zh_cn = ""
-        hero_name_kr = ""
-        hero_name_en = ""
-        if hero_data["name_sno"]:
-            name_data = await get_string_character(data, hero_data["name_sno"])
-            hero_name_zh_tw = name_data["zh_tw"]
-            hero_name_zh_cn = name_data["zh_cn"]
-            hero_name_kr = name_data["kr"]
-            hero_name_en = name_data["en"]
 
         # 获取基础属性
+        name_zh_tw = (await get_string_character(data, hero_data["name_sno"])).get("zh_tw", "")
         race_zh_tw = (await get_string_by_type(data, "system", hero_data["race_sno"])).get("zh_tw", "")
         hero_class_zh_tw = (await get_string_by_type(data, "system", hero_data["class_sno"])).get("zh_tw", "")
         sub_class_zh_tw = (await get_string_by_type(data, "system", hero_data["sub_class_sno"])).get("zh_tw", "")
@@ -173,7 +162,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     recovery_duration = groggy.get("recovery_duration", 0)
                     for buff_type , status_name in SINGLE_RAID_GROGGY_TYPE_MAPPING.items():
                         if ( (buff_type - 201) & 0xFFFFFFFF <= 6 and (((0x63 >> ((buff_type + 55) % 32)) & 1) != 0 )):
-                            groggy_info.append(f"{status_name}类技能：{await format_value(groggy.get(f"value_{SINGLE_RAID_GROGGY_REDUCE_MAPPING[buff_type - 201]}"))}")
+                            groggy_info.append(f"{status_name}类技能：{await format_value(groggy.get(f"value_{SINGLE_RAID_GROGGY_REDUCE_MAPPING[buff_type - 201]}"), True)}")
         
         # 构建消息
         messages = []
@@ -181,9 +170,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 获取立绘
         portrait_paths = await get_character_portrait(data, hero_data["prefab_path"])
-        basic_info.append(f"【恶灵讨伐：{hero_name_zh_tw}】")
+        basic_info.append(f"【恶灵讨伐：{name_zh_tw}】")
         if portrait_paths:
-            # 只使用第一个头像
             basic_info.append(MessageSegment.image(f"file:///{portrait_paths[0]}"))
         
         basic_info_text = f"""类型：{race_zh_tw} {hero_class_zh_tw}
@@ -208,7 +196,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             
         if groggy_info:
             basic_info_text += f"\n\n护盾削减系数：\n{chr(10).join(f'- {info}' for info in groggy_info)}"
-            basic_info_text += f"\n护盾削减量为 护盾削减系数 * 技能持续时间"
             if recovery_duration > 0:
                 basic_info_text += f"\n解除眩晕时间：{recovery_duration}秒"
         
@@ -220,10 +207,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         
         messages.append("\n".join(str(x) for x in basic_info))
         
-        # 构建转发消息
         forward_msgs = []
         for msg in messages:
-            # 如果消息是字符串，直接添加
             if isinstance(msg, str):
                 forward_msgs.append({
                     "type": "node",
@@ -233,7 +218,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         "content": msg
                     }
                 })
-            # 如果消息是列表（包含图片），将其合并
             elif isinstance(msg, list):
                 forward_msgs.append({
                     "type": "node",
@@ -244,7 +228,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     }
                 })
         
-        # 发送合并转发消息
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
                 "send_group_forward_msg",
