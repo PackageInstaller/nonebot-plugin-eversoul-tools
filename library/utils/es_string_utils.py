@@ -132,7 +132,7 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
             buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
             
             if type == "VALUE":
-                return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
+                return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0), False)
             elif type == "DURATION":
                 return await format_duration(buff_code.get("duration", 0))
     elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
@@ -146,28 +146,27 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
         if ref_function_key in (30, 300):
             buff_id = referenced_code.get("value", 0)
             buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
-            return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0))
+            return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0), False)
         else:
-            return await get_code_value_text(ref_function_key, referenced_code.get("value", 0))
+            return await get_code_value_text(ref_function_key, referenced_code.get("value", 0), False)
     if type == "VALUE":
-        return await get_code_value_text(function_key, skill_code.get("value", 0))
+        return await get_code_value_text(function_key, skill_code.get("value", 0), False)
     elif type == "DURATION":
         return await format_duration(skill_code.get("duration", 0))
-
     return ""
 
 
-async def get_code_value_text(function_key: int, value: float) -> str:
+async def get_code_value_text(function_key: int, value: float, use_color_text: bool) -> str:
     """SkillTextUtil::GetCodeValueText
 
     Args:
         function_key: function key
         value: 数值
+        use_color_text: 是否使用颜色文本
     Returns:
         str: 格式化后的字符串
     """
-    integer = (function_key <= 0x1B and (((1 << function_key) % 32) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2)
-    return await concat_color_text(function_key, value, "code", integer, False)
+    return await concat_color_text(function_key, value, "code", (function_key <= 0x1B and (((1 << function_key) % 32) & 0xC000010) != 0 or ((function_key - 1026) & 0xFFFFFFFF) < 2), use_color_text)
 
 
 async def get_code_value_color_text(function_key: int) -> str:
@@ -190,25 +189,26 @@ async def get_code_value_color_text(function_key: int) -> str:
         return ""
 
 
-async def get_buff_value_text(buff_type: int, value: float, use_color_text: bool = False) -> str:
+async def get_buff_value_text(buff_type: int, value: float, use_color_text: bool) -> str:
     """SkillTextUtil::GetBuffValueText
 
     Args:
         buff_type: buff effect 类型
         value: 数值
+        use_color_text: 是否使用颜色文本
     Returns:
         str: 格式化后的字符串
     """
     if buff_type <= 10102:
         if (((buff_type - 10101) & 0xFFFFFFFF) >= 2 and buff_type != 420):
-            return await concat_color_text(buff_type, value, "buff", False, False)
+            return await concat_color_text(buff_type, value, "buff", False, use_color_text)
         else:
-            return await concat_color_text(buff_type, value, "buff", True, False)
+            return await concat_color_text(buff_type, value, "buff", True, use_color_text)
 
     if (((buff_type - 10106) & 0xFFFFFFFF) <= 4 and ((1 << (buff_type - 122) % 32) & 0x13) != 0):
-        return await concat_color_text(buff_type, value, "buff", True, False)
+        return await concat_color_text(buff_type, value, "buff", True, use_color_text)
     else:
-        return await concat_color_text(buff_type, value, "buff", False, False)
+        return await concat_color_text(buff_type, value, "buff", False, use_color_text)
 
 
 async def get_buff_value_color_text(buff_type: int, value: float) -> str:
@@ -347,12 +347,11 @@ async def process_skill_description(data, description, use_color_text: bool):
         processed_text = await clean_rich_text(description)
     placeholder_pattern = r'<\s*(\d+)\.(VALUE|DURATION)\s*>'
     matches = list(re.finditer(placeholder_pattern, processed_text))
-    
+
     async def get_value_for_match(match):
         no = int(match.group(1))
         type_str = match.group(2)
         return await get_character_skill_description(data, no, type_str)
-
 
     tasks = [get_value_for_match(m) for m in matches]
     replacements = await asyncio.gather(*tasks)
@@ -404,7 +403,6 @@ async def get_string_by_type(data, string_type, no):
     return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
-
 async def get_character_birthday(data, birthday: int) -> str:
         """
         获取格式化后的生日字符串
@@ -419,7 +417,7 @@ async def get_character_birthday(data, birthday: int) -> str:
         # 0x51EB851F 是 2^37 / 100 的向上取整，用来模拟除 100，加快运算
         # (0x51EB851F * birthday >> 37) 等价于 birthday / 100
         # (0x51EB851F * birthday >> 63) 用来提取最高位
-        month = (0x51EB851F * birthday >> 37) % 32 + ((0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF) % 64
+        month = ((0x51EB851F * birthday) >> 37) % 32 + ((0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF) % 64
         day = birthday % 0x64
         return template.format(str(month), str(day))
 
