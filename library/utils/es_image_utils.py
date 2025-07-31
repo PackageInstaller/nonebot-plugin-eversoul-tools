@@ -73,16 +73,19 @@ async def get_character_portrait(data, prefab_path):
     
     portraits = []
 
+    base_name = ""
+    controller_path = ""
+
     # 获取基础头像
     for costume in data["item_costume"]["json"]:
         if costume.get("no") == prefab_path:
             base_name = costume.get("portrait_path", "")
             controller_path = costume.get("portrait_path", "") # controller_path与 portrait_path相同
             break
-            
-    portraits.append(str(SOUL_DIR / f"{base_name}_512.png"))
+    
+    if base_name:
+        portraits.append(str(SOUL_DIR / f"{base_name}_512.png"))
 
-    # 获取皮肤头像
     if controller_path:
         costume_portraits = []
         for costume in data["item_costume"]["json"]:
