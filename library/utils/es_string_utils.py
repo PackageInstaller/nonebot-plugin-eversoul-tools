@@ -123,8 +123,12 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
         str: 格式化后的技能描述
     """
 
-    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == no))
+    skill_code = next((code for code in data["skill_code"]["json"] if code["no"] == no), None)
+    if skill_code is None:
+        return ""
+    
     function_key = skill_code.get("function_key", 0)
+    use_color_text = False
 
     if function_key > 29:
         if function_key in (30, 300):
@@ -132,7 +136,7 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
             buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
             
             if type == "VALUE":
-                return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0), False)
+                return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0), use_color_text)
             elif type == "DURATION":
                 return await format_duration(buff_code.get("duration", 0))
     elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
@@ -146,11 +150,11 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
         if ref_function_key in (30, 300):
             buff_id = referenced_code.get("value", 0)
             buff_code = next((b for b in data["skill_buff"]["json"] if b["no"] == buff_id))
-            return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0), False)
+            return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0), use_color_text)
         else:
-            return await get_code_value_text(ref_function_key, referenced_code.get("value", 0), False)
+            return await get_code_value_text(ref_function_key, referenced_code.get("value", 0), use_color_text)
     if type == "VALUE":
-        return await get_code_value_text(function_key, skill_code.get("value", 0), False)
+        return await get_code_value_text(function_key, skill_code.get("value", 0), use_color_text)
     elif type == "DURATION":
         return await format_duration(skill_code.get("duration", 0))
     return ""
@@ -173,7 +177,7 @@ async def get_code_value_color_text(function_key: int) -> str:
     """
     SkillTextUtil::GetCodeValueColorText
     Args:
-        function_key: function key (对应 SkillEffect 枚举值)
+        function_key: function key
     Returns:
         str: 颜色代码
     """

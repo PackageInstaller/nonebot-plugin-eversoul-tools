@@ -67,6 +67,10 @@ async def get_character_portrait(data, prefab_path):
     Returns:
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
+
+    if prefab_path == "":
+        return []
+    
     portraits = []
 
     # 获取基础头像

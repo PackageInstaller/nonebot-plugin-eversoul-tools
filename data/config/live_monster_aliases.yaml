@@ -125,6 +125,13 @@ names:
     ja_name: ''
     aliases: []
     hero_id: 8170
+  - zh_tw_name: 藍狼
+    zh_cn_name: ''
+    kr_name: 푸른 늑대
+    en_name: Blue Wolf
+    ja_name: 青いオオカミ
+    aliases: []
+    hero_id: 8180
   - zh_tw_name: 狼爪人類
     zh_cn_name: ''
     kr_name: 발톱 늑대 인간
@@ -321,6 +328,13 @@ names:
     ja_name: G.メフィ
     aliases: []
     hero_id: 9906
+  - zh_tw_name: 艾拉
+    zh_cn_name: ''
+    kr_name: 아이라
+    en_name: Aira
+    ja_name: アイラ
+    aliases: []
+    hero_id: 9600
   - zh_tw_name: 魯德拉
     zh_cn_name: ''
     kr_name: 루드라
