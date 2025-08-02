@@ -3,7 +3,7 @@ Eversoul群组数据模型 - 管理群组通知记录
 """
 import os
 import json
-from typing import Optional, Dict, Any, List, Set
+from typing import Optional, Dict, Any, List
 import aiosqlite
 from nonebot.log import logger
 from datetime import datetime, timezone, timedelta

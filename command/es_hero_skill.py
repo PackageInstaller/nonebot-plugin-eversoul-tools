@@ -26,7 +26,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         alias_map = await load_aliases(group_id)
         
         # 判断是否为测试模式
-        is_review = config["type"] == "review"
+        review = config["type"] == "review"
 
         # 尝试从别名映射中获取hero_id
         hero_id = alias_map.get(hero_name)
@@ -154,14 +154,14 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 
                 skill_text.append(MessageSegment.image(colored_icon))
             
-            skill_type_text = await select_text_by_priority(skill_type_zh_tw, skill_type_kr, is_review)
-            skill_name_text = await select_text_by_priority(skill_info["name"]["zh_tw"], skill_info["name"]["kr"], is_review)
+            skill_type_text = await select_text_by_priority(skill_type_zh_tw, skill_type_kr, review)
+            skill_name_text = await select_text_by_priority(skill_info["name"]["zh_tw"], skill_info["name"]["kr"], review)
             
             if skill_info["support"]:
                 main_effects = []
                 for desc in skill_info["descriptions"]:
                     if desc.get("type") == "support":
-                        desc_text = await select_text_by_priority(desc["desc_zh_tw"], desc["desc_kr"], is_review)
+                        desc_text = await select_text_by_priority(desc["desc_zh_tw"], desc["desc_kr"], review)
                         main_effects.append(desc_text)
                 
                 if main_effects:
@@ -170,7 +170,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             else:
                 skill_text.append(f"【{skill_type_text}】{skill_name_text}")
                 for i, desc in enumerate(skill_info["descriptions"]):
-                    desc_text = await select_text_by_priority(desc["desc_zh_tw"], desc["desc_kr"], is_review)
+                    desc_text = await select_text_by_priority(desc["desc_zh_tw"], desc["desc_kr"], review)
                     hero_level = desc.get("hero_level", 1)
                     unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
                     skill_text.append(f"等级{i+1}：{desc_text}{unlock_text}\n")
@@ -190,13 +190,13 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if os.path.exists(signature_img_path):
                 signature_msg.append(MessageSegment.image(f"file:///{signature_img_path}"))
             
-            signature_name_text = await select_text_by_priority(signature_info["name"]["zh_tw"], signature_info["name"]["kr"], is_review)
-            signature_desc_text = await select_text_by_priority(signature_info["description"]["zh_tw"], signature_info["description"]["kr"], is_review)
-            signature_title_text = await select_text_by_priority(signature_info["title"]["zh_tw"], signature_info["title"]["kr"], is_review)
+            signature_name_text = await select_text_by_priority(signature_info["name"]["zh_tw"], signature_info["name"]["kr"], review)
+            signature_desc_text = await select_text_by_priority(signature_info["description"]["zh_tw"], signature_info["description"]["kr"], review)
+            signature_title_text = await select_text_by_priority(signature_info["title"]["zh_tw"], signature_info["title"]["kr"], review)
             
             skill_descriptions_text = []
             for i, skill in enumerate(signature_info["skills"]):
-                desc_text = await select_text_by_priority(skill["desc_zh_tw"], skill["desc_kr"], is_review)
+                desc_text = await select_text_by_priority(skill["desc_zh_tw"], skill["desc_kr"], review)
                 skill_descriptions_text.append(f"等級{i+1}：{desc_text}")
             
             signature_info_text = f"""{signature_name_text}

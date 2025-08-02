@@ -21,7 +21,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         alias_map = await load_aliases(group_id)
         
         # 判断是否为测试模式
-        is_review = config["type"] == "review"
+        review = config["type"] == "review"
 
         # 尝试从别名映射中获取hero_id
         hero_id = alias_map.get(hero_name)
@@ -200,8 +200,20 @@ CV_KR：{cv_kr}"""
                     messages.append("\n".join(str(x) for x in image_msg))
                 break
 
+        # 获取自我介绍
+        if hero_desc and isinstance(hero_desc, dict):
+            intro_sno = hero_desc.get("introduction_sno")
+            if intro_sno:
+                intro_data = await get_string_character(data, intro_sno)
+                intro_zh_tw = intro_data["zh_tw"]
+                intro_kr = intro_data["kr"]
+                if intro_zh_tw or intro_kr:
+                    intro_text = await select_text_by_priority(intro_zh_tw, intro_kr, review)
+                    messages.append("【自我介绍】\n" + intro_text)
+        
+
         # 获取灵魂链接信息，
-        soullink_info = await get_character_soullink(data, hero_id, is_review)
+        soullink_info = await get_character_soullink(data, hero_id, review)
         if soullink_info:
             for link in soullink_info:
                 link_msg = ["【灵魂链接】"]
@@ -235,28 +247,10 @@ CV_KR：{cv_kr}"""
                     
                 messages.append("\n".join(link_msg))
 
-        # 获取自我介绍
-        if hero_desc and isinstance(hero_desc, dict):
-            intro_sno = hero_desc.get("introduction_sno")
-            if intro_sno:
-                intro_data = await get_string_character(data, intro_sno)
-                intro_zh_tw = intro_data["zh_tw"]
-                intro_zh_cn = intro_data["zh_cn"]
-                intro_kr = intro_data["kr"]
-                intro_en = intro_data["en"]
-                if intro_zh_tw or intro_kr:
-                    intro_text = await select_text_by_priority(intro_zh_tw, intro_kr, is_review)
-                    messages.append("【自我介绍】\n" + intro_text)
-        
         # 添加好感故事攻略
         has_story, episode_info, endings = await get_character_story(data, hero_id)
         if has_story:
-                messages.append(await format_character_story(episode_info, endings, is_review))
-        
-        # 添加角色关键字信息
-        keyword_info = await get_character_keyword(data, hero_id, is_review=False)
-        if keyword_info:
-            messages.append(keyword_info)
+                messages.append(await format_character_story(episode_info, endings, review))
         
         # 好感故事CG
         cg_images = await get_character_affection_cg(data, hero_id)
@@ -271,6 +265,11 @@ CV_KR：{cv_kr}"""
                     current_episode = episode
                 cg_msg.append(MessageSegment.image(f"file:///{img_path}"))
             messages.append("".join(str(x) for x in cg_msg))
+        
+        # 添加角色关键字信息
+        keyword_info = await get_character_keyword(data, hero_id, review=False)
+        if keyword_info:
+            messages.append(keyword_info)
 
         # EverPhone插图
         evertalk_illusts = await get_character_evertalk_cg(data, hero_id)
@@ -282,7 +281,7 @@ CV_KR：{cv_kr}"""
             messages.append("".join(str(x) for x in illust_msg))
 
         # 添加专属领地物品信息
-        town_objects = await get_character_town_object(data, hero_id, is_review)
+        town_objects = await get_character_town_object(data, hero_id, review)
         if town_objects:
             objects_msg: list = ["【专属领地物品】"]
             for obj_no, name, grade, slot_type, desc, img_path, battle_power_per in town_objects:
@@ -299,7 +298,7 @@ CV_KR：{cv_kr}"""
                     objects_msg.append(f"战力百分比：{battle_power_per}")
                 
                 # 添加可进行的任务信息
-                tasks = await get_character_town_object_task(data, obj_no, is_review)
+                tasks = await get_character_town_object_task(data, obj_no, review)
                 if tasks:
                     objects_msg.append("\n可进行的打工：")
                     for task in tasks:

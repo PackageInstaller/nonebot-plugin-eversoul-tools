@@ -6,7 +6,6 @@ import json
 import aiohttp
 import asyncio
 from typing import Tuple, Optional, List, Dict, Any
-from nonebot.log import logger
 from . import *
 
 

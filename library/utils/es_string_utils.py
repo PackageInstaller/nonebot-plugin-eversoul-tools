@@ -14,29 +14,26 @@ from ...config import (
 )
 
 
-async def select_text_by_priority(zh_tw: str, kr: str, is_review: bool = False) -> str:
-    """根据优先级选择文本
-    
-    优先级：zh_tw > (is_review ? kr : zh_tw)
-    
+async def select_text_by_priority(zh_tw: str, kr: str, review: bool = False) -> str:
+    """
+    根据优先级选择文本
+    优先级：zh_tw > (review ? kr : zh_tw)
     Args:
         zh_tw: 繁体中文文本
         kr: 韩文文本
-        is_review: 是否为测试模式
+        review: 是否为测试模式
     
     Returns:
         str: 选择的文本
     """
-    return zh_tw if zh_tw else (kr if is_review else zh_tw)
+    return zh_tw if zh_tw else (kr if review else zh_tw)
 
 
 async def clean_rich_text(text: str) -> str:
     """
     清理富文本标签
-    
     Args:
         text: 包含富文本标签的输入字符串
-    
     Returns:
         清理后的字符串
     """
@@ -112,8 +109,8 @@ async def format_duration(duration: float) -> str:
 
 
 async def get_character_skill_description(data, no: int, type: str) -> str:
-    """获取角色技能值
-    
+    """
+    获取角色技能值
     Args:
         data: json 数据
         value_id: 技能值编号
@@ -161,8 +158,9 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
 
 
 async def get_code_value_text(function_key: int, value: float, use_color_text: bool) -> str:
-    """SkillTextUtil::GetCodeValueText
-
+    """
+    获取code类型数值文本
+    SkillTextUtil::GetCodeValueText
     Args:
         function_key: function key
         value: 数值
@@ -175,6 +173,7 @@ async def get_code_value_text(function_key: int, value: float, use_color_text: b
 
 async def get_code_value_color_text(function_key: int) -> str:
     """
+    获取code类型数值颜色文本
     SkillTextUtil::GetCodeValueColorText
     Args:
         function_key: function key
@@ -194,8 +193,9 @@ async def get_code_value_color_text(function_key: int) -> str:
 
 
 async def get_buff_value_text(buff_type: int, value: float, use_color_text: bool) -> str:
-    """SkillTextUtil::GetBuffValueText
-
+    """
+    获取buff类型数值文本
+    SkillTextUtil::GetBuffValueText
     Args:
         buff_type: buff effect 类型
         value: 数值
@@ -217,12 +217,11 @@ async def get_buff_value_text(buff_type: int, value: float, use_color_text: bool
 
 async def get_buff_value_color_text(buff_type: int, value: float) -> str:
     """
+    获取buff类型数值颜色文本
     SkillTextUtil::GetBuffValueColorText
-
     Args:
         buff_type: buff effect 类型
         value: 数值
-    
     Returns:
         str: 颜色代码
     """
@@ -303,12 +302,11 @@ async def get_buff_value_color_text(buff_type: int, value: float) -> str:
 
 async def get_stat_string_in_hero_option(value: float, buff_type: str) -> str:
     """
+    获取潜能属性字符串
     UtilManager::GetStatStringInHeroOption
-
     Args:
         value: 需要格式化的原始数值。
         buff_type: 效果的类型
-
     Returns:
         格式化后的字符串。
     """
@@ -335,12 +333,10 @@ async def get_stat_string_in_hero_option(value: float, buff_type: str) -> str:
 async def process_skill_description(data, description, use_color_text: bool):
     """
     处理技能描述
-    
     Args:
         data: json 数据
         description: 技能描述
         use_color_text: 是否使用颜色文本，True时保留富文本格式，False时清理富文本
-
     Returns:
         str: 处理后的技能描述
     """
@@ -368,25 +364,23 @@ async def process_skill_description(data, description, use_color_text: bool):
 
 
 async def get_formation_type(formation_no):
-    """get formation type
-    
+    """
+    获取阵型类型
     Args:
-        formation_no: formation no
-    
+        formation_no: 阵型编号
     Returns:
-        str: formation type
+        str: 阵型类型
     """
     return FORMATION_TYPE_MAPPING.get(formation_no, "")
 
 
 async def get_string_by_type(data, string_type, no):
-    """get string by type
-    
+    """
+    获取字符串
     Args:
         data: JSON 数据字典
         string_type: string 类型的都行
-        no: string no
-        
+        no: 字符串编号
     Returns:
         dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
     """
@@ -417,7 +411,7 @@ async def get_character_birthday(data, birthday: int) -> str:
             str: 格式化的生日字符串
         """
 
-        template = (await get_string_by_type(data, "ui", 10625)).get("zh_tw")
+        template = (await get_string_by_type(data, "ui", 10625)).get("zh_tw", "{0}月{1}日")
         # 0x51EB851F 是 2^37 / 100 的向上取整，用来模拟除 100，加快运算
         # (0x51EB851F * birthday >> 37) 等价于 birthday / 100
         # (0x51EB851F * birthday >> 63) 用来提取最高位
@@ -427,11 +421,11 @@ async def get_character_birthday(data, birthday: int) -> str:
 
 
 async def get_string_character(data, hero_no, special=False):
-    """get string character
-    
+    """
+    获取角色名称
     Args:
         data: JSON 数据字典
-        hero_no: hero no
+        hero_no: 角色编号
         special: 当文本无法直接从 string_character 中获取时使用
     Returns:
         dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
@@ -457,14 +451,14 @@ async def get_string_character(data, hero_no, special=False):
 
 
 async def get_drop_item_rate(data, group_no):
-    """get drop item info, keep the item with the highest probability for the same name
-    
+    """
+    获取掉落物品信息，保留概率最高的物品
     Args:
-        data: JSON data dictionary
-        group_no: drop group no
+        data: JSON 数据字典
+        group_no: 掉落组编号
     
     Returns:
-        list: [(item name, value, drop rate)]
+        list: [(物品名称, 数量, 掉落率)]
     """
     drop_items = []
     
@@ -503,14 +497,13 @@ async def get_drop_item_rate(data, group_no):
 
 async def get_string_item(data, item_no):
     """
-    get string item
-
+    获取物品名称
     Args:
-        data: JSON data dictionary
-        item_no: item no
+        data: JSON 数据字典
+        item_no: 物品编号
     
     Returns:
-        dict: include different language text, keys are 'zh_tw', 'zh_cn', 'kr', 'en'
+        dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
     """
     # 在Item.json中查找物品
     for item in data["item"]["json"]:
@@ -530,14 +523,14 @@ async def get_string_item(data, item_no):
 
 
 async def get_character_cv(data, hero_desc):
-    """get character cv
-    
+    """
+    获取角色配音
     Args:
-        data: JSON data dictionary
-        hero_desc: hero desc
+        data: JSON 数据字典
+        hero_desc: 角色描述
     
     Returns:
-        dict: include korean and japanese cv, keys are 'kr', 'ja'
+        dict: 包含韩语和日语配音, 键为 'kr', 'ja'
     """
     cv_kr = (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw", "？？？") if hero_desc else "？？？"
     cv_ja = (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_tw", "？？？") if hero_desc else "？？？"
@@ -547,14 +540,14 @@ async def get_character_cv(data, hero_desc):
 
 
 async def get_character_release_date(data, hero_id):
-    """get character release date
-    
+    """
+    获取角色发布日期
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
+        data: JSON 数据字典
+        hero_id: 角色编号
     
     Returns:
-        str: formatted release date, if not found, return default date (2023-01-05)
+        str: 格式化的发布日期, 如果未找到, 返回默认日期 (2023-01-05)
     """
     release_date = None
     for movie in data["promotion_movie"]["json"]:
@@ -573,23 +566,14 @@ async def get_character_release_date(data, hero_id):
 
 
 async def get_character_arbeit(data, hero_id):
-    """get character arbeit
-    
+    """
+    获取角色属性
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
-    
+        data: JSON 数据字典
+        hero_id: 角色编号
     Returns:
-        dict: include initial and max level attributes, keys are 'initial', 'max'
+        dict: 包含初始和满级属性, 键为 'initial', 'max'
 
-    get character arbeit
-    args:
-        data: JSON data dictionary
-        hero_id: hero id
-    return:
-        dict: character arbeit, if not found, return "？？？"
-    exception:
-        None
     """
     # 收集所有相关等级的数据
     # collect all related level data
@@ -633,23 +617,14 @@ async def get_character_arbeit(data, hero_id):
 
 
 async def get_character_prefer_gift(data, hero_id):
-    """get character prefer gift
-    
+    """
+    获取角色喜好礼物
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
+        data: JSON 数据字典
+        hero_id: 角色编号
     
     Returns:
-        str: prefer gift items, separated by comma
-
-    get character prefer gift
-    args:
-        data: JSON data dictionary
-        hero_id: hero id
-    return:
-        str: prefer gift items, separated by comma
-    exception:
-        None
+        str: 喜好礼物, 用逗号分隔
     """
     # 在HeroGift.json中查找角色的喜好礼物
     gift_items = []
@@ -665,13 +640,14 @@ async def get_character_prefer_gift(data, hero_id):
 
 
 async def get_character_similar_name(query, alias_map):
-    """get character similar name
+    """
+    获取角色相似名称
     Args:
-        query: query name
-        alias_map: alias map
+        query: 查询名称
+        alias_map: 别名映射
     
     Returns:
-        list: character similar name list [(name, aliases), ...]
+        list: 角色相似名称列表 [(名称, 别名), ...]
     """
     hero_map = {}
     for name, hero_id in alias_map.items():
@@ -701,13 +677,12 @@ async def get_character_similar_name(query, alias_map):
 
 
 async def get_character_skill(data, skill_no, support=False):
-    """获取角色技能
-    
+    """
+    获取角色技能
     Args:
-        data: json 数据
+        data: JSON 数据字典
         skill_no: 技能编号
         support: 是否为支援技能
-    
     Returns:
         dict: 包含技能信息
     """
@@ -788,13 +763,13 @@ async def get_character_skill(data, skill_no, support=False):
     }
 
 
-async def get_character_keyword_location(data: dict, keyword_get_details: int, is_review: bool = False) -> str:
-    """get character keyword location
-    
+async def get_character_keyword_location(data: dict, keyword_get_details: int, review: bool = False) -> str:
+    """
+    获取角色关键字地点
     Args:
-        data: JSON data dictionary
-        keyword_get_details: keyword get details
-        is_review: is test
+        data: JSON 数据字典
+        keyword_get_details: 关键字获取详情
+        review: 是否为测试
     """    
     # 如果没有keyword_get_details或为0，返回"通用"
     # if keyword_get_details is not provided or is 0, return "通用"
@@ -816,19 +791,19 @@ async def get_character_keyword_location(data: dict, keyword_get_details: int, i
     if location_data:
         zh_tw = location_data.get("zh_tw", "")
         kr = location_data.get("kr", "")
-        return await select_text_by_priority(zh_tw, kr, is_review)
+        return await select_text_by_priority(zh_tw, kr, review)
     return ""
 
 
-async def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword_get_details: int, is_review: bool = False) -> str:
-    """get character lost item
-    
+async def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword_get_details: int, review: bool = False) -> str:
+    """
+    获取角色遗失物品
     Args:
-        data: JSON data dictionary
-        hero_no: hero no
-        keyword_type: keyword type
-        keyword_get_details: keyword get details
-        is_review: is test
+        data: JSON 数据字典
+        hero_no: 角色编号
+        keyword_type: 关键字类型
+        keyword_get_details: 关键字获取详情
+        review: 是否为测试
     """
     try:
         lost_item = next((item for item in data["town_lost_item"]["json"] 
@@ -846,7 +821,7 @@ async def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, k
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), is_review)
+                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), review)
                     for s in data["string_talk"]["json"] if s.get("no") == choice_talk.get("no")):
                         return f"{text}"
 
@@ -855,7 +830,7 @@ async def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, k
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), is_review)
+                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), review)
                     for s in data["string_talk"]["json"] if s.get("no") == choice_talk.get("no")):
                         return f"{text}"
 
@@ -864,7 +839,7 @@ async def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, k
                 talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_trip]
                 choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
                 if choice_talk and choice_talk.get("no"):
-                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), is_review)
+                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), review)
                     for s in data["string_talk"]["json"] if s.get("no") == choice_talk.get("no")):
                         return f"{text}"
         
@@ -876,11 +851,11 @@ async def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, k
 
 
 async def get_character_keyword_point(data: dict, keyword_type: str) -> list:
-    """get character keyword point
-    
+    """
+    获取角色关键字点数
     Args:
-        data: JSON data dictionary
-        keyword_type: keyword type
+        data: JSON 数据字典
+        keyword_type: 关键字类型
     """
     key_name = {
         "normal": "TRIP_KEYWORD_GRADE_POINT",
@@ -898,21 +873,21 @@ async def get_character_keyword_point(data: dict, keyword_type: str) -> list:
     return [20, 40, 60]  # 默认值. default value
 
 
-async def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int, keyword_type: int = 0, is_review: bool = False) -> str:
-    """get character keyword source
-    
-    Args:
-        data: JSON data dictionary
-        source_sno: source sno
-        details: details
-        hero_no: hero no
-        keyword_type: keyword type
-        is_review: is test
+async def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int, keyword_type: int = 0, review: bool = False) -> str:
     """
-    # 优先获取zh_tw，当zh_tw为空时再根据is_review判断. get zh_tw first, then check is_review
+    获取角色关键字来源
+    Args:
+        data: JSON 数据字典
+        source_sno: 来源编号
+        details: 详情
+        hero_no: 角色编号
+        keyword_type: 关键字类型
+        review: 是否为测试
+    """
+    # 优先获取zh_tw，当zh_tw为空时再根据review判断. get zh_tw first, then check review
     source_data = await get_string_by_type(data, "ui", source_sno)
     if source_data:
-        source = await select_text_by_priority(source_data["zh_tw"], source_data["kr"], is_review)
+        source = await select_text_by_priority(source_data["zh_tw"], source_data["kr"], review)
     else:
         source = ""
     
@@ -921,7 +896,7 @@ async def get_character_keyword_source(data: dict, source_sno: int, details: int
         
     # 检查是否是遗失物品. check if it is lost item
     if hero_no and keyword_type:
-        lost_item = await get_character_lost_item(data, hero_no, keyword_type, details, is_review)
+        lost_item = await get_character_lost_item(data, hero_no, keyword_type, details, review)
         if lost_item:
             return lost_item
         
@@ -935,7 +910,7 @@ async def get_character_keyword_source(data: dict, source_sno: int, details: int
             if location_data:
                 zh_tw = location_data.get("zh_tw", "")
                 kr = location_data.get("kr", "")
-                location_name = await select_text_by_priority(zh_tw, kr, is_review)
+                location_name = await select_text_by_priority(zh_tw, kr, review)
             else:
                 location_name = "未知"
             return f"在{location_name}解锁"
@@ -972,13 +947,13 @@ async def get_character_keyword_source(data: dict, source_sno: int, details: int
     return source
 
 
-async def get_character_keyword(data: dict, hero_id: int, is_review: bool = False) -> str:
-    """get character keyword
-    
+async def get_character_keyword(data: dict, hero_id: int, review: bool = False) -> str:
+    """
+    获取角色关键字
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
-        is_review: is test
+        data: JSON 数据字典
+        hero_id: 角色编号
+        review: 是否为测试
     """
     trip_keywords = []
     keyword_msgs = []
@@ -1008,7 +983,7 @@ async def get_character_keyword(data: dict, hero_id: int, is_review: bool = Fals
                 favor_point = points[grade_index]
                     
                 trip_keywords.append({
-                    "name": (await get_string_by_type(data, "ui", keyword_info.get("keyword_string"))).get(await select_text_by_priority("zh_tw", "kr", is_review), "？？？"),
+                    "name": (await get_string_by_type(data, "ui", keyword_info.get("keyword_string"))).get(await select_text_by_priority("zh_tw", "kr", review), "？？？"),
                     "type": keyword_type,
                     "favor_point": favor_point,
                     "grade": (await get_string_by_type(data, "system", grade_sno)).get("zh_tw", "？？？"),
@@ -1018,7 +993,7 @@ async def get_character_keyword(data: dict, hero_id: int, is_review: bool = Fals
                         keyword_info.get("keyword_get_details", 0),
                         hero_id,
                         keyword_info.get("keyword_type"),
-                        is_review
+                        review
                     ),
                     "keyword_get_details": keyword_info.get("keyword_get_details")
                 })
@@ -1036,7 +1011,7 @@ async def get_character_keyword(data: dict, hero_id: int, is_review: bool = Fals
         for keyword in bad_keywords:
             msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息
-            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), is_review):
+            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), review):
                 msg += f"\n  地点：{location}"
             keyword_msgs.append(msg)
     
@@ -1049,7 +1024,7 @@ async def get_character_keyword(data: dict, hero_id: int, is_review: bool = Fals
         for keyword in normal_keywords:
             msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息. add location info
-            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), is_review):
+            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), review):
                 msg += f"\n  地点：{location}"
             keyword_msgs.append(msg)
         
@@ -1062,7 +1037,7 @@ async def get_character_keyword(data: dict, hero_id: int, is_review: bool = Fals
         for keyword in (k for k in good_keywords if k["source"]):
             msg = f"・{keyword['name']}（{keyword['grade']}）"
             # 添加地点信息. add location info
-            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), is_review):
+            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), review):
                 msg += f"\n  地点：{location}"
             if keyword["source"]:
                 msg += f"\n  条件：{keyword['source']}"
@@ -1071,15 +1046,15 @@ async def get_character_keyword(data: dict, hero_id: int, is_review: bool = Fals
     return "\n".join(keyword_msgs)
 
 
-async def get_character_town_object(data: dict, hero_id: int, is_review=False) -> list:
-    """get character town object
-    
+async def get_character_town_object(data: dict, hero_id: int, review=False) -> list:
+    """
+    获取角色专属领地物品
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
+        data: JSON 数据字典
+        hero_id: 角色编号
     
     Returns:
-        list: object info list [(object no, object name, object grade, object type, object desc, image path), ...]
+        list: 物品信息列表 [(物品编号, 物品名称, 物品品质, 物品类型, 物品描述, 图片路径), ...]
     """
     try:
         objects_info = []
@@ -1115,7 +1090,7 @@ async def get_character_town_object(data: dict, hero_id: int, is_review=False) -
                                 if string.get("no") == name_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    name = await select_text_by_priority(zh_tw, kr, is_review)
+                                    name = await select_text_by_priority(zh_tw, kr, review)
                                     break
                         
                         # 获取物品品质. get item grade
@@ -1126,7 +1101,7 @@ async def get_character_town_object(data: dict, hero_id: int, is_review=False) -
                                 if string.get("no") == grade_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    grade = await select_text_by_priority(zh_tw, kr, is_review)
+                                    grade = await select_text_by_priority(zh_tw, kr, review)
                                     break
                         
                         # 获取物品类型. get item type
@@ -1137,7 +1112,7 @@ async def get_character_town_object(data: dict, hero_id: int, is_review=False) -
                                 if string.get("no") == slot_limit_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    slot_type = await select_text_by_priority(zh_tw, kr, is_review)
+                                    slot_type = await select_text_by_priority(zh_tw, kr, review)
                                     break
                         
                         # 获取物品描述并清理颜色标签. get item description and clean color tags
@@ -1148,7 +1123,7 @@ async def get_character_town_object(data: dict, hero_id: int, is_review=False) -
                                 if string.get("no") == desc_sno:
                                     zh_tw = string.get("zh_tw", "")
                                     kr = string.get("kr", "")
-                                    desc_text = await select_text_by_priority(zh_tw, kr, is_review)
+                                    desc_text = await select_text_by_priority(zh_tw, kr, review)
                                     desc = await clean_rich_text(desc_text)
                                     break
                         
@@ -1172,15 +1147,15 @@ async def get_character_town_object(data: dict, hero_id: int, is_review=False) -
         return []
 
 
-async def get_character_town_object_task(data: dict, obj_no: int, is_review=False) -> list:
-    """get character town object task
-    
+async def get_character_town_object_task(data: dict, obj_no: int, review=False) -> list:
+    """
+    获取角色专属领地物品任务
     Args:
-        data: JSON data dictionary
-        obj_no: object no
+        data: JSON 数据字典
+        obj_no: 物品编号
     
     Returns:
-        list: task info list
+        list: 任务信息列表
     """
     try:
         tasks_info = []
@@ -1203,7 +1178,7 @@ async def get_character_town_object_task(data: dict, obj_no: int, is_review=Fals
                                 if string.get("no") == rarity_sno:
                                     rarity_zh_tw = string.get("zh_tw", "")
                                     rarity_kr = string.get("kr", "")
-                                    rarity = await select_text_by_priority(rarity_zh_tw, rarity_kr, is_review)
+                                    rarity = await select_text_by_priority(rarity_zh_tw, rarity_kr, review)
                                     break
                         
                         # 获取任务名称. get task name
@@ -1214,7 +1189,7 @@ async def get_character_town_object_task(data: dict, obj_no: int, is_review=Fals
                                 if string.get("no") == name_sno:
                                     name_zh_tw = string.get("zh_tw", "")
                                     name_kr = string.get("kr", "")
-                                    name = await select_text_by_priority(name_zh_tw, name_kr, is_review)
+                                    name = await select_text_by_priority(name_zh_tw, name_kr, review)
                                     break
                                     
                         # 获取所需时间. get required time
@@ -1238,7 +1213,7 @@ async def get_character_town_object_task(data: dict, obj_no: int, is_review=Fals
                                         name_sno = item.get("name_sno")
                                         if name_sno:
                                             item_name = await get_string_by_type(data, "item", name_sno)
-                                            item_name = await select_text_by_priority(item_name["zh_tw"], item_name["kr"], is_review)
+                                            item_name = await select_text_by_priority(item_name["zh_tw"], item_name["kr"], review)
                                             rewards.append(f"{item_name}x{item_value}")
                         
                         # 添加任务信息. add task info
@@ -1260,15 +1235,15 @@ async def get_character_town_object_task(data: dict, obj_no: int, is_review=Fals
 
 
 async def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
-    """get cash pack
-    
+    """
+    获取礼包信息
     Args:
-        data: JSON data dictionary
-        item_type: package type ('barrier'/'stage'/'tower'/'grade_eternal')
-        gate_info: gate/hero info dictionary
+        data: JSON 数据字典
+        item_type: 礼包类型 ('barrier'/'stage'/'tower'/'grade_eternal')
+        gate_info: 门/角色信息字典
     
     Returns:
-        list: include package info message list
+        list: 礼包信息列表
     """
     messages = []
     shop_items = []
@@ -1339,13 +1314,13 @@ async def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
     return messages
 
 
-async def get_character_soullink(data: dict, hero_id: int, is_review: bool = False) -> list:
-    """get character soullink
-    
+async def get_character_soullink(data: dict, hero_id: int, review: bool = False) -> list:
+    """
+    获取角色灵魂链接
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
-        is_review: is test
+        data: JSON 数据字典
+        hero_id: 角色编号
+        review: 是否为测试
     """
     soullink_info = []
     
@@ -1368,10 +1343,10 @@ async def get_character_soullink(data: dict, hero_id: int, is_review: bool = Fal
         
         # 获取灵魂链接标题和故事.
         title = await get_string_by_type(data, "character", link.get("group_title"))
-        title = await select_text_by_priority(title["zh_tw"], title["kr"], is_review)
+        title = await select_text_by_priority(title["zh_tw"], title["kr"], review)
         
         story = await get_string_by_type(data, "character", link.get("group_story"))
-        story = await select_text_by_priority(story["zh_tw"], story["kr"], is_review)
+        story = await select_text_by_priority(story["zh_tw"], story["kr"], review)
         
         # 获取所有角色名称
         hero_names = []
@@ -1379,7 +1354,7 @@ async def get_character_soullink(data: dict, hero_id: int, is_review: bool = Fal
             name_data = await get_string_character(data, hid, special=True)
             name_zh_tw = name_data["zh_tw"]
             name_kr = name_data["kr"]
-            name = await select_text_by_priority(name_zh_tw, name_kr, is_review)
+            name = await select_text_by_priority(name_zh_tw, name_kr, review)
             if name:
                 hero_names.append(name)
                 
@@ -1398,7 +1373,7 @@ async def get_character_soullink(data: dict, hero_id: int, is_review: bool = Fal
                 # 获取条件文本
                 condition_string_no = item.get("condition_string")
                 condition_data = await get_string_by_type(data, "ui", condition_string_no)
-                condition_text = await select_text_by_priority(condition_data["zh_tw"], condition_data["kr"], is_review)
+                condition_text = await select_text_by_priority(condition_data["zh_tw"], condition_data["kr"], review)
                 
                 condition_text = condition_text.format(
                     item.get("condition_count", 0),
@@ -1452,7 +1427,7 @@ async def get_character_signature_value(data, level_group):
     """获取角色遗物值
     
     Args:
-        data: json 数据
+        data: JSON 数据字典
         level_group: 遗物等级组编号
     
     Returns:
@@ -1489,7 +1464,7 @@ async def get_character_signature(data, hero_id):
     """获取角色遗物
     
     Args:
-        data: json 数据
+        data: JSON 数据字典
         hero_id: 角色编号
     
     Returns:
@@ -1585,12 +1560,13 @@ async def get_character_signature(data, hero_id):
 
 
 async def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, normal_threshold):
-    """calculate normal ending choice
+    """
+    计算正常结局选择
     
     Args:
-        all_episodes_choices: all episodes choices
-        bad_threshold: bad threshold
-        normal_threshold: normal threshold
+        all_episodes_choices: 所有结局选择
+        bad_threshold: 坏结局阈值
+        normal_threshold: 正常结局阈值
     """
     good_ending_choices = []
     bad_ending_choices = []
@@ -1725,11 +1701,11 @@ async def calculate_normal_ending_choice(all_episodes_choices, bad_threshold, no
 
 
 async def get_character_story(data, hero_id):
-    """get character story
-    
+    """
+    获取角色故事
     Args:
-        data: JSON data dictionary
-        hero_id: hero id
+        data: JSON 数据字典
+        hero_id: 角色编号
     """
     try:
         story_episodes = []
@@ -1822,13 +1798,13 @@ async def get_character_story(data, hero_id):
         return False, [], {}
 
 
-async def format_character_story(episode_info, endings, is_review=False):
-    """format character story
-    
+async def format_character_story(episode_info, endings, review=False):
+    """
+    格式化角色故事
     Args:
-        episode_info: episode info
-        endings: endings
-        is_review: is test
+        episode_info: 剧情信息
+        endings: 结局信息
+        review: 是否为测试
     """
     good_end = ["😃好结局攻略："]
     normal_end = ["🙂一般结局攻略："]
@@ -1855,7 +1831,7 @@ async def format_character_story(episode_info, endings, is_review=False):
                 choice_info = {
                     "talk_index": talk_index,
                     "choice_group": choice["choice_group"],
-                    "text": f"（{choice['choice_group']}）{await clean_rich_text(await select_text_by_priority(choice['zh_tw_text'], choice['kr_text'], is_review))}({affinity_str})",
+                    "text": f"（{choice['choice_group']}）{await clean_rich_text(await select_text_by_priority(choice['zh_tw_text'], choice['kr_text'], review))}({affinity_str})",
                     "affinity": affinity,
                     "position_type": position_type,
                     "group_no": choice.get("group_no"),
@@ -1868,11 +1844,11 @@ async def format_character_story(episode_info, endings, is_review=False):
         
         all_episodes_choices.append({
             "episode": ep['episode'],
-            "title": await select_text_by_priority(ep['zh_tw_title'], ep['kr_title'], is_review),
+            "title": await select_text_by_priority(ep['zh_tw_title'], ep['kr_title'], review),
             "choices": all_choices
         })
         
-        title = await select_text_by_priority(ep['zh_tw_title'], ep['kr_title'], is_review)
+        title = await select_text_by_priority(ep['zh_tw_title'], ep['kr_title'], review)
         good_end.append(f"\nEP{ep['episode']}：{title}")
         normal_end.append(f"\nEP{ep['episode']}：{title}")
         bad_end.append(f"\nEP{ep['episode']}：{title}")
@@ -1980,15 +1956,15 @@ async def format_character_story(episode_info, endings, is_review=False):
 
 
 async def get_base_battle_power(data: dict, entity_type: int, level: int) -> int:
-    """calculate base battle power
-    
+    """
+    计算基础战力
     Args:
-        data: JSON data dictionary
-        entity_type: entity type (1=hero, 2=monster, 3=raid)
-        level: level
+        data: JSON 数据字典
+        entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
+        level: 等级
     
     Returns:
-        int: calculated base battle power
+        int: 计算后的基础战力
     """
     try:
         type_prefix = ""
@@ -2038,22 +2014,22 @@ async def calculate_battle_power(data: dict, entity_type: int, level: int, grade
                             equipment_power: int = 0, equipment_power_per: float = 0.0, 
                             signature_power_per: float = 0.0, contents_buff_power: float = 0.0, 
                             contents_buff_power_per: float = 0.0) -> int:
-    """calculate total battle power
-    
+    """
+    计算总战力
     Args:
-        data: JSON data dictionary
-        entity_type: entity type (1=hero, 2=monster, 3=raid)
-        level: level
-        grade: grade
-        level_grade: level grade, default 1.0
-        equipment_power: equipment power, default 0
-        equipment_power_per: equipment power percent, default 0.0
-        signature_power_per: signature power percent, default 0.0
-        contents_buff_power: contents buff power, default 0.0
-        contents_buff_power_per: contents buff power percent, default 0.0
+        data: JSON 数据字典
+        entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
+        level: 等级
+        grade: 品质
+        level_grade: 等级品质, 默认1.0
+        equipment_power: 装备战力, 默认0
+        equipment_power_per: 装备战力百分比, 默认0.0
+        signature_power_per: 遗物战力百分比, 默认0.0
+        contents_buff_power: 内容增益战力, 默认0.0
+        contents_buff_power_per: 内容增益战力百分比, 默认0.0
         
     Returns:
-        int: calculated total battle power
+        int: 计算后的总战力
     """
     try:
         base_power = await get_base_battle_power(data, entity_type, level)
@@ -2082,14 +2058,14 @@ async def calculate_battle_power(data: dict, entity_type: int, level: int, grade
     
 
 async def get_hero_grade_value(data: dict, grade: int) -> float:
-    """get hero grade value
-    
+    """
+    获取角色品质加成值
     Args:
-        data: JSON data dictionary
-        grade: grade
+        data: JSON 数据字典
+        grade: 品质
         
     Returns:
-        float: grade value
+        float: 品质加成值
     """
 
     try:
@@ -2105,14 +2081,14 @@ async def get_hero_grade_value(data: dict, grade: int) -> float:
 
 
 async def get_hero_level_grade_value(data: dict, level: int) -> float:
-    """get hero level grade value
-    
+    """
+    获取角色等级加成值
     Args:
-        data: JSON data dictionary
-        level: level
+        data: JSON 数据字典
+        level: 等级
         
     Returns:
-        float: level grade value, default 1.0 (no bonus)
+        float: 等级加成值, 默认1.0 (无加成)
     """
     try:
         level_grade_value = 1.0
@@ -2137,14 +2113,14 @@ async def get_hero_level_grade_value(data: dict, level: int) -> float:
 
 
 async def get_character_skill_pattern(data: dict, hero_no: int) -> list:
-    """get character skill pattern
-    
+    """
+    获取角色技能释放顺序
     Args:
-        data: JSON data dictionary
-        hero_no: hero no
+        data: JSON 数据字典
+        hero_no: 角色编号
     
     Returns:
-        list: skill pattern list, each element is (skill name, is normal attack)
+        list: 技能释放顺序列表, 每个元素是 (技能名称, 是否为普通攻击)
     """
     try:
         pattern_data = None
