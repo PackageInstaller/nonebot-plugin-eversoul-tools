@@ -17,7 +17,7 @@ from ...config import (
 async def select_text_by_priority(zh_tw: str, kr: str, review: bool = False) -> str:
     """
     根据优先级选择文本
-    优先级：zh_tw > (review ? kr : zh_tw)
+    优先级：review ? kr : zh_tw
     Args:
         zh_tw: 繁体中文文本
         kr: 韩文文本
@@ -26,8 +26,8 @@ async def select_text_by_priority(zh_tw: str, kr: str, review: bool = False) -> 
     Returns:
         str: 选择的文本
     """
-    return zh_tw if zh_tw else (kr if review else zh_tw)
-    # return kr 
+    return kr if review else zh_tw
+    # return zh_tw if zh_tw else (kr if review else zh_tw)
 
 
 async def clean_rich_text(text: str) -> str:
@@ -2113,7 +2113,7 @@ async def get_hero_level_grade_value(data: dict, level: int) -> float:
         return 1.0
 
 
-async def get_character_skill_pattern(data: dict, hero_no: int) -> list:
+async def get_character_skill_pattern(data: dict, hero_no: int, review: bool = False) -> list:
     """
     获取角色技能释放顺序
     Args:
@@ -2121,7 +2121,7 @@ async def get_character_skill_pattern(data: dict, hero_no: int) -> list:
         hero_no: 角色编号
     
     Returns:
-        list: 技能释放顺序列表, 每个元素是 (技能名称, 是否为普通攻击)
+        list: 技能释放顺序列表, 每个元素是 (技能名称, 技能类型, 是否为普通攻击)
     """
     try:
         pattern_data = None
@@ -2143,16 +2143,20 @@ async def get_character_skill_pattern(data: dict, hero_no: int) -> list:
         for key in pattern_keys:
             skill_no = pattern_data.get(key)
             if skill_no == hero_base_attack:
-                skill_pattern.append(("普通攻击", True))
+                skill_pattern.append(("普通攻击", "无"))
             else:
                 skill_name = ""
                 for skill in data["skill"]["json"]:
                     if skill["no"] == skill_no:
                         if "name_sno" not in skill:
                             break
-                        skill_name = (await get_string_by_type(data, "skill", skill["name_sno"])).get("zh_tw", "")
+                        skill_name_zh_tw = (await get_string_by_type(data, "skill", skill["name_sno"])).get("zh_tw", "")
+                        skill_name_kr = (await get_string_by_type(data, "skill", skill["name_sno"])).get("kr", "")
+                        skill_type = (await get_string_by_type(data, "system", skill["type"])).get("zh_tw", "")
+
+                        skill_name = await select_text_by_priority(skill_name_zh_tw, skill_name_kr, review)
                         if skill_name:
-                            skill_pattern.append((skill_name, False))
+                            skill_pattern.append((skill_name, skill_type))
                         break
         
         return skill_pattern

@@ -108,11 +108,11 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         skill_keys = ["skill_no_1", "skill_no_2", "skill_no_3", "skill_no_4",  "ultimate_skill_no", "support_skill_no"]
         
         # 获取并显示技能释放顺序
-        skill_pattern = await get_character_skill_pattern(data, hero_id)
+        skill_pattern = await get_character_skill_pattern(data, hero_id, review)
         if skill_pattern:
             pattern_text = ["▼ 技能释放顺序"]
-            for i, (skill_name, is_normal) in enumerate(skill_pattern, 1):
-                pattern_text.append(f"{i}. {skill_name}")
+            for i, (skill_name, skill_type) in enumerate(skill_pattern, 1):
+                pattern_text.append(f"{i}. 【{skill_type}】{skill_name} ")
             messages.append("\n".join(pattern_text))
         
         # 先检查角色有哪些技能
