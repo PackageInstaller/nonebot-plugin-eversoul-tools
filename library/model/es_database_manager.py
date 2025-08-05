@@ -93,6 +93,29 @@ class EversoulUser:
                         )
                         await db.commit()
                         logger.info("数据库表 server 创建成功")
+                    
+                    # 检查push_history表是否存在
+                    cursor = await db.execute(
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name='push_history'"
+                    )
+                    push_table_exists = await cursor.fetchone()
+                    
+                    if not push_table_exists:
+                        await db.execute(
+                            """
+                            CREATE TABLE push_history (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                server_type TEXT NOT NULL,
+                                version TEXT NOT NULL,
+                                table_version INTEGER DEFAULT 0,
+                                group_id INTEGER NOT NULL,
+                                push_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                UNIQUE(server_type, version, table_version, group_id)
+                            )
+                            """
+                        )
+                        await db.commit()
+                        logger.info("数据库表 push_history 创建成功")
             except Exception as e:
                 logger.error(f"升级数据库结构失败: {e}")
     
@@ -370,4 +393,71 @@ class EversoulUser:
             return True
         except Exception as e:
             logger.error(f"更新服务器状态失败: {e}")
+            return False
+    
+    @classmethod
+    async def check_push_history(cls, server_type: str, version: str, 
+                                table_version: int, group_id: int) -> bool:
+        """检查是否已经推送过指定版本
+        
+        Args:
+            server_type: 服务器类型 ("live" 或 "review")
+            version: 版本号
+            table_version: 表版本号
+            group_id: 群号
+            
+        Returns:
+            bool: True表示已推送过，False表示未推送过
+        """
+        try:
+            await cls.init_db()
+            
+            async with aiosqlite.connect(cls._db_path) as db:
+                cursor = await db.execute(
+                    """
+                    SELECT id FROM push_history 
+                    WHERE server_type = ? AND version = ? AND table_version = ? AND group_id = ?
+                    """,
+                    (server_type, version, table_version, group_id)
+                )
+                result = await cursor.fetchone()
+                return result is not None
+                
+        except Exception as e:
+            logger.error(f"检查推送历史失败: {e}")
+            return True  # 出错时返回True，避免重复推送
+    
+    @classmethod
+    async def add_push_history(cls, server_type: str, version: str, 
+                              table_version: int, group_id: int) -> bool:
+        """添加推送历史记录
+        
+        Args:
+            server_type: 服务器类型 ("live" 或 "review")
+            version: 版本号
+            table_version: 表版本号
+            group_id: 群号
+            
+        Returns:
+            bool: 是否成功
+        """
+        try:
+            await cls.init_db()
+            
+            beijing_time = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
+            
+            async with aiosqlite.connect(cls._db_path) as db:
+                await db.execute(
+                    """
+                    INSERT OR IGNORE INTO push_history 
+                    (server_type, version, table_version, group_id, push_time)
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (server_type, version, table_version, group_id, beijing_time)
+                )
+                await db.commit()
+                logger.info(f"推送历史已记录: {server_type} - {version} - 表版本{table_version} -> 群{group_id}")
+            return True
+        except Exception as e:
+            logger.error(f"添加推送历史失败: {e}")
             return False 

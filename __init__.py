@@ -55,6 +55,8 @@ async def init_database():
             logger.info("正在初始化 Eversoul 用户数据库...")
             # 初始化用户数据库
             await EversoulUser.init_db()
+        
+        logger.info("永恒灵魂工具插件启动完成，自动更新检查已启动")
     except Exception as e:
         logger.error(f"初始化 Eversoul 用户数据库时发生错误: {e}")
 

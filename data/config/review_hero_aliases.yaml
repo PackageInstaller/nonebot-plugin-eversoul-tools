@@ -39,7 +39,7 @@ names:
     kr_name: 로제
     en_name: Rose
     ja_name: ロゼ
-    aliases: [小萝丝, 螺丝, 螺絲, 羅斯, 肉絲, 小蘿絲]
+    aliases: [萝丝, 螺丝, 螺絲, 羅斯, 肉絲, 蘿絲]
     hero_id: 120
   - zh_tw_name: 夏琳
     zh_cn_name: 夏琳
@@ -144,7 +144,7 @@ names:
     kr_name: 캐서린
     en_name: Catherine
     ja_name: キャサリン
-    aliases: [凯色琳, 凱色琳, 小凱]
+    aliases: [凯色琳, 凱色琳, 凱]
     hero_id: 1090
   - zh_tw_name: 雪莉
     zh_cn_name: 雪莉
@@ -179,7 +179,7 @@ names:
     kr_name: 에일린
     en_name: Eileen
     ja_name: エイリーン
-    aliases: [大艾琳, 小偷, 竊賊]
+    aliases: [艾琳, 小偷, 竊賊]
     hero_id: 1140
   - zh_tw_name: 蘿絲（紅焰）
     zh_cn_name: 萝丝（红焰）
@@ -285,7 +285,7 @@ names:
     kr_name: 사쿠요
     en_name: Sakuyo
     ja_name: サクヨ
-    aliases: [小樱世, 小猫, 小櫻世, 小貓]
+    aliases: [樱世, 小猫, 櫻世, 小貓]
     hero_id: 2130
   - zh_tw_name: 歐妮絲
     zh_cn_name: 欧妮丝
@@ -432,7 +432,7 @@ names:
     kr_name: 미리암(잔영)
     en_name: Miriam (Afterimage)
     ja_name: ミリアム(残影)
-    aliases: [大米, 界米里昂]
+    aliases: [大米, 大米里昂, 界米里昂, 米酿]
     hero_id: 3170
   - zh_tw_name: 蘿拉
     zh_cn_name: 萝拉
@@ -679,3 +679,10 @@ names:
     ja_name: 夜刀神十香
     aliases: [十香]
     hero_id: 6990
+  - zh_tw_name: 米里昂（殘影）
+    zh_cn_name: ''
+    kr_name: 미리암(잔영)
+    en_name: Miriam (Afterimage)
+    ja_name: ミリアム(残影)
+    aliases: []
+    hero_id: 1170

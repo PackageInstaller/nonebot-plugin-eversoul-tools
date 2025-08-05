@@ -27,6 +27,7 @@ async def select_text_by_priority(zh_tw: str, kr: str, review: bool = False) -> 
         str: 选择的文本
     """
     return zh_tw if zh_tw else (kr if review else zh_tw)
+    # return kr 
 
 
 async def clean_rich_text(text: str) -> str:

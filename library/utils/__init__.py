@@ -63,6 +63,7 @@ es_notice = on_fullmatch("es公告", priority=5, block=True)
 es_story = on_command("es故事信息", priority=5, block=True)
 es_account = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
 es_update_check = on_command("es检查更新", aliases={"es更新检查"}, priority=5, block=True)
+es_auto_push_control = on_command("es自动推送", priority=5, block=True, permission=SUPERUSER)
 emoji_vote = on_notice(priority=1, block=False)
 
 
