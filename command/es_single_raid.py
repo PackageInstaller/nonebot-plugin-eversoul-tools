@@ -203,7 +203,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 添加攻略
         if guide_text:
-            basic_info.append(f"\n【讨伐攻略】\n{clean_rich_text(guide_text)}")
+            basic_info.append(f"\n【讨伐攻略】\n{await clean_rich_text(guide_text)}")
         
         messages.append("\n".join(str(x) for x in basic_info))
         

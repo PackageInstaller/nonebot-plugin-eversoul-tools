@@ -127,10 +127,10 @@ async def generate_aliases() -> None:
     
     try:
         live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
-        live_monster_aliases = CONFIG_DIR / "live_monster_aliases.yaml"
-        live_hero_count, live_monster_count = await process_json_files(live_json_path, live_hero_aliases, live_monster_aliases)
-        if live_hero_count > 0 or live_monster_count > 0:
-            logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_monster_count} 个怪物条目")
+        live_raid_aliases = CONFIG_DIR / "live_raid_aliases.yaml"
+        live_hero_count, live_raid_count = await process_json_files(live_json_path, live_hero_aliases, live_raid_aliases)
+        if live_hero_count > 0 or live_raid_count > 0:
+            logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_raid_count} 个讨伐条目")
         else:
             logger.info("请检查Live版本JSON文件路径配置是否正确")
     except Exception as e:
@@ -138,10 +138,10 @@ async def generate_aliases() -> None:
     
     try:
         review_hero_aliases = CONFIG_DIR / "review_hero_aliases.yaml"
-        review_monster_aliases = CONFIG_DIR / "review_monster_aliases.yaml"
-        review_hero_count, review_monster_count = await process_json_files(review_json_path, review_hero_aliases, review_monster_aliases)
-        if review_hero_count > 0 or review_monster_count > 0:
-            logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_monster_count} 个怪物条目")
+        review_raid_aliases = CONFIG_DIR / "review_raid_aliases.yaml"
+        review_hero_count, review_raid_count = await process_json_files(review_json_path, review_hero_aliases, review_raid_aliases)
+        if review_hero_count > 0 or review_raid_count > 0:
+            logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_raid_count} 个讨伐条目")
         else:
             logger.info("请检查Review版本JSON文件路径配置是否正确")
     except Exception as e:
@@ -149,21 +149,26 @@ async def generate_aliases() -> None:
 
     try:
         await sync_aliases(live_hero_aliases, review_hero_aliases)
-        await sync_aliases(live_monster_aliases, review_monster_aliases)
+        await sync_aliases(live_raid_aliases, review_raid_aliases)
     except Exception as e:
         logger.error(f"同步别名时出错: {e}")
 
 
-async def process_json_files(json_path: Path, hero_output_file: Path, monster_output_file: Path) -> Tuple[int, int]:
+async def process_json_files(json_path: Path, hero_output_file: Path, raid_output_file: Path) -> Tuple[int, int]:
     """处理JSON文件生成别名文件
+    
+    根据 battle_power_type 字段区分不同类型的单位：
+    - battle_power_type == 1: 可操控角色（Heroes）
+    - battle_power_type == 3: 恶灵/讨伐目标（Raid Bosses）
+    - battle_power_type == 2: 已废弃类型，不再处理
     
     Args:
         json_path: JSON文件目录
         hero_output_file: 角色别名输出文件
-        monster_output_file: 怪物别名输出文件
+        raid_output_file: 恶灵别名输出文件
     
     Returns:
-        Tuple[int, int]: 生成的角色数量和怪物数量
+        Tuple[int, int]: 生成的角色数量和讨伐数量
     """
     if not json_path.exists():
         logger.error(f"JSON路径不存在: {json_path}")
@@ -217,32 +222,12 @@ async def process_json_files(json_path: Path, hero_output_file: Path, monster_ou
         existing_aliases = {}
         existing_zh_cn_names = {}
     
-    name_to_min_id = {}
+    # 准备数据容器
+    new_data = {"names": []}        # 角色数据容器
+    raid_data = {"names": []}       # 恶灵数据容器
+    raid_name_count = {}
     
-    for hero in hero_data["json"]:
-        if ("hero_id" in hero and 
-            "name_sno" in hero and 
-            hero["hero_id"] >= 7000):
-            
-            name_data = hero_names.get(hero["name_sno"], {
-                "zh_tw": "",
-                "zh_cn": "",
-                "kr": "",
-                "en": "",
-                "ja": ""
-            })
-            current_id = hero["hero_id"]
-            
-            zh_tw_name = name_data["zh_tw"]
-            if zh_tw_name in name_to_min_id:
-                name_to_min_id[zh_tw_name] = min(name_to_min_id[zh_tw_name], current_id)
-            else:
-                name_to_min_id[zh_tw_name] = current_id
-
-    new_data = {"names": []}
-    monster_data = {"names": []}
-    monster_name_count = {}
-    
+    # 建立名称映射并分类处理所有单位
     for hero in hero_data["json"]:
         if ("hero_id" in hero and 
             "name_sno" in hero and 
@@ -260,6 +245,7 @@ async def process_json_files(json_path: Path, hero_output_file: Path, monster_ou
             if not zh_cn_name and hero_id in existing_zh_cn_names:
                 zh_cn_name = existing_zh_cn_names[hero_id]
             
+            # 构建单位条目（适用于角色和恶灵）
             hero_entry = {
                 "zh_tw_name": name_data["zh_tw"],
                 "zh_cn_name": zh_cn_name,
@@ -270,11 +256,15 @@ async def process_json_files(json_path: Path, hero_output_file: Path, monster_ou
                 "hero_id": hero_id
             }
             
-            if hero_id >= 7000:
-                monster_name_count[name_data["zh_tw"]] = 0
-                monster_data["names"].append(hero_entry)
-            else:
+            # 根据 battle_power_type 分类存储
+            if hero["battle_power_type"] == 3:
+                # 恶灵/讨伐目标 (Raid Bosses)
+                raid_name_count[name_data["zh_tw"]] = 0
+                raid_data["names"].append(hero_entry)
+            elif hero["battle_power_type"] == 1:
+                # 可操控角色 (Heroes)
                 new_data["names"].append(hero_entry)
+            # battle_power_type == 2 的数据被忽略，不再处理
             
             seen_hero_ids.add(hero_id)
     
@@ -293,8 +283,10 @@ async def process_json_files(json_path: Path, hero_output_file: Path, monster_ou
                 flow_style = True
             return super().represent_sequence(tag, sequence, flow_style=flow_style)
     
+    # 确保输出目录存在
     hero_output_file.parent.mkdir(parents=True, exist_ok=True)
     
+    # 写入角色别名文件 (battle_power_type == 1)
     with open(hero_output_file, "w", encoding="utf-8") as f:
         yaml.dump(new_data, f, 
                 Dumper=CustomDumper,
@@ -303,15 +295,16 @@ async def process_json_files(json_path: Path, hero_output_file: Path, monster_ou
                 default_flow_style=False,
                 indent=2)
     
-    with open(monster_output_file, "w", encoding="utf-8") as f:
-        yaml.dump(monster_data, f, 
+    # 写入恶灵别名文件 (battle_power_type == 3)
+    with open(raid_output_file, "w", encoding="utf-8") as f:
+        yaml.dump(raid_data, f, 
                 Dumper=CustomDumper,
                 allow_unicode=True, 
                 sort_keys=False,
                 default_flow_style=False,
                 indent=2)
     
-    return len(new_data['names']), len(monster_data['names']) 
+    return len(new_data['names']), len(raid_data['names']) 
 
 
 # 加载别名配置文件
