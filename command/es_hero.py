@@ -158,26 +158,26 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     if hero_desc is not None and hero_desc.get("union_sno") is not None and 
        await get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
        (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") != ""
-    else "？？？"
+    else ""
 }
-身高：{hero_desc.get("height", "？？？") if hero_desc else "？？？"}cm
-体重：{hero_desc.get("weight", "？？？") if hero_desc else "？？？"}kg
-生日：{await get_character_birthday(data, hero_desc.get("birthday", 0)) if hero_desc else "？？？"}
-星座：{(await get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
-兴趣：{(await get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
-特殊特长：{(await get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
-喜欢的东西：{(await get_string_character(data, hero_desc.get("like_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
-讨厌的东西：{(await get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)).get("zh_tw", "") if hero_desc else "？？？"}
+身高：{hero_desc.get("height", "") if hero_desc else ""}cm
+体重：{hero_desc.get("weight", "") if hero_desc else ""}kg
+生日：{await get_character_birthday(data, hero_desc.get("birthday", 0)) if hero_desc else ""}
+星座：{(await get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
+兴趣：{(await get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
+特殊特长：{(await get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
+喜欢的东西：{(await get_string_character(data, hero_desc.get("like_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
+讨厌的东西：{(await get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
 喜好礼物：{await get_character_prefer_gift(data, hero_id)}
-初始打工属性：{(await get_character_arbeit(data, hero_id)).get("initial", "？？？")}
-满级打工属性：{(await get_character_arbeit(data, hero_id)).get("max", "？？？")}
+初始打工属性：{(await get_character_arbeit(data, hero_id)).get("initial", "")}
+满级打工属性：{(await get_character_arbeit(data, hero_id)).get("max", "")}
 CV_KR：{cv_kr}"""
-        if cv_jp != "？？？":
+        if cv_jp != "":
             basic_info_zh_tw += f"\nCV_JP：{cv_jp}"
         
         basic_info_zh_tw += f"""
 实装日期：{character_release_date}
-攻击范围：{atk_range if atk_range > 0 else "？？？"}
+攻击范围：{atk_range if atk_range > 0 else ""}
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
@@ -284,26 +284,25 @@ CV_KR：{cv_kr}"""
         town_objects = await get_character_town_object(data, hero_id, review)
         if town_objects:
             objects_msg: list = ["【专属领地物品】"]
-            for obj_no, name, grade, slot_type, desc, img_path, battle_power_per in town_objects:
-                if img_path and os.path.exists(img_path):
-                    objects_msg.append(MessageSegment.image(f"file:///{img_path}"))
-                objects_msg.append(f"名称：{name}")
-                if grade:
-                    objects_msg.append(f"品质：{grade}")
-                if slot_type:
-                    objects_msg.append(f"类型：{slot_type}")
-                if desc:
-                    objects_msg.append(f"描述：{desc}")
-                if battle_power_per:
-                    objects_msg.append(f"战力百分比：{battle_power_per}")
+            if town_objects["img_path"] and os.path.exists(town_objects["img_path"]):
+                objects_msg.append(MessageSegment.image(f"file:///{town_objects["img_path"]}"))
+            objects_msg.append(f"{town_objects["name"]}")
+            # if town_objects["grade"]:
+            #     objects_msg.append(f"品质：{town_objects["grade"]}")
+            # if town_objects["slot_type"]:
+            #     objects_msg.append(f"类型：{town_objects["slot_type"]}")
+            if town_objects["desc"]:
+                objects_msg.append(f"{town_objects["desc"]}")
+            if town_objects["battle_power_per"]:
+                objects_msg.append(f"战力百分比：{town_objects["battle_power_per"]}")
                 
                 # 添加可进行的任务信息
-                tasks = await get_character_town_object_task(data, obj_no, review)
+                tasks = await get_character_town_object_task(data, town_objects["obj_no"], review)
                 if tasks:
                     objects_msg.append("\n可进行的打工：")
                     for task in tasks:
                         objects_msg.append(f"▼ {task['name']}（{task['rarity']}）")
-                        objects_msg.append(f"所需时间：{task['time']}小时")
+                        objects_msg.append(f"所需时间：{await format_value(task['time'], True)}小时")
                         if task['traits']:
                             objects_msg.append(f"要求特性：{' '.join(task['traits'])}")
                         objects_msg.append(f"疲劳度：{task['stress']}")
@@ -312,7 +311,7 @@ CV_KR：{cv_kr}"""
                             objects_msg.append("奖励：")
                             objects_msg.extend(f"・{reward}" for reward in task['rewards'])
                 
-                objects_msg.append("")  # 添加空行分隔不同物品
+                objects_msg.append("")
             messages.append("\n".join(str(x) for x in objects_msg))
             
         # 构建转发消息

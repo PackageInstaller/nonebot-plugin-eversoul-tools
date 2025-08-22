@@ -49,7 +49,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if overclock_level == target_level:
                 current_level_cost = mana_crystal
                 # 收集魔力粉尘消耗
-                for i in range(10):  # 最多有10个魔力粉尘
+                for i in range(2):
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -62,7 +62,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if overclock_level == target_level + 1:
                 next_level_cost = mana_crystal
                 # 收集魔力粉尘消耗
-                for i in range(10):  # 最多有10个魔力粉尘
+                for i in range(2):
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -75,7 +75,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if overclock_level == max_level:
                 last_level_cost = mana_crystal
                 # 收集魔力粉尘消耗
-                for i in range(10):  # 最多有10个魔力粉尘
+                for i in range(2):
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:
@@ -88,7 +88,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if overclock_level <= target_level:
                 total_cost += mana_crystal
                 # 收集魔力粉尘总消耗
-                for i in range(10):  # 最多有10个魔力粉尘
+                for i in range(2):
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
                     if item_no_key in overclock and item_amount_key in overclock:

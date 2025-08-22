@@ -201,7 +201,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             
             signature_info_text = f"""{signature_name_text}
 {signature_desc_text}
-最大等级战力百分比：{max_level_battle_power_per}
+战力百分比：{max_level_battle_power_per}
 {max_level}級屬性：
 {chr(10).join(signature_stats)}
 遺物技能【{signature_title_text}】：

@@ -357,10 +357,7 @@ async def process_skill_description(data, description, use_color_text: bool):
         type_str = match.group(2)
         return await get_character_skill_description(data, no, type_str)
 
-    tasks = [get_value_for_match(m) for m in matches]
-    replacements = await asyncio.gather(*tasks)
-
-    for match, replacement in zip(reversed(matches), reversed(replacements)):
+    for match, replacement in zip(reversed(matches), reversed(await asyncio.gather(*[get_value_for_match(m) for m in matches]))):
         start, end = match.span()
         processed_text = processed_text[:start] + replacement + processed_text[end:]
 
@@ -383,17 +380,13 @@ async def get_string_by_type(data, string_type, no):
     获取字符串
     Args:
         data: JSON 数据字典
-        string_type: string 类型的都行
+        string_type: string 类型的都行，例如 ui, character, item, etc.
         no: 字符串编号
     Returns:
         dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
     """
-    json_key = f"string_{string_type}"
-    
-    if json_key not in data:
-        return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
-    
-    for string in data[json_key]["json"]:
+
+    for string in data[f"string_{string_type}"]["json"]:
         if string["no"] == no:
             return {
                 "zh_tw": string.get("zh_tw", ""),
@@ -536,9 +529,9 @@ async def get_character_cv(data, hero_desc):
     Returns:
         dict: 包含韩语和日语配音, 键为 'kr', 'ja'
     """
-    cv_kr = (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw", "？？？") if hero_desc else "？？？"
-    cv_ja = (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_tw", "？？？") if hero_desc else "？？？"
-    cv_ja = cv_ja if cv_ja != cv_kr and cv_ja != "" else "？？？"
+    cv_kr = (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw", "") if hero_desc else ""
+    cv_ja = (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_tw", "") if hero_desc else ""
+    cv_ja = cv_ja if cv_ja != cv_kr and cv_ja != "" else ""
 
     return {"kr": cv_kr, "ja": cv_ja}
 
@@ -587,7 +580,7 @@ async def get_character_arbeit(data, hero_id):
             level_data.append(level)
     
     if not level_data:
-        return {"initial": "？？？", "max": "？？？"}
+        return {"initial": "", "max": ""}
     
     # 按等级排序
     # sort by level
@@ -638,9 +631,9 @@ async def get_character_prefer_gift(data, hero_id):
             prefer_items = gift.get("prefer_gift_items", "").split(",")
             prefer_items = [item.strip() for item in prefer_items if item.strip()]
             for item_no in prefer_items:
-                gift_items.append((await get_string_item(data, item_no)).get("zh_tw", "？？？"))
+                gift_items.append((await get_string_item(data, item_no)).get("zh_tw", ""))
     
-    return "、".join(gift_items) if gift_items else "？？？"
+    return "、".join(gift_items) if gift_items else ""
 
 
 async def get_character_similar_name(query, alias_map):
@@ -767,92 +760,6 @@ async def get_character_skill(data, skill_no, support=False):
     }
 
 
-async def get_character_keyword_location(data: dict, keyword_get_details: int, review: bool = False) -> str:
-    """
-    获取角色关键字地点
-    Args:
-        data: JSON 数据字典
-        keyword_get_details: 关键字获取详情
-        review: 是否为测试
-    """    
-    # 如果没有keyword_get_details或为0，返回"通用"
-    # if keyword_get_details is not provided or is 0, return "通用"
-    if not keyword_get_details:
-        return "通用"
-    
-    # 在TownLocation.json中查找对应地点
-    # find the corresponding location in TownLocation.json
-    location = next((loc for loc in data["town_location"]["json"] 
-                    if loc["no"] == keyword_get_details), None)
-    
-    if not location:
-        return ""
-    
-    # 获取地点名称，优先使用zh_tw
-    # get location name, use zh_tw first
-    location_data = next((s for s in data["string_town"]["json"] 
-                        if s["no"] == location.get("location_name_sno")), None)
-    if location_data:
-        zh_tw = location_data.get("zh_tw", "")
-        kr = location_data.get("kr", "")
-        return await select_text_by_priority(zh_tw, kr, review)
-    return ""
-
-
-async def get_character_lost_item(data: dict, hero_no: int, keyword_type: int, keyword_get_details: int, review: bool = False) -> str:
-    """
-    获取角色遗失物品
-    Args:
-        data: JSON 数据字典
-        hero_no: 角色编号
-        keyword_type: 关键字类型
-        keyword_get_details: 关键字获取详情
-        review: 是否为测试
-    """
-    try:
-        lost_item = next((item for item in data["town_lost_item"]["json"] 
-                        if item.get("hero_no") == hero_no and 
-                        item.get("keyword_type") == keyword_type and 
-                        item.get("keyword_get_details") == keyword_get_details), None)
-        
-        if not lost_item:
-            return ""
-
-        quest_type = lost_item.get("quest_type")
-
-        if quest_type == 1: # 归还领地遗失物品
-            if group_end := lost_item.get("group_end"):
-                talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
-                choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
-                if choice_talk and choice_talk.get("no"):
-                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), review)
-                    for s in data["string_talk"]["json"] if s.get("no") == choice_talk.get("no")):
-                        return f"{text}"
-
-        elif quest_type == 2: # 击杀魔物
-            if group_end := lost_item.get("group_end"):
-                talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_end]
-                choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
-                if choice_talk and choice_talk.get("no"):
-                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), review)
-                    for s in data["string_talk"]["json"] if s.get("no") == choice_talk.get("no")):
-                        return f"{text}"
-
-        elif quest_type == 3: # 外出获取
-            if group_trip := lost_item.get("group_trip"):
-                talks = [t for t in data["talk"]["json"] if t.get("group_no") == group_trip]
-                choice_talk = next((t for t in reversed(talks) if t.get("ui_type", "").lower() == "choice"), None)
-                if choice_talk and choice_talk.get("no"):
-                    async for text in (await select_text_by_priority(s.get("zh_tw"), s.get("kr"), review)
-                    for s in data["string_talk"]["json"] if s.get("no") == choice_talk.get("no")):
-                        return f"{text}"
-        
-        return ""
-
-    except Exception as e:
-        logger.error(f"处理遗失物品信息时发生错误: {e}, hero_no={hero_no}, keyword_type={keyword_type}, details={keyword_get_details}")
-        return ""
-
 
 async def get_character_keyword_point(data: dict, keyword_type: str) -> list:
     """
@@ -869,86 +776,137 @@ async def get_character_keyword_point(data: dict, keyword_type: str) -> list:
     
     points = next((kv.get("values_data") for kv in data["key_values"]["json"] 
                     if kv.get("key_name") == key_name), None)
-    if points:
-        try:
-            return ast.literal_eval(points)
-        except:
-            pass
-    return [20, 40, 60]  # 默认值. default value
+    return ast.literal_eval(points)
 
 
-async def get_character_keyword_source(data: dict, source_sno: int, details: int, hero_no: int, keyword_type: int = 0, review: bool = False) -> str:
+async def get_story_chapter_name(data: dict, story: dict, review: bool = False) -> str:
     """
-    获取角色关键字来源
+    获取故事章节名称
     Args:
         data: JSON 数据字典
-        source_sno: 来源编号
-        details: 详情
-        hero_no: 角色编号
+        story: 故事信息字典
+        review: 是否为测试
+    Returns:
+        格式化的章节名称
+    """
+    chapter = story.get("chapter", 0)
+    if chapter:
+        chapter_format_data = await get_string_by_type(data, "ui", 652001)
+        chapter_format = await select_text_by_priority(chapter_format_data["zh_tw"], chapter_format_data["kr"], review)
+        return chapter_format.format(chapter)
+    else:
+        default_data = await get_string_by_type(data, "ui", 652000)
+        return await select_text_by_priority(default_data["zh_tw"], default_data["kr"], review)
+
+
+
+async def get_character_keyword_source(data: dict, source_sno: int, details: int, keyword_type: int, review: bool = False) -> tuple[str, str]:
+    """
+    获取角色关键字来源和地点信息
+    Info::TripKeyworInfoExtension::GetKeywordSource
+    Args:
+        data: JSON 数据字典
+        source_sno: 来源描述的字符串编号
+        details: 详情ID
         keyword_type: 关键字类型
         review: 是否为测试
+    Returns:
+        tuple: (source, location) - 来源信息和地点信息
     """
-    # 优先获取zh_tw，当zh_tw为空时再根据review判断. get zh_tw first, then check review
-    source_data = await get_string_by_type(data, "ui", source_sno)
-    if source_data:
-        source = await select_text_by_priority(source_data["zh_tw"], source_data["kr"], review)
-    else:
-        source = ""
-    
-    if not source:
-        return ""
-        
-    # 检查是否是遗失物品. check if it is lost item
-    if hero_no and keyword_type:
-        lost_item = await get_character_lost_item(data, hero_no, keyword_type, details, review)
-        if lost_item:
-            return lost_item
-        
-    if 101 <= details <= 110:
-        location = next((loc for loc in data["town_location"]["json"] 
-                        if loc["no"] == details), None)
-        if location:
-            # 获取地点名称，优先使用zh_tw. get location name, use zh_tw first
-            location_data = next((s for s in data["string_town"]["json"] 
-                                if s["no"] == location.get("location_name_sno")), None)
-            if location_data:
-                zh_tw = location_data.get("zh_tw", "")
-                kr = location_data.get("kr", "")
-                location_name = await select_text_by_priority(zh_tw, kr, review)
-            else:
-                location_name = "未知"
-            return f"在{location_name}解锁"
-    elif details == 1:
-        try:
-            return source.format(1)
-        except Exception as e:
-            return f"完成好感故事篇章1"
-    elif source_sno == 619006:  # 打工熟练度. work skill
-        try:
-            return source.format(details)
-        except Exception as e:
-            return f"打工熟练度达Lv.{details}时可获得"
-    elif "好感達Lv.{0}" in source or "好感达等级{0}" in source:  # 好感等级. favor level
-        try:
-            return source.format(details)
-        except Exception as e:
-            return f"好感达Lv.{details}时可获得"
-    else:
-        story = next((s for s in data["story_info"]["json"] 
-                        if s["no"] == details), None)
+    source = ""
+    location = ""
+    # 剧情来源
+    if keyword_type == 3:
+        story = next((s for s in data["story_info"]["json"] if s["no"] == details), None)
         if story:
-            act = story.get('act', '?')
-            episode = story.get('episode', '?')
-            try:
-                # 分别处理章和节. handle chapter and episode separately
-                if "{0}{1}" in source:
-                    result = source.format(f"第{act}章", episode)
-                else:
-                    result = source.format(f"{act}-{episode}")
-                return result
-            except Exception as e:
-                return f"完成主线故事第{act}章 {episode}话时可获得"
-    return source
+            desc_data = await get_string_by_type(data, "ui", source_sno)
+            desc = await select_text_by_priority(desc_data.get("zh_tw", ""), desc_data.get("kr", ""), review)
+            if desc:
+                source = desc.format(await get_story_chapter_name(data, story, review), story.get("episode", 0))
+    # 地点来源
+    elif keyword_type == 7:
+        town_location = next((loc for loc in data["town_location"]["json"] if loc["no"] == details), None)
+        if town_location:
+            location_data = await get_string_by_type(data, "town", town_location.get("location_name_sno"))
+            location = await select_text_by_priority(location_data.get("zh_tw", ""), location_data.get("kr", ""), review)
+            desc_data = await get_string_by_type(data, "ui", source_sno)
+            desc = await select_text_by_priority(desc_data.get("zh_tw", ""), desc_data.get("kr", ""), review)
+            if desc:
+                source = desc.format(location)
+    # 通用数值来源
+    elif ((1 << keyword_type) & 0xFFFFFFFF) & 0x370 != 0:
+        desc_data = await get_string_by_type(data, "ui", source_sno)
+        desc = await select_text_by_priority(desc_data.get("zh_tw", ""), desc_data.get("kr", ""), review)
+        if desc:
+            source = desc.format(details)
+    # 固定文本来源
+    elif keyword_type in {101, 102, 103}:
+        string_data = await get_string_by_type(data, "ui", 619000 + keyword_type)
+        source = await select_text_by_priority(string_data.get("zh_tw", ""), string_data.get("kr", ""), review)
+    # 获取地点信息
+    location = "通用"
+    town_location = next((loc for loc in data["town_location"]["json"] if loc["no"] == details), None)
+    if town_location:
+        location_data = await get_string_by_type(data, "town", town_location.get("location_name_sno"))
+        location = await select_text_by_priority(location_data.get("zh_tw", ""), location_data.get("kr", ""), review)
+    return source, location
+
+
+async def get_character_keyword_info(data: dict, keyword_info: dict, trip_info: dict, review: bool = False) -> dict:
+    """
+    获取完整的角色关键字信息
+    Args:
+        data: JSON 数据字典
+        keyword_info: 关键字基础信息
+        trip_info: 旅行关键字信息
+        review: 是否为测试
+    Returns:
+        dict: 完整的关键字信息
+    """
+    # 关键字类型
+    keyword_type = "normal"  # 粉心
+    if not trip_info.get("favor_point"):  # 黄心
+        keyword_type = "bad"
+    elif trip_info.get("favor_point") == 2:  # 红心
+        keyword_type = "good"
+    
+    # 好感度加成
+    points = await get_character_keyword_point(data, keyword_type)
+    grade_sno = keyword_info.get("keyword_grade")
+    grade_index = 0  # 一般
+    if grade_sno == 110012:  # 稀有
+        grade_index = 1
+    elif grade_sno == 110014:  # 史诗
+        grade_index = 2
+    favor_point = points[grade_index]
+    
+    # 关键字名称
+    name_data = await get_string_by_type(data, "ui", keyword_info.get("keyword_string"))
+    name = name_data.get(await select_text_by_priority("zh_tw", "kr", review), "")
+    
+    # 关键字等级
+    grade_data = await get_string_by_type(data, "system", grade_sno)
+    grade = grade_data.get("zh_tw", "")
+    
+    # 关键字来源和地点信息
+    source, location = await get_character_keyword_source(
+        data,
+        keyword_info.get("keyword_source", 0),
+        keyword_info.get("keyword_get_details", 0),
+        keyword_info.get("keyword_type"),
+        review
+    )
+    
+    return {
+        "name": name,
+        "type": keyword_type,
+        "favor_point": favor_point,
+        "grade": grade,
+        "source": source,
+        "location": location,
+        "keyword_get_details": keyword_info.get("keyword_get_details")
+    }
+
 
 
 async def get_character_keyword(data: dict, hero_id: int, review: bool = False) -> str:
@@ -964,44 +922,13 @@ async def get_character_keyword(data: dict, hero_id: int, review: bool = False) 
     
     for trip in data["trip_hero"]["json"]:
         if trip.get("hero_no") == hero_id:
-            # 这里是先处理30个通用的关键字
-            # here is to handle 30 generic keywords first
             keyword_info = next((k for k in data["trip_keyword"]["json"] 
                                 if k["no"] == trip.get("keyword_no")), None)
             if keyword_info:
-                keyword_type = "normal" # 粉心
-                if not trip.get("favor_point"): # 没这个键的话就是黄心
-                    keyword_type = "bad"
-                elif trip.get("favor_point") == 2: # 红心
-                    keyword_type = "good"
-                
-                # 获取好感度加成
-                points = await get_character_keyword_point(data, keyword_type)
-                grade_sno = keyword_info.get("keyword_grade")
-                grade_index = 0 # 一般
-                if grade_sno == 110012:  # 稀有
-                    grade_index = 1
-                elif grade_sno == 110014:  # 史诗
-                    grade_index = 2
-                favor_point = points[grade_index]
-                    
-                trip_keywords.append({
-                    "name": (await get_string_by_type(data, "ui", keyword_info.get("keyword_string"))).get(await select_text_by_priority("zh_tw", "kr", review), "？？？"),
-                    "type": keyword_type,
-                    "favor_point": favor_point,
-                    "grade": (await get_string_by_type(data, "system", grade_sno)).get("zh_tw", "？？？"),
-                    "source": await get_character_keyword_source(
-                        data, 
-                        keyword_info.get("keyword_source", 0),
-                        keyword_info.get("keyword_get_details", 0),
-                        hero_id,
-                        keyword_info.get("keyword_type"),
-                        review
-                    ),
-                    "keyword_get_details": keyword_info.get("keyword_get_details")
-                })
+                keyword = await get_character_keyword_info(data, keyword_info, trip, review)
+                trip_keywords.append(keyword)
+        return ""
     
-    # 分组显示关键字
     bad_keywords = [k for k in trip_keywords if k["type"] == "bad"]
     good_keywords = [k for k in trip_keywords if k["type"] == "good"]
     
@@ -1013,22 +940,19 @@ async def get_character_keyword(data: dict, hero_id: int, review: bool = False) 
         keyword_msgs.append("▼ 讨厌的话题")
         for keyword in bad_keywords:
             msg = f"・{keyword['name']}（{keyword['grade']}）"
-            # 添加地点信息
-            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), review):
-                msg += f"\n  地点：{location}"
+            if keyword.get("location"):
+                msg += f"\n  地点：{keyword['location']}"
             keyword_msgs.append(msg)
     
     if good_keywords:
         if bad_keywords:
             keyword_msgs.append("")
         keyword_msgs.append("▼ 喜欢的话题")
-        # 先显示没有获取条件的关键字
         normal_keywords = [k for k in good_keywords if not k["source"]]
         for keyword in normal_keywords:
             msg = f"・{keyword['name']}（{keyword['grade']}）"
-            # 添加地点信息
-            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), review):
-                msg += f"\n  地点：{location}"
+            if keyword.get("location"):
+                msg += f"\n  地点：{keyword['location']}"
             keyword_msgs.append(msg)
         
         if normal_keywords and any(k["source"] for k in good_keywords):
@@ -1038,9 +962,8 @@ async def get_character_keyword(data: dict, hero_id: int, review: bool = False) 
         
         for keyword in (k for k in good_keywords if k["source"]):
             msg = f"・{keyword['name']}（{keyword['grade']}）"
-            # 添加地点信息
-            if location := await get_character_keyword_location(data, keyword.get("keyword_get_details"), review):
-                msg += f"\n  地点：{location}"
+            if keyword.get("location"):
+                msg += f"\n  地点：{keyword['location']}"
             if keyword["source"]:
                 msg += f"\n  条件：{keyword['source']}"
             keyword_msgs.append(msg)
@@ -1058,95 +981,83 @@ async def get_character_town_object(data: dict, hero_id: int, review=False) -> l
     Returns:
         list: 物品信息列表 [(物品编号, 物品名称, 物品品质, 物品类型, 物品描述, 图片路径), ...]
     """
-    try:
-        objects_info = []
-        for obj in data["town_object"]["json"]:
-            if obj.get("hero") == hero_id:
-                obj_no = obj.get("no")
-                buff2_sno = obj.get("buff2")
-                if not obj_no:
-                    continue
-                
-                # 获取prefab作为图片名称
-                prefab = obj.get("prefab", "").lower()
+    for obj in data["town_object"]["json"]:
+        if obj.get("hero") == hero_id:
+            obj_no = obj.get("no")
+            buff2_sno = obj.get("buff2")
+            if not obj_no:
+                continue
+            
+            # 获取prefab作为图片名称
+            prefab = obj.get("prefab", "").lower()
 
-                for buff in data["town_buff"]["json"]:
-                    if buff.get("no") == buff2_sno:
-                        contents_buff_no = buff.get("contents_buff_no")
+            for buff in data["town_buff"]["json"]:
+                if buff.get("no") == buff2_sno:
+                    contents_buff_no = buff.get("contents_buff_no")
+                    break
+            
+            if contents_buff_no:
+                for buff in data["contents_buff"]["json"]:
+                    if buff.get("no") == contents_buff_no:
+                        battle_power_per = buff.get("battle_power_per")
                         break
                 
-                if contents_buff_no:
-                    for buff in data["contents_buff"]["json"]:
-                        if buff.get("no") == contents_buff_no:
-                            battle_power_per = buff.get("battle_power_per")
-                            break
+            # 在Item.json中查找对应物品信息
+            for item in data["item"]["json"]:
+                if item.get("no") == obj_no:
+                    name = await select_text_by_priority((await get_string_item(data, obj_no)).get("zh_tw", ""), (await get_string_item(data, obj_no)).get("kr", ""), review)
                     
-                # 在Item.json中查找对应物品信息
-                for item in data["item"]["json"]:
-                    if item.get("no") == obj_no:
-                        # 获取物品名称
-                        name = ""
-                        name_sno = item.get("name_sno")
-                        if name_sno:
-                            for string in data["string_item"]["json"]:
-                                if string.get("no") == name_sno:
-                                    zh_tw = string.get("zh_tw", "")
-                                    kr = string.get("kr", "")
-                                    name = await select_text_by_priority(zh_tw, kr, review)
+                    # 获取物品品质
+                    grade = ""
+                    grade_sno = item.get("grade_sno")
+                    if grade_sno:
+                        grade = await select_text_by_priority((await get_string_by_type(data, "system", grade_sno)).get("zh_tw", ""), (await get_string_by_type(data, "system", grade_sno)).get("kr", ""), review)
+                    
+                    # 获取物品类型
+                    slot_type = ""
+                    slot_limit_sno = item.get("slot_limit_sno")
+                    if slot_limit_sno:
+                        slot_type = await select_text_by_priority((await get_string_by_type(data, "ui", slot_limit_sno)).get("zh_tw", ""), (await get_string_by_type(data, "ui", slot_limit_sno)).get("kr", ""), review)
+                    
+                    # 获取物品描述
+
+                    desc_sno = item.get("desc_sno")
+                    if desc_sno:
+                        for string in data["string_item"]["json"]:
+                            if string.get("no") == desc_sno:
+                                zh_tw = string.get("zh_tw", "")
+                                kr = string.get("kr", "")
+                                desc_text = await select_text_by_priority(zh_tw, kr, review)
+                                desc = await clean_rich_text(desc_text)
+                                break
+                    
+                    if name:
+                        if prefab:
+                            img_path = ""
+                            for file in os.listdir(TOWN_DIR):
+                                if file.lower() == f"{prefab}.png":
+                                    img_path = TOWN_DIR / file
                                     break
-                        
-                        # 获取物品品质
-                        grade = ""
-                        grade_sno = item.get("grade_sno")
-                        if grade_sno:
-                            for string in data["string_system"]["json"]:
-                                if string.get("no") == grade_sno:
-                                    zh_tw = string.get("zh_tw", "")
-                                    kr = string.get("kr", "")
-                                    grade = await select_text_by_priority(zh_tw, kr, review)
-                                    break
-                        
-                        # 获取物品类型
-                        slot_type = ""
-                        slot_limit_sno = item.get("slot_limit_sno")
-                        if slot_limit_sno:
-                            for string in data["string_ui"]["json"]:
-                                if string.get("no") == slot_limit_sno:
-                                    zh_tw = string.get("zh_tw", "")
-                                    kr = string.get("kr", "")
-                                    slot_type = await select_text_by_priority(zh_tw, kr, review)
-                                    break
-                        
-                        # 获取物品描述并清理颜色标签
-                        desc = ""
-                        desc_sno = item.get("desc_sno")
-                        if desc_sno:
-                            for string in data["string_item"]["json"]:
-                                if string.get("no") == desc_sno:
-                                    zh_tw = string.get("zh_tw", "")
-                                    kr = string.get("kr", "")
-                                    desc_text = await select_text_by_priority(zh_tw, kr, review)
-                                    desc = await clean_rich_text(desc_text)
-                                    break
-                        
-                        if name:  # 只添加有名称的物品
-                            # 构建图片路径
-                            if prefab:
-                                for file in os.listdir(TOWN_DIR):
-                                    if file.lower() == f"{prefab}.png":
-                                        img_path = TOWN_DIR / file
-                                        break
-                                
-                                if not img_path:
-                                    img_path = ""
-                            
-                            objects_info.append((obj_no, name, grade, slot_type, desc, img_path, battle_power_per))
-                        
-        return objects_info
-        
-    except Exception as e:
-        logger.error(f"获取专属领地物品信息时发生错误: {e}, hero_id={hero_id}")
-        return []
+                        return {
+                            "obj_no": obj_no,
+                            "name": name,
+                            "grade": grade,
+                            "slot_type": slot_type,
+                            "desc": desc,
+                            "img_path": img_path,
+                            "battle_power_per": battle_power_per
+                        }
+                    
+    return {
+        "obj_no": "",
+        "name": "",
+        "grade": "",
+        "slot_type": "",
+        "desc": "",
+        "img_path": "",
+        "battle_power_per": ""
+    }
+
 
 
 async def get_character_town_object_task(data: dict, obj_no: int, review=False) -> list:
@@ -1265,13 +1176,13 @@ async def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
             
             # 获取礼包名称和描述
             name_sno = shop_item.get("name_sno")
-            package_name = (await get_string_by_type(data, "cashshop", name_sno)).get("zh_tw", "？？？")
+            package_name = (await get_string_by_type(data, "cashshop", name_sno)).get("zh_tw", "")
             
             info_sno = shop_item.get("item_info_sno")
-            package_desc = (await get_string_by_type(data, "cashshop", info_sno)).get("zh_tw", "？？？")
+            package_desc = (await get_string_by_type(data, "cashshop", info_sno)).get("zh_tw", "")
             
             desc_sno = shop_item.get("desc_sno")
-            limit_desc = (await get_string_by_type(data, "ui", desc_sno)).get("zh_tw", "？？？").format(shop_item.get("limit_buy", 0))
+            limit_desc = (await get_string_by_type(data, "ui", desc_sno)).get("zh_tw", "").format(shop_item.get("limit_buy", 0))
             
             # 基本信息部分
             basic_info = [
@@ -1374,7 +1285,7 @@ async def get_character_soullink(data: dict, hero_id: int, review: bool = False)
                 condition_string_no = item.get("condition_string")
                 condition_data = await get_string_by_type(data, "ui", condition_string_no)
                 condition_text = await select_text_by_priority(condition_data["zh_tw"], condition_data["kr"], review)
-                
+                # 格式化条件文本
                 condition_text = condition_text.format(
                     item.get("condition_count", 0),
                     item.get("condition_count", 0)
@@ -1398,7 +1309,7 @@ async def get_character_soullink(data: dict, hero_id: int, review: bool = False)
                         # 战力百分比加成
                         battle_power_per = buff.get("battle_power_per", 0)
                         if battle_power_per != 0:
-                            buff_effects.append(f"战力百分比加成：{battle_power_per}")
+                            buff_effects.append(f"战力百分比：{battle_power_per}")
                         
                         # 固定值战力加成
                         battle_power = buff.get("battle_power", 0)
