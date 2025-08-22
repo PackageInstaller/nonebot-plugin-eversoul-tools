@@ -172,12 +172,12 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 初始打工属性：{(await get_character_arbeit(data, hero_id)).get("initial", "")}
 满级打工属性：{(await get_character_arbeit(data, hero_id)).get("max", "")}
 CV_KR：{cv_kr}"""
-        if cv_jp != "":
+        if cv_jp:
             basic_info_zh_tw += f"\nCV_JP：{cv_jp}"
         
         basic_info_zh_tw += f"""
 实装日期：{character_release_date}
-攻击范围：{atk_range if atk_range > 0 else ""}
+攻击范围：{await format_value(atk_range, True)}
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
@@ -267,7 +267,7 @@ CV_KR：{cv_kr}"""
             messages.append("".join(str(x) for x in cg_msg))
         
         # 添加角色关键字信息
-        keyword_info = await get_character_keyword(data, hero_id, review=False)
+        keyword_info = await get_character_keyword(data, hero_id, review)
         if keyword_info:
             messages.append(keyword_info)
 

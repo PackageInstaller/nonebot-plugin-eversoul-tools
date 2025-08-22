@@ -775,7 +775,7 @@ async def get_character_keyword_point(data: dict, keyword_type: str) -> list:
     }[keyword_type]
     
     points = next((kv.get("values_data") for kv in data["key_values"]["json"] 
-                    if kv.get("key_name") == key_name), None)
+                    if kv.get("key_name") == key_name))
     return ast.literal_eval(points)
 
 
@@ -927,7 +927,6 @@ async def get_character_keyword(data: dict, hero_id: int, review: bool = False) 
             if keyword_info:
                 keyword = await get_character_keyword_info(data, keyword_info, trip, review)
                 trip_keywords.append(keyword)
-        return ""
     
     bad_keywords = [k for k in trip_keywords if k["type"] == "bad"]
     good_keywords = [k for k in trip_keywords if k["type"] == "good"]
@@ -971,7 +970,7 @@ async def get_character_keyword(data: dict, hero_id: int, review: bool = False) 
     return "\n".join(keyword_msgs)
 
 
-async def get_character_town_object(data: dict, hero_id: int, review=False) -> list:
+async def get_character_town_object(data: dict, hero_id: int, review=False) -> dict:
     """
     获取角色专属领地物品
     Args:
@@ -1047,16 +1046,6 @@ async def get_character_town_object(data: dict, hero_id: int, review=False) -> l
                             "img_path": img_path,
                             "battle_power_per": battle_power_per
                         }
-                    
-    return {
-        "obj_no": "",
-        "name": "",
-        "grade": "",
-        "slot_type": "",
-        "desc": "",
-        "img_path": "",
-        "battle_power_per": ""
-    }
 
 
 
