@@ -1361,7 +1361,7 @@ async def get_character_soullink(data: dict, hero_id: int, review: bool = False)
         # 获取收集效果
         collection_effects = []
         
-        if collection_id := link.get("Collection"):
+        if collection_id := link.get("collection"):
             # 按condition_list排序
             collection_items = sorted(
                 [item for item in data["soullink_collection"]["json"] 
