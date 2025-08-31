@@ -1,6 +1,3 @@
-"""
-UI和显示相关的工具函数
-"""
 import re
 from pathlib import Path
 from io import BytesIO

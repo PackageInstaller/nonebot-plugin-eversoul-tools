@@ -1,13 +1,7 @@
-"""
-字符串和多语言文本处理模块
-"""
-import itertools
 import os
 import re
 import ast
 import asyncio
-from dataclasses import dataclass, field
-from typing import Dict, Any, List
 from nonebot.log import logger
 from difflib import get_close_matches
 from ...config import (
@@ -46,13 +40,13 @@ async def clean_rich_text(text: str) -> str:
     return re.sub(pattern, '', text, flags=re.IGNORECASE)
 
 
-async def concat_color_text(buff_type: int, value: float, type: str, integer: bool = True, use_color_text: bool = False) -> str:
+async def concat_color_text(buff_type: int, value: float, type: str, integer: bool = True, use_color_text: bool = False) -> str: # pyright: ignore[reportReturnType]
     """
     拼接颜色文本
     Args:
         buff_type: buff effect 类型
         value: 数值
-        type: 类型
+        type: 类型，buff或者code
         integer: 是否为整数
         use_color_text: 是否使用颜色文本
     Returns:
@@ -240,36 +234,36 @@ async def get_buff_value_color_text(buff_type: int, value: float) -> str:
             elif ((buff_type - 10301) & 0xFFFFFFFF >= 2 and (buff_type - 10201) & 0xFFFFFFFF > 1):
                 return ""
             if value < 0.0:
-                return "#B778FF" # 紫色
-            return "#EDA900" # 黄色
+                return "#B778FF"
+            return "#EDA900"
         if buff_type > 1702:
             if buff_type > 1906:
                 if ( (buff_type - 2301) & 0xFFFFFFFF > 3 or buff_type == 2303 ):
                     return ""
                 if value < 0.0:
-                    return "#B778FF" # 紫色
-                return "#EDA900" # 黄色
+                    return "#B778FF"
+                return "#EDA900"
             if buff_type != 1703:
                 if ( (buff_type - 1901) & 0xFFFFFFFF <= 5 ):
                     if value < 0.0:
-                        return "#B778FF" # 紫色
-                    return "#EDA900" # 黄色
+                        return "#B778FF"
+                    return "#EDA900"
                 return ""
-            return "#00CC27" # 绿色
+            return "#00CC27"
         if buff_type == 1501:
-            return "#EDA900" # 黄色
+            return "#EDA900"
         if buff_type == 1502:
-            return "#B778FF" # 紫色
+            return "#B778FF"
         if buff_type != 1702:
             return ""
-        return "#E67373" # 红色
+        return "#E67373"
     
     if buff_type <= 503:
         if buff_type <= 313:
             if ((buff_type - 101) & 0xFFFFFFFF < 0xB ):
                 if value < 0.0:
-                    return "#B778FF" # 紫色
-                return "#EDA900" # 黄色
+                    return "#B778FF"
+                return "#EDA900"
             if ((buff_type - 301) & 0xFFFFFFFF >= 0xD or ((0x1E3F >> (buff_type - 45) % 32) & 1) == 0 ):
                 return ""
             return "#E67373"
@@ -277,12 +271,12 @@ async def get_buff_value_color_text(buff_type: int, value: float) -> str:
         if buff_type <= 411:
             if ((buff_type - 401) & 0xFFFFFFFF > 0xA or (((1 << (buff_type + 111)) % 32) & 0x601) == 0 ):
                 return ""
-            return "#00CC27" # 绿色
+            return "#00CC27"
         if buff_type == 420:
-            return "#4ABFD3" # 蓝色
+            return "#4ABFD3"
         if ((buff_type - 501) & 0xFFFFFFFF > 2 ):
             return ""
-        return "#368AFF" # 蓝色
+        return "#368AFF"
 
     if buff_type > 802:
         if buff_type <= 1101:
@@ -519,7 +513,7 @@ async def get_string_item(data, item_no):
     return {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""}
 
 
-async def get_character_cv(data, hero_desc):
+async def get_character_cv(data, hero_desc) -> str:
     """
     获取角色配音
     Args:
@@ -531,9 +525,9 @@ async def get_character_cv(data, hero_desc):
     """
     cv_kr = (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw", "") if hero_desc else ""
     cv_ja = (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_tw", "") if hero_desc else ""
-    cv_ja = cv_ja if cv_ja != cv_kr and cv_ja != "" else ""
+    cv_ja = cv_ja if (cv_ja != cv_kr and cv_ja != "") else ""
 
-    return {"kr": cv_kr, "ja": cv_ja}
+    return {"kr": cv_kr, "ja": cv_ja} # pyright: ignore[reportReturnType]
 
 
 async def get_character_release_date(data, hero_id):
@@ -550,15 +544,10 @@ async def get_character_release_date(data, hero_id):
     for movie in data["promotion_movie"]["json"]:
         if movie.get("hero_check") == hero_id:
             # 只取日期部分，不要时间
-            # only get the date part, not the time
             start_date = movie.get("start_date", "").split()[0]
-            if start_date and start_date != "2999-12-31":  # 排除默认日期. exclude default date
+            if start_date and start_date != "2999-12-31":  # 排除默认日期
                 release_date = start_date
                 break
-    
-    
-    # 如果找到日期返回该日期，否则返回默认日期
-    # if found date, return the date, otherwise return default date
     return f"{release_date}" if release_date else "2023-01-05"
 
 
@@ -573,7 +562,6 @@ async def get_character_arbeit(data, hero_id):
 
     """
     # 收集所有相关等级的数据
-    # collect all related level data
     level_data = []
     for level in data["arbeit_fairy_level"]["json"]:
         if level.get("hero_no") == hero_id:
@@ -583,30 +571,25 @@ async def get_character_arbeit(data, hero_id):
         return {"initial": "", "max": ""}
     
     # 按等级排序
-    # sort by level
     level_data.sort(key=lambda x: x.get("level", 0))
     
     # 获取初始等级和满级数据
-    # get initial level and max level data
     initial_level = level_data[0]
     max_level = level_data[-1]
     
     # 获取初始属性
-    # get initial traits
     initial_traits = []
     for trait, value in initial_level.items():
         if trait in TRAIT_NAME_MAPPING and value > 0:
             initial_traits.append(f"{TRAIT_NAME_MAPPING[trait]}{value}⭐")
     
     # 获取满级属性
-    # get max traits
     max_traits = []
     for trait, value in max_level.items():
         if trait in TRAIT_NAME_MAPPING and value > 0:
             max_traits.append(f"{TRAIT_NAME_MAPPING[trait]}{value}⭐")
     
     # 格式化文本
-    # format text
     initial_text = "、".join(initial_traits)
     max_text = "、".join(max_traits)
     
@@ -623,16 +606,13 @@ async def get_character_prefer_gift(data, hero_id):
     Returns:
         str: 喜好礼物, 用逗号分隔
     """
-    # 在HeroGift.json中查找角色的喜好礼物
     gift_items = []
     for gift in data["hero_gift"]["json"]:
         if gift.get("hero_no") == hero_id:
-            # 获取prefer_gift_items字符串并分割成列表
             prefer_items = gift.get("prefer_gift_items", "").split(",")
             prefer_items = [item.strip() for item in prefer_items if item.strip()]
             for item_no in prefer_items:
                 gift_items.append((await get_string_item(data, item_no)).get("zh_tw", ""))
-    
     return "、".join(gift_items) if gift_items else ""
 
 
@@ -642,7 +622,6 @@ async def get_character_similar_name(query, alias_map):
     Args:
         query: 查询名称
         alias_map: 别名映射
-    
     Returns:
         list: 角色相似名称列表 [(名称, 别名), ...]
     """
@@ -697,19 +676,18 @@ async def get_character_skill(data, skill_no, support=False):
             if not skill_icon_info:
                 icon_prefab = skill.get("icon_prefab")
                 # 这里是适配数据表里面没有的转变形态技能的着色(光凯)
-                if icon_prefab == 14:
-                    skill_icon_info = {
-                        "icon": "Icon_Sub_Change",
-                        "color": "#e168eb"
-                    }
-                elif icon_prefab:
-                    for icon_data in data["skill_icon"]["json"]:
-                        if icon_data["no"] == icon_prefab:
-                            skill_icon_info = {
-                                "icon": icon_data["icon"],
-                                "color": f"#{icon_data['color']}"
-                            }
-                            break
+                for icon_data in data["skill_icon"]["json"]:
+                    if icon_data["no"] == icon_prefab:
+                        skill_icon_info = {
+                            "icon": icon_data["icon"],
+                            "color": f"#{icon_data['color']}"
+                        }
+                    elif icon_prefab == 14:
+                        skill_icon_info = {
+                            "icon": "Icon_Sub_Change",
+                            "color": "#e168eb"
+                        }
+                        break
     
     if skill_data_list:
         skill_name_zh_tw = (await get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])).get("zh_tw", "")
@@ -734,7 +712,6 @@ async def get_character_skill(data, skill_no, support=False):
         else:
             # 非支援技能，获取所有等级的技能描述
             for skill_data in skill_data_list:
-                hero_level = skill_data.get("hero_level", 1)
                 desc_tw = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("zh_tw", ""), False)
                 desc_cn = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("zh_cn", ""), False)
                 desc_kr = await process_skill_description(data, (await get_string_by_type(data, "skill", skill_data["tooltip_sno"])).get("kr", ""), False)
@@ -744,7 +721,7 @@ async def get_character_skill(data, skill_no, support=False):
                     "desc_zh_cn": desc_cn,
                     "desc_kr": desc_kr,
                     "desc_en": desc_en,
-                    "hero_level": hero_level
+                    "hero_level": skill_data.get("hero_level", 1)
                 })
     
     return {
@@ -893,7 +870,7 @@ async def get_character_keyword_info(data: dict, keyword_info: dict, trip_info: 
         data,
         keyword_info.get("keyword_source", 0),
         keyword_info.get("keyword_get_details", 0),
-        keyword_info.get("keyword_type"),
+        keyword_info.get("keyword_type", 0),
         review
     )
     
@@ -970,7 +947,7 @@ async def get_character_keyword(data: dict, hero_id: int, review: bool = False) 
     return "\n".join(keyword_msgs)
 
 
-async def get_character_town_object(data: dict, hero_id: int, review=False) -> dict:
+async def get_character_town_object(data: dict, hero_id: int, review=False) -> dict: # pyright: ignore[reportReturnType]
     """
     获取角色专属领地物品
     Args:
@@ -1019,7 +996,6 @@ async def get_character_town_object(data: dict, hero_id: int, review=False) -> d
                         slot_type = await select_text_by_priority((await get_string_by_type(data, "ui", slot_limit_sno)).get("zh_tw", ""), (await get_string_by_type(data, "ui", slot_limit_sno)).get("kr", ""), review)
                     
                     # 获取物品描述
-
                     desc_sno = item.get("desc_sno")
                     if desc_sno:
                         for string in data["string_item"]["json"]:
@@ -2117,6 +2093,5 @@ async def get_character_attack_range(data: dict, hero_id: int) -> float:
     """
     for skill in data["skill"]["json"]:
         if skill.get("no") == hero_id and skill.get("range"):
-            return float(skill.get("range", 0))
-
+            return float(skill.get("range", 0.0))
     return 0.0

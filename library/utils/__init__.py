@@ -1,6 +1,3 @@
-"""
-Eversoul工具模块 - 功能集合
-"""
 import re
 import os
 import yaml

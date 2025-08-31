@@ -46,17 +46,11 @@ driver = get_driver()
 async def init_database():
     """初始化数据库"""
     try:
-        # 确保数据目录存在
         DATA_DIR.mkdir(parents=True, exist_ok=True)
-        
-        # 检查数据库文件是否存在
         db_path = EversoulUser._db_path
         if not os.path.exists(db_path):
             logger.info("正在初始化 Eversoul 用户数据库...")
-            # 初始化用户数据库
             await EversoulUser.init_db()
-        
-        logger.info("永恒灵魂工具插件启动完成，自动更新检查已启动")
     except Exception as e:
         logger.error(f"初始化 Eversoul 用户数据库时发生错误: {e}")
 

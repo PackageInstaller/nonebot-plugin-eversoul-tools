@@ -1,6 +1,3 @@
-"""
-Eversoul兑换码相关工具函数
-"""
 import re
 import json
 import aiohttp
