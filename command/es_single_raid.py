@@ -149,7 +149,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                     # 检查是否有delay
                                     if buff.get("delay"):
                                         delay_seconds = buff.get("delay")
-                                        delay_text = await get_string_by_type(data, "ui", buff.get("buff_tooltip_sno"))['zh_tw']
+                                        delay_text = (await get_string_by_type(data, "ui", buff.get("buff_tooltip_sno"))).get("zh_tw", "")
                             i += 1
         
         # 获取护盾削减系数和解除眩晕时间
