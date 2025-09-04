@@ -92,20 +92,6 @@ async def format_value(value: float, integer: bool) -> str:
         return f"{formatted_str}%"
 
 
-async def format_duration(duration: float) -> str:
-    """
-    格式化持续时间
-    Args:
-        duration: 持续时间
-    Returns:
-        str: 格式化后的字符串
-    """
-    if duration.is_integer():
-        return str(int(duration))
-    else:
-        return str(duration)
-
-
 async def get_character_skill_description(data, no: int, type: str) -> str:
     """
     获取角色技能值
@@ -133,10 +119,10 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
             if type == "VALUE":
                 return await get_buff_value_text(buff_code.get("buff_effect", 0), buff_code.get("value", 0), use_color_text)
             elif type == "DURATION":
-                return await format_duration(buff_code.get("duration", 0))
+                return await get_duration_text(buff_code.get("duration", 0), use_color_text)
     elif ((function_key - 28) & 0xFFFFFFFF) < 2 or function_key == 25:
         if type == "DURATION":
-            return await format_duration(skill_code.get("duration", 0))
+            return await get_duration_text(skill_code.get("duration", 0), use_color_text)
         
         recursive_skill_id = skill_code.get("value", 0)
         referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id))
@@ -151,7 +137,7 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
     if type == "VALUE":
         return await get_code_value_text(function_key, skill_code.get("value", 0), use_color_text)
     elif type == "DURATION":
-        return await format_duration(skill_code.get("duration", 0))
+        return await get_duration_text(skill_code.get("duration", 0), use_color_text)
     return ""
 
 
@@ -188,6 +174,20 @@ async def get_code_value_color_text(function_key: int) -> str:
         return "#FFFFFF" # 白色
     else:
         return ""
+
+
+async def get_duration_text(duration: float, use_color_text: bool) -> str:
+    """
+    获取持续时间文本
+    SkillTextUtil::GetDuraionText
+    Args:
+        duration: 持续时间
+        use_color_text: 是否使用颜色文本
+    Returns:
+        str: 格式化后的字符串
+    """
+    text = f"{int(duration)}" if duration.is_integer() else f"{duration}"
+    return f"<color=#FFFFFF>{text}</color>" if use_color_text else text
 
 
 async def get_buff_value_text(buff_type: int, value: float, use_color_text: bool) -> str:
@@ -334,7 +334,7 @@ async def process_skill_description(data, description, use_color_text: bool):
     Args:
         data: json 数据
         description: 技能描述
-        use_color_text: 是否使用颜色文本，True时保留富文本格式，False时清理富文本
+        use_color_text: 是否使用颜色文本
     Returns:
         str: 处理后的技能描述
     """
