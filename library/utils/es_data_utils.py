@@ -383,80 +383,81 @@ async def load_json_data(group_id: int):
         return {"hero": {"json": []}}  # 返回空数据
     
     json_files = {
-        "hero": "Hero.json", # 角色, character
-        "hero_option": "HeroOption.json", # 角色潜能, character option
-        "hero_gift": "HeroGift.json", # 角色喜好礼物, character gift
-        "hero_desc": "HeroDesc.json", # 角色描述, character description
-        "hero_level_grade": "HeroLevelGrade.json", # 角色等级加成率, character level grade
-        "hero_grade": "HeroGrade.json", # 角色品质, character grade
-        "string_character": "StringCharacter.json", # 角色文本, character text
-        "string_system": "StringSystem.json", # 系统文本, system text
-        "skill": "Skill.json", # 技能, skill
-        "string_skill": "StringSkill.json", # 技能文本, skill text
-        "skill_code": "SkillCode.json", # 技能代码, skill code
-        "skill_buff": "SkillBuff.json", # 技能效果, skill effect
-        "skill_icon": "SkillIcon.json", # 技能图标, skill icon
-        "skill_pattern": "SkillPattern.json", # 技能释放顺序, skill pattern
-        "signature": "Signature.json", # 遗物, signature
-        "signature_level": "SignatureLevel.json", # 遗物等级, signature level
-        "string_evertalk": "StringEverTalk.json", # 聊天文本, chat text
-        "story_info": "StoryInfo.json", # 故事信息, story info
-        "talk": "Talk.json", # 对话, talk
-        "string_talk": "StringTalk.json", # 对话文本, talk text
-        "item_costume": "ItemCostume.json", # 物品信息, item info
-        "item": "Item.json", # 物品, item
-        "item_stat": "ItemStat.json", # 物品属性, item stat
-        "string_item": "StringItem.json", # 物品文本, item text
-        "illust": "Illust.json", # 插画, illust
-        "item_drop_group": "ItemDropGroup.json", # 掉落组, item drop group
-        "item_set_effect": "ItemSetEffect.json", # 套装效果, item set effect
-        "stage": "Stage.json", # 关卡, stage
-        "stage_battle": "StageBattle.json", # 关卡战斗, stage battle
-        "formation": "Formation.json", # 队伍, formation
-        "message_mail": "MessageMail.json", # 邮件, message mail
-        "level": "Level.json", # 等级, level
-        "ark_enhance": "ArkEnhance.json", # 方舟强化, ark enhance
-        "ark_overclock": "ArkOverClock.json", # 超频, ark overclock
-        "promotion_movie": "PromotionMovie.json", # 宣传片, promotion movie
-        "localization_schedule": "LocalizationSchedule.json", # 活动日历, localization schedule
-        "event_calender": "EventCalender.json", # 活动日历, event calender
-        "event_info": "EventInfo.json", # 活动信息, event info
-        "event_story": "EventStory.json", # 活动剧情, event story
-        "string_ui": "StringUI.json", # UI文本, ui text
-        "eden_alliance": "EdenAlliance.json", # 联合作战, eden alliance
-        "stage_equip": "StageEquip.json", # 关卡装备, stage equip
-        "string_stage": "StringStage.json", # 关卡文本, stage text
-        "cash_shop_item": "CashShopItem.json", # 商店物品, cash shop item
-        "string_cashshop": "StringCashshop.json", # 商店文本, cash shop text
-        "barrier": "Barrier.json", # 传送门相关信息, barrier info
-        "trip_hero": "TripHero.json", # 角色关键字, trip hero
-        "trip_keyword": "TripKeyword.json", # 角色关键字, trip keyword
-        "key_values": "KeyValues.json", # 关键字, key values
-        "town_location": "TownLocation.json", # 地点, town location
-        "town_object": "TownObjet.json", # 专属领地物品, town object
-        "string_town": "StringTown.json", # 地点文本, town text
-        "town_lost_item": "TownLostItem.json", # 遗失物品, town lost item
-        "town_buff": "TownBuff.json", # 专属领地物品buff, town buff
-        "thumbnail": "Thumbnail.json", # 缩略图, thumbnail
-        "arbeit_fairy_level": "ArbeitFairyLevel.json", # 打工等级, arbeit fairy level
-        "tower": "Tower.json", # 起源塔, tower
-        "contents_buff": "ContentsBuff.json", # buff数值内容, buff value
-        "battle_buff": "BattleBuff.json", # 战斗buff, battle buff
-        "world_raid_partner_buff": "WorldRaidPartnerBuff.json", # 支援伙伴buff, world raid partner buff
-        "arbeit_choice": "ArbeitChoice.json", # 专属物品任务选择, arbeit choice
-        "arbeit_list": "ArbeitList.json",   # 专属物品任务列表, arbeit list
-        "evertalk_desc": "EverTalkDesc.json", # everphton聊天相关，拿插图, everphton chat related, take illust
-        "soullink": "Soullink.json", # 灵魂链接文本相关, soul link text related
-        "soullink_collection": "SoullinkCollection.json", # 灵魂链接数值相关, soul link value related
-        "gacha": "Gacha.json", # 抽卡相关, gacha related
-        "single_raid_boss": "SingleRaidBoss.json", # 恶灵讨伐BOSS, single raid boss
-        "single_raid": "SingleRaid.json", # 恶灵讨伐, single raid
-        "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json", # 恶灵讨伐BOSS等级, single raid boss level grade
-        "single_raid_schedule": "SingleRaidSchedule.json", # 恶灵讨伐日程(记录了赛季，以及日程键值), single raid schedule (record season and schedule key value)
-        "single_raid_season": "SingleRaidSeason.json", # 恶灵讨伐赛季, single raid season
-        "single_raid_boss_interaction_detail": "SingleRaidBossInteractionDetail.json", # 恶灵讨伐开场白角色, single raid boss interaction detail
-        "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json", # 恶灵讨伐护盾削减系数, single raid boss groggy trigger
-        "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json", # 恶灵讨伐特殊之人, single raid season gimmick
+        "hero": "Hero.json", # 角色
+        "hero_option": "HeroOption.json", # 角色潜能
+        "hero_gift": "HeroGift.json", # 角色喜好礼物
+        "hero_desc": "HeroDesc.json", # 角色描述
+        "hero_level_grade": "HeroLevelGrade.json", # 角色等级加成率
+        "hero_grade": "HeroGrade.json", # 角色品质
+        "string_character": "StringCharacter.json", # 角色文本
+        "string_system": "StringSystem.json", # 系统文本
+        "skill": "Skill.json", # 技能
+        "string_skill": "StringSkill.json", # 技能文本
+        "skill_code": "SkillCode.json", # 技能代码
+        "skill_buff": "SkillBuff.json", # 技能效果
+        "skill_icon": "SkillIcon.json", # 技能图标
+        "skill_pattern": "SkillPattern.json", # 技能释放顺序
+        "signature": "Signature.json", # 遗物
+        "signature_level": "SignatureLevel.json", # 遗物等级
+        "string_evertalk": "StringEverTalk.json", # 聊天文本
+        "story_info": "StoryInfo.json", # 故事信息
+        "talk": "Talk.json", # 对话
+        "string_talk": "StringTalk.json", # 对话文本
+        "item_costume": "ItemCostume.json", # 物品信息
+        "item": "Item.json", # 物品
+        "item_stat": "ItemStat.json", # 物品属性
+        "string_item": "StringItem.json", # 物品文本
+        "illust": "Illust.json", # 插画
+        "item_drop_group": "ItemDropGroup.json", # 掉落组
+        "item_set_effect": "ItemSetEffect.json", # 套装效果
+        "stage": "Stage.json", # 关卡
+        "stage_battle": "StageBattle.json", # 关卡战斗
+        "formation": "Formation.json", # 队伍
+        "message_mail": "MessageMail.json", # 邮件
+        "level": "Level.json", # 等级
+        "ark_enhance": "ArkEnhance.json", # 方舟强化
+        "ark_overclock": "ArkOverClock.json", # 超频
+        "promotion_movie": "PromotionMovie.json", # 宣传片
+        "localization_schedule": "LocalizationSchedule.json", # 活动日历
+        "event_calender": "EventCalender.json", # 活动日历
+        "event_info": "EventInfo.json", # 活动信息
+        "event_story": "EventStory.json", # 活动剧情
+        "string_ui": "StringUI.json", # UI文本
+        "eden_alliance": "EdenAlliance.json", # 联合作战
+        "stage_equip": "StageEquip.json", # 关卡装备
+        "string_stage": "StringStage.json", # 关卡文本
+        "cash_shop_item": "CashShopItem.json", # 商店物品
+        "string_cashshop": "StringCashshop.json", # 商店文本
+        "barrier": "Barrier.json", # 传送门相关信息
+        "trip_hero": "TripHero.json", # 角色关键字
+        "trip_keyword": "TripKeyword.json", # 角色关键字
+        "key_values": "KeyValues.json", # 一些数值定义
+        "town_location": "TownLocation.json", # 地点
+        "town_object": "TownObjet.json", # 专属领地物品
+        "string_town": "StringTown.json", # 地点文本
+        "town_lost_item": "TownLostItem.json", # 遗失物品
+        "town_buff": "TownBuff.json", # 专属领地物品buff
+        "thumbnail": "Thumbnail.json", # 缩略图
+        "arbeit_fairy_level": "ArbeitFairyLevel.json", # 打工等级
+        "tower": "Tower.json", # 起源塔
+        "contents_buff": "ContentsBuff.json", # buff数值内容
+        "battle_buff": "BattleBuff.json", # 战斗buff
+        "world_raid_partner_buff": "WorldRaidPartnerBuff.json", # 支援伙伴buff
+        "arbeit_choice": "ArbeitChoice.json", # 专属物品任务选择
+        "arbeit_list": "ArbeitList.json",   # 专属物品任务列表
+        "evertalk_desc": "EverTalkDesc.json", # everphton聊天相关，拿插图
+        "soullink": "Soullink.json", # 灵魂链接文本相关
+        "soullink_collection": "SoullinkCollection.json", # 灵魂链接数值相关
+        "gacha": "Gacha.json", # 抽卡相关
+        "single_raid_boss": "SingleRaidBoss.json", # 恶灵讨伐BOSS
+        "single_raid": "SingleRaid.json", # 恶灵讨伐
+        "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json", # 恶灵讨伐BOSS等级
+        "single_raid_schedule": "SingleRaidSchedule.json", # 恶灵讨伐日程(记录了赛季，以及日程键值)
+        "single_raid_season": "SingleRaidSeason.json", # 恶灵讨伐赛季
+        "single_raid_boss_interaction_detail": "SingleRaidBossInteractionDetail.json", # 恶灵讨伐开场白角色
+        "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json", # 恶灵讨伐护盾削减系数
+        "single_raid_boss_groggy_condition": "SingleRaidBossGroggyCondition.json", # 恶灵讨伐各类CCBuff削减系数定义
+        "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json", # 恶灵讨伐特殊之人
     }
     
     data = {}

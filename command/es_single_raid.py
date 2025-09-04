@@ -14,8 +14,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         except ValueError:
             await es_single_raid.finish("恶灵ID必须是数字")
         
-        # 获取群组ID
-        group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         
@@ -43,7 +41,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         if not boss_data:
             await es_single_raid.finish(f"未找到ID为{hero_id}的恶灵讨伐信息")
         
-        # 根据level_group找到SingleRaid数据
         level_group = boss_data.get("level_group")
         raid_data = None
         for raid in data["single_raid"]["json"]:
@@ -51,38 +48,37 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 raid_data = raid
                 break
 
-        # 获取基础属性
+        # 基础属性
         name_zh_tw = (await get_string_character(data, hero_data["name_sno"])).get("zh_tw", "")
         race_zh_tw = (await get_string_by_type(data, "system", hero_data["race_sno"])).get("zh_tw", "")
         hero_class_zh_tw = (await get_string_by_type(data, "system", hero_data["class_sno"])).get("zh_tw", "")
         sub_class_zh_tw = (await get_string_by_type(data, "system", hero_data["sub_class_sno"])).get("zh_tw", "")
         stat_zh_tw = (await get_string_by_type(data, "system", hero_data["stat_sno"])).get("zh_tw", "")
         
-        # 获取战斗时长
-        battle_time = 0
+        # 战斗时长
         if raid_data and raid_data.get("stage_no"):
             for stage in data["stage"]["json"]:
                 if stage.get("no") == raid_data.get("stage_no"):
                     battle_time = stage.get("battle_time", 0)
                     break
         
-        # 获取讨伐攻略
+        # 讨伐攻略
         guide_text = ""
         if raid_data and raid_data.get("guide_sno"):
             guide_data = await get_string_by_type(data, "ui", raid_data.get("guide_sno"))
             guide_text = guide_data["zh_tw"]
         
-        # 获取血量倍数
+        # 血量倍数
         hp_multiplier = 1.0
         for level_grade in data["single_raid_boss_level_grade"]["json"]:
             if level_grade.get("level") == boss_data.get("boss_max_level"):
                 hp_multiplier = level_grade.get("value", 1.0)
                 break
         
-        # 计算最终血量
+        # 最终血量
         final_hp = int(hero_data.get("max_hp", 0) * hp_multiplier * boss_data.get('boss_max_level', 0))
         
-        # 获取奖励信息
+        # 奖励信息
         reward_items = []
         if boss_data.get("reward_item1_no"):
             item_name = await get_string_item(data, boss_data.get("reward_item1_no"))
@@ -126,49 +122,61 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     if hero_name:
                         interaction_info.append(hero_name["zh_tw"])
             
-            # 获取特殊之人
+
+        interaction_info = []
+        special_heroes = {}
+        delay_text = None
+        delay_seconds = None
+        if raid_data and raid_data.get("level_group"):
+            for interaction in data["single_raid_boss_interaction_detail"]["json"]:
+                if interaction.get("interaction_no") == raid_data.get("level_group"):
+                    hero_name = await get_string_character(data, interaction.get("hero_no"), special=True)
+                    if hero_name:
+                        interaction_info.append(hero_name["zh_tw"])
+
             if raid_data.get("no"):
-                # 在single_raid_season_gimmick中查找所有相关gimmick
+                buff_lookup = {buff["no"]: buff for buff in data["battle_buff"]["json"] if "no" in buff}
                 for gimmick in data["single_raid_season_gimmick"]["json"]:
                     if gimmick.get("raid_no") == raid_data.get("no"):
-                        # 遍历所有gimmick_type和gimmick_value
                         i = 1
                         while f"gimmick_type_{i}" in gimmick and f"gimmick_value_{i}" in gimmick:
                             gimmick_value = gimmick.get(f"gimmick_value_{i}")
-                            # 在battle_buff中查找对应的buff
-                            for buff in data["battle_buff"]["json"]:
-                                if buff.get("no") == gimmick_value:
-                                    # 获取特殊之人ID
-                                    specific_target = buff.get("specific_target")
-                                    if specific_target:
-                                        # 获取角色名称
-                                        hero_name = await get_string_character(data, specific_target, special=True)
-                                        if hero_name:
-                                            special_hero = hero_name["zh_tw"]
-                                        special_heroes[specific_target] = special_hero
-                                    # 检查是否有delay
-                                    if buff.get("delay"):
-                                        delay_seconds = buff.get("delay")
-                                        delay_text = (await get_string_by_type(data, "ui", buff.get("buff_tooltip_sno"))).get("zh_tw", "")
+                            buff = buff_lookup.get(gimmick_value)
+
+                            if buff:
+                                specific_target = buff.get("specific_target")
+                                if specific_target and specific_target not in special_heroes:
+                                    hero_name_data = await get_string_character(data, specific_target, special=True)
+                                    if hero_name_data and "zh_tw" in hero_name_data:
+                                        special_heroes[specific_target] = hero_name_data["zh_tw"]
+
+                                if not delay_text and buff.get("delay"):
+                                    delay_seconds = buff.get("delay")
+                                    delay_text = (await get_string_by_type(data, "ui", buff.get("buff_tooltip_sno"))).get("zh_tw", "")
+                            
                             i += 1
         
         # 获取护盾削减系数和解除眩晕时间
         groggy_info = []
-        recovery_duration = 0
         if boss_data and boss_data.get("no"):
-            for groggy in data["single_raid_boss_groggy_trigger"]["json"]:
-                if groggy.get("single_raid_boss_no") == boss_data.get("no"):
-                    # 获取解除眩晕时间
-                    recovery_duration = groggy.get("recovery_duration", 0)
-                    for buff_type , status_name in SINGLE_RAID_GROGGY_TYPE_MAPPING.items():
-                        if ( (buff_type - 201) & 0xFFFFFFFF <= 6 and (((0x63 >> ((buff_type + 55) % 32)) & 1) != 0 )):
-                            groggy_info.append(f"{status_name}类技能：{await format_value(groggy.get(f"value_{SINGLE_RAID_GROGGY_REDUCE_MAPPING[buff_type - 201]}"), True)}")
+            for groggy_trigger in data["single_raid_boss_groggy_trigger"]["json"]:
+                if groggy_trigger.get("single_raid_boss_no") == boss_data.get("no"):
+                    condition_group_id = groggy_trigger.get("condition_group")
+                    recovery_duration = groggy_trigger.get("recovery_duration", 0)
+                    break
+        if condition_group_id:
+            for condition in data["single_raid_boss_groggy_condition"]["json"]:
+                if condition.get("condition_group") == condition_group_id:
+                    buff_type = condition.get("condition_buff")
+                    value = condition.get("value", 0)
+                    status_name = SINGLE_RAID_GROGGY_TYPE_MAPPING.get(buff_type)
+                    
+                    if status_name and value != 0:
+                        groggy_info.append(f"{status_name}类技能：{await format_value(value, True)}")
         
-        # 构建消息
         messages = []
         basic_info = []
         
-        # 获取立绘
         portrait_paths = await get_character_portrait(data, hero_data["prefab_path"])
         basic_info.append(f"【恶灵讨伐：{name_zh_tw}】")
         if portrait_paths:
@@ -201,7 +209,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         
         basic_info.append(basic_info_text)
         
-        # 添加攻略
         if guide_text:
             basic_info.append(f"\n【讨伐攻略】\n{await clean_rich_text(guide_text)}")
         

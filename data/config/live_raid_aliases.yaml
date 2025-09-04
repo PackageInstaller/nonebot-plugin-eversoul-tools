@@ -699,6 +699,13 @@ names:
     ja_name: 悪夢のマリオネット
     aliases: []
     hero_id: 32069
+  - zh_tw_name: 惡夢的懸絲木偶
+    zh_cn_name: ''
+    kr_name: 악몽의 마리오네트
+    en_name: Nightmare Marionette
+    ja_name: 悪夢のマリオネット
+    aliases: []
+    hero_id: 32074
   - zh_tw_name: 機械蓋亞
     zh_cn_name: ''
     kr_name: 메카이아
