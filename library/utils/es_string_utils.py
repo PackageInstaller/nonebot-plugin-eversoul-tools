@@ -124,8 +124,7 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
         if type == "DURATION":
             return await get_duration_text(skill_code.get("duration", 0), use_color_text)
         
-        recursive_skill_id = skill_code.get("value", 0)
-        referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == recursive_skill_id))
+        referenced_code = next((code for code in data["skill_code"]["json"] if code["no"] == skill_code.get("value", 0)))
         ref_function_key = referenced_code.get("function_key", 0)
         
         if ref_function_key in (30, 300):
