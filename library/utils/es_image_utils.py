@@ -80,8 +80,10 @@ async def get_character_portrait(data, prefab_path):
             controller_path = costume.get("portrait_path", "")
             break
     
-    if base_name:
+    if base_name and (SOUL_DIR / f"{base_name}_512.png").exists():
         portraits.append(str(SOUL_DIR / f"{base_name}_512.png"))
+    else:
+        return None
 
     if controller_path:
         costume_portraits = set()
@@ -93,7 +95,10 @@ async def get_character_portrait(data, prefab_path):
                     costume_portraits.add(portrait_path)
         
         for portrait_name in sorted(costume_portraits):
-            portraits.append(str(SOUL_DIR / f"{portrait_name}_512.png"))
+            if (SOUL_DIR / f"{base_name}_512.png").exists():
+                portraits.append(str(SOUL_DIR / f"{portrait_name}_512.png"))
+            else:
+                return None
         
     return portraits
 
