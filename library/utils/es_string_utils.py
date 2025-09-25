@@ -1871,14 +1871,13 @@ async def get_base_battle_power(data: dict, entity_type: int, level: int) -> int
     计算基础战力
     Args:
         data: JSON 数据字典
-        entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
+        entity_type: 实体类型 (1=角色, 2=怪物, 3=恶灵)
         level: 等级
     
     Returns:
         int: 计算后的基础战力
     """
     try:
-        type_prefix = ""
         if entity_type == 1:
             type_prefix = "BP_hero"
         elif entity_type == 2:
@@ -1896,22 +1895,13 @@ async def get_base_battle_power(data: dict, entity_type: int, level: int) -> int
             key_name = kv.get("key_name", "")
             
             if key_name == f"{type_prefix}_base":
-                try:
-                    base_value = float(kv.get("values_data", "0"))
-                except ValueError:
-                    base_value = 0.0
-            
+                base_value = float(kv.get("values_data", 0.0))
             elif key_name == f"{type_prefix}_level":
-                try:
-                    level_value = float(kv.get("values_data", "0"))
-                except ValueError:
-                    level_value = 0.0
-            
+                level_value = float(kv.get("values_data", 0.0))
             elif key_name == f"{type_prefix}_level_per":
-                try:
-                    level_per_value = float(kv.get("values_data", "0"))
-                except ValueError:
-                    level_per_value = 0.0
+                level_per_value = float(kv.get("values_data", 0.0))
+            else:
+                base_value, level_value, level_per_value = 0.0, 0.0, 0.0
         
         battle_power = int(base_value + (level_value + level_per_value * level) * (level - 1))
         return battle_power
@@ -1931,16 +1921,17 @@ async def calculate_battle_power(data: dict, entity_type: int, level: int, grade
         data: JSON 数据字典
         entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
         level: 等级
-        grade: 品质
+        grade: 阶级品质
         level_grade: 等级品质, 默认1.0
-        equipment_power: 装备战力, 默认0
-        equipment_power_per: 装备战力百分比, 默认0.0
-        signature_power_per: 遗物战力百分比, 默认0.0
+        equipment_power: 装备战力, 默认0（有几件乘几件）
+        equipment_power_per: 装备战力百分比, 默认0.0（触发2/4件套，直接与基础战力相乘）
+        signature_power_per: 遗物战力百分比, 默认0.0（最高级直接与基础战力相乘）
         contents_buff_power: 内容增益战力, 默认0.0
+        这个以及下面的那个包含星座，专属建筑，潜能，方舟强化（1级时不应用战力加成），灵魂链接，好感等级（buff1_type为2时计算战力）
         contents_buff_power_per: 内容增益战力百分比, 默认0.0
         
     Returns:
-        int: 计算后的总战力
+        int: 计算后的总战力(向下取整)
     """
     try:
         base_power = await get_base_battle_power(data, entity_type, level)
