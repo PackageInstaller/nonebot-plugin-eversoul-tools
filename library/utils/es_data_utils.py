@@ -415,6 +415,7 @@ async def load_json_data(group_id: int):
         "formation": "Formation.json", # 队伍
         "message_mail": "MessageMail.json", # 邮件
         "level": "Level.json", # 等级
+        "love_level": "LoveLevel.json", # 好感等级
         "ark_enhance": "ArkEnhance.json", # 方舟强化
         "ark_overclock": "ArkOverClock.json", # 超频
         "promotion_movie": "PromotionMovie.json", # 宣传片
@@ -458,6 +459,7 @@ async def load_json_data(group_id: int):
         "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json", # 恶灵讨伐护盾削减系数
         "single_raid_boss_groggy_condition": "SingleRaidBossGroggyCondition.json", # 恶灵讨伐各类CCBuff削减系数定义
         "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json", # 恶灵讨伐特殊之人
+        "zodiac": "Zodiac.json", # 星座
     }
     
     data = {}

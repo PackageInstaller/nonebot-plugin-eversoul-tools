@@ -299,7 +299,7 @@ CV_KR：{cv_kr}"""
                 # 添加可进行的任务信息
                 tasks = await get_character_town_object_task(data, town_objects["obj_no"], review)
                 if tasks:
-                    objects_msg.append("\n可进行的打工：")
+                    objects_msg.append(f"\n{town_objects["tooltip"]}")
                     for task in tasks:
                         objects_msg.append(f"▼ {task['name']}（{task['rarity']}）")
                         objects_msg.append(f"所需时间：{await format_value(task['time'], True)}小时")

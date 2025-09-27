@@ -61,6 +61,9 @@ es_story = on_command("es故事信息", priority=5, block=True)
 es_account = on_command("es账号信息", aliases={"es账号列表", "es查看账号"}, priority=5, block=True)
 es_update_check = on_command("es检查更新", aliases={"es更新检查"}, priority=5, block=True)
 emoji_vote = on_notice(priority=1, block=False)
+es_zodiac = on_command("es星座信息", priority=5, block=True)
+es_love_level = on_command("es好感等级信息", priority=5, block=True)
+es_building = on_command("es建筑信息", aliases={"建筑信息"}, priority=5, block=True)
 
 
 # 数据相关
@@ -79,7 +82,8 @@ from .es_image_utils import (
     get_schedule_event, get_mail_event, get_calendar_event,
     get_character_affection_cg, get_character_evertalk_cg,
     generate_level_cost_chart, generate_timeline_html,
-    generate_potential_html
+    generate_potential_html, generate_zodiac_html, generate_love_level_html,
+    generate_building_html
 )
 
 # 更新检查相关
@@ -100,7 +104,10 @@ from .es_string_utils import (
     get_character_keyword, get_character_town_object, get_character_town_object_task,
     get_character_signature, get_character_signature_value,
     get_base_battle_power, calculate_battle_power, get_character_skill_pattern,
-    get_character_attack_range, get_character_birthday, get_buff_value_color_text
+    get_character_attack_range, get_character_birthday, get_buff_value_color_text,
+    get_zodiac_name, get_zodiac_buff_description, format_zodiac_nodes,
+    get_love_buff_type_name, format_love_level_data,
+    get_building_tooltip, format_building_data, get_building_basic_info
 )
 
 # 兑换码相关

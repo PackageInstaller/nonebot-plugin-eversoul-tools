@@ -22,3 +22,6 @@ from .es_notice import *
 from .es_story_info import *
 from .es_update_check import *
 from .es_hero_skill import *
+from .es_zodiac import *
+from .es_love_level import *
+from .es_building import *

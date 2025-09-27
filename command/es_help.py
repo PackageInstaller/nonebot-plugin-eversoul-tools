@@ -222,7 +222,7 @@ async def handle(bot: Bot, event: Event):
                             <td>
                                 es数据源
                                 + [review/live]</td>
-                            <td>切换数据源，仅限超管，群主以及管理员可用</td>
+                            <td>切换数据源</td>
                             <td>es数据源review</td>
                         </tr>
                         <tr>
@@ -273,6 +273,27 @@ async def handle(bot: Bot, event: Event):
                             </td>
                             <td>查询攻击范围排行</td>
                             <td>es攻击范围排行</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                es星座信息
+                            </td>
+                            <td>查询星座信息</td>
+                            <td>es星座信息</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                es好感等级信息
+                            </td>
+                            <td>查询好感等级信息</td>
+                            <td>es好感等级信息</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                es建筑信息
+                            </td>
+                            <td>查询建筑信息</td>
+                            <td>es建筑信息</td>
                         </tr>
                         <tr>
                             <td>

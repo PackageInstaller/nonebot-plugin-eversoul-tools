@@ -1,4 +1,5 @@
 import re
+import os
 from pathlib import Path
 from io import BytesIO
 from datetime import datetime
@@ -1504,3 +1505,711 @@ async def generate_potential_html(data: dict) -> str:
     except Exception as e:
         logger.error(f"生成潜能HTML时发生错误: {e}")
         raise   
+
+
+async def generate_zodiac_html(data: dict) -> str:
+    """生成星座信息HTML"""
+    try:
+        # 获取所有星座类型及其信息
+        zodiac_info = {}
+        for node in data["zodiac"]["json"]:
+            zodiac_type = node.get("zodiac_type")
+            zodiac_type_sno = node.get("zodiac_type_sno")
+            if zodiac_type and zodiac_type_sno:
+                zodiac_info[zodiac_type] = zodiac_type_sno
+        
+        # 按星座类型排序
+        sorted_zodiac_types = sorted(zodiac_info.keys())
+        
+        html_content = ""
+        
+        for zodiac_type in sorted_zodiac_types:
+            zodiac_type_sno = zodiac_info[zodiac_type]
+            
+            # 获取星座名称
+            from .es_string_utils import get_zodiac_name, format_zodiac_nodes
+            zodiac_name = await get_zodiac_name(data, zodiac_type_sno)
+            
+            # 获取该星座的所有节点和祝福信息
+            zodiac_data = await format_zodiac_nodes(data, zodiac_type)
+            nodes = zodiac_data["nodes"]
+            blessing = zodiac_data["blessing"]
+            
+            if not nodes:
+                continue
+                
+            # 为每个星座生成表格
+            html_content += f"""
+            <div class="zodiac-section">
+                <h2>{zodiac_name}</h2>
+                <table class="zodiac-table">
+                    <thead>
+                        <tr>
+                            <th>数据表编号</th>
+                            <th>节点编号</th>
+                            <th>前置节点</th>
+                            <th>消耗点数</th>
+                            <th>效果描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            """
+            
+            for node in nodes:
+                # 格式化前置节点显示
+                require_nodes = node["require_nodes"]
+                if require_nodes == "0":
+                    require_display = "无"
+                else:
+                    require_display = require_nodes.replace(",", ", ")
+                
+                # 消耗点数显示（0点消耗显示为"初始"）
+                need_point_display = "初始" if node["need_point"] == 0 else str(node["need_point"])
+                
+                html_content += f"""
+                        <tr>
+                            <td class="data-no">{node['no']}</td>
+                            <td class="node-no">{node['node_no']}</td>
+                            <td>{require_display}</td>
+                            <td class="need-points">{need_point_display}</td>
+                            <td class="description">{node['description']}</td>
+                        </tr>
+                """
+            
+            html_content += """
+                    </tbody>
+                </table>
+            """
+            
+            # 如果有祝福效果，添加祝福信息
+            if blessing:
+                html_content += f"""
+                <div class="blessing-section">
+                    <h3>🌟 完成祝福</h3>
+                    <div class="blessing-text">{blessing}</div>
+                </div>
+                """
+            
+            html_content += """
+            </div>
+            """
+        
+        # 完整的HTML模板
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>星座信息</title>
+            <style>
+                body {{
+                    font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+                    margin: 20px;
+                    background-color: #f5f5f5;
+                    color: #333;
+                }}
+                
+                .zodiac-section {{
+                    margin-bottom: 30px;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    padding: 20px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }}
+                
+                h2 {{
+                    color: #2c3e50;
+                    text-align: center;
+                    margin-bottom: 20px;
+                    font-size: 24px;
+                    border-bottom: 2px solid #3498db;
+                    padding-bottom: 10px;
+                }}
+                
+                .zodiac-table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 10px;
+                    font-size: 14px;
+                }}
+                
+                .zodiac-table th {{
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 12px 6px;
+                    text-align: center;
+                    font-weight: bold;
+                    border: 1px solid #ddd;
+                    font-size: 12px;
+                }}
+                
+                .zodiac-table td {{
+                    padding: 8px 6px;
+                    border: 1px solid #ddd;
+                    text-align: center;
+                    background-color: #fafafa;
+                    font-size: 12px;
+                }}
+                
+                .zodiac-table tbody tr:nth-child(even) {{
+                    background-color: #f9f9f9;
+                }}
+                
+                .zodiac-table tbody tr:hover {{
+                    background-color: #e8f4f8;
+                }}
+                
+                .data-no {{
+                    font-weight: bold;
+                    color: #8e44ad;
+                    background-color: #f8f4ff !important;
+                    font-size: 11px;
+                }}
+                
+                .node-no {{
+                    font-weight: bold;
+                    color: #e74c3c;
+                    background-color: #fff5f5 !important;
+                }}
+                
+                .need-points {{
+                    font-weight: bold;
+                    color: #f39c12;
+                }}
+                
+                .description {{
+                    text-align: left;
+                    max-width: 400px;
+                    word-wrap: break-word;
+                    font-size: 13px;
+                    line-height: 1.4;
+                }}
+                
+                .blessing-section {{
+                    margin-top: 15px;
+                    padding: 15px;
+                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                    border-radius: 8px;
+                    color: white;
+                    text-align: center;
+                }}
+                
+                .blessing-section h3 {{
+                    margin: 0 0 10px 0;
+                    font-size: 18px;
+                }}
+                
+                .blessing-text {{
+                    font-size: 14px;
+                    font-weight: bold;
+                    background-color: rgba(255,255,255,0.2);
+                    padding: 10px;
+                    border-radius: 5px;
+                }}
+                
+                .header {{
+                    text-align: center;
+                    margin-bottom: 30px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                }}
+                
+                .header h1 {{
+                    margin: 0;
+                    font-size: 28px;
+                }}
+                
+                .header p {{
+                    margin: 10px 0 0 0;
+                    font-size: 16px;
+                    opacity: 0.9;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🌟 星座信息大全 🌟</h1>
+                <p>EverSoul 星座系统详细信息</p>
+            </div>
+            {html_content}
+        </body>
+        </html>
+        """
+        
+        return html
+        
+    except Exception as e:
+        logger.error(f"生成星座HTML时发生错误: {e}")
+        raise
+
+
+async def generate_building_html(data: dict) -> str:
+    """生成建筑信息HTML"""
+    try:
+        from .es_string_utils import format_building_data
+        
+        buildings = await format_building_data(data)
+        
+        if not buildings:
+            return """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>建筑信息</title>
+                <style>
+                    body {
+                        font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+                        margin: 20px;
+                        background-color: #f5f5f5;
+                        color: #333;
+                        text-align: center;
+                        padding: 50px;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>暂无建筑信息</h1>
+                <p>未找到符合条件的建筑数据</p>
+            </body>
+            </html>
+            """
+        
+        # 按buff_type分组建筑
+        building_groups = {}
+        buff_type_names = {
+            50: "攻击力提升",
+            51: "防御力提升", 
+            52: "生命值提升",
+            53: "暴击威力提升",
+            54: "命中率提升",
+            55: "回避率提升",
+            56: "魔法抗性提升",
+            57: "物理抗性提升",
+            58: "生命吸取提升"
+        }
+        
+        for building in buildings:
+            buff_type = building["buff_type"]
+            type_name = buff_type_names.get(buff_type, f"类型{buff_type}")
+            if type_name not in building_groups:
+                building_groups[type_name] = []
+            building_groups[type_name].append(building)
+        
+        html_content = ""
+        
+        for type_name, type_buildings in building_groups.items():
+            html_content += f"""
+            <div class="building-section">
+                <h2>{type_name}</h2>
+                <div class="buildings-grid">
+            """
+            
+            for building in type_buildings:
+                img_html = ""
+                if building["img_path"] and os.path.exists(building["img_path"]):
+                    img_html = f'<img src="file:///{building["img_path"]}" alt="{building["name"]}" class="building-image">'
+                
+                grade_class = "grade-" + building["grade"].replace("★", "star").replace(" ", "").lower() if building["grade"] else "grade-default"
+                
+                html_content += f"""
+                <div class="building-card">
+                    <div class="building-header">
+                        {img_html}
+                        <div class="building-info">
+                            <h3 class="building-name">{building["name"]}</h3>
+                            <div class="building-grade {grade_class}">{building["grade"]}</div>
+                        </div>
+                    </div>
+                    <div class="building-content">
+                        <div class="building-description">{building["description"]}</div>
+                        <div class="building-buff">
+                            <strong></strong>{building["buff_description"]}{building["battle_power_per"]}
+                        </div>
+                    </div>
+                </div>
+                """
+            
+            html_content += """
+                </div>
+            </div>
+            """
+        
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>建筑信息</title>
+            <style>
+                body {{
+                    font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+                    margin: 20px;
+                    background-color: #f5f5f5;
+                    color: #333;
+                }}
+                
+                .header {{
+                    text-align: center;
+                    margin-bottom: 30px;
+                    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                }}
+                
+                .header h1 {{
+                    margin: 0;
+                    font-size: 28px;
+                }}
+                
+                .header p {{
+                    margin: 10px 0 0 0;
+                    font-size: 16px;
+                    opacity: 0.9;
+                }}
+                
+                .building-section {{
+                    margin-bottom: 30px;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    padding: 20px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }}
+                
+                .building-section h2 {{
+                    color: #8b4513;
+                    text-align: center;
+                    margin-bottom: 20px;
+                    font-size: 20px;
+                    border-bottom: 2px solid #d2b48c;
+                    padding-bottom: 10px;
+                }}
+                
+                .buildings-grid {{
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                    gap: 15px;
+                }}
+                
+                .building-card {{
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    padding: 15px;
+                    background-color: #fafafa;
+                    transition: box-shadow 0.3s ease;
+                }}
+                
+                .building-card:hover {{
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                }}
+                
+                .building-header {{
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 15px;
+                }}
+                
+                .building-image {{
+                    width: 60px;
+                    height: 60px;
+                    object-fit: cover;
+                    border-radius: 6px;
+                    margin-right: 15px;
+                    border: 2px solid #ddd;
+                }}
+                
+                .building-info {{
+                    flex: 1;
+                }}
+                
+                .building-name {{
+                    margin: 0 0 5px 0;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #8b4513;
+                }}
+                
+                .building-grade {{
+                    font-size: 12px;
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    display: inline-block;
+                    font-weight: bold;
+                }}
+                
+                .grade-default {{
+                    background-color: #e0e0e0;
+                    color: #666;
+                }}
+                
+                .grade-1star {{
+                    background-color: #f0f0f0;
+                    color: #666;
+                }}
+                
+                .grade-2star {{
+                    background-color: #e8f5e8;
+                    color: #2e7d32;
+                }}
+                
+                .grade-3star {{
+                    background-color: #e3f2fd;
+                    color: #1976d2;
+                }}
+                
+                .grade-4star {{
+                    background-color: #f3e5f5;
+                    color: #7b1fa2;
+                }}
+                
+                .grade-5star {{
+                    background-color: #fff3e0;
+                    color: #f57c00;
+                }}
+                
+                .building-content {{
+                    border-top: 1px solid #eee;
+                    padding-top: 15px;
+                }}
+                
+                .building-description {{
+                    font-size: 13px;
+                    color: #666;
+                    margin-bottom: 10px;
+                    line-height: 1.4;
+                }}
+                
+                .building-buff {{
+                    font-size: 14px;
+                    color: #2e7d32;
+                    background-color: #e8f5e8;
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    border-left: 3px solid #4caf50;
+                }}
+                
+                .building-buff strong {{
+                    color: #1b5e20;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🏰 建筑信息大全 🏰</h1>
+                <p>EverSoul 建筑系统详细信息</p>
+            </div>
+            {html_content}
+        </body>
+        </html>
+        """
+        
+        return html
+        
+    except Exception as e:
+        logger.error(f"生成建筑HTML时发生错误: {e}")
+        raise
+
+
+async def generate_love_level_html(data: dict) -> str:
+    """生成好感等级信息HTML"""
+    try:
+        from .es_string_utils import format_love_level_data, get_love_buff_type_name
+        
+        love_levels = await format_love_level_data(data)
+        
+        html_content = f"""
+        <div class="love-level-section">
+            <h2>好感等级信息</h2>
+            <table class="love-level-table">
+                <thead>
+                    <tr>
+                        <th>等级</th>
+                        <th>所需好感度</th>
+                        <th>累计好感度</th>
+                        <th>效果列表</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for level_info in love_levels:
+            # 好感度
+            lovepoint_display = f"{level_info['lovepoint']}" if level_info['lovepoint'] > 0 else "-"
+            total_lovepoint_display = str(level_info['total_lovepoint']) if level_info['total_lovepoint'] > 0 else "-"
+            
+            # 效果
+            effects_html = ""
+            if level_info['buffs']:
+                for buff in level_info['buffs']:
+                    if buff['description']:
+                        effects_html += f"<div class='buff-item'>{buff['description']}</div>"
+                    elif buff['type']:
+                        buff_name = await get_love_buff_type_name(buff['type'])
+                        effects_html += f"<div class='buff-item'>新增{buff_name}</div>"
+            
+            
+            html_content += f"""
+                    <tr>
+                        <td class="level">{level_info['level']}</td>
+                        <td class="lovepoint">{lovepoint_display}</td>
+                        <td class="total-lovepoint">{total_lovepoint_display}</td>
+                        <td class="effects">{effects_html}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </div>
+        """
+        
+        # 完整的HTML模板
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>好感等级信息</title>
+            <style>
+                body {{
+                    font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+                    margin: 20px;
+                    background-color: #f5f5f5;
+                    color: #333;
+                }}
+                
+                .love-level-section {{
+                    margin-bottom: 30px;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    padding: 20px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }}
+                
+                h2 {{
+                    color: #2c3e50;
+                    text-align: center;
+                    margin-bottom: 20px;
+                    font-size: 24px;
+                    border-bottom: 2px solid #e74c3c;
+                    padding-bottom: 10px;
+                }}
+                
+                .love-level-table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 10px;
+                    font-size: 14px;
+                }}
+                
+                .love-level-table th {{
+                    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                    color: white;
+                    padding: 12px 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    border: 1px solid #ddd;
+                }}
+                
+                .love-level-table td {{
+                    padding: 10px 8px;
+                    border: 1px solid #ddd;
+                    text-align: center;
+                    background-color: #fafafa;
+                    vertical-align: top;
+                }}
+                
+                .love-level-table tbody tr:nth-child(even) {{
+                    background-color: #f9f9f9;
+                }}
+                
+                .love-level-table tbody tr:hover {{
+                    background-color: #fff5f5;
+                }}
+                
+                .level {{
+                    font-weight: bold;
+                    color: #e74c3c;
+                    background-color: #fff5f5 !important;
+                    font-size: 16px;
+                }}
+                
+                .lovepoint {{
+                    font-weight: bold;
+                    color: #f39c12;
+                }}
+                
+                .total-lovepoint {{
+                    font-weight: bold;
+                    color: #27ae60;
+                }}
+                
+                .effects {{
+                    text-align: left;
+                    max-width: 400px;
+                    word-wrap: break-word;
+                }}
+                
+                .buff-item {{
+                    background-color: #e8f6f3;
+                    margin: 2px 0;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 13px;
+                    border-left: 3px solid #27ae60;
+                }}
+                
+                .special-effect {{
+                    background-color: #fef9e7;
+                    margin: 2px 0;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 13px;
+                    border-left: 3px solid #f39c12;
+                }}
+                
+                .no-effect {{
+                    color: #95a5a6;
+                    font-style: italic;
+                    font-size: 13px;
+                }}
+                
+                .header {{
+                    text-align: center;
+                    margin-bottom: 30px;
+                    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                }}
+                
+                .header h1 {{
+                    margin: 0;
+                    font-size: 28px;
+                }}
+                
+                .header p {{
+                    margin: 10px 0 0 0;
+                    font-size: 16px;
+                    opacity: 0.9;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>💕 好感等级信息大全 💕</h1>
+                <p>EverSoul 好感等级系统详细信息</p>
+            </div>
+            {html_content}
+        </body>
+        </html>
+        """
+        
+        return html
+        
+    except Exception as e:
+        logger.error(f"生成好感等级HTML时发生错误: {e}")
+        raise

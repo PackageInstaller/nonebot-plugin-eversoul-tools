@@ -73,12 +73,14 @@ async def concat_color_text(buff_type: int, value: float, type: str, integer: bo
 
 
 
-async def format_value(value: float, integer: bool) -> str:
+async def format_value(value: float, integer: bool, no_percent_sign: bool = False, percent_multiplier: float = 100.0) -> str:
     """
     格式化数值
     Args:
         value: 数值
         integer: 是否为整数
+        no_percent_sign: 是否不添加%符号（默认为False，即添加%符号）
+        percent_multiplier: 百分比乘数（默认为100.0）
     Returns:
         str: 格式化后的字符串
     """
@@ -87,9 +89,12 @@ async def format_value(value: float, integer: bool) -> str:
         formatted_str = f"{abs_value:.2f}".rstrip('0').rstrip('.')
         return formatted_str
     else:
-        percent_value = abs_value * 100
+        percent_value = abs_value * percent_multiplier
         formatted_str = f"{percent_value:.2f}".rstrip('0').rstrip('.')
-        return f"{formatted_str}%"
+        if no_percent_sign:
+            return formatted_str
+        else:
+            return f"{formatted_str}%"
 
 
 async def get_character_skill_description(data, no: int, type: str) -> str:
@@ -284,16 +289,16 @@ async def get_buff_value_color_text(buff_type: int, value: float) -> str:
         elif ((buff_type - 1401) & 0xFFFFFFFF >= 2 and  buff_type != 1202 ):
             return ""
         if value < 0.0:
-            return "#B778FF" # 紫色
-        return "#EDA900" # 黄色
+            return "#B778FF"
+        return "#EDA900"
     
     if ((buff_type - 511) & 0xFFFFFFFF < 2):
-        return "#368AFF" # 蓝色
+        return "#368AFF"
     if (buff_type != 801 and buff_type != 802):
         return ""
     if value >= 0.0:
-        return "#B778FF" # 紫色
-    return "#FFDF24" # 黄色
+        return "#B778FF"
+    return "#FFDF24"
 
 
 
@@ -373,7 +378,7 @@ async def get_string_by_type(data, string_type, no):
     获取字符串
     Args:
         data: JSON 数据字典
-        string_type: string 类型的都行，例如 ui, character, item, etc.
+        string_type: string 类型的都行，例如 ui, character, item, system,etc.
         no: 字符串编号
     Returns:
         dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
@@ -949,6 +954,29 @@ async def get_character_keyword(data: dict, hero_id: int, review: bool = False) 
 async def get_character_town_object(data: dict, hero_id: int, review=False) -> dict: # pyright: ignore[reportReturnType]
     """
     获取角色专属领地物品
+    public enum BuildingBuff
+    {
+        None = 0,
+        LootGoldBonus = 1,
+        LootManaDustBonus = 3,
+        LootManaCrystalBonus = 4,
+        TownBuildingLevelLimit = 10,
+        HeroRestSlotCount = 11,
+        TownShopType = 12,
+        SilverCoinAmount = 16,
+        HeroAttackkUp = 50,
+        HeroDefendUp = 51,
+        HeroHealthPointUp = 52,
+        HeroCriticalPowerUp = 53,
+        HeroAccuracyUp = 54,
+        HeroEvasionUp = 55,
+        HeroMagicRegistUp = 56,
+        HeroPhysicalResistUp = 57,
+        HeroLifeLeechUp = 58,
+        LootGoldBonusPlus = 101,
+        LootManaDustBonusPlus = 103,
+        LootManaCrystalBonusPlus = 104
+    }
     Args:
         data: JSON 数据字典
         hero_id: 角色编号
@@ -959,11 +987,13 @@ async def get_character_town_object(data: dict, hero_id: int, review=False) -> d
     for obj in data["town_object"]["json"]:
         if obj.get("hero") == hero_id:
             obj_no = obj.get("no")
+            buff1_sno = obj.get("buff1")
             buff2_sno = obj.get("buff2")
             if not obj_no:
                 continue
             
             # 获取prefab作为图片名称
+            tooltip = (await get_string_by_type(data, "ui", buff1_sno)).get("zh_tw", "")
             prefab = obj.get("prefab", "").lower()
 
             for buff in data["town_buff"]["json"]:
@@ -1019,7 +1049,8 @@ async def get_character_town_object(data: dict, hero_id: int, review=False) -> d
                             "slot_type": slot_type,
                             "desc": desc,
                             "img_path": img_path,
-                            "battle_power_per": battle_power_per
+                            "battle_power_per": battle_power_per,
+                            "tooltip": tooltip
                         }
 
 
@@ -1278,7 +1309,7 @@ async def get_character_soullink(data: dict, hero_id: int, review: bool = False)
                         # 固定值战力加成
                         battle_power = buff.get("battle_power", 0)
                         if battle_power != 0:
-                            buff_effects.append(f"战力加成：{int(battle_power)}")
+                            buff_effects.append(f"战力：{int(battle_power)}")
                 
                 if condition_text and buff_effects:
                     collection_effects.append({
@@ -1917,6 +1948,7 @@ async def calculate_battle_power(data: dict, entity_type: int, level: int, grade
                             contents_buff_power_per: float = 0.0) -> int:
     """
     计算总战力
+    HeroStatus::CalculatePower
     Args:
         data: JSON 数据字典
         entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
@@ -2085,3 +2117,440 @@ async def get_character_attack_range(data: dict, hero_id: int) -> float:
         if skill.get("no") == hero_id and skill.get("range"):
             return float(skill.get("range", 0.0))
     return 0.0
+
+
+async def get_zodiac_name(data, zodiac_type_sno):
+    """
+    获取星座名称
+    Args:
+        data: 游戏数据
+        zodiac_type_sno: 星座类型编号
+    Returns:
+        str: 星座名称
+    """
+    return (await get_string_by_type(data, "ui", zodiac_type_sno)).get("zh_tw", "")
+
+
+async def get_zodiac_buff_description(data, tooltip_sno, value=None):
+    """
+    获取星座buff描述
+    Args:
+        data: 游戏数据
+        tooltip_sno: 描述编号
+        value: 需要填入的数值（如果有的话）
+    Returns:
+        str: buff描述
+    """
+    description = (await get_string_by_type(data, "ui", tooltip_sno)).get("zh_tw", "")
+    
+    if value is not None:
+        description = description.replace("{0}", str(value))
+    
+    return description
+
+
+async def format_zodiac_nodes(data, zodiac_type):
+    """
+    格式化指定星座类型的所有节点信息
+    Args:
+        data: 游戏数据
+        zodiac_type: 星座类型
+    Returns:
+        dict: 包含节点信息和祝福信息的字典
+    """
+    nodes = []
+    blessing = None
+    
+    zodiac_nodes = []
+    for node in data["zodiac"]["json"]:
+        if node.get("zodiac_type") == zodiac_type:
+            zodiac_nodes.append(node)
+    zodiac_nodes.sort(key=lambda x: x.get("no", 0))
+
+    for node in zodiac_nodes:
+        node_no = node.get("no", 0)
+        zodiac_node_no = node.get("zodiac_node_no", 0)
+        require_nodes = node.get("require_node_no", "0")
+        need_point = node.get("need_point", 0)
+        tooltip_sno = node.get("tooltip_sno")
+        
+        # 祝福节点（没有need_point键）
+        is_blessing = "need_point" not in node
+        
+        if is_blessing:
+            if tooltip_sno:
+                blessing = await get_zodiac_buff_description(data, tooltip_sno)
+                contents_buff_no = node.get("contents_buff_no")
+                if contents_buff_no:
+                    for buff in data["contents_buff"]["json"]:
+                        if buff.get("no") == contents_buff_no:
+                            battle_power_per = buff.get("battle_power_per")
+                            if battle_power_per:
+                                blessing += f"（战力百分比{battle_power_per}）"
+                            break
+        else:
+            # 普通节点
+            node_info = {
+                "no": node_no,
+                "node_no": zodiac_node_no,
+                "require_nodes": require_nodes,
+                "need_point": need_point,
+                "description": ""
+            }
+
+            if "item_rate" in node and node["item_rate"] > 0:
+                # 资源增加类型
+                item_rate = node["item_rate"]
+                formatted_rate = await format_value(item_rate, False, True)
+                
+                if tooltip_sno:
+                    node_info["description"] = await get_zodiac_buff_description(data, tooltip_sno, formatted_rate)
+                
+            elif "contents_buff_no" in node:
+                # 属性增加类型
+                contents_buff_no = node["contents_buff_no"]
+                
+                # 从contents_buff中获取属性信息
+                for buff in data["contents_buff"]["json"]:
+                    if buff.get("no") == contents_buff_no:
+                        for key, value in buff.items():
+                            if key != "no" and value != 0:
+                                formatted_value = await format_value(value, False, True)
+                                
+                                if tooltip_sno:
+                                    description = await get_zodiac_buff_description(data, tooltip_sno, formatted_value)
+                                    buff_type_no = node.get("buff_type_no")
+                                    buff_type_sno = node.get("buff_type_sno")
+                                    prefix = ""
+                                    
+                                    if buff_type_no == 4 and buff_type_sno:
+                                        buff_type_info = await get_string_by_type(data, "system", buff_type_sno)
+                                        type_info = await get_string_by_type(data, "system", 110045)
+                                        type_text = type_info.get("zh_tw", "")
+                                        buff_type_text = buff_type_info.get("zh_tw", "")
+                                        if buff_type_text and type_text:
+                                            prefix = f"{buff_type_text} {type_text} - "
+                                    elif buff_type_no == 1 and buff_type_sno:
+                                        type_info = await get_string_by_type(data, "system", buff_type_sno)
+                                        type_text = type_info.get("zh_tw", "")
+                                        if type_text:
+                                            prefix = f"{type_text} - "
+
+                                    full_description = prefix + description
+                                    battle_power_per = buff.get("battle_power_per")
+                                    if battle_power_per:
+                                        full_description += f"（战力百分比{battle_power_per}）"
+                                    
+                                    node_info["description"] = full_description
+                                break
+                        break
+            
+            nodes.append(node_info)
+    
+    return {
+        "nodes": nodes,
+        "blessing": blessing
+    }
+
+
+
+async def get_love_buff_type_name(buff_type):
+    """
+    获取好感buff类型名称
+    public enum LoveBuffType 
+    {
+        None = 0,
+        DestinyStory = 1,
+        Battle = 2,
+        LoopLostItem = 3,
+        TripGift = 4,
+        Arbeit = 5,
+        Rest = 6,
+        BubbleTalk = 7,
+        WelcomeRun = 8,
+        SpecialTouch = 9,
+        Sticker = 18
+    }
+    Args:
+        buff_type: buff类型ID
+    Returns:
+        str: buff类型名称
+    """
+    buff_type_names = {
+        1: "好感故事",
+        2: "战斗属性",
+        3: "循环遗失物品",
+        4: "约会礼物",
+        5: "打工",
+        6: "休息",
+        7: "领地内气泡对话",
+        8: "领地内欢迎奔跑",
+        9: "特殊触摸",
+        18: "贴纸"
+    }
+    return buff_type_names.get(buff_type, "")
+
+
+async def get_building_tooltip(data: dict, town_buff: dict, amount: float) -> str:
+    """
+    根据town_buff获取建筑buff描述
+    Args:
+        data: JSON数据字典
+        town_buff: town_buff数据
+        amount: 数值
+    Returns:
+        str: 描述文本
+    """
+    try:
+        tooltip_sno = town_buff.get("tooltip_sno")
+        amount_kind = town_buff.get("amount_kind", 0)
+        
+        if not tooltip_sno:
+            return ""
+        
+        if amount_kind == 1:  # 整数
+            display_value = str(int(amount))
+        elif amount_kind == 2:  # 百分比
+            display_value = await format_value(amount, False, True, 100.0)
+        elif amount_kind == 3:  # 小数
+            display_value = f"{amount:.2f}".rstrip('0').rstrip('.')
+        else:
+            string_info = await get_string_by_type(data, "ui", tooltip_sno)
+            return string_info.get("zh_tw", "")
+        
+        string_info = await get_string_by_type(data, "ui", tooltip_sno)
+        description = string_info.get("zh_tw", "")
+        
+        if "{0}" in description:
+            description = description.replace("{0}", display_value)
+        
+        return description
+        
+    except Exception as e:
+        logger.error(f"获取建筑buff描述时发生错误: {e}")
+        return ""
+
+
+async def format_building_data(data: dict) -> list:
+    """
+    格式化建筑数据
+    Args:
+        data: JSON数据字典
+    Returns:
+        list: 格式化后的建筑信息列表
+    """
+    try:
+        buildings = []
+        for town_obj in data["town_object"]["json"]:
+            buff1 = town_obj.get("buff1")
+            buff2 = town_obj.get("buff2")
+            obj_no = town_obj.get("no")
+            
+            if not buff1 or buff2 or not obj_no:
+                continue
+
+            town_buff = None
+            for buff in data["town_buff"]["json"]:
+                if buff.get("no") == buff1:
+                    town_buff = buff
+                    break
+            
+            if not town_buff:
+                continue
+            
+            buff_type = town_buff.get("buff_type")
+            buff_type_no = town_buff.get("buff_type_no")
+            
+            if not buff_type or not (50 <= buff_type <= 58) or buff_type_no != 2:
+                continue
+            
+            building_info = await get_building_basic_info(data, obj_no)
+            if not building_info:
+                continue
+            
+            amount = town_buff.get("amount", 0)
+            buff_description = await get_building_tooltip(data, town_buff, amount)
+            
+            battle_power_per = ""
+            contents_buff_no = town_buff.get("contents_buff_no")
+            if contents_buff_no:
+                for buff in data["contents_buff"]["json"]:
+                    if buff.get("no") == contents_buff_no:
+                        battle_power = buff.get("battle_power_per")
+                        if battle_power:
+                            battle_power_per = f"（战力百分比{battle_power}）"
+                        break
+            
+            buildings.append({
+                "no": obj_no,
+                "name": building_info["name"],
+                "grade": building_info["grade"],
+                "description": building_info["description"],
+                "img_path": building_info["img_path"],
+                "buff_description": buff_description,
+                "battle_power_per": battle_power_per,
+                "buff_type": buff_type
+            })
+        
+        buildings.sort(key=lambda x: x["buff_type"])
+        
+        return buildings
+        
+    except Exception as e:
+        logger.error(f"格式化建筑数据时发生错误: {e}")
+        return []
+
+
+async def get_building_basic_info(data: dict, obj_no: int) -> dict:
+    """
+    获取建筑基本信息
+    Args:
+        data: JSON数据字典
+        obj_no: 建筑编号
+    Returns:
+        dict: 建筑基本信息
+    """
+    try:
+        for item in data["item"]["json"]:
+            if item.get("no") == obj_no:
+                name_sno = item.get("name_sno")
+                name = ""
+                if name_sno:
+                    name_info = await get_string_by_type(data, "item", name_sno)
+                    name = name_info.get("zh_tw", "")
+                grade_sno = item.get("grade_sno")
+                grade = ""
+                if grade_sno:
+                    grade_info = await get_string_by_type(data, "system", grade_sno)
+                    grade = grade_info.get("zh_tw", "")
+                desc_sno = item.get("desc_sno")
+                description = ""
+                if desc_sno:
+                    desc_info = await get_string_by_type(data, "item", desc_sno)
+                    desc_text = desc_info.get("zh_tw", "")
+                    description = await clean_rich_text(desc_text)
+                icon_path = item.get("icon_path", "")
+                img_path = ""
+                if icon_path:
+                    img_filename = icon_path.split("/")[-1] if "/" in icon_path else icon_path
+                    if img_filename:
+                        import os
+                        for file in os.listdir(TOWN_DIR):
+                            if file.lower() == f"{img_filename.lower()}.png":
+                                img_path = TOWN_DIR / file
+                                break
+                return {
+                    "name": name,
+                    "grade": grade,
+                    "description": description,
+                    "img_path": img_path
+                }
+        
+        return {}
+        
+    except Exception as e:
+        logger.error(f"获取建筑基本信息时发生错误: {e}, obj_no={obj_no}")
+        return {}
+
+
+async def format_love_level_data(data):
+    """
+    格式化好感等级数据
+    Args:
+        data: 游戏数据
+    Returns:
+        list: 所有好感等级信息的统一列表
+    """
+    love_levels = []
+    
+    for level_data in data["love_level"]["json"]:
+        level = level_data.get("level", 0)
+        hero_type = level_data.get("hero_type", 0)
+        
+        if level <= 9:
+            # 1-9级只收集hero_type为1的数据
+            if hero_type != 1:
+                continue
+        else:
+            # 10级及以上只收集hero_type为99的数据
+            if hero_type != 99:
+                continue
+        level_info = {
+            "no": level_data.get("no"),
+            "level": level_data.get("level"),
+            "hero_type": level_data.get("hero_type"),
+            "lovepoint": level_data.get("lovepoint", 0),
+            "total_lovepoint": level_data.get("total_lovepoint", 0),
+            "buffs": []
+        }
+        for i in range(1, 6):
+            buff_type_key = f"buff{i}_type"
+            buff_value_key = f"buff{i}_value"
+            buff_sno_key = f"buff{i}_sno"
+            
+            buff_type = level_data.get(buff_type_key)
+            buff_value = level_data.get(buff_value_key)
+            buff_sno = level_data.get(buff_sno_key)
+            
+            if buff_type or buff_sno:
+                buff_info = {
+                    "type": buff_type,
+                    "value": buff_value,
+                    "sno": buff_sno,
+                    "description": ""
+                }
+                
+                if buff_sno:
+                    string_info = await get_string_by_type(data, "ui", buff_sno)
+                    description = string_info.get("zh_tw", "")
+                    display_value = None
+                    raw_value = 0.0
+                    
+                    if buff_type == 1:  # DestinyStory
+                        raw_value = float(buff_value) if buff_value else 0.0
+                        display_value = str(int(raw_value))
+                    elif buff_type == 2:  # Battle
+                        # 战斗类型需要检查attack_rate, defence_rate, hp_rate
+                        if "attack_rate" in level_data and level_data["attack_rate"]:
+                            raw_value = level_data["attack_rate"]
+                            display_value = await format_value(raw_value, False, True, 0.001)
+                        elif "defence_rate" in level_data and level_data["defence_rate"]:
+                            raw_value = level_data["defence_rate"]
+                            display_value = await format_value(raw_value, False, True, 0.001)
+                        elif "hp_rate" in level_data and level_data["hp_rate"]:
+                            raw_value = level_data["hp_rate"]
+                            display_value = await format_value(raw_value, False, True, 0.001)
+                        
+                        # 战力加成
+                        if buff_value and "contents_buff" in data:
+                            for buff in data["contents_buff"]["json"]:
+                                if buff.get("no") == buff_value:
+                                    battle_power_per = buff.get("battle_power_per")
+                                    if battle_power_per and display_value:
+                                        description = description.replace("{0}", display_value)
+                                        description += f"（战力百分比{battle_power_per}）"
+                                        display_value = None
+                                    break
+                    elif buff_type == 5:  # Arbeit
+                        if "reduce_time" in level_data and level_data["reduce_time"]:
+                            raw_value = level_data["reduce_time"]
+                            display_value = await format_value(raw_value, False, True, 0.001)
+                    elif buff_type == 6:  # Rest
+                        if "increase_recovery" in level_data and level_data["increase_recovery"]:
+                            raw_value = level_data["increase_recovery"]
+                            display_value = await format_value(raw_value, False, True, 0.001)
+                    else:
+                        raw_value = float(buff_value) if buff_value else 0.0
+                        display_value = str(int(raw_value))
+
+                    if "{0}" in description:
+                        if display_value is None or (raw_value == 0.0 and buff_value is None):
+                            pass
+                        else:
+                            description = description.replace("{0}", display_value)
+                    buff_info["description"] = description
+                level_info["buffs"].append(buff_info)
+        love_levels.append(level_info)
+    love_levels.sort(key=lambda x: x["level"])
+    
+    return love_levels
