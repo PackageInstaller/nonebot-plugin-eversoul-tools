@@ -48,7 +48,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 查找符合条件的礼品
         items = []
         for item in data["item"]["json"]:
-            if ((item.get("category_sno") == 110002 or item.get("category_sno") == 110078) and 
+            if ((item.get("category_sno") in [110002, 110078]) and 
                 item.get("grade_sno") == grade_sno and
                 item.get("stat_limit_sno") == stat_sno and
                 item.get("set_effect_no") == set_effect["no"]):
@@ -61,10 +61,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         for item in items:
             try:
                 # 获取礼品基本信息
-                name = next((s.get("zh_tw", "未知") for s in data["string_item"]["json"] 
-                            if s["no"] == item.get("name_sno")), "未知")
-                desc = next((s.get("zh_tw", "") for s in data["string_item"]["json"] 
-                            if s["no"] == item.get("desc_sno")), "")
+                name = (await get_string_by_type(data, "item", item.get("name_sno"))).get("zh_tw", "")
+                desc = (await get_string_by_type(data, "item", item.get("desc_sno"))).get("zh_tw", "")
                 
                 # 获取图标路径
                 icon_base = item.get("icon_path", "")
