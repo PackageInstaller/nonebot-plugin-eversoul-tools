@@ -31,7 +31,7 @@ class EversoulUser:
             async with aiosqlite.connect(cls._db_path) as db:
                 await db.execute(
                     """
-                    CREATE TABLE IF NOT EXISTS _user (
+                    CREATE TABLE IF NOT EXISTS user (
                         user_id INTEGER NOT NULL,
                         app_id INTEGER NOT NULL,
                         player_id INTEGER NOT NULL,
