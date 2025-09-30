@@ -1940,55 +1940,6 @@ async def get_base_battle_power(data: dict, entity_type: int, level: int) -> int
     except Exception as e:
         logger.error(f"计算基础战力时发生错误: {e}")
         return 0
-
-
-async def calculate_battle_power(data: dict, entity_type: int, level: int, grade: int, 
-                            equipment_power: int = 0, equipment_power_per: float = 0.0, 
-                            signature_power_per: float = 0.0, contents_buff_power: float = 0.0, 
-                            contents_buff_power_per: float = 0.0) -> int:
-    """
-    计算总战力
-    HeroStatus::CalculatePower
-    Args:
-        data: JSON 数据字典
-        entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
-        level: 等级
-        grade: 阶级品质
-        level_grade: 等级品质, 默认1.0
-        equipment_power: 装备战力, 默认0（有几件乘几件）
-        equipment_power_per: 装备战力百分比, 默认0.0（触发2/4件套，直接与基础战力相乘）
-        signature_power_per: 遗物战力百分比, 默认0.0（最高级直接与基础战力相乘）
-        contents_buff_power: 内容增益战力, 默认0.0
-        这个以及下面的那个包含星座，专属建筑，潜能，方舟强化（1级时不应用战力加成），灵魂链接，好感等级（buff1_type为2时计算战力）
-        contents_buff_power_per: 内容增益战力百分比, 默认0.0
-        
-    Returns:
-        int: 计算后的总战力(向下取整)
-    """
-    try:
-        base_power = await get_base_battle_power(data, entity_type, level)
-        grade_value = await get_hero_grade_value(data, grade)
-        level_grade_value = await get_hero_level_grade_value(data, level)
-        
-        total_power = (
-            base_power +
-            (level_grade_value - 1.0) * base_power +
-            (grade_value - 1.0) * base_power +
-            equipment_power +
-            equipment_power_per * base_power +
-            signature_power_per * base_power +
-            contents_buff_power +
-            contents_buff_power_per * base_power
-        )
-
-        if total_power == float('inf'):
-            return 0
-        
-        return int(total_power)
-        
-    except Exception as e:
-        logger.error(f"计算总战力时发生错误: {e}")
-        return 0
     
 
 async def get_hero_grade_value(data: dict, grade: int) -> float:
@@ -2044,6 +1995,61 @@ async def get_hero_level_grade_value(data: dict, level: int) -> float:
     except Exception as e:
         logger.error(f"获取角色等级加成率时发生错误: {e}")
         return 1.0
+
+
+async def calculate_battle_power(data: dict, entity_type: int, level: int, grade: int, 
+                            equipment_power: int = 0, equipment_power_per: float = 0.0, 
+                            signature_power_per: float = 0.0, contents_buff_power: float = 0.0, 
+                            contents_buff_power_per: float = 0.0) -> int:
+    """
+    计算总战力
+    HeroStatus::CalculatePower
+    Args:
+        data: JSON 数据字典
+        entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
+        level: 等级
+        grade: 阶级品质
+        level_grade: 等级品质, 默认1.0
+        equipment_power: 装备战力, 默认0（有几件乘几件）
+        equipment_power_per: 装备战力百分比, 默认0.0（触发2/4件套，直接与基础战力相乘）
+        signature_power_per: 遗物战力百分比, 默认0.0（最高级直接与基础战力相乘）
+
+        contents_buff_power: 内容增益战力, 默认0.0
+        方舟强化（1级时不应用战力加成，主方舟为战力，其他为战力百分比，同类型最高），灵魂链接（部分为战力，同类型最高）
+
+        contents_buff_power_per: 内容增益战力百分比, 默认0.0
+        星座（战力百分比），建筑（战力百分比），潜能（战力百分比），好感等级（buff1_type为2时计算战力，战力百分比）
+        
+    Returns:
+        int: 计算后的总战力(向下取整)
+    """
+    try:
+        base_power = await get_base_battle_power(data, entity_type, level)
+        grade_value = await get_hero_grade_value(data, grade)
+        level_grade_value = await get_hero_level_grade_value(data, level)
+        
+        total_power = (
+            base_power +
+            (level_grade_value - 1.0) * base_power +
+            (grade_value - 1.0) * base_power +
+            equipment_power +
+            equipment_power_per * base_power +
+            signature_power_per * base_power +
+            contents_buff_power +
+            contents_buff_power_per * base_power
+        )
+
+        if total_power == float('inf'):
+            return 0
+        
+        return int(total_power)
+        
+    except Exception as e:
+        logger.error(f"计算总战力时发生错误: {e}")
+        return 0
+    
+
+
 
 
 async def get_character_skill_pattern(data: dict, hero_no: int, review: bool = False) -> list:
