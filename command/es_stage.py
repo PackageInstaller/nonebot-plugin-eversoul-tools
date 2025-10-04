@@ -115,8 +115,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 if first_valid_hero and first_valid_hero["grade"] and first_valid_hero["level"]:
                     level = first_valid_hero["level"]
                     grade = first_valid_hero["grade"]
-                    hero_count = len(hero_positions)
-                    team_battle_power = await calculate_battle_power(data, 2, level, grade) * hero_count
+                    team_battle_power = (await calculate_battle_power(data, 2, level, grade)) * len(hero_positions)
                     team_info.append(f"队伍战力：{team_battle_power}")
                 
                 messages.append("\n".join(team_info))

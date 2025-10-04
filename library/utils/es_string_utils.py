@@ -1908,39 +1908,25 @@ async def get_base_battle_power(data: dict, entity_type: int, level: int) -> int
     Returns:
         int: 计算后的基础战力
     """
-    try:
-        if entity_type == 1:
-            type_prefix = "BP_hero"
-        elif entity_type == 2:
-            type_prefix = "BP_monster"
-        elif entity_type == 3:
-            type_prefix = "BP_raid"
-        else:
-            return 0
-        
-        base_value = 0.0
-        level_value = 0.0
-        level_per_value = 0.0
-        
-        for kv in data["key_values"]["json"]:
-            key_name = kv.get("key_name", "")
-            
-            if key_name == f"{type_prefix}_base":
-                base_value = float(kv.get("values_data", 0.0))
-            elif key_name == f"{type_prefix}_level":
-                level_value = float(kv.get("values_data", 0.0))
-            elif key_name == f"{type_prefix}_level_per":
-                level_per_value = float(kv.get("values_data", 0.0))
-            else:
-                base_value, level_value, level_per_value = 0.0, 0.0, 0.0
-        
-        battle_power = int(base_value + (level_value + level_per_value * level) * (level - 1))
-        return battle_power
+    if entity_type == 1:
+        type_prefix = "BP_hero"
+    elif entity_type == 2:
+        type_prefix = "BP_monster"
+    elif entity_type == 3:
+        type_prefix = "BP_raid"
     
-    except Exception as e:
-        logger.error(f"计算基础战力时发生错误: {e}")
-        return 0
     
+    for kv in data["key_values"]["json"]:
+        key_name = kv.get("key_name", "")
+        
+        if key_name == f"{type_prefix}_base":
+            base_value = float(kv.get("values_data"))
+        elif key_name == f"{type_prefix}_level":
+            level_value = float(kv.get("values_data"))
+        elif key_name == f"{type_prefix}_level_per":
+            level_per_value = float(kv.get("values_data"))
+    
+    return int(base_value + (level_value + level_per_value * level) * (level - 1))
 
 async def get_hero_grade_value(data: dict, grade: int) -> float:
     """
@@ -1953,48 +1939,28 @@ async def get_hero_grade_value(data: dict, grade: int) -> float:
         float: 品质加成值
     """
 
-    try:
-        for grade_info in data["hero_grade"]["json"]:
-            if grade_info.get("name_sno") == grade:
-                return grade_info.get("hero_grade_value", 0.85)
-            
-        return 0.85
-    
-    except Exception as e:
-        logger.error(f"获取角色品质加成值时发生错误: {e}")
-        return 0.85
-
+    for grade_info in data["hero_grade"]["json"]:
+        if grade_info.get("name_sno") == grade:
+            return grade_info.get("hero_grade_value", 0.85)
 
 async def get_hero_level_grade_value(data: dict, level: int) -> float:
     """
     获取角色等级加成值
+
     Args:
         data: JSON 数据字典
         level: 等级
-        
+
     Returns:
-        float: 等级加成值, 默认1.0 (无加成)
+        float: 等级加成乘数
     """
-    try:
-        level_grade_value = 1.0
-        level_grades = data["hero_level_grade"]["json"]
-        level_grades.sort(key=lambda x: x.get("level", 0))
-        
-        for grade_data in level_grades:
-            if grade_data.get("level", 0) <= level:
-                level_grade_value = grade_data.get("value", 1.0)
-            else:
-                break
-                
-        max_level_data = max(level_grades, key=lambda x: x.get("level", 0))
-        if level >= int(max_level_data.get("level", 0)):
-            level_grade_value = max_level_data.get("value", 1.0)
-        
-        return level_grade_value
-        
-    except Exception as e:
-        logger.error(f"获取角色等级加成率时发生错误: {e}")
-        return 1.0
+    level_grades = data["hero_level_grade"]["json"]
+    level_grades.sort(key=lambda x: x.get("level", 0))
+
+    for i in range(len(level_grades) - 1, -1, -1):
+        grade_data = level_grades[i]
+        if grade_data.get("level", 0) <= level:
+            return grade_data.get("value", 1.0)
 
 
 async def calculate_battle_power(data: dict, entity_type: int, level: int, grade: int, 
@@ -2023,33 +1989,22 @@ async def calculate_battle_power(data: dict, entity_type: int, level: int, grade
     Returns:
         int: 计算后的总战力(向下取整)
     """
-    try:
-        base_power = await get_base_battle_power(data, entity_type, level)
-        grade_value = await get_hero_grade_value(data, grade)
-        level_grade_value = await get_hero_level_grade_value(data, level)
-        
-        total_power = (
-            base_power +
-            (level_grade_value - 1.0) * base_power +
-            (grade_value - 1.0) * base_power +
-            equipment_power +
-            equipment_power_per * base_power +
-            signature_power_per * base_power +
-            contents_buff_power +
-            contents_buff_power_per * base_power
-        )
+    base_power = await get_base_battle_power(data, entity_type, level)
+    grade_value = await get_hero_grade_value(data, grade)
+    level_grade_value = await get_hero_level_grade_value(data, level)
+    print(level, grade, base_power, grade_value, level_grade_value)
+    total_power = (
+        base_power +
+        (level_grade_value - 1.0) * base_power +
+        (grade_value - 1.0) * base_power +
+        equipment_power +
+        equipment_power_per * base_power +
+        signature_power_per * base_power +
+        contents_buff_power +
+        contents_buff_power_per * base_power
+    )
 
-        if total_power == float('inf'):
-            return 0
-        
-        return int(total_power)
-        
-    except Exception as e:
-        logger.error(f"计算总战力时发生错误: {e}")
-        return 0
-    
-
-
+    return int(total_power)
 
 
 async def get_character_skill_pattern(data: dict, hero_no: int, review: bool = False) -> list:
