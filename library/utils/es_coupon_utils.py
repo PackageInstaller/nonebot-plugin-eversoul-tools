@@ -18,8 +18,8 @@ async def parse_server_id(text: str) -> Tuple[Optional[str], Optional[str]]:
     if not text:
         return None, None
     
-    # 尝试匹配格式: asia/kr/en + 12位数字ID
-    pattern = r"^(asia|kr|en|jp)\s*(\d{12,15})$"
+    # 尝试匹配格式: asia/kr/en + 12/15位数字ID
+    pattern = r"^(asia|kr|en|jp)\s*(\d{12}|\d{15})$"
     match = re.match(pattern, text.lower().strip())
     
     if not match:
