@@ -6,33 +6,61 @@ from typing import Tuple, Optional, List, Dict, Any
 from . import *
 
 
-async def parse_server_id(text: str) -> Tuple[Optional[str], Optional[str]]:
+async def parse_server_id(text: str) -> Tuple[Optional[str], Optional[str], Optional[str]]:
     """解析用户输入的服务器和ID
     
     Args:
         text: 用户输入的文本，格式为"服务器ID"，例如"kr123456789012"
         
     Returns:
-        Tuple[Optional[str], Optional[str]]: (服务器代码, 玩家ID)，如果解析失败则返回(None, None)
+        Tuple[Optional[str], Optional[str], Optional[str]]: (服务器代码, 玩家ID, 错误信息)
+        如果解析成功返回(server_code, player_id, None)
+        如果解析失败返回(None, None, error_message)
     """
     if not text:
-        return None, None
+        return None, None, "输入不能为空"
     
-    # 尝试匹配格式: asia/kr/en + 12/15位数字ID
-    pattern = r"^(asia|kr|en|jp)\s*(\d{12}|\d{15})$"
-    match = re.match(pattern, text.lower().strip())
+    # 清理输入文本
+    text = text.strip()
+    
+    # 尝试匹配格式: asia/kr/en + 12或15位数字ID
+    pattern = r"^(asia|kr|en)\s*(\d{12}|\d{15})$"
+    match = re.match(pattern, text.lower())
     
     if not match:
-        return None, None
+        # 检查是否有地区代码
+        if not any(text.lower().startswith(prefix) for prefix in ["asia", "kr", "en"]):
+            return None, None, "缺少地区代码（asia/kr/en）"
+        
+        # 检查地区代码后是否有数字
+        server_match = re.match(r"^(asia|kr|en)\s*(.*)$", text.lower())
+        if server_match:
+            server_code = server_match.group(1)
+            id_part = server_match.group(2).strip()
+            
+            if not id_part:
+                return None, None, f"缺少玩家ID（地区代码：{server_code}）"
+            
+            if not id_part.isdigit():
+                return None, None, f"玩家ID必须是纯数字（当前输入：{id_part}）"
+            
+            id_len = len(id_part)
+            if id_len != 12 and id_len != 15:
+                return None, None, f"玩家ID长度必须是12位或15位（当前长度：{id_len}位）"
+        
+        return None, None, "格式错误，请使用格式：地区代码+玩家ID"
     
     server_code = match.group(1)
     player_id = match.group(2)
     
-    # 确保ID正好是12位数字
-    if not player_id.isdigit() or len(player_id) != 12:
-        return None, None
+    # 确保ID是纯数字且长度为12或15位
+    if not player_id.isdigit():
+        return None, None, f"玩家ID必须是纯数字（当前输入：{player_id}）"
     
-    return server_code, player_id
+    if len(player_id) not in [12, 15]:
+        return None, None, f"玩家ID长度必须是12位或15位（当前长度：{len(player_id)}位）"
+    
+    return server_code, player_id, None
 
 
 async def redeem_coupon(app_id: str, player_id: str, coupon_code: str, event: Event,
