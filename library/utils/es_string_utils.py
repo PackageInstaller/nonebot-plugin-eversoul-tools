@@ -1113,8 +1113,8 @@ async def get_character_town_object_task(data: dict, obj_no: int, review=False) 
                         rewards = []
                         for i in range(1, 3):  # 检查item1和item2
                             item_no = arbeit.get(f"item{i}_no")
-                            item_value = arbeit.get(f"item{i}_value")
-                            if item_no and item_value:
+                            item_amount = arbeit.get(f"item{i}_amount")
+                            if item_no and item_amount:
                                 # 查找物品名称
                                 for item in data["item"]["json"]:
                                     if item.get("no") == item_no:
@@ -1122,7 +1122,7 @@ async def get_character_town_object_task(data: dict, obj_no: int, review=False) 
                                         if name_sno:
                                             item_name = await get_string_by_type(data, "item", name_sno)
                                             item_name = await select_text_by_priority(item_name["zh_tw"], item_name["kr"], review)
-                                            rewards.append(f"{item_name}x{item_value}")
+                                            rewards.append(f"{item_name}x{item_amount}")
                         
                         # 添加任务信息
                         tasks_info.append({
