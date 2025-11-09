@@ -153,6 +153,55 @@ names:
     ja_name: Love Note
     aliases: []
     hero_id: 8590
+  - zh_tw_name: 幻象主人佳妮特
+    zh_cn_name: ''
+    kr_name: 환상의 주인 가넷
+    en_name: Garnet, the Mistress of Illusions
+    ja_name: ''
+    aliases: []
+    hero_id: 8620
+  - zh_tw_name: 艾拉
+    zh_cn_name: ''
+    kr_name: 아이라
+    en_name: Aira
+    ja_name: アイラ
+    aliases: []
+    hero_id: 9600
+  - zh_tw_name: 凱瑟琳
+    zh_cn_name: ''
+    kr_name: 캐서린
+    en_name: Catherine
+    ja_name: キャサリン
+    aliases: []
+    hero_id: 9610
+  - zh_tw_name: 秋
+    zh_cn_name: ''
+    kr_name: 아키
+    en_name: Aki
+    ja_name: アキ
+    aliases: []
+    hero_id: 9640
+  - zh_tw_name: 娜伊雅
+    zh_cn_name: ''
+    kr_name: 나이아
+    en_name: Naiah
+    ja_name: ナイア
+    aliases: []
+    hero_id: 9650
+  - zh_tw_name: 莉澤洛特
+    zh_cn_name: ''
+    kr_name: 리젤로테
+    en_name: Lizelotte
+    ja_name: リゼロッテ
+    aliases: []
+    hero_id: 9660
+  - zh_tw_name: 綾織
+    zh_cn_name: ''
+    kr_name: 아야메
+    en_name: Ayame
+    ja_name: アヤメ
+    aliases: []
+    hero_id: 9670
   - zh_tw_name: 魯德拉
     zh_cn_name: ''
     kr_name: 루드라
