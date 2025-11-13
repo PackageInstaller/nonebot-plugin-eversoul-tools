@@ -6,12 +6,12 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取参数文本. get args text
         args_text = args.extract_plain_text().strip()
-        
+
         # 检查是否是主线章节. check if it is main line chapter
-        match_main = re.match(r'^主线(\d+)$', args_text)
+        match_main = re.match(r"^主线(\d+)$", args_text)
         # 检查是否是传送门类型. check if it is gate type
-        match_gate = re.match(r'^(自由|人类|野兽|妖精|不死)传送门$', args_text)
-        
+        match_gate = re.match(r"^(自由|人类|野兽|妖精|不死)传送门$", args_text)
+
         if match_main:
             item_type = "主线"
             chapter = match_main.group(1)
@@ -20,13 +20,17 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             gate_type = match_gate.group(1)
         else:
             if args_text == "主线":
-                await es_cash_pack.finish("请带上主线章节参数！例如：es突发礼包信息主线21")
+                await es_cash_pack.finish(
+                    "请带上主线章节参数！例如：es突发礼包信息主线21"
+                )
             elif args_text == "传送门":
-                await es_cash_pack.finish("请带上传送门类型参数！例如：es突发礼包信息自由传送门")
+                await es_cash_pack.finish(
+                    "请带上传送门类型参数！例如：es突发礼包信息自由传送门"
+                )
             item_type = args_text
             chapter = None
             gate_type = ""
-        
+
         # 加载数据
         # 获取群组ID. get group id
         group_id = 0
@@ -34,7 +38,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             group_id = event.group_id
         data = await load_json_data(group_id)
         messages = []
-        
+
         if item_type == "主线":
             # 获取所有主线关卡信息. get all main line stage info
             for stage in data["stage"]["json"]:
@@ -43,7 +47,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     # 如果指定了章节，只处理对应章节的关卡. if specified chapter, only process the corresponding chapter stage
                     if chapter and str(area_no) != chapter:
                         continue
-                        
+
                     stage_no = stage.get("stage_no")
                     # 获取关卡编号. get stage no
                     stage_no_id = stage.get("no")
@@ -54,30 +58,38 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         if package_msgs:
                             messages.append(f"主线关卡 {area_no}-{stage_no}:")
                             messages.extend(package_msgs)
-            
+
             if not messages:
                 chapter_text = f"第{chapter}章" if chapter else "所有章节"
-                await es_cash_pack.finish(f"当前{chapter_text}没有主线相关的突发礼包") # current chapter has no main line related突发礼包
-        
+                await es_cash_pack.finish(
+                    f"当前{chapter_text}没有主线相关的突发礼包"
+                )  # current chapter has no main line related突发礼包
+
         elif item_type == "传送门":
             # 获取传送门类型对应的stage_type. get stage type corresponding to gate type
             stage_type = GATE_TYPE_MAPPING.get(gate_type)
             if not stage_type:
                 await es_cash_pack.finish(f"未知的传送门类型：{gate_type}")
-            
+
             # 从Barrier.json获取传送门基本信息. get gate basic info from Barrier.json
             barrier_info = None
             for barrier in data["barrier"]["json"]:
                 if barrier.get("stage_type") == stage_type:
                     barrier_info = barrier
                     break
-            
+
             if barrier_info:
                 # 获取传送门名称. get gate name
-                gate_name = next((s.get("zh_tw", "未知") for s in data["string_stage"]["json"] 
-                                if s["no"] == barrier_info.get("text_name_sno")), "未知")
+                gate_name = next(
+                    (
+                        s.get("zh_tw", "未知")
+                        for s in data["string_stage"]["json"]
+                        if s["no"] == barrier_info.get("text_name_sno")
+                    ),
+                    "未知",
+                )
                 messages.append(f"{gate_name}:")
-                
+
                 # 获取所有对应类型的关卡. get all corresponding type stages
                 for stage in data["stage"]["json"]:
                     if stage.get("stage_type") == stage_type:
@@ -90,22 +102,26 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                 stage_name = string.get("zh_tw", "未知")
                                 stage_name = stage_name.format(stage_no)
                                 break
-                        
+
                         # 获取通关礼包信息. get pass gift info
-                        package_msgs = await get_cash_pack(data, "barrier", stage)  # 直接传入stage对象
+                        package_msgs = await get_cash_pack(
+                            data, "barrier", stage
+                        )  # 直接传入stage对象
                         if package_msgs:
                             messages.append(f"{stage_name}:")
                             messages.extend(package_msgs)
-            
-            if len(messages) <= 1:  # 只有标题没有实际内容. only title, no actual content
+
+            if (
+                len(messages) <= 1
+            ):  # 只有标题没有实际内容. only title, no actual content
                 await es_cash_pack.finish(f"当前没有{gate_type}型传送门相关的突发礼包")
-        
-        elif item_type == "起源塔": # 起源塔. tower
+
+        elif item_type == "起源塔":  # 起源塔. tower
             # 获取所有起源之塔信息. get all tower info
             for tower in data["tower"]["json"]:
                 hero_id = tower.get("req_hero")
                 tower_no = tower.get("no")
-                
+
                 # 获取角色名称. get hero name
                 hero_name = ""
                 for hero in data["hero"]["json"]:
@@ -115,9 +131,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                 hero_name = char.get("zh_tw", "")
                                 break
                         break
-                
+
                 tower_name = f"{hero_name}的起源之塔"
-                
+
                 # 查找对应的礼包信息. find corresponding gift info
                 tower_packages = []
                 for shop_item in data["cash_shop_item"]["json"]:
@@ -126,7 +142,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         type_values = [v.strip() for v in type_values]
                         if str(tower_no) in type_values:
                             tower_packages.append(shop_item)
-                
+
                 if tower_packages:
                     messages.append(f"{tower_name}:")
                     for package in tower_packages:
@@ -140,51 +156,57 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         # 还原原始type_value. restore original type_value
                         package["type_value"] = original_type_value
                         messages.extend(package_msgs)
-                    
+
         elif item_type == "升阶":
             # 获取所有角色升阶礼包信息. get all hero grade gift info
             for shop_item in data["cash_shop_item"]["json"]:
                 if shop_item.get("type") == "grade_eternal":
                     # 构建一个简单的字典来匹配get_cash_item_info的参数要求. build a simple dictionary to match the parameters of get_cash_item_info
                     dummy_info = {"no": shop_item.get("type_value")}
-                    package_msgs = await get_cash_pack(data, "grade_eternal", dummy_info)
+                    package_msgs = await get_cash_pack(
+                        data, "grade_eternal", dummy_info
+                    )
                     if package_msgs:
                         messages.extend(package_msgs)
-        
+
         else:
-            await es_cash_pack.finish("请输入正确的类型：主线/传送门/起源塔/升阶") # please input correct type: main line/gate/tower/grade
-        
+            await es_cash_pack.finish(
+                "请输入正确的类型：主线/传送门/起源塔/升阶"
+            )  # please input correct type: main line/gate/tower/grade
+
         if not messages:
-            await es_cash_pack.finish(f"当前没有{item_type}相关的突发礼包") # current has no related突发礼包
-        
+            await es_cash_pack.finish(
+                f"当前没有{item_type}相关的突发礼包"
+            )  # current has no related突发礼包
+
         # 发送合并转发消息
-        forward_msgs = [{
-            "type": "node",
-            "data": {
-                "name": "Eversoul Info",
-                "uin": bot.self_id,
-                "content": "\n".join(messages)
+        forward_msgs = [
+            {
+                "type": "node",
+                "data": {
+                    "name": "Eversoul Info",
+                    "uin": bot.self_id,
+                    "content": "\n".join(messages),
+                },
             }
-        }]
-        
+        ]
+
         # 发送消息
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=forward_msgs
+                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
             )
         else:
             await bot.call_api(
                 "send_private_forward_msg",
                 user_id=event.get_user_id(),
-                messages=forward_msgs
+                messages=forward_msgs,
             )
-            
 
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
+
             error_location = traceback.extract_tb(e.__traceback__)[-1]
             logger.error(
                 f"处理突发礼包信息时发生错误:\n"

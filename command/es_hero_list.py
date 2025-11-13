@@ -11,79 +11,82 @@ async def handle(bot: Bot, event: Event):
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         data = await load_json_data(group_id)
-        
+
         # 加载别名配置
         aliases_data = {}
         config = await get_group_data_source(group_id)
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             aliases_data = yaml.safe_load(f)
-        
+
         if not aliases_data or "names" not in aliases_data:
-            await es_hero_list.finish("角色数据加载失败")   
-            
+            await es_hero_list.finish("角色数据加载失败")
+
         # 使用字典存储不同种族的角色
         hero_categories = {}
-        
+
         # 遍历所有角色
         for hero in aliases_data["names"]:
             hero_id = hero["hero_id"]
             name = hero["zh_tw_name"]
             if not name:  # 跳过未知角色
                 continue
-            
+
             # 从Hero.json中获取角色种族信息
-            hero_data = next((h for h in data["hero"]["json"] if h["hero_id"] == hero_id), None)
+            hero_data = next(
+                (h for h in data["hero"]["json"] if h["hero_id"] == hero_id), None
+            )
             if not hero_data:
                 continue
-                
+
             # 获取种族名称
             race_data = await get_string_by_type(data, "system", hero_data["race_sno"])
             race_tw = race_data["zh_tw"]
             if not race_tw:
                 continue
-                
+
             # 初始化种族分类
             if race_tw not in hero_categories:
                 hero_categories[race_tw] = []
-            
+
             # 添加别名信息
             aliases = hero.get("aliases", [])
             alias_text = f"（{', '.join(aliases)}）" if aliases else ""
-            
+
             # 添加角色信息
             hero_info = f"{name}{alias_text}"
             hero_categories[race_tw].append(hero_info)
-        
+
         # 生成转发消息
         forward_msgs = []
         for category, heroes in hero_categories.items():
             if heroes:  # 只显示有角色的分类
                 msg = f"【{category}】\n"
                 msg += "\n".join(f"・{hero}" for hero in sorted(heroes))  # 按名称排序
-                forward_msgs.append({
-                    "type": "node",
-                    "data": {
-                        "name": "Eversoul Info",
-                        "uin": bot.self_id,
-                        "content": msg
+                forward_msgs.append(
+                    {
+                        "type": "node",
+                        "data": {
+                            "name": "Eversoul Info",
+                            "uin": bot.self_id,
+                            "content": msg,
+                        },
                     }
-                })
+                )
 
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=forward_msgs
+                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
             )
         else:
             await bot.call_api(
                 "send_private_forward_msg",
                 user_id=event.get_user_id(),
-                messages=forward_msgs
+                messages=forward_msgs,
             )
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
+
             error_location = traceback.extract_tb(e.__traceback__)[-1]
             logger.error(
                 f"处理角色列表时发生错误:\n"

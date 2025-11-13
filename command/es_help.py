@@ -310,6 +310,6 @@ async def handle(bot: Bot, event: Event):
 
     </html>
     """
-    
+
     pic = await html_to_pic(html, viewport={"width": 800, "height": 10})
     await es_help.finish(MessageSegment.image(pic))

@@ -6,13 +6,18 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 解析参数
         args_text = args.extract_plain_text().strip()
-        match = re.match(r'^(粉|红\+?)(\d*)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)$', args_text)
+        match = re.match(
+            r"^(粉|红\+?)(\d*)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)$",
+            args_text,
+        )
         if not match:
-            await es_tier.finish("格式错误！请使用如：es礼品信息粉1智力加速\n具体格式参考:\n(粉|红+数字)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)")
-            
+            await es_tier.finish(
+                "格式错误！请使用如：es礼品信息粉1智力加速\n具体格式参考:\n(粉|红+数字)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)"
+            )
+
         # 获取参数
         grade, level, stat_type, set_type = match.groups()
-        
+
         # 加载数据
         # 获取群组ID
         group_id = 0
@@ -30,40 +35,53 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             grade_name = f"不朽+{level}"
         else:
             grade_name = f"{grade_map[grade]}+{level}"  # 其他装备加上等级
-            
-        grade_sno = next((s["no"] for s in data["string_system"]["json"] 
-                            if s.get("zh_tw") == grade_name), None)
-        
+
+        grade_sno = next(
+            (
+                s["no"]
+                for s in data["string_system"]["json"]
+                if s.get("zh_tw") == grade_name
+            ),
+            None,
+        )
+
         # 获取属性限制对应的stat_limit_sno
         stat_sno = STAT_TYPE_MAPPING.get(stat_type)
-        
+
         # 获取套装效果对应的set_effect_no
         set_no = EFFECT_TYPE_MAPPING.get(set_type)
-        set_effect = next((e for e in data["item_set_effect"]["json"] 
-                            if e.get("name") == set_no), {})
-        
+        set_effect = next(
+            (e for e in data["item_set_effect"]["json"] if e.get("name") == set_no), {}
+        )
+
         if not all([grade_sno, stat_sno, set_effect]):
             await es_tier.finish("未找到对应的礼品信息")
-            
+
         # 查找符合条件的礼品
         items = []
         for item in data["item"]["json"]:
-            if ((item.get("category_sno") in [110002, 110078]) and 
-                item.get("grade_sno") == grade_sno and
-                item.get("stat_limit_sno") == stat_sno and
-                item.get("set_effect_no") == set_effect["no"]):
+            if (
+                (item.get("category_sno") in [110002, 110078])
+                and item.get("grade_sno") == grade_sno
+                and item.get("stat_limit_sno") == stat_sno
+                and item.get("set_effect_no") == set_effect["no"]
+            ):
                 items.append(item)
-        
+
         if not items:
             await es_tier.finish("未找到符合条件的礼品")
-            
+
         messages = []
         for item in items:
             try:
                 # 获取礼品基本信息
-                name = (await get_string_by_type(data, "item", item.get("name_sno"))).get("zh_tw", "")
-                desc = (await get_string_by_type(data, "item", item.get("desc_sno"))).get("zh_tw", "")
-                
+                name = (
+                    await get_string_by_type(data, "item", item.get("name_sno"))
+                ).get("zh_tw", "")
+                desc = (
+                    await get_string_by_type(data, "item", item.get("desc_sno"))
+                ).get("zh_tw", "")
+
                 # 获取图标路径
                 icon_base = item.get("icon_path", "")
                 if icon_base:
@@ -76,24 +94,41 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         img_msg = ""
                 else:
                     img_msg = ""
-                
+
                 # 获取最高等级的属性信息
-                max_stat = max((s for s in data["item_stat"]["json"] 
-                                if s.get("no") == item.get("no")), 
-                                key=lambda x: x.get("level", 0))
+                max_stat = max(
+                    (
+                        s
+                        for s in data["item_stat"]["json"]
+                        if s.get("no") == item.get("no")
+                    ),
+                    key=lambda x: x.get("level", 0),
+                )
                 # 获取套装效果
                 set2_buff_no = set_effect.get("set2_contentsbuff")
                 set4_buff_no = set_effect.get("set4_contentsbuff")
-                
+
                 set2_buff = {}
                 set4_buff = {}
-                
+
                 if set2_buff_no:
-                    set2_buff = next((buff for buff in data["contents_buff"]["json"] 
-                                    if buff.get("no") == set2_buff_no), {})
+                    set2_buff = next(
+                        (
+                            buff
+                            for buff in data["contents_buff"]["json"]
+                            if buff.get("no") == set2_buff_no
+                        ),
+                        {},
+                    )
                 if set4_buff_no:
-                    set4_buff = next((buff for buff in data["contents_buff"]["json"] 
-                                    if buff.get("no") == set4_buff_no), {})
+                    set4_buff = next(
+                        (
+                            buff
+                            for buff in data["contents_buff"]["json"]
+                            if buff.get("no") == set4_buff_no
+                        ),
+                        {},
+                    )
                 # 构建消息
                 msg = [
                     str(img_msg),
@@ -103,7 +138,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     f"\n【最大属性】(等级{max_stat.get('level')})",
                     f"・ 满级所需经验：{max_stat.get('sum_exp', 0)}",
                     f"・ 满级战斗力：{max_stat.get('battle_power', 0)}",
-                    f"・ 百分比战斗力：{max_stat.get('battle_power_per', 0)}"
+                    f"・ 百分比战斗力：{max_stat.get('battle_power_per', 0)}",
                 ]
 
                 # 添加基础属性和额外属性
@@ -111,9 +146,20 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 extra_stats = []
 
                 # 获取所有属性（排除特定键）
-                exclude_keys = {"index", "no", "level", "exp", "sum_exp", "battle_power", "battle_power_per"}
-                stat_items = [(k, v) for k, v in max_stat.items() 
-                                if k not in exclude_keys and v and k in STAT_NAME_MAPPING]
+                exclude_keys = {
+                    "index",
+                    "no",
+                    "level",
+                    "exp",
+                    "sum_exp",
+                    "battle_power",
+                    "battle_power_per",
+                }
+                stat_items = [
+                    (k, v)
+                    for k, v in max_stat.items()
+                    if k not in exclude_keys and v and k in STAT_NAME_MAPPING
+                ]
                 # 前三个是基础属性，之后的是额外属性
                 for i, (stat, value) in enumerate(stat_items):
                     stat_display = STAT_NAME_MAPPING[stat]
@@ -121,8 +167,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         value_str = await format_value(value, True)
                     else:
                         value_str = await format_value(value, False)
-                        
-                    
+
                     if i < 3:  # 基础属性
                         base_stats.append(f"・ {stat_display}：{value_str}")
                     else:  # 额外属性
@@ -131,32 +176,31 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 if base_stats:
                     msg.append("\n基础属性：")
                     msg.extend(base_stats)
-                
+
                 # 添加额外属性
                 if extra_stats:
                     msg.append("\n额外增益：")
                     msg.extend(extra_stats)
-                
-                
-                
+
                 # 添加套装效果
-                msg.extend([
-                    f"\n【套装效果】",
-                    f"2件套效果："
-                ])
-                
+                msg.extend([f"\n【套装效果】", f"2件套效果："])
+
                 # 添加2件套效果
                 has_2set = False
                 for stat, value in set2_buff.items():
                     if stat in STAT_NAME_MAPPING and value:
                         has_2set = True
                         stat_display = STAT_NAME_MAPPING[stat]
-                        msg.append(f"・ {stat_display}：{await format_value(value, False)}")
-                        if 'battle_power_per' in set2_buff:
-                            msg.append(f"・ 战力百分比：{set2_buff['battle_power_per']}")
+                        msg.append(
+                            f"・ {stat_display}：{await format_value(value, False)}"
+                        )
+                        if "battle_power_per" in set2_buff:
+                            msg.append(
+                                f"・ 战力百分比：{set2_buff['battle_power_per']}"
+                            )
                 if not has_2set:
                     msg.append("・ 无效果")
-                
+
                 # 添加4件套效果
                 msg.append(f"4件套效果：")
                 has_4set = False
@@ -164,47 +208,51 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     if stat in STAT_NAME_MAPPING and value:
                         has_4set = True
                         stat_display = STAT_NAME_MAPPING[stat]
-                        msg.append(f"・ {stat_display}：{await format_value(value, False)}")
-                        if 'battle_power_per' in set4_buff:
-                            msg.append(f"・ 战力百分比：{set4_buff['battle_power_per']}")
+                        msg.append(
+                            f"・ {stat_display}：{await format_value(value, False)}"
+                        )
+                        if "battle_power_per" in set4_buff:
+                            msg.append(
+                                f"・ 战力百分比：{set4_buff['battle_power_per']}"
+                            )
                 if not has_4set:
                     msg.append("・ 无效果")
-                
+
                 messages.append("\n".join(msg))
-            
+
             except Exception as e:
                 logger.error(f"处理礼品图片时发生错误: {e}")
                 continue
-        
+
         # 发送合并转发消息
         forward_msgs = []
         for msg in messages:
-            forward_msgs.append({
-                "type": "node",
-                "data": {
-                    "name": "Eversoul Info",
-                    "uin": bot.self_id,
-                    "content": msg
+            forward_msgs.append(
+                {
+                    "type": "node",
+                    "data": {
+                        "name": "Eversoul Info",
+                        "uin": bot.self_id,
+                        "content": msg,
+                    },
                 }
-            })
-        
+            )
+
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
-                "send_group_forward_msg",
-                group_id=event.group_id,
-                messages=forward_msgs
+                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
             )
         else:
             await bot.call_api(
                 "send_private_forward_msg",
                 user_id=event.get_user_id(),
-                messages=forward_msgs
+                messages=forward_msgs,
             )
-            
 
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
+
             error_location = traceback.extract_tb(e.__traceback__)[-1]
             logger.error(
                 f"处理礼品信息时发生错误:\n"
@@ -214,4 +262,3 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-

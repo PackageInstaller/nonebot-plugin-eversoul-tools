@@ -19,6 +19,7 @@ async def handle(bot: Bot, event: Event):
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
+
             error_location = traceback.extract_tb(e.__traceback__)[-1]
             logger.error(
                 f"处理潜能信息时发生错误:\n"

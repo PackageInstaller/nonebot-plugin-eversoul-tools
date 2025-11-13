@@ -6,7 +6,9 @@ async def handle(bot: Bot, event: Event):
     try:
         # 获取版本号
         try:
-            result = playstore_app(app_id="com.kakaogames.eversoul", lang="en", country="kr")
+            result = playstore_app(
+                app_id="com.kakaogames.eversoul", lang="en", country="kr"
+            )
             version = result["version"]
         except Exception as e:
             await es_notice.finish(f"获取版本号失败: {str(e)}")
@@ -21,9 +23,9 @@ async def handle(bot: Bot, event: Event):
                 if response.status != 200:
                     await es_notice.finish("获取通知失败")
                     return
-                
+
                 data = await response.json()
-                
+
                 if data["status"] != 200:
                     await es_notice.finish("获取通知失败")
                     return
@@ -40,13 +42,13 @@ async def handle(bot: Bot, event: Event):
                     content = notice.get("msg", "无内容")
                     message = [
                         f"【通知类型】{notice_type}\n",
-                        f"【通知内容】\n{content}\n"
+                        f"【通知内容】\n{content}\n",
                     ]
-                    
+
                     # 如果有链接，添加到消息中
                     if notice.get("link"):
                         message.append(f"【详情链接】{notice['link']}\n")
-                    
+
                     notice_messages.append("\n".join(message))
 
                 try:
@@ -57,6 +59,7 @@ async def handle(bot: Bot, event: Event):
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
+
             error_location = traceback.extract_tb(e.__traceback__)[-1]
             logger.error(
                 f"处理通知信息时发生错误:\n"
@@ -66,4 +69,3 @@ async def handle(bot: Bot, event: Event):
                 f"问题代码: {error_location.line}\n"
                 f"错误行号: {error_location.lineno}\n"
             )
-

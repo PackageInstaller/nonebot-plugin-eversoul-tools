@@ -8,26 +8,27 @@ from ...config import *
 
 driver = get_driver()
 
+
 @driver.on_startup
 async def init_plugin():
     """插件启动时初始化"""
     global DEFAULT_CONFIG
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     # 根据env更新默认配置
     if plugin_config.eversoul_live_path:
         DEFAULT_CONFIG["json_path"] = str(Path(plugin_config.eversoul_live_path))
-    
+
     if DATA_SOURCE_CONFIG.exists():
         try:
             with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
                 config = yaml.safe_load(f)
-            
+
             if config:
                 new_config = {}
                 for k, v in config.items():
                     new_config[str(k)] = v
-                
+
                 with open(DATA_SOURCE_CONFIG, "w", encoding="utf-8") as f:
                     yaml.dump(new_config, f, allow_unicode=True)
             else:
@@ -45,7 +46,7 @@ async def init_plugin():
 
 async def sync_aliases(file1: Path, file2: Path) -> None:
     """同步两个yaml文件中的别名，将file1中的别名完全同步到file2
-    
+
     Args:
         file1: 源yaml文件路径
         file2: 目标yaml文件路径
@@ -63,7 +64,11 @@ async def sync_aliases(file1: Path, file2: Path) -> None:
         return
 
     # 创建hero_id到别名的映射
-    aliases1 = {hero["hero_id"]: hero.get("aliases", []) for hero in data1["names"] if "hero_id" in hero}
+    aliases1 = {
+        hero["hero_id"]: hero.get("aliases", [])
+        for hero in data1["names"]
+        if "hero_id" in hero
+    }
 
     # 将file1的别名直接同步到file2
     for hero_id in aliases1:
@@ -83,62 +88,81 @@ async def sync_aliases(file1: Path, file2: Path) -> None:
             return super().represent_scalar(tag, value, style)
 
         def represent_sequence(self, tag, sequence, flow_style=None):
-            if isinstance(sequence, (list, tuple)) and len(sequence) > 0 and isinstance(sequence[0], str):
+            if (
+                isinstance(sequence, (list, tuple))
+                and len(sequence) > 0
+                and isinstance(sequence[0], str)
+            ):
                 flow_style = True
             return super().represent_sequence(tag, sequence, flow_style=flow_style)
 
     try:
         # 保持原有的缩进格式
         with open(file1, "w", encoding="utf-8") as f:
-            yaml.dump(data1, f, 
-                    Dumper=CustomDumper,
-                    allow_unicode=True, 
-                    sort_keys=False,
-                    default_flow_style=False,
-                    indent=2)
+            yaml.dump(
+                data1,
+                f,
+                Dumper=CustomDumper,
+                allow_unicode=True,
+                sort_keys=False,
+                default_flow_style=False,
+                indent=2,
+            )
         with open(file2, "w", encoding="utf-8") as f:
-            yaml.dump(data2, f, 
-                    Dumper=CustomDumper,
-                    allow_unicode=True, 
-                    sort_keys=False,
-                    default_flow_style=False,
-                    indent=2)
+            yaml.dump(
+                data2,
+                f,
+                Dumper=CustomDumper,
+                allow_unicode=True,
+                sort_keys=False,
+                default_flow_style=False,
+                indent=2,
+            )
     except Exception as e:
         logger.error(f"同步出错: {e}")
+
 
 async def generate_aliases() -> None:
     """生成别名文件"""
     # 检查配置是否存在
     if plugin_config.eversoul_live_path is None:
         logger.error("未配置 eversoul_live_path，无法生成Live版本别名文件")
-        logger.error("请在 .env 文件中添加配置项：eversoul_live_path=\"数据文件路径\"")
+        logger.error('请在 .env 文件中添加配置项：eversoul_live_path="数据文件路径"')
         return
-        
+
     if plugin_config.eversoul_review_path is None:
         logger.error("未配置 eversoul_review_path，无法生成Review版本别名文件")
-        logger.error("请在 .env 文件中添加配置项：eversoul_review_path=\"数据文件路径\"")
+        logger.error('请在 .env 文件中添加配置项：eversoul_review_path="数据文件路径"')
         return
 
     live_json_path = Path(plugin_config.eversoul_live_path)
     review_json_path = Path(plugin_config.eversoul_review_path)
-    
+
     try:
         live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
         live_raid_aliases = CONFIG_DIR / "live_raid_aliases.yaml"
-        live_hero_count, live_raid_count = await process_json_files(live_json_path, live_hero_aliases, live_raid_aliases)
+        live_hero_count, live_raid_count = await process_json_files(
+            live_json_path, live_hero_aliases, live_raid_aliases
+        )
         if live_hero_count > 0 or live_raid_count > 0:
-            logger.info(f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_raid_count} 个讨伐条目")
+            logger.info(
+                f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_raid_count} 个讨伐条目"
+            )
         else:
             logger.info("请检查Live版本JSON文件路径配置是否正确")
     except Exception as e:
         logger.error(f"处理live别名文件时出错: {e}")
-    
+
     try:
         review_hero_aliases = CONFIG_DIR / "review_hero_aliases.yaml"
         review_raid_aliases = CONFIG_DIR / "review_raid_aliases.yaml"
-        review_hero_count, review_raid_count = await process_json_files(review_json_path, review_hero_aliases, review_raid_aliases)
+        review_hero_count, review_raid_count = await process_json_files(
+            review_json_path, review_hero_aliases, review_raid_aliases
+        )
         if review_hero_count > 0 or review_raid_count > 0:
-            logger.info(f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_raid_count} 个讨伐条目")
+            logger.info(
+                f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_raid_count} 个讨伐条目"
+            )
         else:
             logger.info("请检查Review版本JSON文件路径配置是否正确")
     except Exception as e:
@@ -151,36 +175,38 @@ async def generate_aliases() -> None:
         logger.error(f"同步别名时出错: {e}")
 
 
-async def process_json_files(json_path: Path, hero_output_file: Path, raid_output_file: Path) -> Tuple[int, int]:
+async def process_json_files(
+    json_path: Path, hero_output_file: Path, raid_output_file: Path
+) -> Tuple[int, int]:
     """处理JSON文件生成别名文件
-    
+
     根据 battle_power_type 字段区分不同类型的单位：
     - battle_power_type == 1: 可操控角色（Heroes）
     - battle_power_type == 3: 恶灵/讨伐目标（Raid Bosses）
     - battle_power_type == 2: 已废弃类型，不再处理
-    
+
     Args:
         json_path: JSON文件目录
         hero_output_file: 角色别名输出文件
         raid_output_file: 恶灵别名输出文件
-    
+
     Returns:
         Tuple[int, int]: 生成的角色数量和讨伐数量
     """
     if not json_path.exists():
         logger.error(f"JSON路径不存在: {json_path}")
         return 0, 0
-    
+
     try:
         with open(json_path / "Hero.json", "r", encoding="utf-8") as f:
             hero_data = json.load(f)
-        
+
         with open(json_path / "StringCharacter.json", "r", encoding="utf-8") as f:
             string_char_data = json.load(f)
     except Exception as e:
         logger.error(f"加载JSON文件失败: {e}")
         return 0, 0
-    
+
     hero_names = {}
     for string in string_char_data["json"]:
         if "no" in string:
@@ -190,17 +216,17 @@ async def process_json_files(json_path: Path, hero_output_file: Path, raid_outpu
                     "zh_cn": string.get("zh_cn", ""),
                     "kr": string.get("kr", ""),
                     "en": string.get("en", ""),
-                    "ja": string.get("ja", "")
+                    "ja": string.get("ja", ""),
                 }
 
     seen_hero_ids = set()
-    
+
     existing_data = {}
     if hero_output_file.exists():
         try:
             with open(hero_output_file, "r", encoding="utf-8") as f:
                 existing_data = yaml.safe_load(f)
-    
+
             existing_aliases = {}
             existing_zh_cn_names = {}
             if existing_data and "names" in existing_data:
@@ -218,30 +244,29 @@ async def process_json_files(json_path: Path, hero_output_file: Path, raid_outpu
     else:
         existing_aliases = {}
         existing_zh_cn_names = {}
-    
+
     # 准备数据容器
-    new_data = {"names": []}        # 角色数据容器
-    raid_data = {"names": []}       # 恶灵数据容器
+    new_data = {"names": []}  # 角色数据容器
+    raid_data = {"names": []}  # 恶灵数据容器
     raid_name_count = {}
-    
+
     # 建立名称映射并分类处理所有单位
     for hero in hero_data["json"]:
-        if ("hero_id" in hero and 
-            "name_sno" in hero and 
-            hero["hero_id"] not in seen_hero_ids):
-            
+        if (
+            "hero_id" in hero
+            and "name_sno" in hero
+            and hero["hero_id"] not in seen_hero_ids
+        ):
+
             hero_id = hero["hero_id"]
-            name_data = hero_names.get(hero["name_sno"], {
-                "zh_tw": "",
-                "zh_cn": "",
-                "kr": "",
-                "en": "",
-                "ja": ""
-            })
+            name_data = hero_names.get(
+                hero["name_sno"],
+                {"zh_tw": "", "zh_cn": "", "kr": "", "en": "", "ja": ""},
+            )
             zh_cn_name = name_data["zh_cn"]
             if not zh_cn_name and hero_id in existing_zh_cn_names:
                 zh_cn_name = existing_zh_cn_names[hero_id]
-            
+
             # 构建单位条目（适用于角色和恶灵）
             hero_entry = {
                 "zh_tw_name": name_data["zh_tw"],
@@ -249,10 +274,10 @@ async def process_json_files(json_path: Path, hero_output_file: Path, raid_outpu
                 "kr_name": name_data["kr"],
                 "en_name": name_data["en"],
                 "ja_name": name_data["ja"],
-                "aliases": existing_aliases.get(hero_id, []), 
-                "hero_id": hero_id
+                "aliases": existing_aliases.get(hero_id, []),
+                "hero_id": hero_id,
             }
-            
+
             # 根据 battle_power_type 分类存储
             if hero["battle_power_type"] == 3:
                 # 恶灵/讨伐目标 (Raid Bosses)
@@ -262,9 +287,9 @@ async def process_json_files(json_path: Path, hero_output_file: Path, raid_outpu
                 # 可操控角色 (Heroes)
                 new_data["names"].append(hero_entry)
             # battle_power_type == 2 的数据被忽略，不再处理
-            
+
             seen_hero_ids.add(hero_id)
-    
+
     class CustomDumper(yaml.SafeDumper):
         def increase_indent(self, flow=False, indentless=False):
             return super().increase_indent(flow, False)
@@ -276,32 +301,42 @@ async def process_json_files(json_path: Path, hero_output_file: Path, raid_outpu
 
         def represent_sequence(self, tag, sequence, flow_style=None):
             """对于字符串列表使用flow风格（单行）"""
-            if isinstance(sequence, (list, tuple)) and len(sequence) > 0 and isinstance(sequence[0], str):
+            if (
+                isinstance(sequence, (list, tuple))
+                and len(sequence) > 0
+                and isinstance(sequence[0], str)
+            ):
                 flow_style = True
             return super().represent_sequence(tag, sequence, flow_style=flow_style)
-    
+
     # 确保输出目录存在
     hero_output_file.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # 写入角色别名文件 (battle_power_type == 1)
     with open(hero_output_file, "w", encoding="utf-8") as f:
-        yaml.dump(new_data, f, 
-                Dumper=CustomDumper,
-                allow_unicode=True, 
-                sort_keys=False,
-                default_flow_style=False,
-                indent=2)
-    
+        yaml.dump(
+            new_data,
+            f,
+            Dumper=CustomDumper,
+            allow_unicode=True,
+            sort_keys=False,
+            default_flow_style=False,
+            indent=2,
+        )
+
     # 写入恶灵别名文件 (battle_power_type == 3)
     with open(raid_output_file, "w", encoding="utf-8") as f:
-        yaml.dump(raid_data, f, 
-                Dumper=CustomDumper,
-                allow_unicode=True, 
-                sort_keys=False,
-                default_flow_style=False,
-                indent=2)
-    
-    return len(new_data['names']), len(raid_data['names']) 
+        yaml.dump(
+            raid_data,
+            f,
+            Dumper=CustomDumper,
+            allow_unicode=True,
+            sort_keys=False,
+            default_flow_style=False,
+            indent=2,
+        )
+
+    return len(new_data["names"]), len(raid_data["names"])
 
 
 # 加载别名配置文件
@@ -309,10 +344,10 @@ async def load_aliases(group_id=None):
     """加载角色别名配置"""
     config = await get_group_data_source(group_id)
     hero_alias_file = config["hero_alias_file"]
-    
+
     if not hero_alias_file.exists():
         return {}
-    
+
     try:
         with open(hero_alias_file, "r", encoding="utf-8") as f:
             aliases_data = yaml.safe_load(f)
@@ -321,20 +356,14 @@ async def load_aliases(group_id=None):
     except Exception as e:
         logger.error(f"加载别名配置文件出错: {e}")
         return {}
-    
+
     # 创建别名到hero_id的映射
     alias_map = {}
     for hero in aliases_data["names"]:
         if isinstance(hero, dict) and "hero_id" in hero:
             # 添加所有语言版本的名称
-            name_fields = [
-                "zh_tw_name",
-                "zh_cn_name",
-                "kr_name",
-                "en_name",
-                "ja_name"
-            ]
-            
+            name_fields = ["zh_tw_name", "zh_cn_name", "kr_name", "en_name", "ja_name"]
+
             # 添加所有非空的名称作为可能的匹配
             for field in name_fields:
                 if hero.get(field):  # 只添加非空的名称
@@ -342,24 +371,25 @@ async def load_aliases(group_id=None):
                     # 为英文名称添加小写版本
                     if field == "en_name":
                         alias_map[hero[field].lower()] = hero["hero_id"]
-            
+
             # 添加所有别名
             for alias in hero.get("aliases", []):
                 alias_map[alias] = hero["hero_id"]
                 # 如果别名看起来是英文(只包含ASCII字符),也添加小写版本
                 if alias.isascii():
                     alias_map[alias.lower()] = hero["hero_id"]
-    
+
     return alias_map
+
 
 # 加载所需的JSON文件
 async def load_json_data(group_id: int):
     """
     load json data
-    
+
     Args:
         group_id: group id
-    
+
     Returns:
         dict: json data
     """
@@ -371,97 +401,97 @@ async def load_json_data(group_id: int):
         logger.error("数据源路径未配置，无法加载游戏数据")
         logger.error("请在配置文件中设置正确的eversoul_live_path和eversoul_review_path")
         return {"hero": {"json": []}}  # 返回空数据
-    
+
     # 确保json_path是Path对象
     if not isinstance(json_path, Path):
         json_path = Path(json_path)
-    
+
     # 检查路径是否存在
     if not json_path.exists():
         logger.error(f"数据源路径不存在: {json_path}")
         logger.error("请检查配置的路径是否正确")
         return {"hero": {"json": []}}  # 返回空数据
-    
+
     json_files = {
-        "hero": "Hero.json", # 角色
-        "hero_option": "HeroOption.json", # 角色潜能
-        "hero_gift": "HeroGift.json", # 角色喜好礼物
-        "hero_desc": "HeroDesc.json", # 角色描述
-        "hero_level_grade": "HeroLevelGrade.json", # 角色等级加成率
-        "hero_grade": "HeroGrade.json", # 角色品质
-        "string_character": "StringCharacter.json", # 角色文本
-        "string_system": "StringSystem.json", # 系统文本
-        "skill": "Skill.json", # 技能
-        "string_skill": "StringSkill.json", # 技能文本
-        "skill_code": "SkillCode.json", # 技能代码
-        "skill_buff": "SkillBuff.json", # 技能效果
-        "skill_icon": "SkillIcon.json", # 技能图标
-        "skill_pattern": "SkillPattern.json", # 技能释放顺序
-        "signature": "Signature.json", # 遗物
-        "signature_level": "SignatureLevel.json", # 遗物等级
-        "string_evertalk": "StringEverTalk.json", # 聊天文本
-        "story_info": "StoryInfo.json", # 故事信息
-        "talk": "Talk.json", # 对话
-        "string_talk": "StringTalk.json", # 对话文本
-        "item_costume": "ItemCostume.json", # 物品信息
-        "item": "Item.json", # 物品
-        "item_stat": "ItemStat.json", # 物品属性
-        "string_item": "StringItem.json", # 物品文本
-        "illust": "Illust.json", # 插画
-        "item_drop_group": "ItemDropGroup.json", # 掉落组
-        "item_set_effect": "ItemSetEffect.json", # 套装效果
-        "stage": "Stage.json", # 关卡
-        "stage_battle": "StageBattle.json", # 关卡战斗
-        "formation": "Formation.json", # 队伍
-        "message_mail": "MessageMail.json", # 邮件
-        "level": "Level.json", # 等级
-        "love_level": "LoveLevel.json", # 好感等级
-        "ark_enhance": "ArkEnhance.json", # 方舟强化
-        "ark_overclock": "ArkOverClock.json", # 超频
-        "promotion_movie": "PromotionMovie.json", # 宣传片
-        "localization_schedule": "LocalizationSchedule.json", # 活动日历
-        "event_calender": "EventCalender.json", # 活动日历
-        "event_info": "EventInfo.json", # 活动信息
-        "event_story": "EventStory.json", # 活动剧情
-        "string_ui": "StringUI.json", # UI文本
-        "eden_alliance": "EdenAlliance.json", # 联合作战
-        "stage_equip": "StageEquip.json", # 关卡装备
-        "string_stage": "StringStage.json", # 关卡文本
-        "cash_shop_item": "CashShopItem.json", # 商店物品
-        "string_cashshop": "StringCashshop.json", # 商店文本
-        "barrier": "Barrier.json", # 传送门相关信息
-        "trip_hero": "TripHero.json", # 角色关键字
-        "trip_keyword": "TripKeyword.json", # 角色关键字
-        "key_values": "KeyValues.json", # 一些数值定义
-        "town_location": "TownLocation.json", # 地点
-        "town_object": "TownObjet.json", # 专属领地物品
-        "string_town": "StringTown.json", # 地点文本
-        "town_lost_item": "TownLostItem.json", # 遗失物品
-        "town_buff": "TownBuff.json", # 专属领地物品buff
-        "thumbnail": "Thumbnail.json", # 缩略图
-        "arbeit_fairy_level": "ArbeitFairyLevel.json", # 打工等级
-        "tower": "Tower.json", # 起源塔
-        "contents_buff": "ContentsBuff.json", # buff数值内容
-        "battle_buff": "BattleBuff.json", # 战斗buff
-        "world_raid_partner_buff": "WorldRaidPartnerBuff.json", # 支援伙伴buff
-        "arbeit_choice": "ArbeitChoice.json", # 专属物品任务选择
-        "arbeit_list": "ArbeitList.json",   # 专属物品任务列表
-        "evertalk_desc": "EverTalkDesc.json", # everphton聊天相关，拿插图
-        "soullink": "Soullink.json", # 灵魂链接文本相关
-        "soullink_collection": "SoullinkCollection.json", # 灵魂链接数值相关
-        "gacha": "Gacha.json", # 抽卡相关
-        "single_raid_boss": "SingleRaidBoss.json", # 恶灵讨伐BOSS
-        "single_raid": "SingleRaid.json", # 恶灵讨伐
-        "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json", # 恶灵讨伐BOSS等级
-        "single_raid_schedule": "SingleRaidSchedule.json", # 恶灵讨伐日程(记录了赛季，以及日程键值)
-        "single_raid_season": "SingleRaidSeason.json", # 恶灵讨伐赛季
-        "single_raid_boss_interaction_detail": "SingleRaidBossInteractionDetail.json", # 恶灵讨伐开场白角色
-        "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json", # 恶灵讨伐护盾削减系数
-        "single_raid_boss_groggy_condition": "SingleRaidBossGroggyCondition.json", # 恶灵讨伐各类CCBuff削减系数定义
-        "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json", # 恶灵讨伐特殊之人
-        "zodiac": "Zodiac.json", # 星座
+        "hero": "Hero.json",  # 角色
+        "hero_option": "HeroOption.json",  # 角色潜能
+        "hero_gift": "HeroGift.json",  # 角色喜好礼物
+        "hero_desc": "HeroDesc.json",  # 角色描述
+        "hero_level_grade": "HeroLevelGrade.json",  # 角色等级加成率
+        "hero_grade": "HeroGrade.json",  # 角色品质
+        "string_character": "StringCharacter.json",  # 角色文本
+        "string_system": "StringSystem.json",  # 系统文本
+        "skill": "Skill.json",  # 技能
+        "string_skill": "StringSkill.json",  # 技能文本
+        "skill_code": "SkillCode.json",  # 技能代码
+        "skill_buff": "SkillBuff.json",  # 技能效果
+        "skill_icon": "SkillIcon.json",  # 技能图标
+        "skill_pattern": "SkillPattern.json",  # 技能释放顺序
+        "signature": "Signature.json",  # 遗物
+        "signature_level": "SignatureLevel.json",  # 遗物等级
+        "string_evertalk": "StringEverTalk.json",  # 聊天文本
+        "story_info": "StoryInfo.json",  # 故事信息
+        "talk": "Talk.json",  # 对话
+        "string_talk": "StringTalk.json",  # 对话文本
+        "item_costume": "ItemCostume.json",  # 物品信息
+        "item": "Item.json",  # 物品
+        "item_stat": "ItemStat.json",  # 物品属性
+        "string_item": "StringItem.json",  # 物品文本
+        "illust": "Illust.json",  # 插画
+        "item_drop_group": "ItemDropGroup.json",  # 掉落组
+        "item_set_effect": "ItemSetEffect.json",  # 套装效果
+        "stage": "Stage.json",  # 关卡
+        "stage_battle": "StageBattle.json",  # 关卡战斗
+        "formation": "Formation.json",  # 队伍
+        "message_mail": "MessageMail.json",  # 邮件
+        "level": "Level.json",  # 等级
+        "love_level": "LoveLevel.json",  # 好感等级
+        "ark_enhance": "ArkEnhance.json",  # 方舟强化
+        "ark_overclock": "ArkOverClock.json",  # 超频
+        "promotion_movie": "PromotionMovie.json",  # 宣传片
+        "localization_schedule": "LocalizationSchedule.json",  # 活动日历
+        "event_calender": "EventCalender.json",  # 活动日历
+        "event_info": "EventInfo.json",  # 活动信息
+        "event_story": "EventStory.json",  # 活动剧情
+        "string_ui": "StringUI.json",  # UI文本
+        "eden_alliance": "EdenAlliance.json",  # 联合作战
+        "stage_equip": "StageEquip.json",  # 关卡装备
+        "string_stage": "StringStage.json",  # 关卡文本
+        "cash_shop_item": "CashShopItem.json",  # 商店物品
+        "string_cashshop": "StringCashshop.json",  # 商店文本
+        "barrier": "Barrier.json",  # 传送门相关信息
+        "trip_hero": "TripHero.json",  # 角色关键字
+        "trip_keyword": "TripKeyword.json",  # 角色关键字
+        "key_values": "KeyValues.json",  # 一些数值定义
+        "town_location": "TownLocation.json",  # 地点
+        "town_object": "TownObjet.json",  # 专属领地物品
+        "string_town": "StringTown.json",  # 地点文本
+        "town_lost_item": "TownLostItem.json",  # 遗失物品
+        "town_buff": "TownBuff.json",  # 专属领地物品buff
+        "thumbnail": "Thumbnail.json",  # 缩略图
+        "arbeit_fairy_level": "ArbeitFairyLevel.json",  # 打工等级
+        "tower": "Tower.json",  # 起源塔
+        "contents_buff": "ContentsBuff.json",  # buff数值内容
+        "battle_buff": "BattleBuff.json",  # 战斗buff
+        "world_raid_partner_buff": "WorldRaidPartnerBuff.json",  # 支援伙伴buff
+        "arbeit_choice": "ArbeitChoice.json",  # 专属物品任务选择
+        "arbeit_list": "ArbeitList.json",  # 专属物品任务列表
+        "evertalk_desc": "EverTalkDesc.json",  # everphton聊天相关，拿插图
+        "soullink": "Soullink.json",  # 灵魂链接文本相关
+        "soullink_collection": "SoullinkCollection.json",  # 灵魂链接数值相关
+        "gacha": "Gacha.json",  # 抽卡相关
+        "single_raid_boss": "SingleRaidBoss.json",  # 恶灵讨伐BOSS
+        "single_raid": "SingleRaid.json",  # 恶灵讨伐
+        "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json",  # 恶灵讨伐BOSS等级
+        "single_raid_schedule": "SingleRaidSchedule.json",  # 恶灵讨伐日程(记录了赛季，以及日程键值)
+        "single_raid_season": "SingleRaidSeason.json",  # 恶灵讨伐赛季
+        "single_raid_boss_interaction_detail": "SingleRaidBossInteractionDetail.json",  # 恶灵讨伐开场白角色
+        "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json",  # 恶灵讨伐护盾削减系数
+        "single_raid_boss_groggy_condition": "SingleRaidBossGroggyCondition.json",  # 恶灵讨伐各类CCBuff削减系数定义
+        "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json",  # 恶灵讨伐特殊之人
+        "zodiac": "Zodiac.json",  # 星座
     }
-    
+
     data = {}
     for key, filename in json_files.items():
         try:
@@ -472,35 +502,36 @@ async def load_json_data(group_id: int):
             data[key] = {"json": []}  # 提供一个空的默认值
     return data
 
+
 async def load_data_source_config():
     """加载数据源配置文件"""
     global CURRENT_DATA_SOURCE
-    
+
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     # 检查配置
     has_live_path = plugin_config.eversoul_live_path is not None
     has_review_path = plugin_config.eversoul_review_path is not None
     live_path = plugin_config.eversoul_live_path or ""
     review_path = plugin_config.eversoul_review_path or ""
-    
+
     # 确保路径是字符串形式，方便比较
     if has_live_path and isinstance(live_path, Path):
         live_path = str(live_path)
     if has_review_path and isinstance(review_path, Path):
         review_path = str(review_path)
-        
+
     # 检查是否有路径变更
     config_updated = False
-    
+
     # 保存当前的配置
     current_config = CURRENT_DATA_SOURCE.copy() if CURRENT_DATA_SOURCE else {}
-    
+
     # 确保有默认配置
     default_config = DEFAULT_CONFIG.copy()
     # 确保json_path为字符串而不是Path对象，避免None值错误
     default_config["json_path"] = live_path if has_live_path else ""
-    
+
     # 如果没有任何配置或者没有default配置，则初始化
     if not current_config or "default" not in current_config:
         CURRENT_DATA_SOURCE = {"default": default_config}
@@ -508,13 +539,13 @@ async def load_data_source_config():
         # 确保default配置存在
         if "default" not in CURRENT_DATA_SOURCE:
             CURRENT_DATA_SOURCE["default"] = default_config
-    
+
     file_config_loaded = False
     if DATA_SOURCE_CONFIG.exists():
         try:
             with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
                 config = yaml.safe_load(f)
-            
+
             if config:
                 # 确保配置中有default键
                 if "default" not in config:
@@ -532,12 +563,12 @@ async def load_data_source_config():
                         config["default"]["json_path"] = review_path
                         config_updated = True
                         logger.info(f"检测到review路径变更: {review_path}")
-                
+
                 # 明确转换路径字符串为Path对象
                 for group_id, group_config in config.items():
                     # 确保group_id是字符串
                     group_id_str = str(group_id)
-                    
+
                     # 检查并可能更新路径
                     if group_config.get("type") == "live" and has_live_path:
                         if str(group_config.get("json_path", "")) != live_path:
@@ -548,29 +579,37 @@ async def load_data_source_config():
                         if str(group_config.get("json_path", "")) != review_path:
                             group_config["json_path"] = review_path
                             config_updated = True
-                            logger.info(f"群组{group_id}的review路径已更新: {review_path}")
-                    
+                            logger.info(
+                                f"群组{group_id}的review路径已更新: {review_path}"
+                            )
+
                     if "json_path" in group_config:
                         # 确保json_path是Path对象
                         if not isinstance(group_config["json_path"], Path):
                             # 如果json_path为空字符串，保持为空字符串
                             if group_config["json_path"]:
-                                group_config["json_path"] = Path(group_config["json_path"])
-                    
+                                group_config["json_path"] = Path(
+                                    group_config["json_path"]
+                                )
+
                     if "hero_alias_file" in group_config:
                         # 确保hero_alias_file是Path对象
                         if not isinstance(group_config["hero_alias_file"], Path):
                             if str(group_config["hero_alias_file"]).startswith("./"):
-                                group_config["hero_alias_file"] = Path(__file__).parent.parent / \
-                                    str(group_config["hero_alias_file"])[2:]
+                                group_config["hero_alias_file"] = (
+                                    Path(__file__).parent.parent
+                                    / str(group_config["hero_alias_file"])[2:]
+                                )
                             else:
-                                group_config["hero_alias_file"] = Path(group_config["hero_alias_file"])
-                    
+                                group_config["hero_alias_file"] = Path(
+                                    group_config["hero_alias_file"]
+                                )
+
                     # 使用字符串键存储配置
                     CURRENT_DATA_SOURCE[group_id_str] = group_config
-                
+
                 file_config_loaded = True
-                
+
                 # 如果有更新，保存配置
                 if config_updated:
                     try:
@@ -578,24 +617,28 @@ async def load_data_source_config():
                         logger.info("检测到配置路径更新，已更新配置文件")
                     except Exception as e:
                         logger.error(f"更新配置文件失败: {e}")
-                
+
         except Exception as e:
             logger.error(f"加载数据源配置文件出错: {e}")
-    
+
     if not file_config_loaded:
         try:
             await save_data_source_config(CURRENT_DATA_SOURCE)
         except Exception as e:
             logger.error(f"创建默认数据源配置文件失败: {e}")
-    
-    if hasattr(plugin_config, 'eversoul_group_config') and getattr(plugin_config, 'eversoul_group_config', None):
-        for group_id, group_settings in getattr(plugin_config, 'eversoul_group_config', {}).items():
+
+    if hasattr(plugin_config, "eversoul_group_config") and getattr(
+        plugin_config, "eversoul_group_config", None
+    ):
+        for group_id, group_settings in getattr(
+            plugin_config, "eversoul_group_config", {}
+        ).items():
             if group_id not in CURRENT_DATA_SOURCE:
                 CURRENT_DATA_SOURCE[group_id] = CURRENT_DATA_SOURCE["default"].copy()
 
             if "type" in group_settings:
                 CURRENT_DATA_SOURCE[group_id]["type"] = group_settings["type"]
-            
+
             # 处理json_path
             json_path = ""
             if CURRENT_DATA_SOURCE[group_id]["type"] == "live":
@@ -604,21 +647,25 @@ async def load_data_source_config():
             else:  # review
                 if has_review_path:
                     json_path = review_path
-                
+
             if "json_path" in group_settings:
                 json_path = group_settings["json_path"]
-                
+
             # 只有在json_path不为空时才转换为Path对象
             if json_path:
                 CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(json_path)
             else:
                 CURRENT_DATA_SOURCE[group_id]["json_path"] = ""
-            
+
             alias_type = CURRENT_DATA_SOURCE[group_id]["type"]
-            CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = CONFIG_DIR / f"{alias_type}_hero_aliases.yaml"
+            CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = (
+                CONFIG_DIR / f"{alias_type}_hero_aliases.yaml"
+            )
             if "hero_alias_file" in group_settings:
-                CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = Path(group_settings["hero_alias_file"])
-        
+                CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = Path(
+                    group_settings["hero_alias_file"]
+                )
+
         try:
             await save_data_source_config(CURRENT_DATA_SOURCE)
         except Exception as e:
@@ -633,10 +680,10 @@ async def save_data_source_config(config):
         if DATA_SOURCE_CONFIG.exists():
             with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
                 existing_config = yaml.safe_load(f) or {}
-        
+
         save_config = existing_config.copy()  # 基于现有配置创建
         plugin_dir = str(Path(__file__).parent)
-        
+
         # 更新或添加新配置
         for group_id, group_config in config.items():
             save_config[group_id] = group_config.copy()
@@ -649,11 +696,11 @@ async def save_data_source_config(config):
             if "hero_alias_file" in group_config:
                 hero_alias_path = str(group_config["hero_alias_file"])
                 if hero_alias_path.startswith(plugin_dir):
-                    rel_path = hero_alias_path[len(plugin_dir):].lstrip('/')
+                    rel_path = hero_alias_path[len(plugin_dir) :].lstrip("/")
                     save_config[group_id]["hero_alias_file"] = f"./{rel_path}"
                 else:
                     save_config[group_id]["hero_alias_file"] = hero_alias_path
-        
+
         with open(DATA_SOURCE_CONFIG, "w", encoding="utf-8") as f:
             yaml.dump(save_config, f, allow_unicode=True)
     except Exception as e:
@@ -662,20 +709,20 @@ async def save_data_source_config(config):
 
 async def get_group_data_source(group_id):
     """获取群组的数据源配置
-    
+
     Args:
         group_id: 群组ID，如果不是群消息则为None
-        
+
     Returns:
         dict: 数据源配置
     """
-    
+
     # 先检查是否需要从文件刷新数据
     try:
         if DATA_SOURCE_CONFIG.exists():
             with open(DATA_SOURCE_CONFIG, "r", encoding="utf-8") as f:
                 file_config = yaml.safe_load(f) or {}
-            
+
             # 检查是否有新的群组配置在文件中但不在内存中
             for group_id_str, config in file_config.items():
                 if group_id_str not in CURRENT_DATA_SOURCE:
@@ -684,33 +731,37 @@ async def get_group_data_source(group_id):
                         config["json_path"] = Path(config["json_path"])
                     if "hero_alias_file" in config and config["hero_alias_file"]:
                         config["hero_alias_file"] = Path(config["hero_alias_file"])
-                    
+
                     # 将配置添加到内存中
                     CURRENT_DATA_SOURCE[group_id_str] = config
     except Exception as e:
         logger.error(f"尝试从文件刷新配置时出错: {e}")
-    
+
     result_config = None
-    
+
     if group_id is not None:
         group_id_str = str(group_id)
 
         if group_id_str in CURRENT_DATA_SOURCE:
             result_config = CURRENT_DATA_SOURCE[group_id_str]
         else:
-            keys_match = [k for k in CURRENT_DATA_SOURCE.keys() if str(k) == group_id_str]
+            keys_match = [
+                k for k in CURRENT_DATA_SOURCE.keys() if str(k) == group_id_str
+            ]
             if keys_match:
                 result_config = CURRENT_DATA_SOURCE[keys_match[0]]
-    
+
     if result_config is None:
         result_config = CURRENT_DATA_SOURCE.get("default", DEFAULT_CONFIG.copy())
-    
+
     # 确保json_path有值
     if "json_path" not in result_config or not result_config["json_path"]:
         # 根据类型选择路径
         if result_config.get("type") == "live" and plugin_config.eversoul_live_path:
             result_config["json_path"] = Path(plugin_config.eversoul_live_path)
-        elif result_config.get("type") == "review" and plugin_config.eversoul_review_path:
+        elif (
+            result_config.get("type") == "review" and plugin_config.eversoul_review_path
+        ):
             result_config["json_path"] = Path(plugin_config.eversoul_review_path)
         else:
             # 默认使用live路径
@@ -723,10 +774,14 @@ async def get_group_data_source(group_id):
             else:
                 # 如果都没有配置，使用空字符串
                 result_config["json_path"] = ""
-                logger.error("未配置数据源路径，请在env中设置eversoul_live_path或eversoul_review_path")
-    
+                logger.error(
+                    "未配置数据源路径，请在env中设置eversoul_live_path或eversoul_review_path"
+                )
+
     # 确保hero_alias_file有值
     if "hero_alias_file" not in result_config or not result_config["hero_alias_file"]:
-        result_config["hero_alias_file"] = CONFIG_DIR / f"{result_config.get('type', 'live')}_hero_aliases.yaml"
-    
+        result_config["hero_alias_file"] = (
+            CONFIG_DIR / f"{result_config.get('type', 'live')}_hero_aliases.yaml"
+        )
+
     return result_config

@@ -9,20 +9,21 @@ async def handle(bot: Bot, event: Event):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        
+
         # 加载游戏数据
         data = await load_json_data(group_id)
         # 生成星座信息HTML
         html = await generate_zodiac_html(data)
-        
+
         # 转换为图片
         pic = await html_to_pic(html, viewport={"width": 1200, "height": 1600})
-        
+
         await es_zodiac.finish(MessageSegment.image(pic))
 
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
+
             error_location = traceback.extract_tb(e.__traceback__)[-1]
             logger.error(
                 f"处理星座信息时发生错误:\n"
