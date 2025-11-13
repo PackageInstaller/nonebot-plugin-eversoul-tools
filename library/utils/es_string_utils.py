@@ -2357,6 +2357,7 @@ async def get_hero_grade_value(data: dict, grade: int) -> float:
     for grade_info in data["hero_grade"]["json"]:
         if grade_info.get("name_sno") == grade:
             return grade_info.get("hero_grade_value", 0.85)
+    return 0.85
 
 
 async def get_hero_level_grade_value(data: dict, level: int) -> float:
@@ -2377,6 +2378,7 @@ async def get_hero_level_grade_value(data: dict, level: int) -> float:
         grade_data = level_grades[i]
         if grade_data.get("level", 0) <= level:
             return grade_data.get("value", 1.0)
+    return 1.0
 
 
 async def calculate_battle_power(
