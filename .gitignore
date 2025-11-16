@@ -150,9 +150,9 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-data_source_config.yaml
-es_update_utils.py
-es_update_check.py
+data/config/data_source_config.yaml
+library/utils/es_update_utils.py
+command/es_update_check.py
 *.db
 
 # Pyre type checker
