@@ -1,0 +1,8 @@
+cg->story_assets_assets/bundles/story/love/xxx/01-10.bundle->Texture2D
+evertalk->story_assets_assets/bundles/story/talk.bundle->Texture2D
+hero->ui_assets_assets/bundles/ui/textures/souls/xxx/xxx.budle->Texture2D
+signature->ui_assets_assets/bundles/ui/textures/souls/xxx/xxx.budle->Texture2D
+town->ui_assets_assets/bundles/ui/textures/town.bundle->Texture2D
+tier->ui_assets_assets/bundles/ui/textures/atlas.bundle->Sprite
+banner->ui_assets_assets/bundles/ui/textures/banner/zh_tw.bundle->Texture2D
+sticker->同tier

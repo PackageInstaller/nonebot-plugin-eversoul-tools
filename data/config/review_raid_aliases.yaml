@@ -1,76 +1,76 @@
 names:
   - zh_tw_name: 暴走的席爾維斯特喬伊三世
-    zh_cn_name: ''
+    zh_cn_name: 暴走的席尔维斯特乔伊三世
     kr_name: 폭주한 실베스터 조이 3세
     en_name: Rampaging King Sylvester Joey III
     ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8000
   - zh_tw_name: 暴走的席爾維斯特喬伊三世
-    zh_cn_name: ''
+    zh_cn_name: 暴走的席尔维斯特乔伊三世
     kr_name: 폭주한 실베스터 조이 3세
     en_name: Rampaging King Sylvester Joey III
     ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8010
   - zh_tw_name: 暴走的席爾維斯特喬伊三世
-    zh_cn_name: ''
+    zh_cn_name: 暴走的席尔维斯特乔伊三世
     kr_name: 폭주한 실베스터 조이 3세
     en_name: Rampaging King Sylvester Joey III
     ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8020
   - zh_tw_name: 暴走的席爾維斯特喬伊三世
-    zh_cn_name: ''
+    zh_cn_name: 暴走的席尔维斯特乔伊三世
     kr_name: 폭주한 실베스터 조이 3세
     en_name: Rampaging King Sylvester Joey III
     ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8030
   - zh_tw_name: 暴走的席爾維斯特喬伊三世
-    zh_cn_name: ''
+    zh_cn_name: 暴走的席尔维斯特乔伊三世
     kr_name: 폭주한 실베스터 조이 3세
     en_name: Rampaging King Sylvester Joey III
     ja_name: 暴走したシルベスタージョイ3世
     aliases: []
     hero_id: 8040
   - zh_tw_name: 樂園魔女
-    zh_cn_name: ''
+    zh_cn_name: 乐园魔女
     kr_name: 낙원의 마녀
     en_name: The Witch of Paradise
     ja_name: ''
     aliases: []
     hero_id: 8050
   - zh_tw_name: 哈米蟹多頓
-    zh_cn_name: ''
+    zh_cn_name: 哈米蟹多顿
     kr_name: 아마'게'돈
     en_name: CRABmageddon
     ja_name: ''
     aliases: []
     hero_id: 8080
   - zh_tw_name: 哈米蟹多頓
-    zh_cn_name: ''
+    zh_cn_name: 哈米蟹多顿
     kr_name: 아마'게'돈
     en_name: CRABmageddon
     ja_name: ''
     aliases: []
     hero_id: 8090
   - zh_tw_name: 哈米蟹多頓
-    zh_cn_name: ''
+    zh_cn_name: 哈米蟹多顿
     kr_name: 아마'게'돈
     en_name: CRABmageddon
     ja_name: ''
     aliases: []
     hero_id: 8100
   - zh_tw_name: 哈米蟹多頓
-    zh_cn_name: ''
+    zh_cn_name: 哈米蟹多顿
     kr_name: 아마'게'돈
     en_name: CRABmageddon
     ja_name: ''
     aliases: []
     hero_id: 8110
   - zh_tw_name: 哈米蟹多頓
-    zh_cn_name: ''
+    zh_cn_name: 哈米蟹多顿
     kr_name: 아마'게'돈
     en_name: CRABmageddon
     ja_name: ''
@@ -161,14 +161,14 @@ names:
     aliases: []
     hero_id: 8620
   - zh_tw_name: 艾拉
-    zh_cn_name: ''
+    zh_cn_name: 艾拉
     kr_name: 아이라
     en_name: Aira
     ja_name: アイラ
     aliases: []
     hero_id: 9600
   - zh_tw_name: 凱瑟琳
-    zh_cn_name: ''
+    zh_cn_name: 凯瑟琳
     kr_name: 캐서린
     en_name: Catherine
     ja_name: キャサリン
@@ -189,959 +189,959 @@ names:
     aliases: []
     hero_id: 9650
   - zh_tw_name: 莉澤洛特
-    zh_cn_name: ''
+    zh_cn_name: 莉泽洛特
     kr_name: 리젤로테
     en_name: Lizelotte
     ja_name: リゼロッテ
     aliases: []
     hero_id: 9660
   - zh_tw_name: 綾織
-    zh_cn_name: ''
+    zh_cn_name: 绫织
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
     aliases: []
     hero_id: 9670
   - zh_tw_name: 魯德拉
-    zh_cn_name: ''
+    zh_cn_name: 鲁德拉
     kr_name: 루드라
     en_name: Ruthra
     ja_name: ルドラ
     aliases: []
     hero_id: 9900
   - zh_tw_name: 夏里特
-    zh_cn_name: ''
+    zh_cn_name: 夏里特
     kr_name: 샤리트
     en_name: Charite
     ja_name: シャリト
     aliases: []
     hero_id: 9901
   - zh_tw_name: 貪官汙吏克羅伊
-    zh_cn_name: ''
+    zh_cn_name: 贪官污吏克罗伊
     kr_name: 탐관오리 클로이
     en_name: Corrupt Official Chloe
     ja_name: 悪代官クロエ
     aliases: []
     hero_id: 9902
   - zh_tw_name: 吏房蟾蜍
-    zh_cn_name: ''
+    zh_cn_name: 吏房蟾蜍
     kr_name: 이방 두꺼비
     en_name: Official Toad
     ja_name: 役人ガマガエル
     aliases: []
     hero_id: 9903
   - zh_tw_name: 捕快鱉
-    zh_cn_name: ''
+    zh_cn_name: 捕快鳖
     kr_name: 포졸 자라
     en_name: Police Tortoise
     ja_name: 巡査スッポン
     aliases: []
     hero_id: 9904
   - zh_tw_name: 蓋亞
-    zh_cn_name: ''
+    zh_cn_name: 盖亚
     kr_name: 가이아
     en_name: Gaia
     ja_name: ガイア
     aliases: []
     hero_id: 9905
   - zh_tw_name: 卡倫
-    zh_cn_name: ''
+    zh_cn_name: 卡伦
     kr_name: 카렌
     en_name: Karen
     ja_name: カレン
     aliases: []
     hero_id: 9907
   - zh_tw_name: 卡倫
-    zh_cn_name: ''
+    zh_cn_name: 卡伦
     kr_name: 카렌
     en_name: Karen
     ja_name: カレン
     aliases: []
     hero_id: 9908
   - zh_tw_name: 綾織
-    zh_cn_name: ''
+    zh_cn_name: 绫织
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
     aliases: []
     hero_id: 9909
   - zh_tw_name: 雪莉
-    zh_cn_name: ''
+    zh_cn_name: 雪莉
     kr_name: 셰리
     en_name: Cherrie
     ja_name: シェリー
     aliases: []
     hero_id: 9910
   - zh_tw_name: 妮妮
-    zh_cn_name: ''
+    zh_cn_name: 妮妮
     kr_name: 니니
     en_name: Nini
     ja_name: メイ
     aliases: []
     hero_id: 9911
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 9912
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 9913
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 9914
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 9915
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 9916
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 9917
   - zh_tw_name: 巨大薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 巨大薇薇安
     kr_name: 거대 비비안
     en_name: Giant Vivienne
     ja_name: 巨大ビビアン
     aliases: []
     hero_id: 9918
   - zh_tw_name: 綾織
-    zh_cn_name: ''
+    zh_cn_name: 绫织
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
     aliases: []
     hero_id: 9919
   - zh_tw_name: 綾織
-    zh_cn_name: ''
+    zh_cn_name: 绫织
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
     aliases: []
     hero_id: 9920
   - zh_tw_name: 綾織
-    zh_cn_name: ''
+    zh_cn_name: 绫织
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
     aliases: []
     hero_id: 9921
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 9922
   - zh_tw_name: 勇者阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 勇者阿德里安
     kr_name: 히어로 아드리안
     en_name: Hero Adrianne
     ja_name: ヒーローアドリアン
     aliases: []
     hero_id: 9923
   - zh_tw_name: 比基尼阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 比基尼阿德里安
     kr_name: 비키니 아드리안
     en_name: Bikini Adrianne
     ja_name: ビキニアドリアン
     aliases: []
     hero_id: 9924
   - zh_tw_name: 艾拉
-    zh_cn_name: ''
+    zh_cn_name: 艾拉
     kr_name: 아이라
     en_name: Aira
     ja_name: アイラ
     aliases: []
     hero_id: 9925
   - zh_tw_name: 艾拉
-    zh_cn_name: ''
+    zh_cn_name: 艾拉
     kr_name: 아이라
     en_name: Aira
     ja_name: アイラ
     aliases: []
     hero_id: 9926
   - zh_tw_name: 艾拉
-    zh_cn_name: ''
+    zh_cn_name: 艾拉
     kr_name: 아이라
     en_name: Aira
     ja_name: アイラ
     aliases: []
     hero_id: 9927
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 9928
   - zh_tw_name: 凱瑟琳
-    zh_cn_name: ''
+    zh_cn_name: 凯瑟琳
     kr_name: 캐서린
     en_name: Catherine
     ja_name: キャサリン
     aliases: []
     hero_id: 9929
   - zh_tw_name: 凱瑟琳
-    zh_cn_name: ''
+    zh_cn_name: 凯瑟琳
     kr_name: 캐서린
     en_name: Catherine
     ja_name: キャサリン
     aliases: []
     hero_id: 9930
   - zh_tw_name: 凱瑟琳
-    zh_cn_name: ''
+    zh_cn_name: 凯瑟琳
     kr_name: 캐서린
     en_name: Catherine
     ja_name: キャサリン
     aliases: []
     hero_id: 9931
   - zh_tw_name: 凱瑟琳
-    zh_cn_name: ''
+    zh_cn_name: 凯瑟琳
     kr_name: 캐서린
     en_name: Catherine
     ja_name: キャサリン
     aliases: []
     hero_id: 9932
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 9933
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 9934
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 9935
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 9936
   - zh_tw_name: 使者之矛
-    zh_cn_name: ''
+    zh_cn_name: 使者之矛
     kr_name: 사도의 창
     en_name: Spear of the Apostle
     ja_name: 使徒の槍
     aliases: []
     hero_id: 9937
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 9938
   - zh_tw_name: 綾織
-    zh_cn_name: ''
+    zh_cn_name: 绫织
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
     aliases: []
     hero_id: 9939
   - zh_tw_name: 莉澤洛特
-    zh_cn_name: ''
+    zh_cn_name: 莉泽洛特
     kr_name: 리젤로테
     en_name: Lizelotte
     ja_name: リゼロッテ
     aliases: []
     hero_id: 9940
   - zh_tw_name: 莉澤洛特
-    zh_cn_name: ''
+    zh_cn_name: 莉泽洛特
     kr_name: 리젤로테
     en_name: Lizelotte
     ja_name: リゼロッテ
     aliases: []
     hero_id: 9941
   - zh_tw_name: 莉澤洛特
-    zh_cn_name: ''
+    zh_cn_name: 莉泽洛特
     kr_name: 리젤로테
     en_name: Lizelotte
     ja_name: リゼロッテ
     aliases: []
     hero_id: 9942
   - zh_tw_name: 艾拉
-    zh_cn_name: ''
+    zh_cn_name: 艾拉
     kr_name: 아이라
     en_name: Aira
     ja_name: アイラ
     aliases: []
     hero_id: 9943
   - zh_tw_name: 夏里特（第1階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第1阶段）
     kr_name: 샤리트(1단계)
     en_name: Charite (Level 1)
     ja_name: シャリト(1段階)
     aliases: []
     hero_id: 9951
   - zh_tw_name: 夏里特（第2階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第2阶段）
     kr_name: 샤리트(2단계)
     en_name: Charite (Level 2)
     ja_name: シャリト(2段階)
     aliases: []
     hero_id: 9952
   - zh_tw_name: 夏里特（第3階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第3阶段）
     kr_name: 샤리트(3단계)
     en_name: Charite (Level 3)
     ja_name: シャリト(3段階)
     aliases: []
     hero_id: 9953
   - zh_tw_name: 夏里特（第4階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第4阶段）
     kr_name: 샤리트(4단계)
     en_name: Charite (Level 4)
     ja_name: シャリト(4段階)
     aliases: []
     hero_id: 9954
   - zh_tw_name: 夏里特（第5階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第5阶段）
     kr_name: 샤리트(5단계)
     en_name: Charite (Level 5)
     ja_name: シャリト(5段階)
     aliases: []
     hero_id: 9955
   - zh_tw_name: 夏里特（第6階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第6阶段）
     kr_name: 샤리트(6단계)
     en_name: Charite (Level 6)
     ja_name: シャリト(6段階)
     aliases: []
     hero_id: 9956
   - zh_tw_name: 夏里特（第7階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第7阶段）
     kr_name: 샤리트(7단계)
     en_name: Charite (Level 7)
     ja_name: シャリト(7段階)
     aliases: []
     hero_id: 9957
   - zh_tw_name: 夏里特（第8階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第8阶段）
     kr_name: 샤리트(8단계)
     en_name: Charite (Level 8)
     ja_name: シャリト(8段階)
     aliases: []
     hero_id: 9958
   - zh_tw_name: 夏里特（第9階段）
-    zh_cn_name: ''
+    zh_cn_name: 夏里特（第9阶段）
     kr_name: 샤리트(9단계)
     en_name: Charite (Level 9)
     ja_name: シャリト(9段階)
     aliases: []
     hero_id: 9959
   - zh_tw_name: 黑騎士
-    zh_cn_name: ''
+    zh_cn_name: 黑骑士
     kr_name: 흑기사
     en_name: Dark Knight
     ja_name: 黒騎士
     aliases: []
     hero_id: 9961
   - zh_tw_name: 公主魯特
-    zh_cn_name: ''
+    zh_cn_name: 公主鲁特
     kr_name: 공주 루테
     en_name: Princess Lute
     ja_name: ルーテ姫
     aliases: []
     hero_id: 9962
   - zh_tw_name: 羊尚宮
-    zh_cn_name: ''
+    zh_cn_name: 羊尚宫
     kr_name: 양상궁
     en_name: Upper Court Sheep Lady
     ja_name: ヒツジ尚宮
     aliases: []
     hero_id: 9963
   - zh_tw_name: 羊內官
-    zh_cn_name: ''
+    zh_cn_name: 羊内官
     kr_name: 양내관
     en_name: Sheep Eunuch
     ja_name: ヒツジ内官
     aliases: []
     hero_id: 9964
   - zh_tw_name: 莉澤洛特
-    zh_cn_name: ''
+    zh_cn_name: 莉泽洛特
     kr_name: 리젤로테
     en_name: Lizelotte
     ja_name: リゼロッテ
     aliases: []
     hero_id: 9973
   - zh_tw_name: 雪怪
-    zh_cn_name: ''
+    zh_cn_name: 雪怪
     kr_name: 슬레이봅
     en_name: Sleighbob
     ja_name: スレイボブ
     aliases: []
     hero_id: 9974
   - zh_tw_name: 雪怪
-    zh_cn_name: ''
+    zh_cn_name: 雪怪
     kr_name: 슬레이봅
     en_name: Sleighbob
     ja_name: スレイボブ
     aliases: []
     hero_id: 9975
   - zh_tw_name: 雪怪
-    zh_cn_name: ''
+    zh_cn_name: 雪怪
     kr_name: 슬레이봅
     en_name: Sleighbob
     ja_name: スレイボブ
     aliases: []
     hero_id: 9976
   - zh_tw_name: 雪怪
-    zh_cn_name: ''
+    zh_cn_name: 雪怪
     kr_name: 슬레이봅
     en_name: Sleighbob
     ja_name: スレイボブ
     aliases: []
     hero_id: 9977
   - zh_tw_name: 酒勞迪婭
-    zh_cn_name: ''
+    zh_cn_name: 飘飘饮劳迪娅
     kr_name: 술라우디아
     en_name: Drunklaudia
     ja_name: 酒ラウディア
     aliases: []
     hero_id: 9978
   - zh_tw_name: 酒勞迪婭
-    zh_cn_name: ''
+    zh_cn_name: 飘飘饮劳迪娅
     kr_name: 술라우디아
     en_name: Drunklaudia
     ja_name: 酒ラウディア
     aliases: []
     hero_id: 9979
   - zh_tw_name: 酒勞迪婭
-    zh_cn_name: ''
+    zh_cn_name: 飘飘饮劳迪娅
     kr_name: 술라우디아
     en_name: Drunklaudia
     ja_name: 酒ラウディア
     aliases: []
     hero_id: 9981
   - zh_tw_name: 酒勞迪婭
-    zh_cn_name: ''
+    zh_cn_name: 飘飘饮劳迪娅
     kr_name: 술라우디아
     en_name: Drunklaudia
     ja_name: 酒ラウディア
     aliases: []
     hero_id: 9984
   - zh_tw_name: 巧克力甜心女王
-    zh_cn_name: ''
+    zh_cn_name: 巧克力甜心女王
     kr_name: 쇼콜라 퀸
     en_name: Chocolat Queen
     ja_name: ショコラクイーン
     aliases: []
     hero_id: 9985
   - zh_tw_name: 巧克力甜心女王
-    zh_cn_name: ''
+    zh_cn_name: 巧克力甜心女王
     kr_name: 쇼콜라 퀸
     en_name: Chocolat Queen
     ja_name: ショコラクイーン
     aliases: []
     hero_id: 9986
   - zh_tw_name: 巧克力甜心女王
-    zh_cn_name: ''
+    zh_cn_name: 巧克力甜心女王
     kr_name: 쇼콜라 퀸
     en_name: Chocolat Queen
     ja_name: ショコラクイーン
     aliases: []
     hero_id: 9987
   - zh_tw_name: 巧克力甜心女王
-    zh_cn_name: ''
+    zh_cn_name: 巧克力甜心女王
     kr_name: 쇼콜라 퀸
     en_name: Chocolat Queen
     ja_name: ショコラクイーン
     aliases: []
     hero_id: 9989
   - zh_tw_name: 巧克力甜心女王
-    zh_cn_name: ''
+    zh_cn_name: 巧克力甜心女王
     kr_name: 쇼콜라 퀸
     en_name: Chocolat Queen
     ja_name: ショコラクイーン
     aliases: []
     hero_id: 9998
   - zh_tw_name: 巧克力甜心女王
-    zh_cn_name: ''
+    zh_cn_name: 巧克力甜心女王
     kr_name: 쇼콜라 퀸
     en_name: Chocolat Queen
     ja_name: ショコラクイーン
     aliases: []
     hero_id: 9999
   - zh_tw_name: 時崎狂三
-    zh_cn_name: ''
+    zh_cn_name: 时崎狂三
     kr_name: 토키사키 쿠루미
     en_name: Kurumi Tokisaki
     ja_name: 時崎狂三
     aliases: []
     hero_id: 10086
   - zh_tw_name: 夜刀神十香
-    zh_cn_name: ''
+    zh_cn_name: 夜刀神十香
     kr_name: 야토가미 토카
     en_name: Tohka Yatogami
     ja_name: 夜刀神十香
     aliases: []
     hero_id: 10087
   - zh_tw_name: 魯德拉
-    zh_cn_name: ''
+    zh_cn_name: 鲁德拉
     kr_name: 루드라
     en_name: Ruthra
     ja_name: ルドラ
     aliases: []
     hero_id: 10097
   - zh_tw_name: 黑騎士
-    zh_cn_name: ''
+    zh_cn_name: 黑骑士
     kr_name: 흑기사
     en_name: Dark Knight
     ja_name: 黒騎士
     aliases: []
     hero_id: 20441
   - zh_tw_name: 黑騎士
-    zh_cn_name: ''
+    zh_cn_name: 黑骑士
     kr_name: 흑기사
     en_name: Dark Knight
     ja_name: 黒騎士
     aliases: []
     hero_id: 20442
   - zh_tw_name: 黑騎士
-    zh_cn_name: ''
+    zh_cn_name: 黑骑士
     kr_name: 흑기사
     en_name: Dark Knight
     ja_name: 黒騎士
     aliases: []
     hero_id: 20443
   - zh_tw_name: 卡倫
-    zh_cn_name: ''
+    zh_cn_name: 卡伦
     kr_name: 카렌
     en_name: Karen
     ja_name: カレン
     aliases: []
     hero_id: 32011
   - zh_tw_name: 尖刺仙人掌
-    zh_cn_name: ''
+    zh_cn_name: 尖刺仙人掌
     kr_name: 가시 선인장
     en_name: Thorny Cactus
     ja_name: 棘サボテン
     aliases: []
     hero_id: 32012
   - zh_tw_name: 卡倫
-    zh_cn_name: ''
+    zh_cn_name: 卡伦
     kr_name: 카렌
     en_name: Karen
     ja_name: カレン
     aliases: []
     hero_id: 32021
   - zh_tw_name: 無名
-    zh_cn_name: ''
+    zh_cn_name: 无名
     kr_name: 무명
     en_name: Nameless
     ja_name: ナナシ
     aliases: []
     hero_id: 32022
   - zh_tw_name: 惡夢的懸絲木偶
-    zh_cn_name: ''
+    zh_cn_name: 恶梦的悬丝木偶
     kr_name: 악몽의 마리오네트
     en_name: Nightmare Marionette
     ja_name: 悪夢のマリオネット
     aliases: []
     hero_id: 32066
   - zh_tw_name: 惡夢的懸絲木偶
-    zh_cn_name: ''
+    zh_cn_name: 恶梦的悬丝木偶
     kr_name: 악몽의 마리오네트
     en_name: Nightmare Marionette
     ja_name: 悪夢のマリオネット
     aliases: []
     hero_id: 32067
   - zh_tw_name: 惡夢的懸絲木偶
-    zh_cn_name: ''
+    zh_cn_name: 恶梦的悬丝木偶
     kr_name: 악몽의 마리오네트
     en_name: Nightmare Marionette
     ja_name: 悪夢のマリオネット
     aliases: []
     hero_id: 32068
   - zh_tw_name: 惡夢的懸絲木偶
-    zh_cn_name: ''
+    zh_cn_name: 恶梦的悬丝木偶
     kr_name: 악몽의 마리오네트
     en_name: Nightmare Marionette
     ja_name: 悪夢のマリオネット
     aliases: []
     hero_id: 32069
   - zh_tw_name: 惡夢的懸絲木偶
-    zh_cn_name: ''
+    zh_cn_name: 恶梦的悬丝木偶
     kr_name: 악몽의 마리오네트
     en_name: Nightmare Marionette
     ja_name: 悪夢のマリオネット
     aliases: []
     hero_id: 32074
   - zh_tw_name: 機械蓋亞
-    zh_cn_name: ''
+    zh_cn_name: 机械盖亚
     kr_name: 메카이아
     en_name: Mecha Gaia
     ja_name: メカイア
     aliases: []
     hero_id: 32075
   - zh_tw_name: 機械蓋亞
-    zh_cn_name: ''
+    zh_cn_name: 机械盖亚
     kr_name: 메카이아
     en_name: Mecha Gaia
     ja_name: メカイア
     aliases: []
     hero_id: 32076
   - zh_tw_name: 機械蓋亞
-    zh_cn_name: ''
+    zh_cn_name: 机械盖亚
     kr_name: 메카이아
     en_name: Mecha Gaia
     ja_name: メカイア
     aliases: []
     hero_id: 32077
   - zh_tw_name: 機械蓋亞
-    zh_cn_name: ''
+    zh_cn_name: 机械盖亚
     kr_name: 메카이아
     en_name: Mecha Gaia
     ja_name: メカイア
     aliases: []
     hero_id: 32078
   - zh_tw_name: 機械蓋亞
-    zh_cn_name: ''
+    zh_cn_name: 机械盖亚
     kr_name: 메카이아
     en_name: Mecha Gaia
     ja_name: メカイア
     aliases: []
     hero_id: 32079
   - zh_tw_name: 年糕工廠廠長順伊
-    zh_cn_name: ''
+    zh_cn_name: 年糕工厂厂长顺伊
     kr_name: 떡공장장 순이
     en_name: Ricecake Maker Soonie
     ja_name: モチ工場の工場長・スニ
     aliases: []
     hero_id: 32084
   - zh_tw_name: 年糕工廠廠長順伊
-    zh_cn_name: ''
+    zh_cn_name: 年糕工厂厂长顺伊
     kr_name: 떡공장장 순이
     en_name: Ricecake Maker Soonie
     ja_name: モチ工場の工場長・スニ
     aliases: []
     hero_id: 32085
   - zh_tw_name: 年糕工廠廠長順伊
-    zh_cn_name: ''
+    zh_cn_name: 年糕工厂厂长顺伊
     kr_name: 떡공장장 순이
     en_name: Ricecake Maker Soonie
     ja_name: モチ工場の工場長・スニ
     aliases: []
     hero_id: 32086
   - zh_tw_name: 年糕工廠廠長順伊
-    zh_cn_name: ''
+    zh_cn_name: 年糕工厂厂长顺伊
     kr_name: 떡공장장 순이
     en_name: Ricecake Maker Soonie
     ja_name: モチ工場の工場長・スニ
     aliases: []
     hero_id: 32087
   - zh_tw_name: 年糕工廠廠長順伊
-    zh_cn_name: ''
+    zh_cn_name: 年糕工厂厂长顺伊
     kr_name: 떡공장장 순이
     en_name: Ricecake Maker Soonie
     ja_name: モチ工場の工場長・スニ
     aliases: []
     hero_id: 32088
   - zh_tw_name: 心理世界的蘿絲
-    zh_cn_name: ''
+    zh_cn_name: 心理世界的萝丝
     kr_name: 심상세계의 로제
     en_name: Rose(Imaginary World)
     ja_name: 心象世界のロゼ
     aliases: []
     hero_id: 32092
   - zh_tw_name: 心理世界的蘿絲
-    zh_cn_name: ''
+    zh_cn_name: 心理世界的萝丝
     kr_name: 심상세계의 로제
     en_name: Rose(Imaginary World)
     ja_name: 心象世界のロゼ
     aliases: []
     hero_id: 32093
   - zh_tw_name: 爐心
-    zh_cn_name: ''
+    zh_cn_name: 炉心
     kr_name: 노심
     en_name: Reactor Core
     ja_name: 爐心
     aliases: []
     hero_id: 32094
   - zh_tw_name: 魔物襲擊
-    zh_cn_name: ''
+    zh_cn_name: 魔物袭击
     kr_name: 마물 습격
     en_name: Monster Attack
     ja_name: ''
     aliases: []
     hero_id: 32099
   - zh_tw_name: 爐心
-    zh_cn_name: ''
+    zh_cn_name: 炉心
     kr_name: 노심
     en_name: Reactor Core
     ja_name: 爐心
     aliases: []
     hero_id: 32113
   - zh_tw_name: 考驗的幻影
-    zh_cn_name: ''
+    zh_cn_name: 考验的幻影
     kr_name: 시련의 환영
     en_name: Illusion of Ordeal
     ja_name: ''
     aliases: []
     hero_id: 32118
   - zh_tw_name: 考驗的幻影
-    zh_cn_name: ''
+    zh_cn_name: 考验的幻影
     kr_name: 시련의 환영
     en_name: Illusion of Ordeal
     ja_name: ''
     aliases: []
     hero_id: 32119
   - zh_tw_name: 雪之賢者
-    zh_cn_name: ''
+    zh_cn_name: 雪之贤者
     kr_name: 눈의 현자
     en_name: Sage of the Snow
     ja_name: ''
     aliases: []
     hero_id: 32120
   - zh_tw_name: 雪之賢者
-    zh_cn_name: ''
+    zh_cn_name: 雪之贤者
     kr_name: 눈의 현자
     en_name: Sage of the Snow
     ja_name: ''
     aliases: []
     hero_id: 32121
   - zh_tw_name: 燈塔看守員
-    zh_cn_name: ''
+    zh_cn_name: 灯塔守望者
     kr_name: 등대지기
     en_name: Lighthouse Keeper
     ja_name: 灯台守
     aliases: []
     hero_id: 60001
   - zh_tw_name: 貝希摩斯
-    zh_cn_name: ''
+    zh_cn_name: 贝希摩斯
     kr_name: 베히모스
     en_name: Behemoth
     ja_name: ベヒモス
     aliases: []
     hero_id: 60002
   - zh_tw_name: 貝希摩斯
-    zh_cn_name: ''
+    zh_cn_name: 贝希摩斯
     kr_name: 베히모스
     en_name: Behemoth
     ja_name: ベヒモス
     aliases: []
     hero_id: 60003
   - zh_tw_name: 貝希摩斯
-    zh_cn_name: ''
+    zh_cn_name: 贝希摩斯
     kr_name: 베히모스
     en_name: Behemoth
     ja_name: ベヒモス
     aliases: []
     hero_id: 60004
   - zh_tw_name: 冥王
-    zh_cn_name: ''
+    zh_cn_name: 冥王
     kr_name: 플루토
     en_name: Pluto
     ja_name: プルート
     aliases: []
     hero_id: 60011
   - zh_tw_name: 貪官汙吏克羅伊
-    zh_cn_name: ''
+    zh_cn_name: 贪官污吏克罗伊
     kr_name: 탐관오리 클로이
     en_name: Corrupt Official Chloe
     ja_name: 悪代官クロエ
     aliases: []
     hero_id: 60012
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 66001
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 66002
   - zh_tw_name: 綾織
-    zh_cn_name: ''
+    zh_cn_name: 绫织
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
     aliases: []
     hero_id: 66003
   - zh_tw_name: 艾拉
-    zh_cn_name: ''
+    zh_cn_name: 艾拉
     kr_name: 아이라
     en_name: Aira
     ja_name: アイラ
     aliases: []
     hero_id: 66004
   - zh_tw_name: 凱瑟琳
-    zh_cn_name: ''
+    zh_cn_name: 凯瑟琳
     kr_name: 캐서린
     en_name: Catherine
     ja_name: キャサリン
     aliases: []
     hero_id: 66005
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 66006
   - zh_tw_name: 娜伊雅
-    zh_cn_name: ''
+    zh_cn_name: 娜伊雅
     kr_name: 나이아
     en_name: Naiah
     ja_name: ナイア
     aliases: []
     hero_id: 66009
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 66104
   - zh_tw_name: 蘿絲（紅焰）
-    zh_cn_name: ''
+    zh_cn_name: 萝丝（红焰）
     kr_name: 로제(홍염)
     en_name: Rose (Prominence)
     ja_name: ロゼ(紅炎)
     aliases: []
     hero_id: 66105
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 66108
   - zh_tw_name: 威里
-    zh_cn_name: ''
+    zh_cn_name: 威里
     kr_name: 웨리
     en_name: Wheri
     ja_name: ウェリー
     aliases: []
     hero_id: 66109
   - zh_tw_name: 蘿絲（紅焰）
-    zh_cn_name: ''
+    zh_cn_name: 萝丝（红焰）
     kr_name: 로제(홍염)
     en_name: Rose (Prominence)
     ja_name: ロゼ(紅炎)
     aliases: []
     hero_id: 66115
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 66204
   - zh_tw_name: 克萊兒
-    zh_cn_name: ''
+    zh_cn_name: 克莱儿
     kr_name: 클레르
     en_name: Claire
     ja_name: クレール
     aliases: []
     hero_id: 66205
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 66208
   - zh_tw_name: 藤草普萊西亞
-    zh_cn_name: ''
+    zh_cn_name: 藤草普莱西亚
     kr_name: 덩굴 플레시아
     en_name: Vine Plesia
     ja_name: 蔓フレシア
     aliases: []
     hero_id: 66209
   - zh_tw_name: 克萊兒
-    zh_cn_name: ''
+    zh_cn_name: 克莱儿
     kr_name: 클레르
     en_name: Claire
     ja_name: クレール
     aliases: []
     hero_id: 66215
   - zh_tw_name: 薇薇安
-    zh_cn_name: ''
+    zh_cn_name: 薇薇安
     kr_name: 비비안
     en_name: Vivienne
     ja_name: ビビアン
     aliases: []
     hero_id: 66304
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 66305
   - zh_tw_name: 潔克琳
-    zh_cn_name: ''
+    zh_cn_name: 洁克琳
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
     aliases: []
     hero_id: 66308
   - zh_tw_name: 監視者之眼
-    zh_cn_name: ''
+    zh_cn_name: 监视者之眼
     kr_name: 감시자의 눈
     en_name: Watcher's Eye
     ja_name: 監視者の目
     aliases: []
     hero_id: 66309
   - zh_tw_name: 阿德里安
-    zh_cn_name: ''
+    zh_cn_name: 阿德里安
     kr_name: 아드리안
     en_name: Adrianne
     ja_name: アドリアン
     aliases: []
     hero_id: 66315
   - zh_tw_name: 蓋亞
-    zh_cn_name: ''
+    zh_cn_name: 盖亚
     kr_name: 가이아
     en_name: Gaia
     ja_name: ガイア
     aliases: []
     hero_id: 66409
   - zh_tw_name: 呢喃細語
-    zh_cn_name: ''
+    zh_cn_name: 呢喃细语
     kr_name: 속삭임
     en_name: The Whispers
     ja_name: ささやき

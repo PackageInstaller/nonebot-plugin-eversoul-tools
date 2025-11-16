@@ -10,8 +10,9 @@ driver = get_driver()
 
 class Config(BaseModel):
     # Eversoul相关配置项，live和review数据源
-    eversoul_live_path: str | None = None
-    eversoul_review_path: str | None = None
+    eversoul_live_path: str | None = None  # 国际服live数据源
+    eversoul_review_path: str | None = None  # 国际服review数据源
+    eversoul_cn_live_path: str | None = None  # 国服live数据源
     _warned: ClassVar[bool] = False
     
     @model_validator(mode='after')
@@ -24,6 +25,10 @@ class Config(BaseModel):
             if self.eversoul_review_path is None:
                 logger.warning("eversoul_review_path 未配置，这会导致部分功能无法正常使用。")
                 logger.warning("请在配置文件中添加 eversoul_review_path 配置项。")
+            
+            if self.eversoul_cn_live_path is None:
+                logger.warning("eversoul_cn_live_path 未配置，国服功能将无法使用。")
+                logger.warning("请在配置文件中添加 eversoul_cn_live_path 配置项。")
             
             Config._warned = True
         
@@ -173,12 +178,14 @@ SERVER_APP_ID_MAPPING = {
     "asia": 743491,  # 亚服
     "kr": 743487,    # 韩服
     "en": 750066,    # 欧美服
+    "cn": 743493,    # 国服
 }
 
 SERVER_NAME_MAPPING = {
     "asia": "亚服",
     "kr": "韩服",
     "en": "欧美服",
+    "cn": "国服",
 }
 
 # 恶灵讨伐护盾削减系数映射
@@ -206,13 +213,15 @@ DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"
 
 # 默认配置
 DEFAULT_CONFIG = {
-    "type": "live",
+    "server": "global",  # 服务器: global(国际服) 或 cn(国服)
+    "type": "live",      # 数据类型: live 或 review
     "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
     "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml"
 }
 
 CURRENT_DATA_SOURCE = {
     "default": {
+        "server": "global",
         "type": "live", 
         "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
         "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml"
@@ -223,11 +232,11 @@ CURRENT_DATA_SOURCE = {
 FONT_DIR = RESOURCE_DIR / "font" / "Sarasa-Regular.ttc"
 CUSTOM_FONT = FontProperties(fname=FONT_DIR)
 
-CG_DIR = RESOURCE_DIR / "image" / "cg"
-EVERTALK_DIR = RESOURCE_DIR / "image" / "evertalk"
-SOUL_DIR = RESOURCE_DIR / "image" / "soul"
-ICON_DIR = RESOURCE_DIR / "image" / "icon"
-TIER_DIR = RESOURCE_DIR / "image" / "tier"
-TOWN_DIR = RESOURCE_DIR / "image" / "town"
-BANNER_DIR = RESOURCE_DIR / "image" / "banner"
-STICKER_DIR = RESOURCE_DIR / "image" / "sticker"
+CG_DIR = RESOURCE_DIR / "image" / "global" / "cg"
+EVERTALK_DIR = RESOURCE_DIR / "image" / "global" / "evertalk"
+SOUL_DIR = RESOURCE_DIR / "image" / "global" / "soul"
+ICON_DIR = RESOURCE_DIR / "image" / "global" / "icon"
+TIER_DIR = RESOURCE_DIR / "image" / "global" / "tier"
+TOWN_DIR = RESOURCE_DIR / "image" / "global" / "town"
+BANNER_DIR = RESOURCE_DIR / "image" / "global" / "banner"
+STICKER_DIR = RESOURCE_DIR / "image" / "global" / "sticker"

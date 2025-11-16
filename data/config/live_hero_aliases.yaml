@@ -56,7 +56,7 @@ names:
     aliases: []
     hero_id: 220
   - zh_tw_name: 艾麗西雅
-    zh_cn_name: 艾丽西雅
+    zh_cn_name: 艾丽西亚
     kr_name: 알리샤
     en_name: Alisha
     ja_name: アリーシャ
@@ -554,7 +554,7 @@ names:
     aliases: [大佩特拉, 界佩特拉, 大佩佩]
     hero_id: 4160
   - zh_tw_name: 佳妮特（狂喜）
-    zh_cn_name: 佳妮特（狂喜）
+    zh_cn_name: 佳妮特（悦乐）
     kr_name: 가넷(열락)
     en_name: Garnet (Rapture)
     ja_name: ガーネット(悦楽)
@@ -624,11 +624,11 @@ names:
     aliases: [灵芝, 靈芝]
     hero_id: 6030
   - zh_tw_name: 夏娃
-    zh_cn_name: 太古精灵
+    zh_cn_name: 伊芙
     kr_name: 이브
     en_name: Eve
     ja_name: イブ
-    aliases: [java]
+    aliases: []
     hero_id: 6050
   - zh_tw_name: 妮亞
     zh_cn_name: 妮亚

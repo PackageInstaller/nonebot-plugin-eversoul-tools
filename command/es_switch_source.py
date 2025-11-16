@@ -10,11 +10,21 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
     group_id = str(event.group_id)
 
     if not args_str:
-        group_data_source = (await get_group_data_source(group_id)).get("type", "")
-        await es_switch_source.finish(f"当前群组数据源为{group_data_source}")
+        config = await get_group_data_source(group_id)
+        server = config.get("server", "global")
+        data_type = config.get("type", "live")
+        server_name = {"global": "国际服", "cn": "国服"}.get(server, server)
+        await es_switch_source.finish(f"当前群组数据源为: {server_name} - {data_type}")
 
-    if args_str not in ["live", "review"]:
-        await es_switch_source.finish("参数错误！请使用 'live' 或 'review'")
+    # 支持的参数：cn, live, review
+    if args_str not in ["cn", "live", "review"]:
+        await es_switch_source.finish(
+            "参数错误！\n"
+            "可用选项:\n"
+            "  cn - 国服(仅live)\n"
+            "  live - 国际服live\n"
+            "  review - 国际服review"
+        )
 
     # 确保CURRENT_DATA_SOURCE包含default配置
     if "default" not in CURRENT_DATA_SOURCE:
@@ -25,32 +35,50 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         # 如果群组配置不存在，基于默认配置创建一个
         CURRENT_DATA_SOURCE[group_id] = CURRENT_DATA_SOURCE["default"].copy()
 
-    # 更新群组的数据源类型
-    CURRENT_DATA_SOURCE[group_id]["type"] = args_str
-
-    # 根据类型选择对应的路径配置
-    if args_str == "live":
+    # 根据参数设置server和type
+    if args_str == "cn":
+        # 国服只支持live
+        CURRENT_DATA_SOURCE[group_id]["server"] = "cn"
+        CURRENT_DATA_SOURCE[group_id]["type"] = "live"
+        
+        if plugin_config.eversoul_cn_live_path:
+            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
+                plugin_config.eversoul_cn_live_path
+            )
+        else:
+            await es_switch_source.finish(
+                "未配置国服数据源路径，请在env中设置eversoul_cn_live_path"
+            )
+    elif args_str == "live":
+        # 国际服live
+        CURRENT_DATA_SOURCE[group_id]["server"] = "global"
+        CURRENT_DATA_SOURCE[group_id]["type"] = "live"
+        
         if plugin_config.eversoul_live_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
                 plugin_config.eversoul_live_path
             )
         else:
             await es_switch_source.finish(
-                "未配置live数据源路径，请在env中设置eversoul_live_path"
+                "未配置国际服live数据源路径，请在env中设置eversoul_live_path"
             )
     else:  # review
+        # 国际服review
+        CURRENT_DATA_SOURCE[group_id]["server"] = "global"
+        CURRENT_DATA_SOURCE[group_id]["type"] = "review"
+        
         if plugin_config.eversoul_review_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
                 plugin_config.eversoul_review_path
             )
         else:
             await es_switch_source.finish(
-                "未配置review数据源路径，请在env中设置eversoul_review_path"
+                "未配置国际服review数据源路径，请在env中设置eversoul_review_path"
             )
 
     # 使用DATA_DIR中的别名文件
     CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = (
-        CONFIG_DIR / f"{args_str}_hero_aliases.yaml"
+        CONFIG_DIR / f"{CURRENT_DATA_SOURCE[group_id]['type']}_hero_aliases.yaml"
     )
 
     try:
@@ -70,4 +98,10 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
                 f"错误行号: {error_location.lineno}\n"
             )
 
-    await es_switch_source.finish(f"已为当前群组切换到{args_str}数据源")
+    server_name = {"global": "国际服", "cn": "国服"}.get(
+        CURRENT_DATA_SOURCE[group_id]["server"], 
+        CURRENT_DATA_SOURCE[group_id]["server"]
+    )
+    await es_switch_source.finish(
+        f"已为当前群组切换到 {server_name} - {CURRENT_DATA_SOURCE[group_id]['type']} 数据源"
+    )

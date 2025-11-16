@@ -234,9 +234,10 @@ CV_KR：{cv_kr}"""
                 intro_data = await get_string_character(data, intro_sno)
                 intro_zh_tw = intro_data["zh_tw"]
                 intro_kr = intro_data["kr"]
+                intro_zh_cn = intro_data["zh_cn"]
                 if intro_zh_tw or intro_kr:
                     intro_text = await select_text_by_priority(
-                        intro_zh_tw, intro_kr, review
+                        intro_zh_tw, intro_zh_cn, intro_kr, review
                     )
                     messages.append("【自我介绍】\n" + intro_text)
 

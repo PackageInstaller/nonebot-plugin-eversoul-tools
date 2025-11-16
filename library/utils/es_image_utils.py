@@ -372,7 +372,7 @@ async def get_character_affection_cg(data, hero_id):
             if episode_info["episode_name_sno"]:
                 for string in data["string_talk"]["json"]:
                     if string["no"] == episode_info["episode_name_sno"]:
-                        episode_title = string.get("zh_tw", "")
+                        episode_title = string.get("zh_tw") if string.get("zh_tw") != "" else string.get("zh_cn")
                         break
             images.append((file, f"CG_{no}", episode_info["episode"], episode_title))
             break  # 找到一个匹配的文件就跳出

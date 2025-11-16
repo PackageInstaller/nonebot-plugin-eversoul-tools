@@ -56,7 +56,7 @@ names:
     aliases: []
     hero_id: 220
   - zh_tw_name: 艾麗西雅
-    zh_cn_name: 艾丽西雅
+    zh_cn_name: 艾丽西亚
     kr_name: 알리샤
     en_name: Alisha
     ja_name: アリーシャ
@@ -154,7 +154,7 @@ names:
     aliases: [雪梨, 酒鬼]
     hero_id: 1100
   - zh_tw_name: 朵菈
-    zh_cn_name: 朵拉
+    zh_cn_name: 朵菈
     kr_name: 도라
     en_name: Dora
     ja_name: ドーラ
@@ -190,7 +190,7 @@ names:
       大蘿絲, 紅蘿, 火蘿]
     hero_id: 1150
   - zh_tw_name: 智河（米爾）
-    zh_cn_name: ''
+    zh_cn_name: 智河（米尔）
     kr_name: 지호(미르)
     en_name: Jiho (Mir)
     ja_name: ジホ(ミル)
@@ -547,7 +547,7 @@ names:
     aliases: [薇丝, 白丝]
     hero_id: 4150
   - zh_tw_name: 佩特拉（覺魂）
-    zh_cn_name: 佩特拉（狂喜）
+    zh_cn_name: 佩特拉（觉魂）
     kr_name: 페트라(각혼)
     en_name: Petra (Awakened Soul)
     ja_name: ペトラ(覚魂)
@@ -624,11 +624,11 @@ names:
     aliases: [灵芝, 靈芝]
     hero_id: 6030
   - zh_tw_name: 夏娃
-    zh_cn_name: 太古精灵
+    zh_cn_name: 伊芙
     kr_name: 이브
     en_name: Eve
     ja_name: イブ
-    aliases: [java]
+    aliases: []
     hero_id: 6050
   - zh_tw_name: 妮亞
     zh_cn_name: 妮亚

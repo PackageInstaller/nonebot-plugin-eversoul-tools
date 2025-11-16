@@ -137,12 +137,17 @@ async def generate_aliases() -> None:
 
     live_json_path = Path(plugin_config.eversoul_live_path)
     review_json_path = Path(plugin_config.eversoul_review_path)
+    
+    # 获取国服路径（可选）
+    cn_json_path = None
+    if plugin_config.eversoul_cn_live_path:
+        cn_json_path = Path(plugin_config.eversoul_cn_live_path)
 
     try:
         live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
         live_raid_aliases = CONFIG_DIR / "live_raid_aliases.yaml"
         live_hero_count, live_raid_count = await process_json_files(
-            live_json_path, live_hero_aliases, live_raid_aliases
+            live_json_path, live_hero_aliases, live_raid_aliases, cn_json_path
         )
         if live_hero_count > 0 or live_raid_count > 0:
             logger.info(
@@ -157,7 +162,7 @@ async def generate_aliases() -> None:
         review_hero_aliases = CONFIG_DIR / "review_hero_aliases.yaml"
         review_raid_aliases = CONFIG_DIR / "review_raid_aliases.yaml"
         review_hero_count, review_raid_count = await process_json_files(
-            review_json_path, review_hero_aliases, review_raid_aliases
+            review_json_path, review_hero_aliases, review_raid_aliases, cn_json_path
         )
         if review_hero_count > 0 or review_raid_count > 0:
             logger.info(
@@ -176,7 +181,7 @@ async def generate_aliases() -> None:
 
 
 async def process_json_files(
-    json_path: Path, hero_output_file: Path, raid_output_file: Path
+    json_path: Path, hero_output_file: Path, raid_output_file: Path, cn_json_path: Path = None
 ) -> Tuple[int, int]:
     """处理JSON文件生成别名文件
 
@@ -186,9 +191,10 @@ async def process_json_files(
     - battle_power_type == 2: 已废弃类型，不再处理
 
     Args:
-        json_path: JSON文件目录
+        json_path: JSON文件目录（国际服）
         hero_output_file: 角色别名输出文件
         raid_output_file: 恶灵别名输出文件
+        cn_json_path: 国服JSON文件目录（可选），用于获取zh_cn字段
 
     Returns:
         Tuple[int, int]: 生成的角色数量和讨伐数量
@@ -207,6 +213,23 @@ async def process_json_files(
         logger.error(f"加载JSON文件失败: {e}")
         return 0, 0
 
+    # 加载国服数据（如果提供了国服路径）
+    cn_hero_data = None
+    cn_string_char_data = None
+    if cn_json_path and cn_json_path.exists():
+        try:
+            with open(cn_json_path / "Hero.json", "r", encoding="utf-8") as f:
+                cn_hero_data = json.load(f)
+            
+            with open(cn_json_path / "StringCharacter.json", "r", encoding="utf-8") as f:
+                cn_string_char_data = json.load(f)
+            
+        except Exception as e:
+            logger.warning(f"加载国服数据失败: {e}，将只使用国际服数据")
+            cn_hero_data = None
+            cn_string_char_data = None
+
+    # 构建国际服名称映射
     hero_names = {}
     for string in string_char_data["json"]:
         if "no" in string:
@@ -218,6 +241,29 @@ async def process_json_files(
                     "en": string.get("en", ""),
                     "ja": string.get("ja", ""),
                 }
+    
+    # 构建国服名称映射，并用国服的zh_cn覆盖国际服的
+    cn_hero_names = {}
+    if cn_string_char_data:
+        for string in cn_string_char_data["json"]:
+            if "no" in string:
+                # 如果国际服有这个no，用国服的zh_cn覆盖
+                if string["no"] in hero_names:
+                    if "zh_cn" in string:
+                        hero_names[string["no"]]["zh_cn"] = string["zh_cn"]
+                # 如果国际服没有这个no，创建新条目（国服独有）
+                else:
+                    hero_names[string["no"]] = {
+                        "zh_tw": string.get("zh_tw", ""),
+                        "zh_cn": string.get("zh_cn", ""),
+                        "kr": string.get("kr", ""),
+                        "en": string.get("en", ""),
+                        "ja": string.get("ja", ""),
+                    }
+                
+                # 记录国服的name_sno，用于后续查找国服独有角色
+                if "zh_cn" in string:
+                    cn_hero_names[string["no"]] = string["zh_cn"]
 
     seen_hero_ids = set()
 
@@ -250,45 +296,83 @@ async def process_json_files(
     raid_data = {"names": []}  # 恶灵数据容器
     raid_name_count = {}
 
-    # 建立名称映射并分类处理所有单位
+    # 处理函数：构建角色条目
+    def process_hero(hero, hero_names, existing_aliases, existing_zh_cn_names):
+        """处理单个角色数据，返回角色条目"""
+        hero_id = hero["hero_id"]
+        name_data = hero_names.get(
+            hero["name_sno"],
+            {"zh_tw": "", "zh_cn": "", "kr": "", "en": "", "ja": ""},
+        )
+        zh_cn_name = name_data["zh_cn"]
+        if not zh_cn_name and hero_id in existing_zh_cn_names:
+            zh_cn_name = existing_zh_cn_names[hero_id]
+
+        # 构建单位条目（适用于角色和恶灵）
+        # zh_cn字段已经在前面从国服数据源读取（如果有的话）
+        hero_entry = {
+            "zh_tw_name": name_data["zh_tw"],
+            "zh_cn_name": zh_cn_name,
+            "kr_name": name_data["kr"],
+            "en_name": name_data["en"],
+            "ja_name": name_data["ja"],
+            "aliases": existing_aliases.get(hero_id, []),
+            "hero_id": hero_id,
+        }
+        return hero_entry, hero["battle_power_type"]
+
+    # 建立名称映射并分类处理国际服的所有单位
     for hero in hero_data["json"]:
         if (
             "hero_id" in hero
             and "name_sno" in hero
             and hero["hero_id"] not in seen_hero_ids
         ):
-
-            hero_id = hero["hero_id"]
-            name_data = hero_names.get(
-                hero["name_sno"],
-                {"zh_tw": "", "zh_cn": "", "kr": "", "en": "", "ja": ""},
+            hero_entry, battle_power_type = process_hero(
+                hero, hero_names, existing_aliases, existing_zh_cn_names
             )
-            zh_cn_name = name_data["zh_cn"]
-            if not zh_cn_name and hero_id in existing_zh_cn_names:
-                zh_cn_name = existing_zh_cn_names[hero_id]
-
-            # 构建单位条目（适用于角色和恶灵）
-            hero_entry = {
-                "zh_tw_name": name_data["zh_tw"],
-                "zh_cn_name": zh_cn_name,
-                "kr_name": name_data["kr"],
-                "en_name": name_data["en"],
-                "ja_name": name_data["ja"],
-                "aliases": existing_aliases.get(hero_id, []),
-                "hero_id": hero_id,
-            }
 
             # 根据 battle_power_type 分类存储
-            if hero["battle_power_type"] == 3:
+            if battle_power_type == 3:
                 # 恶灵/讨伐目标 (Raid Bosses)
-                raid_name_count[name_data["zh_tw"]] = 0
+                raid_name_count[hero_entry["zh_tw_name"]] = 0
                 raid_data["names"].append(hero_entry)
-            elif hero["battle_power_type"] == 1:
+            elif battle_power_type == 1:
                 # 可操控角色 (Heroes)
                 new_data["names"].append(hero_entry)
             # battle_power_type == 2 的数据被忽略，不再处理
 
-            seen_hero_ids.add(hero_id)
+            seen_hero_ids.add(hero["hero_id"])
+
+    # 处理国服独有的角色（如果有国服数据）
+    if cn_hero_data:
+        cn_only_count = 0
+        for hero in cn_hero_data["json"]:
+            if (
+                "hero_id" in hero
+                and "name_sno" in hero
+                and hero["hero_id"] not in seen_hero_ids
+            ):
+                hero_entry, battle_power_type = process_hero(
+                    hero, hero_names, existing_aliases, existing_zh_cn_names
+                )
+
+                # 根据 battle_power_type 分类存储
+                if battle_power_type == 3:
+                    # 恶灵/讨伐目标 (Raid Bosses)
+                    raid_name_count[hero_entry["zh_tw_name"]] = 0
+                    raid_data["names"].append(hero_entry)
+                    cn_only_count += 1
+                elif battle_power_type == 1:
+                    # 可操控角色 (Heroes)
+                    new_data["names"].append(hero_entry)
+                    cn_only_count += 1
+                # battle_power_type == 2 的数据被忽略，不再处理
+
+                seen_hero_ids.add(hero["hero_id"])
+        
+        if cn_only_count > 0:
+            logger.info(f"发现 {cn_only_count} 个国服独有的角色/恶灵")
 
     class CustomDumper(yaml.SafeDumper):
         def increase_indent(self, flow=False, indentless=False):
@@ -512,14 +596,19 @@ async def load_data_source_config():
     # 检查配置
     has_live_path = plugin_config.eversoul_live_path is not None
     has_review_path = plugin_config.eversoul_review_path is not None
+    has_cn_live_path = plugin_config.eversoul_cn_live_path is not None
+    
     live_path = plugin_config.eversoul_live_path or ""
     review_path = plugin_config.eversoul_review_path or ""
+    cn_live_path = plugin_config.eversoul_cn_live_path or ""
 
     # 确保路径是字符串形式，方便比较
     if has_live_path and isinstance(live_path, Path):
         live_path = str(live_path)
     if has_review_path and isinstance(review_path, Path):
         review_path = str(review_path)
+    if has_cn_live_path and isinstance(cn_live_path, Path):
+        cn_live_path = str(cn_live_path)
 
     # 检查是否有路径变更
     config_updated = False
@@ -551,37 +640,63 @@ async def load_data_source_config():
                 if "default" not in config:
                     config["default"] = default_config.copy()
                     config_updated = True
-                elif config["default"].get("type") == "live" and has_live_path:
-                    # 检查live路径是否变更
-                    if str(config["default"].get("json_path")) != live_path:
-                        config["default"]["json_path"] = live_path
+                else:
+                    # 确保有server字段
+                    if "server" not in config["default"]:
+                        config["default"]["server"] = "global"
                         config_updated = True
-                        logger.info(f"检测到live路径变更: {live_path}")
-                elif config["default"].get("type") == "review" and has_review_path:
-                    # 检查review路径是否变更
-                    if str(config["default"].get("json_path")) != review_path:
-                        config["default"]["json_path"] = review_path
-                        config_updated = True
-                        logger.info(f"检测到review路径变更: {review_path}")
+                    
+                    # 根据server和type检查路径变更
+                    server = config["default"].get("server", "global")
+                    data_type = config["default"].get("type", "live")
+                    
+                    if server == "cn" and has_cn_live_path:
+                        if str(config["default"].get("json_path")) != cn_live_path:
+                            config["default"]["json_path"] = cn_live_path
+                            config_updated = True
+                            logger.info(f"检测到国服live路径变更: {cn_live_path}")
+                    elif server == "global":
+                        if data_type == "live" and has_live_path:
+                            if str(config["default"].get("json_path")) != live_path:
+                                config["default"]["json_path"] = live_path
+                                config_updated = True
+                                logger.info(f"检测到国际服live路径变更: {live_path}")
+                        elif data_type == "review" and has_review_path:
+                            if str(config["default"].get("json_path")) != review_path:
+                                config["default"]["json_path"] = review_path
+                                config_updated = True
+                                logger.info(f"检测到国际服review路径变更: {review_path}")
 
                 # 明确转换路径字符串为Path对象
                 for group_id, group_config in config.items():
                     # 确保group_id是字符串
                     group_id_str = str(group_id)
+                    
+                    # 确保有server字段
+                    if "server" not in group_config:
+                        group_config["server"] = "global"
+                        config_updated = True
 
-                    # 检查并可能更新路径
-                    if group_config.get("type") == "live" and has_live_path:
-                        if str(group_config.get("json_path", "")) != live_path:
-                            group_config["json_path"] = live_path
+                    # 根据server和type检查并更新路径
+                    server = group_config.get("server", "global")
+                    data_type = group_config.get("type", "live")
+                    
+                    if server == "cn" and has_cn_live_path:
+                        if str(group_config.get("json_path", "")) != cn_live_path:
+                            group_config["json_path"] = cn_live_path
                             config_updated = True
-                            logger.info(f"群组{group_id}的live路径已更新: {live_path}")
-                    elif group_config.get("type") == "review" and has_review_path:
-                        if str(group_config.get("json_path", "")) != review_path:
-                            group_config["json_path"] = review_path
-                            config_updated = True
-                            logger.info(
-                                f"群组{group_id}的review路径已更新: {review_path}"
-                            )
+                            logger.info(f"群组{group_id}的国服live路径已更新: {cn_live_path}")
+                    elif server == "global":
+                        if data_type == "live" and has_live_path:
+                            if str(group_config.get("json_path", "")) != live_path:
+                                group_config["json_path"] = live_path
+                                config_updated = True
+                                logger.info(f"群组{group_id}的国际服live路径已更新: {live_path}")
+                        elif data_type == "review" and has_review_path:
+                            if str(group_config.get("json_path", "")) != review_path:
+                                group_config["json_path"] = review_path
+                                config_updated = True
+                                logger.info(f"群组{group_id}的国际服review路径已更新: {review_path}")
 
                     if "json_path" in group_config:
                         # 确保json_path是Path对象
@@ -636,17 +751,32 @@ async def load_data_source_config():
             if group_id not in CURRENT_DATA_SOURCE:
                 CURRENT_DATA_SOURCE[group_id] = CURRENT_DATA_SOURCE["default"].copy()
 
+            # 处理server配置
+            if "server" in group_settings:
+                CURRENT_DATA_SOURCE[group_id]["server"] = group_settings["server"]
+            
+            # 确保有server字段
+            if "server" not in CURRENT_DATA_SOURCE[group_id]:
+                CURRENT_DATA_SOURCE[group_id]["server"] = "global"
+
             if "type" in group_settings:
                 CURRENT_DATA_SOURCE[group_id]["type"] = group_settings["type"]
 
             # 处理json_path
             json_path = ""
-            if CURRENT_DATA_SOURCE[group_id]["type"] == "live":
-                if has_live_path:
-                    json_path = live_path
-            else:  # review
-                if has_review_path:
-                    json_path = review_path
+            server = CURRENT_DATA_SOURCE[group_id].get("server", "global")
+            data_type = CURRENT_DATA_SOURCE[group_id].get("type", "live")
+            
+            if server == "cn":
+                if has_cn_live_path:
+                    json_path = cn_live_path
+            else:  # global
+                if data_type == "live":
+                    if has_live_path:
+                        json_path = live_path
+                else:  # review
+                    if has_review_path:
+                        json_path = review_path
 
             if "json_path" in group_settings:
                 json_path = group_settings["json_path"]
@@ -754,29 +884,43 @@ async def get_group_data_source(group_id):
     if result_config is None:
         result_config = CURRENT_DATA_SOURCE.get("default", DEFAULT_CONFIG.copy())
 
+    # 确保有server字段
+    if "server" not in result_config:
+        result_config["server"] = "global"
+    
     # 确保json_path有值
     if "json_path" not in result_config or not result_config["json_path"]:
-        # 根据类型选择路径
-        if result_config.get("type") == "live" and plugin_config.eversoul_live_path:
-            result_config["json_path"] = Path(plugin_config.eversoul_live_path)
-        elif (
-            result_config.get("type") == "review" and plugin_config.eversoul_review_path
-        ):
-            result_config["json_path"] = Path(plugin_config.eversoul_review_path)
-        else:
-            # 默认使用live路径
-            if plugin_config.eversoul_live_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_live_path)
+        # 根据server和type选择路径
+        server = result_config.get("server", "global")
+        data_type = result_config.get("type", "live")
+        
+        if server == "cn":
+            # 国服只有live
+            if plugin_config.eversoul_cn_live_path:
+                result_config["json_path"] = Path(plugin_config.eversoul_cn_live_path)
                 result_config["type"] = "live"
-            elif plugin_config.eversoul_review_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_review_path)
-                result_config["type"] = "review"
             else:
-                # 如果都没有配置，使用空字符串
                 result_config["json_path"] = ""
-                logger.error(
-                    "未配置数据源路径，请在env中设置eversoul_live_path或eversoul_review_path"
-                )
+                logger.error("未配置国服数据源路径，请在env中设置eversoul_cn_live_path")
+        else:  # global
+            if data_type == "live" and plugin_config.eversoul_live_path:
+                result_config["json_path"] = Path(plugin_config.eversoul_live_path)
+            elif data_type == "review" and plugin_config.eversoul_review_path:
+                result_config["json_path"] = Path(plugin_config.eversoul_review_path)
+            else:
+                # 默认使用国际服live路径
+                if plugin_config.eversoul_live_path:
+                    result_config["json_path"] = Path(plugin_config.eversoul_live_path)
+                    result_config["type"] = "live"
+                elif plugin_config.eversoul_review_path:
+                    result_config["json_path"] = Path(plugin_config.eversoul_review_path)
+                    result_config["type"] = "review"
+                else:
+                    # 如果都没有配置，使用空字符串
+                    result_config["json_path"] = ""
+                    logger.error(
+                        "未配置国际服数据源路径，请在env中设置eversoul_live_path或eversoul_review_path"
+                    )
 
     # 确保hero_alias_file有值
     if "hero_alias_file" not in result_config or not result_config["hero_alias_file"]:
