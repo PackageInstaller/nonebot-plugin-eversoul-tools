@@ -538,7 +538,8 @@ async def get_string_character(data, hero_no, special=False):
     for char in data["string_character"]["json"]:
         if char["no"] == name_sno:
             return {
-                "zh_tw": char.get("zh_tw", ""),
+                # 这里是为了直接适配国服。。
+                "zh_tw": char.get("zh_tw") if char.get("zh_tw") != "" else char.get("zh_cn"),
                 "zh_cn": char.get("zh_cn", ""),
                 "kr": char.get("kr", ""),
                 "en": char.get("en", ""),
@@ -614,7 +615,8 @@ async def get_string_item(data, item_no):
                 for string in data["string_item"]["json"]:
                     if string.get("no") == name_sno:
                         return {
-                            "zh_tw": string.get("zh_tw", ""),
+                            # 这里是为了直接适配国服。。
+                            "zh_tw": string.get("zh_tw") if string.get("zh_tw") != "" else string.get("zh_cn"),
                             "zh_cn": string.get("zh_cn", ""),
                             "kr": string.get("kr", ""),
                             "en": string.get("en", ""),
@@ -633,14 +635,14 @@ async def get_character_cv(data, hero_desc) -> str:
         dict: 包含韩语和日语配音, 键为 'kr', 'ja'
     """
     cv_kr = (
-        (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw", "")
+        (await get_string_character(data, hero_desc.get("cv_sno", 0))).get(
+            "zh_tw") if (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw") != "" else (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_cn")
         if hero_desc
         else ""
     )
     cv_ja = (
         (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get(
-            "zh_tw", ""
-        )
+            "zh_tw") if (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_tw") != "" else (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_cn")
         if hero_desc
         else ""
     )

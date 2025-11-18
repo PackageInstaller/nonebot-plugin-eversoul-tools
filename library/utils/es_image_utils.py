@@ -148,13 +148,13 @@ async def get_character_illustration(data, hero_id):
                     "zh_tw", ""
                 )
                 condition_cn = (await get_string_by_type(data, "ui", type_sno)).get(
-                    "zh_tw", ""
+                    "zh_cn", ""
                 )
                 condition_kr = (await get_string_by_type(data, "ui", type_sno)).get(
-                    "zh_tw", ""
+                    "kr", ""
                 )
                 condition_en = (await get_string_by_type(data, "ui", type_sno)).get(
-                    "zh_tw", ""
+                    "en", ""
                 )
                 costume_info[portrait_path] = (
                     costume_name_zh_tw,
@@ -401,6 +401,8 @@ async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path
                 if string.get("no") == talk_no:
                     # 提取插图基础名称
                     illust_match = re.search(r"<display:(.+?)>", string.get("kr", ""))
+                    if not illust_match:
+                        illust_match = re.search(r"<display:(.+?)>", string.get("zh_cn", ""))
                     if illust_match:
                         illust_base = illust_match.group(1)
                         illust_path = EVERTALK_DIR / f"{illust_base}.png"
