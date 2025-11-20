@@ -172,8 +172,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 隶属：{
     (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") 
     if hero_desc is not None and hero_desc.get("union_sno") is not None and 
-       await get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
-       (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") != ""
+        await get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
+        (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") != ""
     else ""
 }
 身高：{hero_desc.get("height", "") if hero_desc else ""}cm

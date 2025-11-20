@@ -481,6 +481,7 @@ async def get_string_by_type(data, string_type, no):
         no: 编号
     Returns:
         dict: 包含不同语言的文本, 键为 'zh_tw', 'zh_cn', 'kr', 'en'
+    Note: 切换到国服数据源时也使用 zh_tw 即可
     """
 
     for string in data[f"string_{string_type}"]["json"]:
@@ -507,9 +508,6 @@ async def get_character_birthday(data, birthday: int) -> str:
     """
 
     template = (await get_string_by_type(data, "ui", 10625)).get("zh_tw", "{0}月{1}日")
-    # 0x51EB851F 是 2^37 / 100 的向上取整，用来模拟除 100，加快运算
-    # (0x51EB851F * birthday >> 37) 等价于 birthday / 100
-    # (0x51EB851F * birthday >> 63) 用来提取最高位
     month = ((0x51EB851F * birthday) >> 37) % 32 + (
         (0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF
     ) % 64
