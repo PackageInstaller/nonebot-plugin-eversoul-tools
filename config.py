@@ -8,54 +8,46 @@ from nonebot.log import logger
 
 driver = get_driver()
 
+
 class Config(BaseModel):
     # Eversoul相关配置项，live和review数据源
     eversoul_live_path: str | None = None  # 国际服live数据源
     eversoul_review_path: str | None = None  # 国际服review数据源
     eversoul_cn_live_path: str | None = None  # 国服live数据源
     _warned: ClassVar[bool] = False
-    
-    @model_validator(mode='after')
+
+    @model_validator(mode="after")
     def check_paths(self):
         if not Config._warned:
             if self.eversoul_live_path is None:
                 logger.error("eversoul_live_path 未配置，这会导致功能无法正常使用。")
                 logger.error("请在配置文件中添加 eversoul_live_path 配置项。")
-            
+
             if self.eversoul_review_path is None:
-                logger.warning("eversoul_review_path 未配置，这会导致部分功能无法正常使用。")
+                logger.warning(
+                    "eversoul_review_path 未配置，这会导致部分功能无法正常使用。"
+                )
                 logger.warning("请在配置文件中添加 eversoul_review_path 配置项。")
-            
+
             if self.eversoul_cn_live_path is None:
                 logger.warning("eversoul_cn_live_path 未配置，国服功能将无法使用。")
                 logger.warning("请在配置文件中添加 eversoul_cn_live_path 配置项。")
-            
-            Config._warned = True
-        
-        return self
 
+            Config._warned = True
+
+        return self
 
 
 plugin_config = get_plugin_config(Config)
 
 # 传送门类型
-GATE_TYPE_MAPPING = {
-    "自由": 4,
-    "人类": 5,
-    "野兽": 6,
-    "妖精": 7,
-    "不死": 8
-}
+GATE_TYPE_MAPPING = {"自由": 4, "人类": 5, "野兽": 6, "妖精": 7, "不死": 8}
 
 # 装备的数值整数属性映射
-TIER_INTEGER_STAT_MAPPING = {
-    "max_hp", "attack", "defence", "hit", "dodge"
-}
+TIER_INTEGER_STAT_MAPPING = {"max_hp", "attack", "defence", "hit", "dodge"}
 
 # 灵魂链接的数值整数属性映射
-SOULLINK_INTEGER_STAT_MAPPING = {
-    "attack", "defence", "hp", "hit", "dodge"
-}
+SOULLINK_INTEGER_STAT_MAPPING = {"attack", "defence", "hp", "hit", "dodge"}
 
 # 属性限制映射，rate代表这是百分比数值的意思，但是字段是一样的
 STAT_NAME_MAPPING = {
@@ -74,16 +66,11 @@ STAT_NAME_MAPPING = {
     "physical_resist": "物理抵抗",
     "magic_resist": "魔法抵抗",
     "life_leech": "噬血",
-    "attack_speed": "攻击速度"
+    "attack_speed": "攻击速度",
 }
 
 # 属性限制映射
-STAT_TYPE_MAPPING = {
-    "智力": 110044,
-    "敏捷": 110043,
-    "力量": 110042,
-    "共用": 110041
-}
+STAT_TYPE_MAPPING = {"智力": 110044, "敏捷": 110043, "力量": 110042, "共用": 110041}
 
 # 组合效果映射
 EFFECT_TYPE_MAPPING = {
@@ -93,7 +80,7 @@ EFFECT_TYPE_MAPPING = {
     "暴击率": 14104,
     "暴击威力": 14105,
     "回避": 14107,
-    "加速": 14111
+    "加速": 14111,
 }
 
 # 打工属性名称映射
@@ -103,16 +90,11 @@ TRAIT_NAME_MAPPING = {
     "courage": "胆量",
     "knowledge": "知识",
     "guts": "毅力",
-    "handicraft": "才艺"
+    "handicraft": "才艺",
 }
 
 # 阵型类型映射
-FORMATION_TYPE_MAPPING = {
-    1: "基本阵型",
-    2: "狙击型",
-    3: "防守阵型",
-    4: "突击型"
-}
+FORMATION_TYPE_MAPPING = {1: "基本阵型", 2: "狙击型", 3: "防守阵型", 4: "突击型"}
 
 # 角色名称映射
 HERO_NAME_MAPPING = {
@@ -127,7 +109,8 @@ HERO_NAME_MAPPING = {
     "Renee": "Leah",
     "Violette": "Amelia",
     "Bryce": "Blyce",
-    "Mephistopheles (Dawn)": "MephistoDawn"
+    "Mephistopheles (Dawn)": "MephistoDawn",
+    "CherrieRomanRaid": "CherrieRoman",
 }
 
 # 潜能buff类型
@@ -160,7 +143,7 @@ HERO_OPTION_BUFF_MAPPING = {
     "elf_type_damage": 1805,
     "angel_type_damage": 1806,
     "demon_type_damage": 1807,
-    "chaos_type_damage": 1808
+    "chaos_type_damage": 1808,
 }
 
 # 潜能buff类型的反向映射
@@ -168,17 +151,17 @@ HERO_OPTION_BUFF_REVERSE_MAPPING = {v: k for k, v in HERO_OPTION_BUFF_MAPPING.it
 
 # 礼包类型映射
 PACKAGE_TYPE_MAPPING = {
-    'barrier': '通关礼包',
-    'stage': '主线礼包',
-    'tower': '起源之塔礼包',
-    'grade_eternal': '角色升阶礼包'
+    "barrier": "通关礼包",
+    "stage": "主线礼包",
+    "tower": "起源之塔礼包",
+    "grade_eternal": "角色升阶礼包",
 }
 
 SERVER_APP_ID_MAPPING = {
     "asia": 743491,  # 亚服
-    "kr": 743487,    # 韩服
-    "en": 750066,    # 欧美服
-    "cn": 743493,    # 国服
+    "kr": 743487,  # 韩服
+    "en": 750066,  # 欧美服
+    "cn": 743493,  # 国服
 }
 
 SERVER_NAME_MAPPING = {
@@ -195,7 +178,7 @@ SINGLE_RAID_GROGGY_TYPE_MAPPING = {
     206: "沉默",
     207: "魅惑",
     # 212: "無力",
-    215: "束縛"
+    215: "束縛",
 }
 
 # app_id到服务器名称的反向映射
@@ -214,17 +197,25 @@ DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"
 # 默认配置
 DEFAULT_CONFIG = {
     "server": "global",  # 服务器: global(国际服) 或 cn(国服)
-    "type": "live",      # 数据类型: live 或 review
-    "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
-    "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml"
+    "type": "live",  # 数据类型: live 或 review
+    "json_path": (
+        str(Path(plugin_config.eversoul_live_path))
+        if plugin_config.eversoul_live_path
+        else ""
+    ),
+    "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
 }
 
 CURRENT_DATA_SOURCE = {
     "default": {
         "server": "global",
-        "type": "live", 
-        "json_path": str(Path(plugin_config.eversoul_live_path)) if plugin_config.eversoul_live_path else "",
-        "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml"
+        "type": "live",
+        "json_path": (
+            str(Path(plugin_config.eversoul_live_path))
+            if plugin_config.eversoul_live_path
+            else ""
+        ),
+        "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
     }
 }
 

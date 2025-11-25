@@ -7,17 +7,19 @@ import os
 from .config import *
 from .command import *
 from .library.utils import *
+
 __plugin_meta__ = PluginMetadata(
-    name='永恒灵魂工具合集',
-    description='基于 nonebot2 的 Eversoul 工具合集',
-    usage='请使用 es命令列表 指令查看使用方法',
-    type='application',
+    name="永恒灵魂工具合集",
+    description="基于 nonebot2 的 Eversoul 工具合集",
+    usage="请使用 es命令列表 指令查看使用方法",
+    type="application",
     config=Config,
-    homepage='https:#github.com/PackageInstaller/nonebot-plugin-eversoul-tools',
-    supported_adapters={'~onebot.v11'}
+    homepage="https:#github.com/PackageInstaller/nonebot-plugin-eversoul-tools",
+    supported_adapters={"~onebot.v11"},
 )
 
 driver = get_driver()
+
 
 @driver.on_startup
 async def init_database():
@@ -31,6 +33,7 @@ async def init_database():
     except Exception as e:
         logger.error(f"初始化 Eversoul 用户数据库时发生错误: {e}")
 
+
 sub_plugins = nonebot.load_plugins(
-    str(Path(__file__).parent.joinpath('plugins').resolve())
+    str(Path(__file__).parent.joinpath("plugins").resolve())
 )

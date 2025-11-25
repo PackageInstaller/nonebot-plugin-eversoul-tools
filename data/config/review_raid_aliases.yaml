@@ -160,6 +160,13 @@ names:
     ja_name: ''
     aliases: []
     hero_id: 8620
+  - zh_tw_name: 雪莉（浪漫）
+    zh_cn_name: ''
+    kr_name: 셰리(낭만)
+    en_name: Cherrie (Romantic)
+    ja_name: ''
+    aliases: []
+    hero_id: 8700
   - zh_tw_name: 艾拉
     zh_cn_name: 艾拉
     kr_name: 아이라
@@ -202,6 +209,13 @@ names:
     ja_name: アヤメ
     aliases: []
     hero_id: 9670
+  - zh_tw_name: 潔克琳
+    zh_cn_name: 洁克琳
+    kr_name: 재클린
+    en_name: Jacqueline
+    ja_name: ジャクリーン
+    aliases: []
+    hero_id: 9680
   - zh_tw_name: 魯德拉
     zh_cn_name: 鲁德拉
     kr_name: 루드라

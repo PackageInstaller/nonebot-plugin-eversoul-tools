@@ -157,7 +157,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         )
         if portrait_paths:
             for portrait_path in portrait_paths:
-                basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
+                if os.path.exists(portrait_path):
+                    basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
 
         # 获取CV信息
         cv_info = await get_character_cv(data, hero_desc)

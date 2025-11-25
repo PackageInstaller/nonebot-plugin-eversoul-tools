@@ -14,7 +14,9 @@ from ...config import (
 )
 
 
-async def select_text_by_priority(zh_tw: str, zh_cn: str, kr: str, review: bool = False) -> str:
+async def select_text_by_priority(
+    zh_tw: str, zh_cn: str, kr: str, review: bool = False
+) -> str:
     """
     根据优先级选择文本
     优先级：review ? kr : zh_tw
@@ -488,7 +490,11 @@ async def get_string_by_type(data, string_type, no):
         if string["no"] == no:
             return {
                 # 这里是为了直接适配国服。。
-                "zh_tw": string.get("zh_tw") if string.get("zh_tw") != "" else string.get("zh_cn"),
+                "zh_tw": (
+                    string.get("zh_tw")
+                    if string.get("zh_tw") != ""
+                    else string.get("zh_cn")
+                ),
                 "zh_cn": string.get("zh_cn", ""),
                 "kr": string.get("kr", ""),
                 "en": string.get("en", ""),
@@ -537,7 +543,9 @@ async def get_string_character(data, hero_no, special=False):
         if char["no"] == name_sno:
             return {
                 # 这里是为了直接适配国服。。
-                "zh_tw": char.get("zh_tw") if char.get("zh_tw") != "" else char.get("zh_cn"),
+                "zh_tw": (
+                    char.get("zh_tw") if char.get("zh_tw") != "" else char.get("zh_cn")
+                ),
                 "zh_cn": char.get("zh_cn", ""),
                 "kr": char.get("kr", ""),
                 "en": char.get("en", ""),
@@ -614,7 +622,11 @@ async def get_string_item(data, item_no):
                     if string.get("no") == name_sno:
                         return {
                             # 这里是为了直接适配国服。。
-                            "zh_tw": string.get("zh_tw") if string.get("zh_tw") != "" else string.get("zh_cn"),
+                            "zh_tw": (
+                                string.get("zh_tw")
+                                if string.get("zh_tw") != ""
+                                else string.get("zh_cn")
+                            ),
                             "zh_cn": string.get("zh_cn", ""),
                             "kr": string.get("kr", ""),
                             "en": string.get("en", ""),
@@ -633,14 +645,12 @@ async def get_character_cv(data, hero_desc) -> str:
         dict: 包含韩语和日语配音, 键为 'kr', 'ja'
     """
     cv_kr = (
-        (await get_string_character(data, hero_desc.get("cv_sno", 0))).get(
-            "zh_tw") if (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw") != "" else (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_cn")
+        (await get_string_character(data, hero_desc.get("cv_sno", 0))).get("zh_tw")
         if hero_desc
         else ""
     )
     cv_ja = (
-        (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get(
-            "zh_tw") if (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_tw") != "" else (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_cn")
+        (await get_string_character(data, hero_desc.get("cv_jp_sno", 0))).get("zh_tw")
         if hero_desc
         else ""
     )
@@ -971,7 +981,10 @@ async def get_story_chapter_name(data: dict, story: dict, review: bool = False) 
     if chapter:
         chapter_format_data = await get_string_by_type(data, "ui", 652001)
         chapter_format = await select_text_by_priority(
-            chapter_format_data["zh_tw"], chapter_format_data["zh_cn"], chapter_format_data["kr"], review
+            chapter_format_data["zh_tw"],
+            chapter_format_data["zh_cn"],
+            chapter_format_data["kr"],
+            review,
         )
         return chapter_format.format(chapter)
     else:
@@ -1006,7 +1019,10 @@ async def get_character_keyword_source(
         if story:
             desc_data = await get_string_by_type(data, "ui", source_sno)
             desc = await select_text_by_priority(
-                desc_data.get("zh_tw", ""), desc_data.get("zh_cn", ""), desc_data.get("kr", ""), review
+                desc_data.get("zh_tw", ""),
+                desc_data.get("zh_cn", ""),
+                desc_data.get("kr", ""),
+                review,
             )
             if desc:
                 source = desc.format(
@@ -1023,11 +1039,17 @@ async def get_character_keyword_source(
                 data, "town", town_location.get("location_name_sno")
             )
             location = await select_text_by_priority(
-                location_data.get("zh_tw", ""), location_data.get("zh_cn", ""), location_data.get("kr", ""), review
+                location_data.get("zh_tw", ""),
+                location_data.get("zh_cn", ""),
+                location_data.get("kr", ""),
+                review,
             )
             desc_data = await get_string_by_type(data, "ui", source_sno)
             desc = await select_text_by_priority(
-                desc_data.get("zh_tw", ""), desc_data.get("zh_cn", ""), desc_data.get("kr", ""), review
+                desc_data.get("zh_tw", ""),
+                desc_data.get("zh_cn", ""),
+                desc_data.get("kr", ""),
+                review,
             )
             if desc:
                 source = desc.format(location)
@@ -1035,7 +1057,10 @@ async def get_character_keyword_source(
     elif ((1 << keyword_type) & 0xFFFFFFFF) & 0x370 != 0:
         desc_data = await get_string_by_type(data, "ui", source_sno)
         desc = await select_text_by_priority(
-            desc_data.get("zh_tw", ""), desc_data.get("zh_cn", ""), desc_data.get("kr", ""), review
+            desc_data.get("zh_tw", ""),
+            desc_data.get("zh_cn", ""),
+            desc_data.get("kr", ""),
+            review,
         )
         if desc:
             source = desc.format(details)
@@ -1043,7 +1068,10 @@ async def get_character_keyword_source(
     elif keyword_type in {101, 102, 103}:
         string_data = await get_string_by_type(data, "ui", 619000 + keyword_type)
         source = await select_text_by_priority(
-            string_data.get("zh_tw", ""), string_data.get("zh_cn", ""), string_data.get("kr", ""), review
+            string_data.get("zh_tw", ""),
+            string_data.get("zh_cn", ""),
+            string_data.get("kr", ""),
+            review,
         )
     # 获取地点信息
     location = "通用"
@@ -1055,7 +1083,10 @@ async def get_character_keyword_source(
             data, "town", town_location.get("location_name_sno")
         )
         location = await select_text_by_priority(
-            location_data.get("zh_tw", ""), location_data.get("zh_cn", ""), location_data.get("kr", ""), review
+            location_data.get("zh_tw", ""),
+            location_data.get("zh_cn", ""),
+            location_data.get("kr", ""),
+            review,
         )
     return source, location
 
@@ -1092,7 +1123,9 @@ async def get_character_keyword_info(
 
     # 关键字名称
     name_data = await get_string_by_type(data, "ui", keyword_info.get("keyword_string"))
-    name = name_data.get(await select_text_by_priority("zh_tw", "zh_cn", "kr", review), "")
+    name = name_data.get(
+        await select_text_by_priority("zh_tw", "zh_cn", "kr", review), ""
+    )
 
     # 关键字等级
     grade_data = await get_string_by_type(data, "system", grade_sno)
@@ -1544,10 +1577,14 @@ async def get_character_soullink(
 
         # 获取灵魂链接标题和故事
         title = await get_string_by_type(data, "character", link.get("Group_Title"))
-        title = await select_text_by_priority(title["zh_tw"], title["zh_cn"], title["kr"], review)
+        title = await select_text_by_priority(
+            title["zh_tw"], title["zh_cn"], title["kr"], review
+        )
 
         story = await get_string_by_type(data, "character", link.get("Group_Story"))
-        story = await select_text_by_priority(story["zh_tw"], story["zh_cn"], story["kr"], review)
+        story = await select_text_by_priority(
+            story["zh_tw"], story["zh_cn"], story["kr"], review
+        )
 
         # 获取所有角色名称
         hero_names = []
@@ -1556,7 +1593,9 @@ async def get_character_soullink(
             name_zh_tw = name_data["zh_tw"]
             name_zh_cn = name_data["zh_cn"]
             name_kr = name_data["kr"]
-            name = await select_text_by_priority(name_zh_tw, name_zh_cn, name_kr, review)
+            name = await select_text_by_priority(
+                name_zh_tw, name_zh_cn, name_kr, review
+            )
             if name:
                 hero_names.append(name)
 
@@ -1581,7 +1620,10 @@ async def get_character_soullink(
                     data, "ui", condition_string_no
                 )
                 condition_text = await select_text_by_priority(
-                    condition_data["zh_tw"], condition_data["zh_cn"], condition_data["kr"], review
+                    condition_data["zh_tw"],
+                    condition_data["zh_cn"],
+                    condition_data["kr"],
+                    review,
                 )
                 # 格式化条件文本
                 condition_text = condition_text.format(
@@ -2061,7 +2103,9 @@ async def process_episode_choices(ep, review=False):
             choice_info["episode"] = ep["episode"]
             all_choices.append(choice_info)
 
-    title = await select_text_by_priority(ep["zh_tw_title"], ep["zh_cn_title"], ep["kr_title"], review)
+    title = await select_text_by_priority(
+        ep["zh_tw_title"], ep["zh_cn_title"], ep["kr_title"], review
+    )
     return all_choices, title
 
 

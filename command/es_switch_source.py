@@ -40,7 +40,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         # 国服只支持live
         CURRENT_DATA_SOURCE[group_id]["server"] = "cn"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
-        
+
         if plugin_config.eversoul_cn_live_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
                 plugin_config.eversoul_cn_live_path
@@ -53,7 +53,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         # 国际服live
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
-        
+
         if plugin_config.eversoul_live_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
                 plugin_config.eversoul_live_path
@@ -66,7 +66,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         # 国际服review
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "review"
-        
+
         if plugin_config.eversoul_review_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
                 plugin_config.eversoul_review_path
@@ -99,8 +99,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
             )
 
     server_name = {"global": "国际服", "cn": "国服"}.get(
-        CURRENT_DATA_SOURCE[group_id]["server"], 
-        CURRENT_DATA_SOURCE[group_id]["server"]
+        CURRENT_DATA_SOURCE[group_id]["server"], CURRENT_DATA_SOURCE[group_id]["server"]
     )
     await es_switch_source.finish(
         f"已为当前群组切换到 {server_name} - {CURRENT_DATA_SOURCE[group_id]['type']} 数据源"

@@ -196,6 +196,13 @@ names:
     ja_name: ジホ(ミル)
     aliases: [大智河, 米河, 米智河, 大纸盒, 米盒, 米纸盒, 界智河, 界纸盒]
     hero_id: 1160
+  - zh_tw_name: 雪莉（浪漫）
+    zh_cn_name: ''
+    kr_name: 셰리(낭만)
+    en_name: Cherrie (Romantic)
+    ja_name: ''
+    aliases: [大雪梨]
+    hero_id: 1170
   - zh_tw_name: 紅蘭
     zh_cn_name: 红兰
     kr_name: 홍란
