@@ -15,11 +15,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 "格式错误！请使用如：es礼品信息粉1智力加速\n具体格式参考:\n(粉|红+数字)(智力|敏捷|力量|共用)(加速|暴击率|防御力|体力|攻击力|回避|暴击威力)"
             )
 
-        # 获取参数
         grade, level, stat_type, set_type = match.groups()
-
-        # 加载数据
-        # 获取群组ID
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
@@ -61,6 +57,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         items = []
         for item in data["item"]["json"]:
             if (
+                # 礼品，活动礼品
                 (item.get("category_sno") in [110002, 110078])
                 and item.get("grade_sno") == grade_sno
                 and item.get("stat_limit_sno") == stat_sno
@@ -138,7 +135,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     f"\n【最大属性】(等级{max_stat.get('level')})",
                     f"・ 满级所需经验：{max_stat.get('sum_exp', 0)}",
                     f"・ 满级战斗力：{max_stat.get('battle_power', 0)}",
-                    f"・ 百分比战斗力：{max_stat.get('battle_power_per', 0)}",
+                    f"・ 战斗力百分比：{max_stat.get('battle_power_per', 0)}",
                 ]
 
                 # 添加基础属性和额外属性

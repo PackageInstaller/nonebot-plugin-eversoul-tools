@@ -211,7 +211,7 @@ async def get_code_value_text(
         "code",
         (
             function_key <= 0x1B
-            and (((1 << function_key) % 32) & 0xC000010) != 0
+            and ((1 << function_key) & 0xC000010) != 0
             or ((function_key - 1026) & 0xFFFFFFFF) < 2
         ),
         use_color_text,
@@ -2450,23 +2450,46 @@ async def calculate_battle_power(
     contents_buff_power_per: float = 0.0,
 ) -> int:
     """
-    计算总战力
-    HeroStatus::CalculatePower
+    计算总战力（完整公式）
+    
+    对应游戏函数: HeroStatus::CalculatePower
+    
+    战力公式:
+        总战力 = 基础战力
+               + (等级加成率 - 1) × 基础战力
+               + (阶级系数 - 1) × 基础战力
+               + 装备固定战力
+               + 装备战力百分比 × 基础战力
+               + 遗物战力百分比 × 基础战力
+               + 内容增益固定战力
+               + 内容增益战力百分比 × 基础战力
+    
     Args:
         data: JSON 数据字典
         entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
         level: 等级
         grade: 阶级品质
-        level_grade: 等级品质, 默认1.0
-        equipment_power: 装备战力, 默认0（有几件乘几件）
-        equipment_power_per: 装备战力百分比, 默认0.0（触发2/4件套，直接与基础战力相乘）
-        signature_power_per: 遗物战力百分比, 默认0.0（最高级直接与基础战力相乘）
+        
+        equipment_power: 装备固定战力, 默认0
+            计算方式: Σ(每件装备的battle_power)
+            例如: 6件装备每件11948, 则 equipment_power = 11948 × 6 = 71688
+        
+        equipment_power_per: 装备战力百分比, 默认0.0
+            计算方式: Σ(每件装备的battle_power_per)
+            例如: 6件装备每件0.1, 则 equipment_power_per = 0.1 × 6 = 0.6
+            战力贡献: 0.6 × 基础战力（注意是乘以基础战力，不是装备战力！）
+            
+        signature_power_per: 遗物战力百分比, 默认0.0
+            计算方式: 遗物的battle_power（最高级生效）
+            战力贡献: signature_power_per × 基础战力
 
-        contents_buff_power: 内容增益战力, 默认0.0
-        方舟强化（1级时不应用战力加成，主方舟为战力，其他为战力百分比，同类型最高），灵魂链接（部分为战力，同类型最高）
-
+        contents_buff_power: 内容增益固定战力, 默认0.0
+            包含: 方舟强化战力、灵魂链接战力等
+            计算方式: 直接累加到总战力
+            
         contents_buff_power_per: 内容增益战力百分比, 默认0.0
-        星座（战力百分比），建筑（战力百分比），潜能（战力百分比），好感等级（buff1_type为2时计算战力，战力百分比）
+            包含: 星座、建筑、潜能、好感等级等
+            战力贡献: contents_buff_power_per × 基础战力
 
     Returns:
         int: 计算后的总战力(向下取整)
@@ -2474,16 +2497,16 @@ async def calculate_battle_power(
     base_power = await get_base_battle_power(data, entity_type, level)
     grade_value = await get_hero_grade_value(data, grade)
     level_grade_value = await get_hero_level_grade_value(data, level)
-    print(level, grade, base_power, grade_value, level_grade_value)
+    
     total_power = (
-        base_power
-        + (level_grade_value - 1.0) * base_power
-        + (grade_value - 1.0) * base_power
-        + equipment_power
-        + equipment_power_per * base_power
-        + signature_power_per * base_power
-        + contents_buff_power
-        + contents_buff_power_per * base_power
+        base_power                                  # 基础战力
+        + (level_grade_value - 1.0) * base_power    # 等级加成战力
+        + (grade_value - 1.0) * base_power          # 阶级加成战力
+        + equipment_power                           # 装备固定战力（直接累加）
+        + equipment_power_per * base_power          # 装备百分比战力（乘以基础战力）
+        + signature_power_per * base_power          # 遗物百分比战力（乘以基础战力）
+        + contents_buff_power                       # 内容增益固定战力
+        + contents_buff_power_per * base_power      # 内容增益百分比战力
     )
 
     return int(total_power)
