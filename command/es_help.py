@@ -302,6 +302,13 @@ async def handle(bot: Bot, event: Event):
                             <td>手动检查服务器更新状态</td>
                             <td>es检查更新</td>
                         </tr>
+                        <tr>
+                            <td>
+                                es检查数据源
+                            </td>
+                            <td>手动检查数据源文件变化并重新生成别名（仅超级用户）</td>
+                            <td>es检查数据源</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

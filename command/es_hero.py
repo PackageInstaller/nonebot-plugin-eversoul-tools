@@ -266,8 +266,8 @@ CV_KR：{cv_kr}"""
                         else:
                             link_msg.append("  未知效果")
 
-                # if link['open_date']:
-                #     link_msg.append(f"\n开启时间：{link['open_date']}")
+                if link['open_date']:
+                    link_msg.append(f"\n开启时间：{link['open_date']}")
 
                 messages.append("\n".join(link_msg))
 
@@ -312,10 +312,10 @@ CV_KR：{cv_kr}"""
                     MessageSegment.image(f"file:///{town_objects["img_path"]}")
                 )
             objects_msg.append(f"{town_objects["name"]}")
-            # if town_objects["grade"]:
-            #     objects_msg.append(f"品质：{town_objects["grade"]}")
-            # if town_objects["slot_type"]:
-            #     objects_msg.append(f"类型：{town_objects["slot_type"]}")
+            if town_objects["grade"]:
+                objects_msg.append(f"品质：{town_objects["grade"]}")
+            if town_objects["slot_type"]:
+                objects_msg.append(f"类型：{town_objects["slot_type"]}")
             if town_objects["desc"]:
                 objects_msg.append(f"{town_objects["desc"]}")
             if town_objects["battle_power_per"]:
@@ -345,10 +345,8 @@ CV_KR：{cv_kr}"""
                 objects_msg.append("")
             messages.append("\n".join(str(x) for x in objects_msg))
 
-        # 构建转发消息
         forward_msgs = []
         for msg in messages:
-            # 如果消息是字符串，直接添加
             if isinstance(msg, str):
                 forward_msgs.append(
                     {
@@ -361,7 +359,6 @@ CV_KR：{cv_kr}"""
                     }
                 )
 
-            # 如果消息是列表（包含图片），将其合并
             elif isinstance(msg, list):
                 forward_msgs.append(
                     {
@@ -374,7 +371,6 @@ CV_KR：{cv_kr}"""
                     }
                 )
 
-        # 发送合并转发消息
         if isinstance(event, GroupMessageEvent):
             await bot.call_api(
                 "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs

@@ -14,6 +14,7 @@ class Config(BaseModel):
     eversoul_live_path: str | None = None  # 国际服live数据源
     eversoul_review_path: str | None = None  # 国际服review数据源
     eversoul_cn_live_path: str | None = None  # 国服live数据源
+    eversoul_file_check_interval: int = 5  # 文件监视检查间隔（秒）
     _warned: ClassVar[bool] = False
 
     @model_validator(mode="after")
