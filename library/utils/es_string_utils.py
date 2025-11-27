@@ -1677,7 +1677,7 @@ async def get_character_soullink(
                 "heroes": hero_names,
                 "story": story,
                 "effects": collection_effects,
-                # "open_date": link.get("Open_date", ""),
+                "open_date": link.get("Open_date", ""),
             }
         )
 

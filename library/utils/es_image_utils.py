@@ -74,6 +74,7 @@ async def get_character_portrait(data, prefab_path):
         return []
 
     portraits = []
+    added_portraits = set()  # 用于去重
 
     base_name = ""
     controller_path = ""
@@ -86,7 +87,9 @@ async def get_character_portrait(data, prefab_path):
             break
 
     if base_name and (SOUL_DIR / f"{base_name}_512.png").exists():
-        portraits.append(str(SOUL_DIR / f"{base_name}_512.png"))
+        base_portrait_path = str(SOUL_DIR / f"{base_name}_512.png")
+        portraits.append(base_portrait_path)
+        added_portraits.add(base_name)
     else:
         return None
 
@@ -99,12 +102,13 @@ async def get_character_portrait(data, prefab_path):
                 and costume.get("icon_path") != ""
             ):  # 排除基础时装本身
                 portrait_path = costume.get("portrait_path", "")
-                if portrait_path:
+                if portrait_path and portrait_path not in added_portraits:  # 去重
                     costume_portraits.add(portrait_path)
 
         for portrait_name in sorted(costume_portraits):
-            if (SOUL_DIR / f"{base_name}_512.png").exists():
+            if (SOUL_DIR / f"{portrait_name}_512.png").exists():
                 portraits.append(str(SOUL_DIR / f"{portrait_name}_512.png"))
+                added_portraits.add(portrait_name)
             else:
                 return None
 
