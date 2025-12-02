@@ -2,20 +2,32 @@ from ..library.utils import *
 
 
 @es_month.handle()
-async def handle_es_month(bot: Bot, event: Event):
+async def handle_es_month(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
-        # 获取月份
-        raw_message = event.get_plaintext()  # 获取纯文本消息
-        month_match = re.match(r"^es(\d{1,2})月事件$", raw_message)
-        if month_match:
-            target_month = int(month_match.group(1))
+        # 获取参数
+        arg_text = args.extract_plain_text().strip()
+        
+        # 如果没有参数，使用当前年月
+        if not arg_text:
+            target_year = datetime.now().year
+            target_month = datetime.now().month
+        else:
+            # 解析年份-月份格式 (例如: 2023-01)
+            date_match = re.match(r"^(\d{4})-(\d{1,2})$", arg_text)
+            if not date_match:
+                await es_month.finish("请输入正确的日期格式，例如：es日程信息 2023-01")
+            
+            target_year = int(date_match.group(1))
+            target_month = int(date_match.group(2))
+            
+            # 验证月份范围
             if not 1 <= target_month <= 12:
                 await es_month.finish("请输入正确的月份(1-12)")
-        else:
-            # 如果是其他别名触发，使用当前月份
-            target_month = datetime.now().month
-
-        current_year = datetime.now().year
+            
+            # 验证年份范围（可选：限制在合理范围内）
+            if not 2023 <= target_year <= 2099:
+                await es_month.finish("请输入合理的年份(2023-2099)")
+        
         # 加载数据
         # 获取群组ID
         group_id = 0
@@ -33,23 +45,23 @@ async def handle_es_month(bot: Bot, event: Event):
                 prefix = schedule_key
                 main_events.extend(
                     await get_schedule_event(
-                        data, target_month, current_year, prefix, "主要活动"
+                        data, target_month, target_year, prefix, "主要活动"
                     )
                 )
         month_events.extend(main_events)
 
         month_events.extend(
             await get_schedule_event(
-                data, target_month, current_year, "Calender_PickUp_", "Pickup"
+                data, target_month, target_year, "Calender_PickUp_", "Pickup"
             )
         )
 
         # 获取一般活动事件
-        calendar_events = await get_calendar_event(data, target_month, current_year)
+        calendar_events = await get_calendar_event(data, target_month, target_year)
         month_events.extend(calendar_events)
 
         # 获取邮箱事件
-        mail_events = await get_mail_event(data, target_month, current_year)
+        mail_events = await get_mail_event(data, target_month, target_year)
         month_events.extend(mail_events)
 
         if month_events:
@@ -69,7 +81,7 @@ async def handle_es_month(bot: Bot, event: Event):
                     message=Message(MessageSegment.image(png_pic)),
                 )
         else:
-            await es_month.finish(f"{target_month}月份没有事件哦~")
+            await es_month.finish(f"{target_year}年{target_month}月份没有事件哦~")
 
     except Exception as e:
         if not isinstance(e, FinishedException):

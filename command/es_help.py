@@ -150,10 +150,10 @@ async def handle(bot: Bot, event: Event):
                         </tr>
                         <tr>
                             <td>
-                                esx月事件
+                                es日程信息
                             </td>
-                            <td>查询x月的所有事件</td>
-                            <td>es1月事件</td>
+                            <td>查询当月的所有事件</td>
+                            <td>es日程信息</td>
                         </tr>
                         <tr>
                             <td>

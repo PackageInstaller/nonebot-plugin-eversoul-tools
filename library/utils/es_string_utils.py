@@ -514,9 +514,7 @@ async def get_character_birthday(data, birthday: int) -> str:
     """
 
     template = (await get_string_by_type(data, "ui", 10625)).get("zh_tw", "{0}月{1}日")
-    month = ((0x51EB851F * birthday) >> 37) % 32 + (
-        (0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF
-    ) % 64
+    month = ((0x51EB851F * birthday) >> 37) % 32 + ((0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF) % 64
     day = birthday % 0x64
     return template.format(str(month), str(day))
 

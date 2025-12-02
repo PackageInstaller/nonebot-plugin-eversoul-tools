@@ -423,14 +423,14 @@ async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path
 
 
 async def get_schedule_event(
-    data, target_month, current_year, schedule_prefix, event_type
+    data, target_month, target_year, schedule_prefix, event_type
 ):
     """获取活动日程事件信息
 
     Args:
         data: JSON数据字典
         target_month: 目标月份
-        current_year: 当前年份
+        target_year: 目标年份
         schedule_prefix: 日程key前缀(如"Calender_PickUp_")
         event_type: 事件类型显示名称(如"Pickup")
 
@@ -471,8 +471,8 @@ async def get_schedule_event(
         end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
 
         is_in_month = (
-            (start_date.year == current_year and start_date.month == target_month)
-            or (end_date.year == current_year and end_date.month == target_month)
+            (start_date.year == target_year and start_date.month == target_month)
+            or (end_date.year == target_year and end_date.month == target_month)
         ) and end_date >= now
 
         if not is_in_month:
@@ -534,7 +534,7 @@ async def get_schedule_event(
     return events
 
 
-async def get_mail_event(data, target_month, current_year):
+async def get_mail_event(data, target_month, target_year):
     """获取邮箱事件信息"""
     mail_events = []
     now = datetime.now()
@@ -552,8 +552,8 @@ async def get_mail_event(data, target_month, current_year):
 
         # 检查事件是否在目标月份内
         is_in_month = (
-            (start_date.year == current_year and start_date.month == target_month)
-            or (end_date.year == current_year and end_date.month == target_month)
+            (start_date.year == target_year and start_date.month == target_month)
+            or (end_date.year == target_year and end_date.month == target_month)
         ) and end_date >= now
 
         if not is_in_month:
@@ -617,7 +617,7 @@ async def get_mail_event(data, target_month, current_year):
     return mail_events
 
 
-async def get_calendar_event(data, target_month, current_year):
+async def get_calendar_event(data, target_month, target_year):
     """获取一般活动信息"""
     calendar_events_with_date = []
     now = datetime.now()
@@ -655,8 +655,8 @@ async def get_calendar_event(data, target_month, current_year):
         end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
 
         is_in_month = (
-            (start_date.year == current_year and start_date.month == target_month)
-            or (end_date.year == current_year and end_date.month == target_month)
+            (start_date.year == target_year and start_date.month == target_month)
+            or (end_date.year == target_year and end_date.month == target_month)
         ) and end_date >= now
 
         if not is_in_month:

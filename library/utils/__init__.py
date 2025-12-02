@@ -62,7 +62,7 @@ es_hero = on_command("es角色信息", aliases={"es基础信息"}, priority=5, b
 es_hero_skill = on_command("es技能信息", priority=5, block=True)
 es_hero_list = on_command("es角色列表", priority=5, block=True)
 es_level_cost = on_command("es升级消耗", priority=5, block=True)
-es_month = on_regex(r"^es(\d{1,2})月事件$", priority=5, block=True)
+es_month = on_command("es日程信息", priority=5, block=True)
 es_potential = on_command("es潜能信息", priority=5, block=True)
 es_stage = on_command("es主线信息", priority=5, block=True)
 es_stats = on_regex(r"^es(身高|体重)排行$", priority=5, block=True)
