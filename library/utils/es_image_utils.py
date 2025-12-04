@@ -2615,16 +2615,28 @@ async def generate_skill_description_image(
             max_width = CANVAS_WIDTH - PADDING_X * 2
             current_line = ""
             
-            for char in desc_text:
-                # 处理换行符
-                if char == '\n':
+            i = 0
+            while i < len(desc_text):
+                char = desc_text[i]
+                
+                # \r\n
+                if char == '\r' and i + 1 < len(desc_text) and desc_text[i + 1] == '\n':
                     if current_line:
                         draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
                         cursor_y += FONT_SIZE_SMALL + 2
                         current_line = ""
+                    i += 2  # 跳过 \r\n
                     continue
                 
-                # 测试加上当前字符后的宽度
+                # \n 或 \r
+                if char == '\n' or char == '\r':
+                    if current_line:
+                        draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                        cursor_y += FONT_SIZE_SMALL + 2
+                        current_line = ""
+                    i += 1
+                    continue
+
                 test_line = current_line + char
                 try:
                     if hasattr(font_small, "getlength"):
@@ -2633,21 +2645,20 @@ async def generate_skill_description_image(
                         line_width = font_small.getsize(test_line)[0]
                 except:
                     line_width = len(test_line) * FONT_SIZE_SMALL
-                
-                # 如果超宽，先绘制当前行，然后开始新行
                 if line_width > max_width and current_line:
                     draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
                     cursor_y += FONT_SIZE_SMALL + 2
                     current_line = char
                 else:
                     current_line = test_line
-            
-            # 绘制最后一行
+                
+                i += 1
+
             if current_line:
                 draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
                 cursor_y += FONT_SIZE_SMALL + 2
             
-            cursor_y += 6  # 描述后额外空白
+            cursor_y += 6
 
         # 绘制战力百分比
         if extra_info.get("battle_power_per"):
