@@ -4,39 +4,42 @@ from ..library.utils import *
 @es_hero_skill.handle()
 async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
-        # 获取输入的文本并提取角色名
-        hero_name = args.extract_plain_text().strip()
-        if not hero_name:
+        raw_text = args.extract_plain_text().strip()
+        if not raw_text:
             await es_hero.finish("请输入角色名！")
 
-        # 获取群组ID
+        # 解析参数：角色名 [图片标志]
+        parts = raw_text.rsplit(maxsplit=1)
+        hero_name = parts[0]
+        generate_image_flag = False
+
+        # 最后一个参数是否是图片标志
+        if len(parts) == 2 and parts[1] in ("1", "0"):
+            generate_image_flag = parts[1] == "1"
+            hero_name = parts[0]
+        else:
+            hero_name = raw_text
+            generate_image_flag = False
+
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
 
-        # 加载数据
         config = await get_group_data_source(group_id)
-
-        # 加载数据
         data = await load_json_data(group_id)
 
-        # 加载别名配置和原始别名数据
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             aliases_data = yaml.safe_load(f)
         alias_map = await load_aliases(group_id)
 
-        # 判断是否为测试模式
+        # 是否为测试模式
         review = config["type"] == "review"
-
-        # 尝试从别名映射中获取hero_id
         hero_id = alias_map.get(hero_name)
-        if not hero_id and hero_name.isascii():  # 如果是英文名称,尝试小写匹配
+        if not hero_id and hero_name.isascii():
             hero_id = alias_map.get(hero_name.lower())
 
         if not hero_id:
-            # 如果没有直接匹配,尝试模糊匹配
             all_names = list(alias_map.keys())
-            # 对于英文输入,同时在小写版本中搜索
             if hero_name.isascii():
                 matches = get_close_matches(
                     hero_name.lower(),
@@ -47,7 +50,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             else:
                 matches = get_close_matches(hero_name, all_names, n=1, cutoff=0.6)
             if matches:
-                # 找到匹配的主名称和别名
                 matched_name = matches[0]
                 matched_hero_id = alias_map[matched_name]
 
@@ -59,8 +61,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     "日文": None,
                 }
                 aliases = []
-
-                # 直接从原始数据中获取各语言名称
                 for hero in aliases_data["names"]:
                     if hero["hero_id"] == matched_hero_id:
                         if hero.get("zh_tw_name"):
@@ -73,19 +73,15 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                             main_names["英文"] = hero.get("en_name")
                         if hero.get("ja_name"):
                             main_names["日文"] = hero.get("ja_name")
-                        # 获取别名
                         aliases = hero.get("aliases", [])
                         break
 
-                # 构建响应消息
                 response_parts = ["未找到角色 " + hero_name + "\n您是否想查询："]
 
-                # 添加各语言名称
                 for lang, name in main_names.items():
                     if name:
                         response_parts.append(f"{lang}：{name}")
 
-                # 添加别名
                 if aliases:
                     response_parts.append(f"别名：{', '.join(aliases)}")
 
@@ -95,7 +91,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         assert hero_id is not None, "hero_id 应该不为空"
 
-        # 查找角色数据
         hero_data = None
         for hero in data["hero"]["json"]:
             if hero["hero_id"] == hero_id:
@@ -107,7 +102,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         messages = []
 
-        # 技能信息
         skill_types = []
         skill_keys = [
             "skill_no_1",
@@ -118,7 +112,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             "support_skill_no",
         ]
 
-        # 获取并显示技能释放顺序
+        # 技能释放顺序
         skill_pattern = await get_character_skill_pattern(data, hero_id, review)
         if skill_pattern:
             pattern_text = ["▼ 技能释放顺序"]
@@ -140,9 +134,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         skill_type_en = skill_type_data["en"]
                         # 判断是否为支援技能
                         support = skill_key == "support_skill_no"
-                        # 带图片的技能信息
+                        # 获取技能信息（根据标志决定是否生成图片）
                         skill_info = await get_character_skill(
-                            data, skill_no, support, generate_image=False
+                            data, skill_no, support, generate_image=generate_image_flag
                         )
                         skill_types.append(
                             (
@@ -164,11 +158,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         ) in skill_types:
             skill_text = []
 
-            # 如果有技能图标，处理并添加
             if skill_info["icon_info"]:
                 icon_path = str(ICON_DIR / f"{skill_info['icon_info']['icon']}.png")
-
-                # 检查是否存在缓存的着色图标
                 cache_filename = f"{skill_info['icon_info']['icon']}_{skill_info['icon_info']['color'].replace('#', '')}.png"
                 cache_path = str(ICON_DIR / cache_filename)
 
@@ -181,7 +172,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     colored_icon = await apply_color_to_icon(
                         icon_path, skill_info["icon_info"]["color"]
                     )
-                    # 保存到缓存目录
                     with open(cache_path, "wb") as f:
                         f.write(colored_icon)
 
@@ -234,7 +224,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             messages.append(skill_text)
 
         signature_info = await get_character_signature(
-            data, hero_id, generate_image=False
+            data, hero_id, generate_image=generate_image_flag
         )
         if signature_info["name"]["kr"] or signature_info["name"]["zh_cn"]:
             signature_stats = signature_info["stats"]
