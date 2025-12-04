@@ -9,6 +9,7 @@ from typing import List, Tuple
 from nonebot.log import logger
 import matplotlib.pyplot as plt
 
+
 async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
     """对图标应用颜色
 
@@ -53,6 +54,7 @@ async def get_character_portrait(data, prefab_path):
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
     from ...config import SOUL_DIR
+
     if prefab_path == "":
         return []
 
@@ -109,6 +111,7 @@ async def get_character_illustration(data, hero_id):
     """
     from .es_string_utils import get_string_by_type
     from ...config import SOUL_DIR
+
     image_path = str(SOUL_DIR)
     if not Path(image_path).exists():
         return []
@@ -318,6 +321,7 @@ async def get_character_affection_cg(data, hero_id):
         list: [(图片路径, CG编号, 章节标题)] 的列表
     """
     from ...config import CG_DIR
+
     if not CG_DIR.exists():
         return []
 
@@ -385,6 +389,7 @@ async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path
         List[Tuple[Path, str]]: 插图信息列表，每个元素为(插图路径, 插图基础名称)的元组
     """
     from ...config import EVERTALK_DIR
+
     evertalk_illusts = []
 
     # 从EverTalkDesc.json中查找插图
@@ -525,6 +530,7 @@ async def get_mail_event(data, target_month, target_year):
     """获取邮箱事件信息"""
     from .es_string_utils import get_string_character, get_string_item
     from ...config import STICKER_DIR, HERO_NAME_MAPPING
+
     mail_events = []
     now = datetime.now()
 
@@ -610,6 +616,7 @@ async def get_calendar_event(data, target_month, target_year):
     """获取一般活动信息"""
     from .es_string_utils import get_string_by_type
     from ...config import HERO_NAME_MAPPING, STICKER_DIR, BANNER_DIR
+
     calendar_events_with_date = []
     now = datetime.now()
 
@@ -793,6 +800,7 @@ async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> s
     """
     from .es_string_utils import get_stat_string_in_hero_option
     from ...config import HERO_OPTION_BUFF_REVERSE_MAPPING
+
     if effect_type == 1:
         for buff in data["contents_buff"]["json"]:
             if buff.get("no") == effect_no:
@@ -813,6 +821,7 @@ async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> s
 async def generate_event_html(event, event_type):
     """生成事件HTML，包括内容和banner图片"""
     from ...config import STICKER_DIR, BANNER_DIR
+
     # 首先调用 format_event_content 获取格式化的内容和banner路径
     event_data = format_event_content(event)
 
@@ -1256,6 +1265,7 @@ async def get_event_description(event):
 async def get_event_banner(event):
     """获取事件banner图片路径"""
     from ...config import STICKER_DIR, BANNER_DIR
+
     lines = event.split("\n")
     for line in lines:
         if line.startswith("banner："):
@@ -1285,6 +1295,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
     """
     from .es_string_utils import get_string_item
     from ...config import CUSTOM_FONT
+
     try:
         # 检查数据是否存在
         if "ark_enhance" not in data or "json" not in data["ark_enhance"]:
@@ -1488,6 +1499,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
 async def generate_level_cost_chart(data: dict) -> MessageSegment:
     """生成等级升级消耗统计图"""
     from ...config import CUSTOM_FONT
+
     try:
         # 收集数据
         levels = []
@@ -2432,19 +2444,30 @@ async def generate_skill_description_image(
     skill_type: str = "",
     support: bool = False,
     icon_bytes: bytes = None,
+    extra_info: dict = None,
+    review: bool = False,
 ) -> bytes:
     """
     生成技能描述图片
     Args:
         skill_descriptions: 技能描述列表
-        skill_name: 技能名称
-        skill_type: 技能类型
+        skill_name: 技能名称（已根据review模式选择的语言）
+        skill_type: 技能类型（已根据review模式选择的语言）
         support: 是否为支援技能
         icon_bytes: 技能图标字节流
+        extra_info: 额外信息（如遗物属性），格式：
+            {
+                "description": "描述文字",
+                "stats": ["属性1", "属性2", ...],
+                "battle_power_per": 数值,
+                "max_level": 数值
+            }
+        review: 是否为review模式（用于选择描述语言）
     Returns:
         bytes: WebP图片字节流（quality=85, method=6高压缩）
     """
     from ...config import FONT_DIR
+
     # 颜色定义
     BG_COLOR = (30, 32, 40, 255)
     TEXT_GRAY = (148, 150, 170)  # 灰色 #9495A9
@@ -2584,10 +2607,83 @@ async def generate_skill_description_image(
         text_total_height = type_height + 4 + name_height
         cursor_y += max(ICON_SIZE, text_total_height) + 20
 
+    # 绘制额外信息（如遗物属性）
+    if extra_info:
+        # 绘制描述（紧凑显示，手动处理换行）
+        if extra_info.get("description"):
+            desc_text = extra_info["description"]
+            max_width = CANVAS_WIDTH - PADDING_X * 2
+            current_line = ""
+            
+            for char in desc_text:
+                # 处理换行符
+                if char == '\n':
+                    if current_line:
+                        draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                        cursor_y += FONT_SIZE_SMALL + 2
+                        current_line = ""
+                    continue
+                
+                # 测试加上当前字符后的宽度
+                test_line = current_line + char
+                try:
+                    if hasattr(font_small, "getlength"):
+                        line_width = font_small.getlength(test_line)
+                    else:
+                        line_width = font_small.getsize(test_line)[0]
+                except:
+                    line_width = len(test_line) * FONT_SIZE_SMALL
+                
+                # 如果超宽，先绘制当前行，然后开始新行
+                if line_width > max_width and current_line:
+                    draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                    cursor_y += FONT_SIZE_SMALL + 2
+                    current_line = char
+                else:
+                    current_line = test_line
+            
+            # 绘制最后一行
+            if current_line:
+                draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                cursor_y += FONT_SIZE_SMALL + 2
+            
+            cursor_y += 6  # 描述后额外空白
+
+        # 绘制战力百分比
+        if extra_info.get("battle_power_per"):
+            battle_power_text = f"战力百分比：{extra_info['battle_power_per']}"
+            draw.text(
+                (PADDING_X, cursor_y),
+                battle_power_text,
+                font=font_small,
+                fill=TEXT_GRAY,
+            )
+            cursor_y += FONT_SIZE_SMALL + 8
+
+        # 绘制满级属性（紧凑显示）
+        if extra_info.get("max_level") and extra_info.get("stats"):
+            for stat in extra_info["stats"]:
+                draw.text((PADDING_X, cursor_y), stat, font=font_small, fill=TEXT_GRAY)
+                cursor_y += FONT_SIZE_SMALL + 2
+
+        # 添加分隔线
+        line_y = cursor_y + 10
+        draw.line(
+            [(PADDING_X, line_y), (CANVAS_WIDTH - PADDING_X, line_y)],
+            fill=(60, 62, 70),
+            width=2,
+        )
+        cursor_y = line_y + 15
+
     # 绘制技能描述
     for desc in skill_descriptions:
         level = desc.get("hero_level", desc.get("level", 1))
-        desc_text = desc.get("desc_zh_tw", desc.get("desc", ""))
+        
+        # 根据review模式选择描述语言
+        if review:
+            desc_text = desc.get("desc_kr", desc.get("desc_zh_tw", desc.get("desc", "")))
+        else:
+            desc_text = desc.get("desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", "")))
 
         # 判断是否为升级描述（等级>1）
         is_upgrade = level > 1 and not support

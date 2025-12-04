@@ -780,7 +780,7 @@ async def get_character_similar_name(query, alias_map):
     return results
 
 
-async def get_character_skill(data, skill_no, support=False, generate_image=False):
+async def get_character_skill(data, skill_no, support=False, generate_image=False, review=False):
     """
     获取角色技能
     Args:
@@ -788,6 +788,7 @@ async def get_character_skill(data, skill_no, support=False, generate_image=Fals
         skill_no: 技能编号
         support: 是否为支援技能
         generate_image: 是否生成图片
+        review: 是否为review模式（影响语言选择）
     Returns:
         dict: 包含技能信息，如果generate_image=True，还包含image_bytes字段
     """
@@ -952,7 +953,21 @@ async def get_character_skill(data, skill_no, support=False, generate_image=Fals
                     skill_type_data = await get_string_by_type(
                         data, "system", skill_type_sno
                     )
-                    skill_type = skill_type_data.get("zh_tw", "")
+                    # 根据review模式选择语言
+                    skill_type = await select_text_by_priority(
+                        skill_type_data.get("zh_tw", ""),
+                        skill_type_data.get("zh_cn", ""),
+                        skill_type_data.get("kr", ""),
+                        review
+                    )
+            
+            # 根据review模式选择技能名称
+            skill_name_display = await select_text_by_priority(
+                skill_name_zh_tw,
+                skill_name_zh_cn,
+                skill_name_kr,
+                review
+            )
 
             # 准备技能图标
             icon_bytes_data = None
@@ -981,15 +996,15 @@ async def get_character_skill(data, skill_no, support=False, generate_image=Fals
                 except Exception as e:
                     logger.error(f"加载技能图标失败: {e}")
 
-            # 延迟导入避免循环依赖
             from .es_image_utils import generate_skill_description_image
 
             image_bytes = await generate_skill_description_image(
                 skill_descriptions,
-                skill_name_zh_tw,
+                skill_name_display,
                 skill_type,
                 support,
                 icon_bytes_data,
+                review=review,
             )
             result["image_bytes"] = image_bytes
         except Exception as e:
@@ -1789,13 +1804,14 @@ async def get_character_signature_value(data, level_group):
     return formatted_stats, max_level, max_level_data["battle_power_per"]
 
 
-async def get_character_signature(data, hero_id, generate_image=False):
+async def get_character_signature(data, hero_id, generate_image=False, review=False):
     """获取角色遗物
 
     Args:
         data: JSON 数据字典
         hero_id: 角色编号
         generate_image: 是否生成图片
+        review: 是否为review模式（影响语言选择）
 
     Returns:
         dict: 包含遗物信息，如果generate_image=True，还包含image_bytes字段
@@ -1966,12 +1982,42 @@ async def get_character_signature(data, hero_id, generate_image=False):
                         logger.error(f"加载遗物图标失败: {e}")
                 from .es_image_utils import generate_skill_description_image
 
+                # 根据review模式选择显示语言
+                signature_name_display = await select_text_by_priority(
+                    signature_name_zh_tw,
+                    signature_name_zh_cn,
+                    signature_name_kr,
+                    review
+                )
+                signature_title_display = await select_text_by_priority(
+                    signature_title_zh_tw,
+                    signature_title_zh_cn,
+                    signature_title_kr,
+                    review
+                )
+                signature_desc_display = await select_text_by_priority(
+                    signature_desc_zh_tw,
+                    signature_desc_zh_cn,
+                    signature_desc_kr,
+                    review
+                )
+
+                # 准备额外信息（遗物属性）
+                extra_info = {
+                    "description": signature_desc_display,
+                    "stats": signature_stats[0] if signature_stats else [],
+                    "battle_power_per": signature_stats[2] if len(signature_stats) > 2 else 0,
+                    "max_level": signature_stats[1] if len(signature_stats) > 1 else 0,
+                }
+
                 image_bytes = await generate_skill_description_image(
                     skill_descriptions,
-                    signature_name_zh_tw,
-                    f"{signature_title_zh_tw}",
+                    signature_name_display,
+                    f"{signature_title_display}",
                     support=False,
                     icon_bytes=icon_bytes_data,
+                    extra_info=extra_info,
+                    review=review,
                 )
                 result["image_bytes"] = image_bytes
             except Exception as e:

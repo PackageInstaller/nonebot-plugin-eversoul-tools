@@ -136,7 +136,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         support = skill_key == "support_skill_no"
                         # 获取技能信息（根据标志决定是否生成图片）
                         skill_info = await get_character_skill(
-                            data, skill_no, support, generate_image=generate_image_flag
+                            data, skill_no, support, generate_image=generate_image_flag, review=review
                         )
                         skill_types.append(
                             (
@@ -158,73 +158,76 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         ) in skill_types:
             skill_text = []
 
-            if skill_info["icon_info"]:
-                icon_path = str(ICON_DIR / f"{skill_info['icon_info']['icon']}.png")
-                cache_filename = f"{skill_info['icon_info']['icon']}_{skill_info['icon_info']['color'].replace('#', '')}.png"
-                cache_path = str(ICON_DIR / cache_filename)
+            # 根据标志决定显示内容
+            if generate_image_flag:
+                # 只显示图片
+                if skill_info.get("image_bytes"):
+                    skill_text.append(MessageSegment.image(skill_info["image_bytes"]))
+            else:
+                # 只显示文字（带技能图标）
+                if skill_info["icon_info"]:
+                    icon_path = str(ICON_DIR / f"{skill_info['icon_info']['icon']}.png")
+                    cache_filename = f"{skill_info['icon_info']['icon']}_{skill_info['icon_info']['color'].replace('#', '')}.png"
+                    cache_path = str(ICON_DIR / cache_filename)
 
-                # 如果存在缓存图标，直接使用
-                if os.path.exists(cache_path):
-                    with open(cache_path, "rb") as f:
-                        colored_icon = f.read()
+                    # 如果存在缓存图标，直接使用
+                    if os.path.exists(cache_path):
+                        with open(cache_path, "rb") as f:
+                            colored_icon = f.read()
+                    else:
+                        # 没有缓存，重新生成并保存
+                        colored_icon = await apply_color_to_icon(
+                            icon_path, skill_info["icon_info"]["color"]
+                        )
+                        with open(cache_path, "wb") as f:
+                            f.write(colored_icon)
+
+                    skill_text.append(MessageSegment.image(colored_icon))
+
+                skill_type_text = await select_text_by_priority(
+                    skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, review
+                )
+                skill_name_text = await select_text_by_priority(
+                    skill_info["name"]["zh_tw"],
+                    skill_info["name"]["zh_cn"],
+                    skill_info["name"]["kr"],
+                    review,
+                )
+
+                # 添加文字描述（清理颜色代码）
+                if skill_info["support"]:
+                    main_effects = []
+                    for desc in skill_info["descriptions"]:
+                        if desc.get("type") == "support":
+                            desc_text = await select_text_by_priority(
+                                desc["desc_zh_tw"],
+                                desc["desc_zh_cn"],
+                                desc["desc_kr"],
+                                review,
+                            )
+                            # 清理颜色代码
+                            desc_text = await clean_rich_text(desc_text)
+                            main_effects.append(desc_text)
+
+                    if main_effects:
+                        skill_text.append(f"【{skill_type_text}】{skill_name_text}")
+                        skill_text.extend(main_effects)
                 else:
-                    # 没有缓存，重新生成并保存
-                    colored_icon = await apply_color_to_icon(
-                        icon_path, skill_info["icon_info"]["color"]
-                    )
-                    with open(cache_path, "wb") as f:
-                        f.write(colored_icon)
-
-                skill_text.append(MessageSegment.image(colored_icon))
-
-            skill_type_text = await select_text_by_priority(
-                skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, review
-            )
-            skill_name_text = await select_text_by_priority(
-                skill_info["name"]["zh_tw"],
-                skill_info["name"]["zh_cn"],
-                skill_info["name"]["kr"],
-                review,
-            )
-
-            # 添加文字描述（清理颜色代码）
-            if skill_info["support"]:
-                main_effects = []
-                for desc in skill_info["descriptions"]:
-                    if desc.get("type") == "support":
+                    skill_text.append(f"【{skill_type_text}】{skill_name_text}")
+                    for i, desc in enumerate(skill_info["descriptions"]):
                         desc_text = await select_text_by_priority(
-                            desc["desc_zh_tw"],
-                            desc["desc_zh_cn"],
-                            desc["desc_kr"],
-                            review,
+                            desc["desc_zh_tw"], desc["desc_zh_cn"], desc["desc_kr"], review
                         )
                         # 清理颜色代码
                         desc_text = await clean_rich_text(desc_text)
-                        main_effects.append(desc_text)
-
-                if main_effects:
-                    skill_text.append(f"【{skill_type_text}】{skill_name_text}")
-                    skill_text.extend(main_effects)
-            else:
-                skill_text.append(f"【{skill_type_text}】{skill_name_text}")
-                for i, desc in enumerate(skill_info["descriptions"]):
-                    desc_text = await select_text_by_priority(
-                        desc["desc_zh_tw"], desc["desc_zh_cn"], desc["desc_kr"], review
-                    )
-                    # 清理颜色代码
-                    desc_text = await clean_rich_text(desc_text)
-                    hero_level = desc.get("hero_level", 1)
-                    unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
-                    skill_text.append(f"\n等级{i+1}：{desc_text}{unlock_text}\n")
-
-            # 如果有生成的图片，添加到最后
-            if skill_info.get("image_bytes"):
-                skill_text.append(MessageSegment.image(skill_info["image_bytes"]))
+                        hero_level = desc.get("hero_level", 1)
+                        unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
+                        skill_text.append(f"\n等级{i+1}：{desc_text}{unlock_text}\n")
 
             messages.append(skill_text)
 
         signature_info = await get_character_signature(
-            data, hero_id, generate_image=generate_image_flag
+            data, hero_id, generate_image=generate_image_flag, review=review
         )
         if signature_info["name"]["kr"] or signature_info["name"]["zh_cn"]:
             signature_stats = signature_info["stats"]
@@ -234,57 +237,61 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             signature_img_path = str(SOUL_DIR / signature_bg_path)
 
             signature_msg = []
-            signature_msg.append(f"【遺物信息】")
-            if os.path.exists(signature_img_path):
-                signature_msg.append(
-                    MessageSegment.image(f"file:///{signature_img_path}")
+            
+            # 根据标志决定显示内容
+            if generate_image_flag:
+                # 只显示图片
+                if signature_info.get("image_bytes"):
+                    signature_msg.append(
+                        MessageSegment.image(signature_info["image_bytes"])
+                    )
+            else:
+                # 只显示文字
+                signature_msg.append(f"【遺物信息】")
+                if os.path.exists(signature_img_path):
+                    signature_msg.append(
+                        MessageSegment.image(f"file:///{signature_img_path}")
+                    )
+
+                signature_name_text = await select_text_by_priority(
+                    signature_info["name"]["zh_tw"],
+                    signature_info["name"]["zh_cn"],
+                    signature_info["name"]["kr"],
+                    review,
+                )
+                signature_desc_text = await select_text_by_priority(
+                    signature_info["description"]["zh_tw"],
+                    signature_info["description"]["zh_cn"],
+                    signature_info["description"]["kr"],
+                    review,
+                )
+                signature_title_text = await select_text_by_priority(
+                    signature_info["title"]["zh_tw"],
+                    signature_info["title"]["zh_cn"],
+                    signature_info["title"]["kr"],
+                    review,
                 )
 
-            signature_name_text = await select_text_by_priority(
-                signature_info["name"]["zh_tw"],
-                signature_info["name"]["zh_cn"],
-                signature_info["name"]["kr"],
-                review,
-            )
-            signature_desc_text = await select_text_by_priority(
-                signature_info["description"]["zh_tw"],
-                signature_info["description"]["zh_cn"],
-                signature_info["description"]["kr"],
-                review,
-            )
-            signature_title_text = await select_text_by_priority(
-                signature_info["title"]["zh_tw"],
-                signature_info["title"]["zh_cn"],
-                signature_info["title"]["kr"],
-                review,
-            )
+                # 生成文字描述（清理颜色代码）
+                skill_descriptions_text = []
+                for i, skill in enumerate(signature_info["skills"]):
+                    desc_text = await select_text_by_priority(
+                        skill["desc_zh_tw"], skill["desc_zh_cn"], skill["desc_kr"], review
+                    )
+                    # 清理颜色代码
+                    desc_text = await clean_rich_text(desc_text)
+                    skill_descriptions_text.append(f"\n等級{i+1}：{desc_text}")
 
-            # 生成文字描述（清理颜色代码）
-            skill_descriptions_text = []
-            for i, skill in enumerate(signature_info["skills"]):
-                desc_text = await select_text_by_priority(
-                    skill["desc_zh_tw"], skill["desc_zh_cn"], skill["desc_kr"], review
-                )
-                # 清理颜色代码
-                desc_text = await clean_rich_text(desc_text)
-                skill_descriptions_text.append(f"\n等級{i+1}：{desc_text}")
-
-            signature_info_text = f"""{signature_name_text}
+                signature_info_text = f"""{signature_name_text}
 {signature_desc_text}
 战力百分比：{max_level_battle_power_per}
 {max_level}級屬性：
 {chr(10).join(signature_stats)}
 遺物技能【{signature_title_text}】：
 """ + "\n".join(
-                skill_descriptions_text
-            )
-            signature_msg.append(signature_info_text)
-
-            # 如果有生成的遗物技能图片，添加到最后
-            if signature_info.get("image_bytes"):
-                signature_msg.append(
-                    MessageSegment.image(signature_info["image_bytes"])
+                    skill_descriptions_text
                 )
+                signature_msg.append(signature_info_text)
 
             messages.append(signature_msg)
 
