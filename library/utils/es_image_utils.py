@@ -3,28 +3,11 @@ import os
 from pathlib import Path
 from io import BytesIO
 from datetime import datetime
-from PIL import Image
-from ...config import (
-    BANNER_DIR,
-    STICKER_DIR,
-    HERO_NAME_MAPPING,
-    EVERTALK_DIR,
-    CG_DIR,
-    SOUL_DIR,
-    CUSTOM_FONT,
-    HERO_OPTION_BUFF_REVERSE_MAPPING,
-)
-from .es_string_utils import (
-    get_string_item,
-    get_string_character,
-    get_string_by_type,
-    get_stat_string_in_hero_option,
-)
+from PIL import Image, ImageDraw, ImageFont
 from nonebot.adapters.onebot.v11 import MessageSegment
 from typing import List, Tuple
 from nonebot.log import logger
 import matplotlib.pyplot as plt
-
 
 async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
     """对图标应用颜色
@@ -69,7 +52,7 @@ async def get_character_portrait(data, prefab_path):
     Returns:
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
-
+    from ...config import SOUL_DIR
     if prefab_path == "":
         return []
 
@@ -124,6 +107,8 @@ async def get_character_illustration(data, hero_id):
     Returns:
         list: [(图片路径, 显示名称_tw, 显示名称_cn, 显示名称_kr, 显示名称_en, 解锁条件_tw, 解锁条件_cn, 解锁条件_kr, 解锁条件_en)] 的列表
     """
+    from .es_string_utils import get_string_by_type
+    from ...config import SOUL_DIR
     image_path = str(SOUL_DIR)
     if not Path(image_path).exists():
         return []
@@ -332,6 +317,7 @@ async def get_character_affection_cg(data, hero_id):
     Returns:
         list: [(图片路径, CG编号, 章节标题)] 的列表
     """
+    from ...config import CG_DIR
     if not CG_DIR.exists():
         return []
 
@@ -398,6 +384,7 @@ async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path
     Returns:
         List[Tuple[Path, str]]: 插图信息列表，每个元素为(插图路径, 插图基础名称)的元组
     """
+    from ...config import EVERTALK_DIR
     evertalk_illusts = []
 
     # 从EverTalkDesc.json中查找插图
@@ -536,6 +523,8 @@ async def get_schedule_event(
 
 async def get_mail_event(data, target_month, target_year):
     """获取邮箱事件信息"""
+    from .es_string_utils import get_string_character, get_string_item
+    from ...config import STICKER_DIR, HERO_NAME_MAPPING
     mail_events = []
     now = datetime.now()
 
@@ -619,6 +608,8 @@ async def get_mail_event(data, target_month, target_year):
 
 async def get_calendar_event(data, target_month, target_year):
     """获取一般活动信息"""
+    from .es_string_utils import get_string_by_type
+    from ...config import HERO_NAME_MAPPING, STICKER_DIR, BANNER_DIR
     calendar_events_with_date = []
     now = datetime.now()
 
@@ -800,7 +791,8 @@ async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> s
     Returns:
         str: 格式化后的数值
     """
-
+    from .es_string_utils import get_stat_string_in_hero_option
+    from ...config import HERO_OPTION_BUFF_REVERSE_MAPPING
     if effect_type == 1:
         for buff in data["contents_buff"]["json"]:
             if buff.get("no") == effect_no:
@@ -820,6 +812,7 @@ async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> s
 
 async def generate_event_html(event, event_type):
     """生成事件HTML，包括内容和banner图片"""
+    from ...config import STICKER_DIR, BANNER_DIR
     # 首先调用 format_event_content 获取格式化的内容和banner路径
     event_data = format_event_content(event)
 
@@ -1262,6 +1255,7 @@ async def get_event_description(event):
 
 async def get_event_banner(event):
     """获取事件banner图片路径"""
+    from ...config import STICKER_DIR, BANNER_DIR
     lines = event.split("\n")
     for line in lines:
         if line.startswith("banner："):
@@ -1289,6 +1283,8 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
     Returns:
         MessageSegment: 包含图表的消息段
     """
+    from .es_string_utils import get_string_item
+    from ...config import CUSTOM_FONT
     try:
         # 检查数据是否存在
         if "ark_enhance" not in data or "json" not in data["ark_enhance"]:
@@ -1491,6 +1487,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
 
 async def generate_level_cost_chart(data: dict) -> MessageSegment:
     """生成等级升级消耗统计图"""
+    from ...config import CUSTOM_FONT
     try:
         # 收集数据
         levels = []
@@ -2427,3 +2424,487 @@ async def generate_love_level_html(data: dict) -> str:
     except Exception as e:
         logger.error(f"生成好感等级HTML时发生错误: {e}")
         raise
+
+
+async def generate_skill_description_image(
+    skill_descriptions: list,
+    skill_name: str = "",
+    skill_type: str = "",
+    support: bool = False,
+    icon_bytes: bytes = None,
+) -> bytes:
+    """
+    生成技能描述图片
+    Args:
+        skill_descriptions: 技能描述列表
+        skill_name: 技能名称
+        skill_type: 技能类型
+        support: 是否为支援技能
+        icon_bytes: 技能图标字节流
+    Returns:
+        bytes: WebP图片字节流（quality=85, method=6高压缩）
+    """
+    from ...config import FONT_DIR
+    # 颜色定义
+    BG_COLOR = (30, 32, 40, 255)
+    TEXT_GRAY = (148, 150, 170)  # 灰色 #9495A9
+    TEXT_GREEN = (45, 155, 0)  # 绿色 #2C9A00
+    TEXT_HIGHLIGHT = (255, 255, 255)  # 白色高亮
+
+    # 画布和字体设置
+    CANVAS_WIDTH = 800
+    PADDING_X = 40
+    PADDING_Y = 40
+    FONT_SIZE = 24
+    FONT_SIZE_SMALL = 18  # 技能类型用小字号
+    CHECKMARK_SIZE = 22
+    ICON_SIZE = 64  # 技能图标大小
+
+    # 加载字体
+    try:
+        font = ImageFont.truetype(str(FONT_DIR), FONT_SIZE, index=0)
+        font_small = ImageFont.truetype(str(FONT_DIR), FONT_SIZE_SMALL, index=0)
+    except Exception:
+        font = ImageFont.load_default()
+        font_small = ImageFont.load_default()
+
+    # 创建临时画布
+    img = Image.new("RGBA", (CANVAS_WIDTH, 5000), BG_COLOR)
+    draw = ImageDraw.Draw(img)
+
+    cursor_y = PADDING_Y
+
+    # 绘制标题（如果有）
+    if skill_type and skill_name:
+        # 计算图标和文字的起始位置
+        icon_x = PADDING_X
+        text_x = PADDING_X + (ICON_SIZE + 15 if icon_bytes else 0)
+
+        # 绘制技能图标（如果有）
+        if icon_bytes:
+            try:
+                icon_img = Image.open(BytesIO(icon_bytes))
+
+                # 转换为RGBA模式
+                if icon_img.mode != "RGBA":
+                    icon_img = icon_img.convert("RGBA")
+
+                # 裁剪为正方形（取中心部分）
+                width, height = icon_img.size
+                if width != height:
+                    min_side = min(width, height)
+                    left = (width - min_side) // 2
+                    top = (height - min_side) // 2
+                    right = left + min_side
+                    bottom = top + min_side
+                    icon_img = icon_img.crop((left, top, right, bottom))
+
+                # 调整图标大小
+                icon_img = icon_img.resize(
+                    (ICON_SIZE, ICON_SIZE), Image.Resampling.LANCZOS
+                )
+
+                # 创建圆角遮罩
+                mask = Image.new("L", (ICON_SIZE, ICON_SIZE), 0)
+                mask_draw = ImageDraw.Draw(mask)
+                try:
+                    # 尝试绘制圆角矩形遮罩
+                    mask_draw.rounded_rectangle(
+                        [(0, 0), (ICON_SIZE, ICON_SIZE)], radius=8, fill=255
+                    )
+                except AttributeError:
+                    # 降级为圆形遮罩
+                    mask_draw.ellipse([(0, 0), (ICON_SIZE, ICON_SIZE)], fill=255)
+
+                # 应用遮罩
+                output_icon = Image.new("RGBA", (ICON_SIZE, ICON_SIZE), (0, 0, 0, 0))
+                output_icon.paste(icon_img, (0, 0))
+                output_icon.putalpha(mask)
+
+                # 粘贴图标
+                img.paste(output_icon, (icon_x, cursor_y), output_icon)
+            except Exception as e:
+                logger.error(f"加载技能图标失败: {e}")
+
+        # 计算技能类型文字尺寸
+        try:
+            if hasattr(font_small, "getbbox"):
+                type_bbox = font_small.getbbox(skill_type)
+                type_width = type_bbox[2] - type_bbox[0]
+                type_height = type_bbox[3] - type_bbox[1]
+            else:
+                type_width, type_height = font_small.getsize(skill_type)
+        except:
+            type_width = len(skill_type) * FONT_SIZE_SMALL
+            type_height = FONT_SIZE_SMALL
+
+        # 绘制技能类型背景矩形
+        type_y = cursor_y
+        rect_padding_left = 4  # 矩形左侧内边距
+        rect_padding_right = 12  # 矩形右侧内边距
+        rect_padding_y = 2  # 矩形上下内边距
+
+        # 矩形左侧与技能名字左侧对齐
+        rect_x1 = text_x - rect_padding_left
+        rect_y1 = type_y - rect_padding_y
+        # 矩形长度为文字宽度的3倍（1.5 * 2）
+        rect_x2 = text_x + type_width * 3 + rect_padding_right
+        rect_y2 = type_y + type_height + rect_padding_y
+
+        # 绘制直角矩形背景（深色）
+        rect_bg_color = (45, 47, 55, 255)  # 比背景稍亮的深色
+        draw.rectangle([rect_x1, rect_y1, rect_x2, rect_y2], fill=rect_bg_color)
+
+        # 绘制技能类型文字（小字号，灰色）
+        draw.text((text_x, type_y), skill_type, font=font_small, fill=TEXT_GRAY)
+
+        # 计算技能类型的高度
+        try:
+            if hasattr(font_small, "getbbox"):
+                type_height = font_small.getbbox(skill_type)[3]
+            else:
+                type_height = font_small.getsize(skill_type)[1]
+        except:
+            type_height = FONT_SIZE_SMALL
+
+        # 绘制技能名称（正常字号，白色，在类型下方）
+        name_y = type_y + type_height + 4
+        draw.text((text_x, name_y), skill_name, font=font, fill=TEXT_HIGHLIGHT)
+
+        # 计算技能名称的高度
+        try:
+            if hasattr(font, "getbbox"):
+                name_height = font.getbbox(skill_name)[3]
+            else:
+                name_height = font.getsize(skill_name)[1]
+        except:
+            name_height = FONT_SIZE
+
+        # 更新cursor_y，取图标高度和文字总高度的较大值
+        text_total_height = type_height + 4 + name_height
+        cursor_y += max(ICON_SIZE, text_total_height) + 20
+
+    # 绘制技能描述
+    for desc in skill_descriptions:
+        level = desc.get("hero_level", desc.get("level", 1))
+        desc_text = desc.get("desc_zh_tw", desc.get("desc", ""))
+
+        # 判断是否为升级描述（等级>1）
+        is_upgrade = level > 1 and not support
+        default_color = TEXT_GREEN if is_upgrade else TEXT_GRAY
+
+        # 添加等级标签（如果不是支援技能）
+        if not support:
+            level_prefix = f"等级{level}："
+            desc_text = level_prefix + desc_text
+
+        # 解析富文本
+        segments = await _parse_rich_text_segments(desc_text, default_color)
+
+        # 绘制勾号（如果是升级描述）
+        if is_upgrade:
+            await _draw_checkmark(draw, PADDING_X, cursor_y + 4, CHECKMARK_SIZE)
+            text_x = PADDING_X + CHECKMARK_SIZE + 15
+            max_w = CANVAS_WIDTH - text_x - PADDING_X
+            cursor_y = await _draw_text_block(
+                draw, segments, text_x, cursor_y, max_w, font
+            )
+        else:
+            max_w = CANVAS_WIDTH - PADDING_X * 2
+            cursor_y = await _draw_text_block(
+                draw, segments, PADDING_X, cursor_y, max_w, font
+            )
+
+        cursor_y += 15
+
+    # 裁剪到实际高度
+    final_height = cursor_y + PADDING_Y
+    final_img = img.crop((0, 0, CANVAS_WIDTH, int(final_height)))
+
+    # 转换为字节流（使用WebP格式，高压缩率）
+    output = BytesIO()
+    final_img.save(output, format="WEBP", quality=85, method=6)
+    return output.getvalue()
+
+
+async def _parse_rich_text_segments(text: str, default_color: tuple) -> list:
+    """
+    解析富文本为文本段落列表
+    Args:
+        text: 富文本字符串
+        default_color: 默认颜色RGB元组
+    Returns:
+        list: [(文本, 颜色), ...]
+    """
+    TEXT_HIGHLIGHT = (255, 255, 255)
+    TEXT_GRAY = (148, 149, 169)
+
+    segments = []
+
+    # 提取后缀（等级解锁说明）
+    suffix_pattern = r"([（\(]等级\d+.*?解锁[）\)])$"
+    suffix_match = re.search(suffix_pattern, text)
+    main_text = text
+    suffix_text = ""
+
+    if suffix_match:
+        suffix_text = suffix_match.group(1)
+        main_text = text[: suffix_match.start()]
+
+    # 逐字符解析，正确处理嵌套标签
+    i = 0
+    current_text = ""
+    current_color = default_color
+    color_stack = []  # 颜色栈，用于处理嵌套
+
+    while i < len(main_text):
+        # 检查是否是颜色标签开始
+        if main_text[i : i + 7] == "<color=" and i + 14 < len(main_text):
+            # 匹配 <color=#XXXXXX>
+            color_match = re.match(r"<color=(#[0-9a-fA-F]{6})>", main_text[i:])
+            if color_match:
+                # 保存当前文本
+                if current_text:
+                    segments.append((current_text, current_color))
+                    current_text = ""
+
+                # 压栈当前颜色，切换到新颜色
+                color_stack.append(current_color)
+                hex_color = color_match.group(1)
+                current_color = tuple(
+                    int(hex_color.lstrip("#")[j : j + 2], 16) for j in (0, 2, 4)
+                )
+                i += len(color_match.group(0))
+                continue
+
+        # 检查是否是颜色标签结束
+        if main_text[i : i + 8] == "</color>":
+            # 保存当前文本
+            if current_text:
+                segments.append((current_text, current_color))
+                current_text = ""
+
+            # 出栈恢复颜色
+            if color_stack:
+                current_color = color_stack.pop()
+            else:
+                current_color = default_color
+            i += 8
+            continue
+
+        # 检查是否是全角括号标记（高亮文本）
+        if main_text[i] == "＜":
+            # 查找对应的结束标记
+            end_idx = main_text.find("＞", i)
+            if end_idx != -1:
+                # 保存当前文本
+                if current_text:
+                    segments.append((current_text, current_color))
+                    current_text = ""
+
+                # 添加高亮文本（包括括号）
+                highlight_text = main_text[i : end_idx + 1]
+                segments.append((highlight_text, TEXT_HIGHLIGHT))
+                i = end_idx + 1
+                continue
+
+        # 检查是否是半角尖括号内容（比如 <火龙>）
+        # 这些不是color标签也不是数字.类型占位符，应该保持原样
+        if main_text[i] == "<" and i + 1 < len(main_text):
+            # 查找结束的 >
+            end_idx = main_text.find(">", i)
+            if end_idx != -1:
+                bracket_content = main_text[i + 1 : end_idx]
+                # 检查是否是占位符格式 (数字.类型)，如果不是则保持原样
+                if not re.match(r"^\d+\.(VALUE|DURATION)$", bracket_content):
+                    # 不是占位符，直接添加到当前文本（包括括号）
+                    current_text += main_text[i : end_idx + 1]
+                    i = end_idx + 1
+                    continue
+
+        # 普通字符
+        current_text += main_text[i]
+        i += 1
+
+    # 保存最后的文本
+    if current_text:
+        segments.append((current_text, current_color))
+
+    # 添加后缀
+    if suffix_text:
+        segments.append((suffix_text, TEXT_GRAY))
+
+    return segments
+
+
+async def _draw_checkmark(draw: ImageDraw.Draw, x: int, y: int, size: int):
+    """绘制勾号标记"""
+    CHECKMARK_COLOR = (45, 155, 0)
+
+    # 绘制圆形背景
+    draw.ellipse([x, y, x + size, y + size], fill=CHECKMARK_COLOR)
+
+    # 绘制勾号
+    cx, cy = x + size / 2, y + size / 2
+    points = [
+        (cx - size * 0.25, cy),
+        (cx - size * 0.05, cy + size * 0.2),
+        (cx + size * 0.25, cy - size * 0.25),
+    ]
+    draw.line(points, fill="white", width=int(size * 0.12))
+
+
+async def _draw_text_block(
+    draw: ImageDraw.Draw,
+    segments: list,
+    x: int,
+    y: int,
+    max_width: int,
+    font: ImageFont.FreeTypeFont,
+) -> int:
+    """
+    绘制文本块（支持自动换行、换行符和两端对齐）
+    Args:
+        draw: PIL绘图对象
+        segments: [(文本, 颜色), ...]
+        x: 起始X坐标
+        y: 起始Y坐标
+        max_width: 最大宽度
+        font: 字体对象
+    Returns:
+        int: 绘制后的Y坐标
+    """
+    start_x = x
+    current_y = y
+
+    # 获取行高
+    try:
+        ascent, descent = font.getmetrics()
+        line_height = ascent + descent + 12
+    except:
+        line_height = 36
+
+    # 首先将segments转换为字符列表，保留颜色信息
+    char_list = []  # [(char, color), ...]
+    for text, color in segments:
+        i = 0
+        while i < len(text):
+            char = text[i]
+
+            # 处理回车换行
+            if char == "\r" and i + 1 < len(text) and text[i + 1] == "\n":
+                char_list.append(("\n", color))
+                i += 2
+                continue
+
+            # 处理换行符
+            if char == "\n" or char == "\r":
+                char_list.append(("\n", color))
+                i += 1
+                continue
+
+            # 处理制表符
+            if char == "\t":
+                char_list.append(("\t", color))
+                i += 1
+                continue
+
+            # 忽略其他控制字符
+            if ord(char) < 32:
+                i += 1
+                continue
+
+            char_list.append((char, color))
+            i += 1
+
+    # 按行分组字符
+    lines = []  # [[(char, color, width), ...], ...]
+    current_line = []
+    current_line_width = 0
+
+    for char, color in char_list:
+        if char == "\n":
+            # 强制换行
+            lines.append((current_line, current_line_width, True))  # True表示强制换行
+            current_line = []
+            current_line_width = 0
+            continue
+
+        if char == "\t":
+            # 制表符宽度
+            try:
+                if hasattr(font, "getlength"):
+                    tab_width = font.getlength(" ") * 4
+                else:
+                    tab_width = font.getsize(" ")[0] * 4
+            except:
+                tab_width = 48
+
+            if current_line_width + tab_width > max_width:
+                lines.append((current_line, current_line_width, False))
+                current_line = []
+                current_line_width = 0
+            else:
+                current_line.append(("\t", color, tab_width))
+                current_line_width += tab_width
+            continue
+
+        # 获取字符宽度
+        try:
+            if hasattr(font, "getlength"):
+                char_width = font.getlength(char)
+            else:
+                char_width = font.getsize(char)[0]
+        except:
+            char_width = 24
+
+        # 检查是否需要自动换行
+        if current_line_width + char_width > max_width and current_line:
+            lines.append((current_line, current_line_width, False))  # False表示自动换行
+            current_line = []
+            current_line_width = 0
+
+        current_line.append((char, color, char_width))
+        current_line_width += char_width
+
+    # 添加最后一行
+    if current_line:
+        lines.append((current_line, current_line_width, True))  # 最后一行标记为强制换行
+
+    # 绘制每一行（两端对齐）
+    for line_chars, line_width, is_hard_break in lines:
+        if not line_chars:
+            current_y += line_height
+            continue
+
+        # 计算额外间距（仅对非强制换行且不是最后一行的行进行两端对齐）
+        extra_spacing = 0
+        num_chars = len(line_chars)
+
+        # 两端对齐条件：自动换行 且 行宽度超过最大宽度的70%
+        if (
+            not is_hard_break
+            and line_width < max_width
+            and line_width > max_width * 0.7
+            and num_chars > 1
+        ):
+            # 计算需要分配的额外空间
+            total_extra_space = max_width - line_width
+            # 平均分配到字符间隙中
+            extra_spacing = total_extra_space / (num_chars - 1)
+
+        # 绘制这一行
+        current_x = start_x
+        for i, (char, color, char_width) in enumerate(line_chars):
+            if char == "\t":
+                current_x += char_width
+            else:
+                draw.text((current_x, current_y), char, font=font, fill=color)
+                current_x += char_width
+                # 添加额外间距（最后一个字符后不加）
+                if i < num_chars - 1:
+                    current_x += extra_spacing
+
+        current_y += line_height
+
+    return current_y

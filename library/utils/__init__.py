@@ -128,6 +128,7 @@ from .es_image_utils import (
     generate_zodiac_html,
     generate_love_level_html,
     generate_building_html,
+    generate_skill_description_image
 )
 
 # 更新检查相关

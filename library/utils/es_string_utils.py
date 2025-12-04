@@ -4,14 +4,6 @@ import ast
 import asyncio
 from nonebot.log import logger
 from difflib import get_close_matches
-from ...config import (
-    TOWN_DIR,
-    TRAIT_NAME_MAPPING,
-    PACKAGE_TYPE_MAPPING,
-    STAT_NAME_MAPPING,
-    FORMATION_TYPE_MAPPING,
-    SOULLINK_INTEGER_STAT_MAPPING,
-)
 
 
 async def select_text_by_priority(
@@ -116,7 +108,9 @@ async def format_value(
             return f"{formatted_str}%"
 
 
-async def get_character_skill_description(data, no: int, type: str) -> str:
+async def get_character_skill_description(
+    data, no: int, type: str, use_color_text: bool = False
+) -> str:
     """
     获取角色技能值
     Args:
@@ -135,7 +129,6 @@ async def get_character_skill_description(data, no: int, type: str) -> str:
         return ""
 
     function_key = skill_code.get("function_key", 0)
-    use_color_text = False
 
     if function_key > 29:
         if function_key in (30, 300):
@@ -451,7 +444,7 @@ async def process_skill_description(data, description, use_color_text: bool):
     async def get_value_for_match(match):
         no = int(match.group(1))
         type_str = match.group(2)
-        return await get_character_skill_description(data, no, type_str)
+        return await get_character_skill_description(data, no, type_str, use_color_text)
 
     for match, replacement in zip(
         reversed(matches),
@@ -471,6 +464,8 @@ async def get_formation_type(formation_no):
     Returns:
         str: 阵型类型
     """
+    from ...config import FORMATION_TYPE_MAPPING
+
     return FORMATION_TYPE_MAPPING.get(formation_no, "")
 
 
@@ -514,7 +509,9 @@ async def get_character_birthday(data, birthday: int) -> str:
     """
 
     template = (await get_string_by_type(data, "ui", 10625)).get("zh_tw", "{0}月{1}日")
-    month = ((0x51EB851F * birthday) >> 37) % 32 + ((0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF) % 64
+    month = ((0x51EB851F * birthday) >> 37) % 32 + (
+        (0x51EB851F * birthday >> 63) & 0xFFFFFFFFFFFFFFFF
+    ) % 64
     day = birthday % 0x64
     return template.format(str(month), str(day))
 
@@ -688,6 +685,8 @@ async def get_character_arbeit(data, hero_id):
         dict: 包含初始和满级属性, 键为 'initial', 'max'
 
     """
+    from ...config import TRAIT_NAME_MAPPING
+
     # 收集所有相关等级的数据
     level_data = []
     for level in data["arbeit_fairy_level"]["json"]:
@@ -781,15 +780,16 @@ async def get_character_similar_name(query, alias_map):
     return results
 
 
-async def get_character_skill(data, skill_no, support=False):
+async def get_character_skill(data, skill_no, support=False, generate_image=False):
     """
     获取角色技能
     Args:
         data: JSON 数据字典
         skill_no: 技能编号
         support: 是否为支援技能
+        generate_image: 是否生成图片
     Returns:
-        dict: 包含技能信息
+        dict: 包含技能信息，如果generate_image=True，还包含image_bytes字段
     """
     skill_data_list = []
     skill_name_zh_tw = ""
@@ -842,7 +842,7 @@ async def get_character_skill(data, skill_no, support=False):
                         data, "skill", max_level_skill["tooltip_sno"]
                     )
                 ).get("zh_tw", ""),
-                False,
+                True,
             )
             desc_cn = await process_skill_description(
                 data,
@@ -851,7 +851,7 @@ async def get_character_skill(data, skill_no, support=False):
                         data, "skill", max_level_skill["tooltip_sno"]
                     )
                 ).get("zh_cn", ""),
-                False,
+                True,
             )
             desc_kr = await process_skill_description(
                 data,
@@ -860,7 +860,7 @@ async def get_character_skill(data, skill_no, support=False):
                         data, "skill", max_level_skill["tooltip_sno"]
                     )
                 ).get("kr", ""),
-                False,
+                True,
             )
             desc_en = await process_skill_description(
                 data,
@@ -869,7 +869,7 @@ async def get_character_skill(data, skill_no, support=False):
                         data, "skill", max_level_skill["tooltip_sno"]
                     )
                 ).get("en", ""),
-                False,
+                True,
             )
             skill_descriptions.append(
                 {
@@ -890,7 +890,7 @@ async def get_character_skill(data, skill_no, support=False):
                             data, "skill", skill_data["tooltip_sno"]
                         )
                     ).get("zh_tw", ""),
-                    False,
+                    True,
                 )
                 desc_cn = await process_skill_description(
                     data,
@@ -899,7 +899,7 @@ async def get_character_skill(data, skill_no, support=False):
                             data, "skill", skill_data["tooltip_sno"]
                         )
                     ).get("zh_cn", ""),
-                    False,
+                    True,
                 )
                 desc_kr = await process_skill_description(
                     data,
@@ -908,7 +908,7 @@ async def get_character_skill(data, skill_no, support=False):
                             data, "skill", skill_data["tooltip_sno"]
                         )
                     ).get("kr", ""),
-                    False,
+                    True,
                 )
                 desc_en = await process_skill_description(
                     data,
@@ -917,7 +917,7 @@ async def get_character_skill(data, skill_no, support=False):
                             data, "skill", skill_data["tooltip_sno"]
                         )
                     ).get("en", ""),
-                    False,
+                    True,
                 )
                 skill_descriptions.append(
                     {
@@ -929,7 +929,7 @@ async def get_character_skill(data, skill_no, support=False):
                     }
                 )
 
-    return {
+    result = {
         "name": {
             "zh_tw": skill_name_zh_tw,
             "zh_cn": skill_name_zh_cn,
@@ -940,6 +940,63 @@ async def get_character_skill(data, skill_no, support=False):
         "icon_info": skill_icon_info,
         "support": support,
     }
+
+    # 生成图片（如果需要）
+    if generate_image and skill_descriptions:
+        try:
+            # 获取技能类型（从第一个技能数据中）
+            skill_type = ""
+            if skill_data_list:
+                skill_type_sno = skill_data_list[0].get("type")
+                if skill_type_sno:
+                    skill_type_data = await get_string_by_type(
+                        data, "system", skill_type_sno
+                    )
+                    skill_type = skill_type_data.get("zh_tw", "")
+
+            # 准备技能图标
+            icon_bytes_data = None
+            if skill_icon_info:
+                try:
+                    from ...config import ICON_DIR
+
+                    icon_path = str(ICON_DIR / f"{skill_icon_info['icon']}.png")
+                    cache_filename = f"{skill_icon_info['icon']}_{skill_icon_info['color'].replace('#', '')}.png"
+                    cache_path = str(ICON_DIR / cache_filename)
+
+                    # 检查缓存
+                    if os.path.exists(cache_path):
+                        with open(cache_path, "rb") as f:
+                            icon_bytes_data = f.read()
+                    elif os.path.exists(icon_path):
+                        # 需要着色
+                        from .es_image_utils import apply_color_to_icon
+
+                        icon_bytes_data = await apply_color_to_icon(
+                            icon_path, skill_icon_info["color"]
+                        )
+                        # 保存缓存
+                        with open(cache_path, "wb") as f:
+                            f.write(icon_bytes_data)
+                except Exception as e:
+                    logger.error(f"加载技能图标失败: {e}")
+
+            # 延迟导入避免循环依赖
+            from .es_image_utils import generate_skill_description_image
+
+            image_bytes = await generate_skill_description_image(
+                skill_descriptions,
+                skill_name_zh_tw,
+                skill_type,
+                support,
+                icon_bytes_data,
+            )
+            result["image_bytes"] = image_bytes
+        except Exception as e:
+            logger.error(f"生成技能图片失败: {e}")
+            result["image_bytes"] = None
+
+    return result
 
 
 async def get_character_keyword_point(data: dict, keyword_type: str) -> list:
@@ -1253,6 +1310,8 @@ async def get_character_town_object(
     Returns:
         list: 物品信息列表 [(物品编号, 物品名称, 物品品质, 物品类型, 物品描述, 图片路径), ...]
     """
+    from ...config import TOWN_DIR
+
     for obj in data["town_object"]["json"]:
         if obj.get("hero") == hero_id:
             obj_no = obj.get("no")
@@ -1363,6 +1422,8 @@ async def get_character_town_object_task(data: dict, obj_no: int, review=False) 
     Returns:
         list: 任务信息列表
     """
+    from ...config import TRAIT_NAME_MAPPING
+
     try:
         tasks_info = []
 
@@ -1466,6 +1527,8 @@ async def get_cash_pack(data: dict, item_type: str, gate_info: dict) -> list:
     Returns:
         list: 礼包信息列表
     """
+    from ...config import PACKAGE_TYPE_MAPPING
+
     messages = []
     shop_items = []
 
@@ -1550,6 +1613,8 @@ async def get_character_soullink(
         hero_id: 角色编号
         review: 是否为测试
     """
+    from ...config import STAT_NAME_MAPPING, SOULLINK_INTEGER_STAT_MAPPING
+
     soullink_info = []
 
     # 查找所有包含该角色的灵魂链接
@@ -1692,6 +1757,8 @@ async def get_character_signature_value(data, level_group):
     Returns:
         dict: 包含遗物属性统计信息
     """
+    from ...config import STAT_NAME_MAPPING
+
     max_level_data = None
     max_level = 0
 
@@ -1722,15 +1789,16 @@ async def get_character_signature_value(data, level_group):
     return formatted_stats, max_level, max_level_data["battle_power_per"]
 
 
-async def get_character_signature(data, hero_id):
+async def get_character_signature(data, hero_id, generate_image=False):
     """获取角色遗物
 
     Args:
         data: JSON 数据字典
         hero_id: 角色编号
+        generate_image: 是否生成图片
 
     Returns:
-        dict: 包含遗物信息
+        dict: 包含遗物信息，如果generate_image=True，还包含image_bytes字段
     """
 
     skill_descriptions = []
@@ -1811,28 +1879,28 @@ async def get_character_signature(data, hero_id):
                     (await get_string_by_type(data, "skill", tooltip_sno)).get(
                         "zh_tw", ""
                     ),
-                    False,
+                    True,
                 )
                 desc_cn = await process_skill_description(
                     data,
                     (await get_string_by_type(data, "skill", tooltip_sno)).get(
                         "zh_cn", ""
                     ),
-                    False,
+                    True,
                 )
                 desc_kr = await process_skill_description(
                     data,
                     (await get_string_by_type(data, "skill", tooltip_sno)).get(
                         "kr", ""
                     ),
-                    False,
+                    True,
                 )
                 desc_en = await process_skill_description(
                     data,
                     (await get_string_by_type(data, "skill", tooltip_sno)).get(
                         "en", ""
                     ),
-                    False,
+                    True,
                 )
 
                 skill_descriptions.append(
@@ -1853,7 +1921,7 @@ async def get_character_signature(data, hero_id):
             else []
         )
 
-        return {
+        result = {
             "name": {
                 "zh_tw": signature_name_zh_tw,
                 "zh_cn": signature_name_zh_cn,
@@ -1880,6 +1948,37 @@ async def get_character_signature(data, hero_id):
             ),
             "bg_path": signature_bg_path,
         }
+
+        # 生成图片（如果需要）
+        if generate_image and skill_descriptions:
+            try:
+                # 准备遗物图标（使用遗物背景图片）
+                icon_bytes_data = None
+                if signature_bg_path:
+                    try:
+                        from ...config import SOUL_DIR
+
+                        signature_img_path = str(SOUL_DIR / signature_bg_path)
+                        if os.path.exists(signature_img_path):
+                            with open(signature_img_path, "rb") as f:
+                                icon_bytes_data = f.read()
+                    except Exception as e:
+                        logger.error(f"加载遗物图标失败: {e}")
+                from .es_image_utils import generate_skill_description_image
+
+                image_bytes = await generate_skill_description_image(
+                    skill_descriptions,
+                    signature_name_zh_tw,
+                    f"{signature_title_zh_tw}",
+                    support=False,
+                    icon_bytes=icon_bytes_data,
+                )
+                result["image_bytes"] = image_bytes
+            except Exception as e:
+                logger.error(f"生成遗物技能图片失败: {e}")
+                result["image_bytes"] = None
+
+        return result
 
     return {
         "name": {"zh_tw": "", "zh_cn": "", "kr": "", "en": ""},
@@ -2449,9 +2548,9 @@ async def calculate_battle_power(
 ) -> int:
     """
     计算总战力（完整公式）
-    
+
     对应游戏函数: HeroStatus::CalculatePower
-    
+
     战力公式:
         总战力 = 基础战力
                + (等级加成率 - 1) × 基础战力
@@ -2461,22 +2560,22 @@ async def calculate_battle_power(
                + 遗物战力百分比 × 基础战力
                + 内容增益固定战力
                + 内容增益战力百分比 × 基础战力
-    
+
     Args:
         data: JSON 数据字典
         entity_type: 实体类型 (1=英雄, 2=怪物, 3=恶灵)
         level: 等级
         grade: 阶级品质
-        
+
         equipment_power: 装备固定战力, 默认0
             计算方式: Σ(每件装备的battle_power)
             例如: 6件装备每件11948, 则 equipment_power = 11948 × 6 = 71688
-        
+
         equipment_power_per: 装备战力百分比, 默认0.0
             计算方式: Σ(每件装备的battle_power_per)
             例如: 6件装备每件0.1, 则 equipment_power_per = 0.1 × 6 = 0.6
             战力贡献: 0.6 × 基础战力（注意是乘以基础战力，不是装备战力！）
-            
+
         signature_power_per: 遗物战力百分比, 默认0.0
             计算方式: 遗物的battle_power（最高级生效）
             战力贡献: signature_power_per × 基础战力
@@ -2484,7 +2583,7 @@ async def calculate_battle_power(
         contents_buff_power: 内容增益固定战力, 默认0.0
             包含: 方舟强化战力、灵魂链接战力等
             计算方式: 直接累加到总战力
-            
+
         contents_buff_power_per: 内容增益战力百分比, 默认0.0
             包含: 星座、建筑、潜能、好感等级等
             战力贡献: contents_buff_power_per × 基础战力
@@ -2495,16 +2594,16 @@ async def calculate_battle_power(
     base_power = await get_base_battle_power(data, entity_type, level)
     grade_value = await get_hero_grade_value(data, grade)
     level_grade_value = await get_hero_level_grade_value(data, level)
-    
+
     total_power = (
-        base_power                                  # 基础战力
-        + (level_grade_value - 1.0) * base_power    # 等级加成战力
-        + (grade_value - 1.0) * base_power          # 阶级加成战力
-        + equipment_power                           # 装备固定战力（直接累加）
-        + equipment_power_per * base_power          # 装备百分比战力（乘以基础战力）
-        + signature_power_per * base_power          # 遗物百分比战力（乘以基础战力）
-        + contents_buff_power                       # 内容增益固定战力
-        + contents_buff_power_per * base_power      # 内容增益百分比战力
+        base_power  # 基础战力
+        + (level_grade_value - 1.0) * base_power  # 等级加成战力
+        + (grade_value - 1.0) * base_power  # 阶级加成战力
+        + equipment_power  # 装备固定战力（直接累加）
+        + equipment_power_per * base_power  # 装备百分比战力（乘以基础战力）
+        + signature_power_per * base_power  # 遗物百分比战力（乘以基础战力）
+        + contents_buff_power  # 内容增益固定战力
+        + contents_buff_power_per * base_power  # 内容增益百分比战力
     )
 
     return int(total_power)
@@ -2898,6 +2997,8 @@ async def get_building_basic_info(data: dict, obj_no: int) -> dict:
         dict: 建筑基本信息
     """
     try:
+        from ...config import TOWN_DIR
+
         for item in data["item"]["json"]:
             if item.get("no") == obj_no:
                 name_sno = item.get("name_sno")

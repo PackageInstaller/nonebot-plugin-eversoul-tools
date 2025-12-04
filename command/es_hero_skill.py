@@ -140,7 +140,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         skill_type_en = skill_type_data["en"]
                         # 判断是否为支援技能
                         support = skill_key == "support_skill_no"
-                        skill_info = await get_character_skill(data, skill_no, support)
+                        # 带图片的技能信息
+                        skill_info = await get_character_skill(
+                            data, skill_no, support, generate_image=False
+                        )
                         skill_types.append(
                             (
                                 skill_type_zh_tw,
@@ -160,6 +163,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             skill_info,
         ) in skill_types:
             skill_text = []
+
             # 如果有技能图标，处理并添加
             if skill_info["icon_info"]:
                 icon_path = str(ICON_DIR / f"{skill_info['icon_info']['icon']}.png")
@@ -187,16 +191,25 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, review
             )
             skill_name_text = await select_text_by_priority(
-                skill_info["name"]["zh_tw"], skill_info["name"]["zh_cn"], skill_info["name"]["kr"], review
+                skill_info["name"]["zh_tw"],
+                skill_info["name"]["zh_cn"],
+                skill_info["name"]["kr"],
+                review,
             )
 
+            # 添加文字描述（清理颜色代码）
             if skill_info["support"]:
                 main_effects = []
                 for desc in skill_info["descriptions"]:
                     if desc.get("type") == "support":
                         desc_text = await select_text_by_priority(
-                            desc["desc_zh_tw"], desc["desc_zh_cn"], desc["desc_kr"], review
+                            desc["desc_zh_tw"],
+                            desc["desc_zh_cn"],
+                            desc["desc_kr"],
+                            review,
                         )
+                        # 清理颜色代码
+                        desc_text = await clean_rich_text(desc_text)
                         main_effects.append(desc_text)
 
                 if main_effects:
@@ -208,13 +221,21 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     desc_text = await select_text_by_priority(
                         desc["desc_zh_tw"], desc["desc_zh_cn"], desc["desc_kr"], review
                     )
+                    # 清理颜色代码
+                    desc_text = await clean_rich_text(desc_text)
                     hero_level = desc.get("hero_level", 1)
                     unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
-                    skill_text.append(f"等级{i+1}：{desc_text}{unlock_text}\n")
+                    skill_text.append(f"\n等级{i+1}：{desc_text}{unlock_text}\n")
 
-            messages.append("\n".join(str(x) for x in skill_text))
+            # 如果有生成的图片，添加到最后
+            if skill_info.get("image_bytes"):
+                skill_text.append(MessageSegment.image(skill_info["image_bytes"]))
 
-        signature_info = await get_character_signature(data, hero_id)
+            messages.append(skill_text)
+
+        signature_info = await get_character_signature(
+            data, hero_id, generate_image=False
+        )
         if signature_info["name"]["kr"] or signature_info["name"]["zh_cn"]:
             signature_stats = signature_info["stats"]
             max_level = signature_info["max_level"]
@@ -230,7 +251,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 )
 
             signature_name_text = await select_text_by_priority(
-                signature_info["name"]["zh_tw"], signature_info["name"]["zh_cn"], signature_info["name"]["kr"], review
+                signature_info["name"]["zh_tw"],
+                signature_info["name"]["zh_cn"],
+                signature_info["name"]["kr"],
+                review,
             )
             signature_desc_text = await select_text_by_priority(
                 signature_info["description"]["zh_tw"],
@@ -239,15 +263,21 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 review,
             )
             signature_title_text = await select_text_by_priority(
-                signature_info["title"]["zh_tw"], signature_info["title"]["zh_cn"], signature_info["title"]["kr"], review
+                signature_info["title"]["zh_tw"],
+                signature_info["title"]["zh_cn"],
+                signature_info["title"]["kr"],
+                review,
             )
 
+            # 生成文字描述（清理颜色代码）
             skill_descriptions_text = []
             for i, skill in enumerate(signature_info["skills"]):
                 desc_text = await select_text_by_priority(
                     skill["desc_zh_tw"], skill["desc_zh_cn"], skill["desc_kr"], review
                 )
-                skill_descriptions_text.append(f"等級{i+1}：{desc_text}")
+                # 清理颜色代码
+                desc_text = await clean_rich_text(desc_text)
+                skill_descriptions_text.append(f"\n等級{i+1}：{desc_text}")
 
             signature_info_text = f"""{signature_name_text}
 {signature_desc_text}
@@ -258,9 +288,15 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 """ + "\n".join(
                 skill_descriptions_text
             )
-
             signature_msg.append(signature_info_text)
-            messages.append("\n".join(str(x) for x in signature_msg))
+
+            # 如果有生成的遗物技能图片，添加到最后
+            if signature_info.get("image_bytes"):
+                signature_msg.append(
+                    MessageSegment.image(signature_info["image_bytes"])
+                )
+
+            messages.append(signature_msg)
 
         forward_msgs = []
         for msg in messages:
@@ -275,15 +311,33 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         },
                     }
                 )
-
             elif isinstance(msg, list):
+                # 处理包含MessageSegment的列表
+                content_parts = []
+                for item in msg:
+                    if isinstance(item, MessageSegment):
+                        content_parts.append(item)
+                    else:
+                        content_parts.append(str(item))
+
                 forward_msgs.append(
                     {
                         "type": "node",
                         "data": {
                             "name": "Eversoul Info",
                             "uin": bot.self_id,
-                            "content": "\n".join(str(x) for x in msg),
+                            "content": Message(content_parts),
+                        },
+                    }
+                )
+            elif isinstance(msg, MessageSegment):
+                forward_msgs.append(
+                    {
+                        "type": "node",
+                        "data": {
+                            "name": "Eversoul Info",
+                            "uin": bot.self_id,
+                            "content": Message([msg]),
                         },
                     }
                 )
