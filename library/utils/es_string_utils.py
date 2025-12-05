@@ -1819,6 +1819,7 @@ async def get_character_signature(data, hero_id, generate_image=False, review=Fa
 
     skill_descriptions = []
     signature_bg_path = ""
+    signature_data = None
 
     # 在Signature中查找对应角色的遗物
     for signature in data["signature"]["json"]:
@@ -2012,8 +2013,8 @@ async def get_character_signature(data, hero_id, generate_image=False, review=Fa
 
                 image_bytes = await generate_skill_description_image(
                     skill_descriptions,
-                    signature_name_display,
                     f"{signature_title_display}",
+                    signature_name_display,
                     support=False,
                     icon_bytes=icon_bytes_data,
                     extra_info=extra_info,

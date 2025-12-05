@@ -456,11 +456,16 @@ async def get_schedule_event(
         start_date = schedule.get("start_date")
         end_date = schedule.get("end_date")
 
-        if not (start_date and end_date):
+        # 跳过无效的日期数据（如 '0' 或空字符串）
+        if not (start_date and end_date) or start_date == "0" or end_date == "0":
             continue
 
-        start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
-        end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+            end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+        except (ValueError, TypeError):
+            # 跳过无法解析的日期
+            continue
 
         is_in_month = (
             (start_date.year == target_year and start_date.month == target_month)
@@ -538,14 +543,17 @@ async def get_mail_event(data, target_month, target_year):
         start_date = mail.get("start_date")
         end_date = mail.get("end_date")
 
-        if not (start_date and end_date):
+        # 跳过无效的日期数据（如 '0' 或空字符串）
+        if not (start_date and end_date) or start_date == "0" or end_date == "0":
             continue
 
-        # 将日期字符串转换为datetime对象
-        start_date = datetime.strptime(start_date, "%Y-%m-%d")
-        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        except (ValueError, TypeError):
+            # 跳过无法解析的日期
+            continue
 
-        # 检查事件是否在目标月份内
         is_in_month = (
             (start_date.year == target_year and start_date.month == target_month)
             or (end_date.year == target_year and end_date.month == target_month)
@@ -554,7 +562,6 @@ async def get_mail_event(data, target_month, target_year):
         if not is_in_month:
             continue
 
-        # 获取发送者名称
         sender_name_tw = "未知"
         sender_name_en = "Unknown"
         if sender_sno := mail.get("sender_sno"):
@@ -562,7 +569,6 @@ async def get_mail_event(data, target_month, target_year):
             sender_name_tw = sender_data["zh_tw"]
             sender_name_en = sender_data["en"]
 
-        # 获取标题和描述
         title_data = (
             await get_string_character(data, mail.get("title_sno", 0)) or "无标题"
         )
@@ -573,7 +579,7 @@ async def get_mail_event(data, target_month, target_year):
         )
         desc_tw = desc_data["zh_tw"] if isinstance(desc_data, dict) else "无描述"
 
-        # 处理奖励信息
+        # 奖励信息
         rewards = []
         for i in range(1, 5):
             reward_no_key = f"reward_no{i}"
@@ -585,10 +591,9 @@ async def get_mail_event(data, target_month, target_year):
                 if item_name and amount:
                     rewards.append(f"{item_name['zh_tw']}x{amount}")
 
-        # 构建事件信息
         event_info = []
-        event_info.append(f"【邮箱事件】")  # 使用统一的格式
-        event_info.append(f"名称：{sender_name_tw}的信件")  # 添加名称行以统一格式
+        event_info.append(f"【邮箱事件】")
+        event_info.append(f"名称：{sender_name_tw}的信件")
         event_info.append(f"标题：{title_tw}")
         event_info.append(f"描述：{desc_tw}")
         event_info.append(
@@ -623,13 +628,13 @@ async def get_calendar_event(data, target_month, target_year):
     for schedule in data["localization_schedule"]["json"]:
         schedule_key = schedule.get("schedule_key", "")
         # 排除以下类型：
-        #   - Calender_PickUp_ （Pickup活动）
-        #   - *_Main 结尾的主要活动
+        #  - Calender_PickUp_ （Pickup活动）
+        #  - *_Main 结尾的主要活动
         if (
             (
                 not schedule_key.startswith("Calender_")
                 and not schedule_key.startswith("EventInfo_")
-            )
+            ) 
             or schedule_key.startswith("Calender_PickUp_")
             or schedule_key.endswith("_Main")  # 主要活动
             or schedule_key.endswith("_Quest")  # 7日任务
@@ -646,11 +651,16 @@ async def get_calendar_event(data, target_month, target_year):
         start_date = schedule.get("start_date")
         end_date = schedule.get("end_date")
 
-        if not (start_date and end_date):
+        # 跳过无效的日期数据（如 '0' 或空字符串）
+        if not (start_date and end_date) or start_date == "0" or end_date == "0":
             continue
 
-        start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
-        end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+            end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+        except (ValueError, TypeError):
+            # 跳过无法解析的日期
+            continue
 
         is_in_month = (
             (start_date.year == target_year and start_date.month == target_month)
@@ -712,7 +722,7 @@ async def get_calendar_event(data, target_month, target_year):
             # 从schedule_key中提取角色名称：Calender_SingleRaid_HeroName
             parts = schedule_key.split("_")
             if len(parts) > 2:
-                hero_name = parts[-1]  # 获取最后一部分，保持原始大小写
+                hero_name = parts[-1]
                 # 这里是给数据表中不同字段角色名称做适配
                 hero_name = HERO_NAME_MAPPING.get(
                     hero_name, hero_name
@@ -726,19 +736,18 @@ async def get_calendar_event(data, target_month, target_year):
             # 从schedule_key中提取角色名称：Calender_EdenAlliance_HeroName
             parts = schedule_key.split("_")
             if len(parts) > 2:
-                hero_name = parts[-1].lower()  # 获取最后一部分并转为小写
-                # 寻找最大tier值的贴纸
+                hero_name = parts[-1].lower()
                 max_tier = 0
                 found_sticker = None
                 # 查找基础贴纸（不带_1后缀）
-                for tier in range(1, 20):  # 假设tier最多到20
+                for tier in range(1, 20):
                     sticker_name = f"sticker_eas_{hero_name}_tier_{tier}.png"
                     sticker_path = STICKER_DIR / sticker_name
                     if sticker_path.exists():
                         max_tier = tier
                         found_sticker = sticker_name
 
-                # 如果找到了基础贴纸，尝试查找带_1后缀的贴纸
+                # 带_1后缀的贴纸
                 if found_sticker:
                     variant_sticker = f"sticker_eas_{hero_name}_tier_{max_tier}_1.png"
                     variant_path = STICKER_DIR / variant_sticker
@@ -746,7 +755,6 @@ async def get_calendar_event(data, target_month, target_year):
                         banner_path = variant_sticker
                     else:
                         banner_path = found_sticker
-        # 从EventInfo中获取banner路径
         elif name_sno and not banner_path:
             for event_info in data["event_info"]["json"]:
                 if event_info.get("name_sno") == name_sno:
@@ -778,7 +786,6 @@ async def format_event_content(event_text):
         if line.startswith("banner："):
             banner_path = line.replace("banner：", "").strip()
         else:
-            # 移除事件类型标题行
             if not (line.startswith("【") and line.endswith("】")):
                 # 跳过名称行，因为名称已经在event-type标签中显示了
                 if not line.startswith("名称："):
@@ -822,14 +829,10 @@ async def generate_event_html(event, event_type):
     """生成事件HTML，包括内容和banner图片"""
     from ...config import STICKER_DIR, BANNER_DIR
 
-    # 首先调用 format_event_content 获取格式化的内容和banner路径
     event_data = format_event_content(event)
 
-    # 确保 event_data 是一个字典
     if isinstance(event_data, dict):
         html = f'<div class="event-content">{event_data["content"]}</div>'
-
-        # 如果有banner，添加到HTML中
         if event_data["banner"]:
             # 检查是否是联合作战的sticker图片或恶灵讨伐或邮箱事件的sticker图片
             if (
@@ -842,7 +845,6 @@ async def generate_event_html(event, event_type):
                 banner_path = str(BANNER_DIR / event_data["banner"])
             html += f'<img class="event-banner" src="{banner_path}" alt="活动Banner">'
         else:
-            # 如果没有找到banner图片，显示默认图片
             default_banner_path = str(BANNER_DIR / "banner_No_Image.png")
             html += f'<img class="event-banner" src="{default_banner_path}" alt="默认Banner">'
 
@@ -853,27 +855,22 @@ async def get_event_name(event):
     """获取事件名称"""
     lines = event.split("\n")
 
-    # 检查是否是邮件事件
+    # 邮件事件
     if lines and "【邮箱事件】" in lines[0]:
-        # 从名称行提取发送者名称
         for line in lines:
             if line.startswith("名称："):
                 name = line.replace("名称：", "").replace("的信件", "").strip()
                 return name
 
-    # 其他类型的活动
     for line in lines:
         if line.startswith("名称："):
-            # 移除名称前缀，清理特殊字符
             name = line.replace("名称：", "").strip()
-            # 处理可能的转义字符和换行
             name = (
                 name.replace("\r", "")
                 .replace("\n", " ")
                 .replace("\\r", "")
                 .replace("\\n", " ")
             )
-            # 合并多个空格
             name = " ".join(name.split())
             return name
 
@@ -1225,7 +1222,6 @@ async def get_event_time(event):
     for line in lines:
         if "持续时间：" in line:
             time_str = line.replace("持续时间：", "").strip()
-            # 格式化为简短的月.日-月.日格式
             try:
                 start_date_str, end_date_str = time_str.split("至")
                 start_date = datetime.strptime(start_date_str.strip(), "%Y-%m-%d")
@@ -1279,7 +1275,6 @@ async def get_event_banner(event):
                 return str(STICKER_DIR / banner_path)
             else:
                 return str(BANNER_DIR / banner_path)
-    # 如果没有找到banner图片，返回默认图片
     return str(BANNER_DIR / "banner_No_Image.png")
 
 
@@ -1297,7 +1292,6 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
     from ...config import CUSTOM_FONT
 
     try:
-        # 检查数据是否存在
         if "ark_enhance" not in data or "json" not in data["ark_enhance"]:
             logger.error("数据中缺少ark_enhance或其json字段")
             return MessageSegment.text("生成统计图失败: 缺少方舟强化数据")
@@ -1305,15 +1299,11 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
         if "ark_overclock" not in data or "json" not in data["ark_overclock"]:
             logger.error("数据中缺少ark_overclock或其json字段")
             return MessageSegment.text("生成统计图失败: 缺少超频数据")
-
-        # 收集超频消耗数据
         all_overclock_costs = []
         all_overclock_levels_cost = []
 
-        # 收集魔力粉尘消耗数据
         extra_items_data = {}  # 格式: {item_no: {levels: [], costs: []}}
 
-        # 使用字典确保每个超频等级只对应一个消耗值
         level_cost_map = {}
         for overclock in data["ark_overclock"]["json"]:
             level = overclock.get("overclock_level", 0)
@@ -1321,7 +1311,6 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
             if level is not None and cost is not None:
                 level_cost_map[level] = cost
 
-                # 收集魔力粉尘消耗数据
                 for i in range(10):  # 最多有10个魔力粉尘
                     item_no_key = f"pay_item_no_{i}"
                     item_amount_key = f"pay_amount_{i}"
@@ -1337,22 +1326,17 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                                 extra_items_data[item_no]["levels"].append(level)
                                 extra_items_data[item_no]["costs"].append(item_amount)
 
-        # 将字典转换为有序列表
         sorted_cost_levels = sorted(level_cost_map.keys())
         for level in sorted_cost_levels:
             all_overclock_levels_cost.append(level)
             all_overclock_costs.append(level_cost_map[level])
 
-        # 获取数据的最大超频等级
         max_overclock_level = (
             max(all_overclock_levels_cost) if all_overclock_levels_cost else 0
         )
 
-        # 如果提供了目标等级，限制图表范围为目标等级
-        # 否则使用全范围
         plot_max_level = target_level if target_level else max_overclock_level
 
-        # 过滤超频消耗数据
         overclock_levels_cost = []
         overclock_costs = []
         for i, level in enumerate(all_overclock_levels_cost):
@@ -1360,7 +1344,6 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                 overclock_levels_cost.append(level)
                 overclock_costs.append(all_overclock_costs[i])
 
-        # 过滤魔力粉尘消耗数据
         filtered_extra_items_data = {}
         for item_no, item_data in extra_items_data.items():
             filtered_levels = []
@@ -1369,7 +1352,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                 if i < len(item_data["costs"]) and level <= plot_max_level:
                     filtered_levels.append(level)
                     filtered_costs.append(item_data["costs"][i])
-            if filtered_levels:  # 只保留有数据的物品
+            if filtered_levels:
                 item_name = (await get_string_item(data, item_no)).get("zh_tw", "")
                 if not item_name:
                     item_name = f"{item_no}"
@@ -1379,10 +1362,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
                     "name": item_name,
                 }
 
-        # 使用双Y轴
         fig, ax1 = plt.subplots(figsize=(12, 8))
-
-        # 设置左侧Y轴 - 魔力水晶
         ax1.set_xlabel("超频等级", fontproperties=CUSTOM_FONT)
         ax1.set_ylabel("魔力水晶消耗", color="red", fontproperties=CUSTOM_FONT)
         ax1.plot(
@@ -1396,18 +1376,15 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
         ax1.tick_params(axis="y", labelcolor="red")
         ax1.grid(True, linestyle="--", alpha=0.7, axis="both")
 
-        # 设置右侧Y轴 - 魔力粉尘
         if filtered_extra_items_data:
-            ax2 = ax1.twinx()  # 创建共享X轴的第二个Y轴
+            ax2 = ax1.twinx()
             ax2.set_ylabel("魔力粉尘消耗", color="blue", fontproperties=CUSTOM_FONT)
 
-            # 设置颜色循环
+            # 颜色循环
             colors = ["g", "c", "m", "y", "k", "b"]
             color_index = 0
 
-            # 绘制每种魔力粉尘的消耗曲线
             for item_no, item_data in filtered_extra_items_data.items():
-                # 验证数据
                 if len(item_data["levels"]) != len(item_data["costs"]):
                     logger.warning(
                         f"物品 {item_no} 数据维度不匹配: levels({len(item_data['levels'])}) != costs({len(item_data['costs'])})"
@@ -1430,22 +1407,18 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
 
             ax2.tick_params(axis="y", labelcolor="blue")
 
-            # 添加图例 - 合并两个轴的图例
             lines1, labels1 = ax1.get_legend_handles_labels()
             lines2, labels2 = ax2.get_legend_handles_labels()
             ax1.legend(
                 lines1 + lines2, labels1 + labels2, loc="upper left", prop=CUSTOM_FONT
             )
         else:
-            # 如果没有魔力粉尘，只添加魔力水晶的图例
             ax1.legend(loc="upper left", prop=CUSTOM_FONT)
 
-        # 设置图表标题
         plt.title(
             f"超频等级升级消耗图 (1-{plot_max_level}级)", fontproperties=CUSTOM_FONT
         )
 
-        # 设置x轴范围和刻度
         if overclock_levels_cost:
             x_max = max(overclock_levels_cost)
             if x_max <= 50:
@@ -1459,10 +1432,7 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
             ax1.set_xlim(0, x_max)
             ax1.set_xticks(range(0, x_max + 1, x_interval))
 
-        # 添加网格线
         ax1.grid(True, linestyle="--", alpha=0.7)
-
-        # 添加标记线，显示当前等级
         if target_level and target_level <= plot_max_level:
             ax1.axvline(x=target_level, color="purple", linestyle="--", alpha=0.7)
             ax1.text(
@@ -1481,11 +1451,9 @@ async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegm
         plt.savefig(buffer, format="webp", dpi=300, bbox_inches="tight")
         plt.close()
 
-        # 获取bytes数据
         buffer.seek(0)
         image_bytes = buffer.getvalue()
 
-        # 返回MessageSegment对象
         return MessageSegment.image(image_bytes)
 
     except Exception as e:
@@ -2483,7 +2451,6 @@ async def generate_skill_description_image(
     CHECKMARK_SIZE = 22
     ICON_SIZE = 64  # 技能图标大小
 
-    # 加载字体
     try:
         font = ImageFont.truetype(str(FONT_DIR), FONT_SIZE, index=0)
         font_small = ImageFont.truetype(str(FONT_DIR), FONT_SIZE_SMALL, index=0)
@@ -2491,28 +2458,23 @@ async def generate_skill_description_image(
         font = ImageFont.load_default()
         font_small = ImageFont.load_default()
 
-    # 创建临时画布
     img = Image.new("RGBA", (CANVAS_WIDTH, 5000), BG_COLOR)
     draw = ImageDraw.Draw(img)
 
     cursor_y = PADDING_Y
 
-    # 绘制标题（如果有）
+    # 绘制标题
     if skill_type and skill_name:
-        # 计算图标和文字的起始位置
         icon_x = PADDING_X
         text_x = PADDING_X + (ICON_SIZE + 15 if icon_bytes else 0)
 
-        # 绘制技能图标（如果有）
+        # 绘制技能图标
         if icon_bytes:
             try:
                 icon_img = Image.open(BytesIO(icon_bytes))
 
-                # 转换为RGBA模式
                 if icon_img.mode != "RGBA":
                     icon_img = icon_img.convert("RGBA")
-
-                # 裁剪为正方形（取中心部分）
                 width, height = icon_img.size
                 if width != height:
                     min_side = min(width, height)
@@ -2521,35 +2483,27 @@ async def generate_skill_description_image(
                     right = left + min_side
                     bottom = top + min_side
                     icon_img = icon_img.crop((left, top, right, bottom))
-
-                # 调整图标大小
                 icon_img = icon_img.resize(
                     (ICON_SIZE, ICON_SIZE), Image.Resampling.LANCZOS
                 )
-
-                # 创建圆角遮罩
                 mask = Image.new("L", (ICON_SIZE, ICON_SIZE), 0)
                 mask_draw = ImageDraw.Draw(mask)
                 try:
-                    # 尝试绘制圆角矩形遮罩
                     mask_draw.rounded_rectangle(
                         [(0, 0), (ICON_SIZE, ICON_SIZE)], radius=8, fill=255
                     )
                 except AttributeError:
-                    # 降级为圆形遮罩
                     mask_draw.ellipse([(0, 0), (ICON_SIZE, ICON_SIZE)], fill=255)
 
-                # 应用遮罩
                 output_icon = Image.new("RGBA", (ICON_SIZE, ICON_SIZE), (0, 0, 0, 0))
                 output_icon.paste(icon_img, (0, 0))
                 output_icon.putalpha(mask)
 
-                # 粘贴图标
                 img.paste(output_icon, (icon_x, cursor_y), output_icon)
             except Exception as e:
                 logger.error(f"加载技能图标失败: {e}")
 
-        # 计算技能类型文字尺寸
+        # 技能类型文字尺寸
         try:
             if hasattr(font_small, "getbbox"):
                 type_bbox = font_small.getbbox(skill_type)
@@ -2561,27 +2515,21 @@ async def generate_skill_description_image(
             type_width = len(skill_type) * FONT_SIZE_SMALL
             type_height = FONT_SIZE_SMALL
 
-        # 绘制技能类型背景矩形
         type_y = cursor_y
-        rect_padding_left = 4  # 矩形左侧内边距
-        rect_padding_right = 12  # 矩形右侧内边距
-        rect_padding_y = 2  # 矩形上下内边距
+        rect_padding_left = 4
+        rect_padding_right = 12
+        rect_padding_y = 2
 
-        # 矩形左侧与技能名字左侧对齐
         rect_x1 = text_x - rect_padding_left
         rect_y1 = type_y - rect_padding_y
-        # 矩形长度为文字宽度的3倍（1.5 * 2）
         rect_x2 = text_x + type_width * 3 + rect_padding_right
         rect_y2 = type_y + type_height + rect_padding_y
 
-        # 绘制直角矩形背景（深色）
-        rect_bg_color = (45, 47, 55, 255)  # 比背景稍亮的深色
+        rect_bg_color = (45, 47, 55, 255)
         draw.rectangle([rect_x1, rect_y1, rect_x2, rect_y2], fill=rect_bg_color)
-
-        # 绘制技能类型文字（小字号，灰色）
         draw.text((text_x, type_y), skill_type, font=font_small, fill=TEXT_GRAY)
 
-        # 计算技能类型的高度
+        # 技能类型高度
         try:
             if hasattr(font_small, "getbbox"):
                 type_height = font_small.getbbox(skill_type)[3]
@@ -2590,11 +2538,10 @@ async def generate_skill_description_image(
         except:
             type_height = FONT_SIZE_SMALL
 
-        # 绘制技能名称（正常字号，白色，在类型下方）
+        # 技能名称
         name_y = type_y + type_height + 4
         draw.text((text_x, name_y), skill_name, font=font, fill=TEXT_HIGHLIGHT)
 
-        # 计算技能名称的高度
         try:
             if hasattr(font, "getbbox"):
                 name_height = font.getbbox(skill_name)[3]
@@ -2603,35 +2550,42 @@ async def generate_skill_description_image(
         except:
             name_height = FONT_SIZE
 
-        # 更新cursor_y，取图标高度和文字总高度的较大值
         text_total_height = type_height + 4 + name_height
         cursor_y += max(ICON_SIZE, text_total_height) + 20
 
-    # 绘制额外信息（如遗物属性）
     if extra_info:
-        # 绘制描述（紧凑显示，手动处理换行）
         if extra_info.get("description"):
             desc_text = extra_info["description"]
             max_width = CANVAS_WIDTH - PADDING_X * 2
             current_line = ""
-            
+
             i = 0
             while i < len(desc_text):
                 char = desc_text[i]
-                
+
                 # \r\n
-                if char == '\r' and i + 1 < len(desc_text) and desc_text[i + 1] == '\n':
+                if char == "\r" and i + 1 < len(desc_text) and desc_text[i + 1] == "\n":
                     if current_line:
-                        draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                        draw.text(
+                            (PADDING_X, cursor_y),
+                            current_line,
+                            font=font_small,
+                            fill=TEXT_GRAY,
+                        )
                         cursor_y += FONT_SIZE_SMALL + 2
                         current_line = ""
                     i += 2  # 跳过 \r\n
                     continue
-                
+
                 # \n 或 \r
-                if char == '\n' or char == '\r':
+                if char == "\n" or char == "\r":
                     if current_line:
-                        draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                        draw.text(
+                            (PADDING_X, cursor_y),
+                            current_line,
+                            font=font_small,
+                            fill=TEXT_GRAY,
+                        )
                         cursor_y += FONT_SIZE_SMALL + 2
                         current_line = ""
                     i += 1
@@ -2646,21 +2600,27 @@ async def generate_skill_description_image(
                 except:
                     line_width = len(test_line) * FONT_SIZE_SMALL
                 if line_width > max_width and current_line:
-                    draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                    draw.text(
+                        (PADDING_X, cursor_y),
+                        current_line,
+                        font=font_small,
+                        fill=TEXT_GRAY,
+                    )
                     cursor_y += FONT_SIZE_SMALL + 2
                     current_line = char
                 else:
                     current_line = test_line
-                
+
                 i += 1
 
             if current_line:
-                draw.text((PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY)
+                draw.text(
+                    (PADDING_X, cursor_y), current_line, font=font_small, fill=TEXT_GRAY
+                )
                 cursor_y += FONT_SIZE_SMALL + 2
-            
+
             cursor_y += 6
 
-        # 绘制战力百分比
         if extra_info.get("battle_power_per"):
             battle_power_text = f"战力百分比：{extra_info['battle_power_per']}"
             draw.text(
@@ -2671,13 +2631,11 @@ async def generate_skill_description_image(
             )
             cursor_y += FONT_SIZE_SMALL + 8
 
-        # 绘制满级属性（紧凑显示）
         if extra_info.get("max_level") and extra_info.get("stats"):
             for stat in extra_info["stats"]:
                 draw.text((PADDING_X, cursor_y), stat, font=font_small, fill=TEXT_GRAY)
                 cursor_y += FONT_SIZE_SMALL + 2
 
-        # 添加分隔线
         line_y = cursor_y + 10
         draw.line(
             [(PADDING_X, line_y), (CANVAS_WIDTH - PADDING_X, line_y)],
@@ -2686,29 +2644,25 @@ async def generate_skill_description_image(
         )
         cursor_y = line_y + 15
 
-    # 绘制技能描述
     for desc in skill_descriptions:
         level = desc.get("hero_level", desc.get("level", 1))
-        
-        # 根据review模式选择描述语言
         if review:
-            desc_text = desc.get("desc_kr", desc.get("desc_zh_tw", desc.get("desc", "")))
+            desc_text = desc.get(
+                "desc_kr", desc.get("desc_zh_tw", desc.get("desc", ""))
+            )
         else:
-            desc_text = desc.get("desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", "")))
+            desc_text = desc.get(
+                "desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", ""))
+            )
 
-        # 判断是否为升级描述（等级>1）
         is_upgrade = level > 1 and not support
         default_color = TEXT_GREEN if is_upgrade else TEXT_GRAY
 
-        # 添加等级标签（如果不是支援技能）
         if not support:
             level_prefix = f"等级{level}："
             desc_text = level_prefix + desc_text
 
-        # 解析富文本
         segments = await _parse_rich_text_segments(desc_text, default_color)
-
-        # 绘制勾号（如果是升级描述）
         if is_upgrade:
             await _draw_checkmark(draw, PADDING_X, cursor_y + 4, CHECKMARK_SIZE)
             text_x = PADDING_X + CHECKMARK_SIZE + 15
@@ -2724,11 +2678,8 @@ async def generate_skill_description_image(
 
         cursor_y += 15
 
-    # 裁剪到实际高度
     final_height = cursor_y + PADDING_Y
     final_img = img.crop((0, 0, CANVAS_WIDTH, int(final_height)))
-
-    # 转换为字节流（使用WebP格式，高压缩率）
     output = BytesIO()
     final_img.save(output, format="WEBP", quality=85, method=6)
     return output.getvalue()
@@ -2746,9 +2697,10 @@ async def _parse_rich_text_segments(text: str, default_color: tuple) -> list:
     TEXT_HIGHLIGHT = (255, 255, 255)
     TEXT_GRAY = (148, 149, 169)
 
-    segments = []
+    # 先清理不需要的标签（如 <effect:none>）
+    text = re.sub(r"<effect:none>", "", text, flags=re.IGNORECASE)
 
-    # 提取后缀（等级解锁说明）
+    segments = []
     suffix_pattern = r"([（\(]等级\d+.*?解锁[）\)])$"
     suffix_match = re.search(suffix_pattern, text)
     main_text = text
@@ -2758,19 +2710,18 @@ async def _parse_rich_text_segments(text: str, default_color: tuple) -> list:
         suffix_text = suffix_match.group(1)
         main_text = text[: suffix_match.start()]
 
-    # 逐字符解析，正确处理嵌套标签
     i = 0
     current_text = ""
     current_color = default_color
     color_stack = []  # 颜色栈，用于处理嵌套
 
     while i < len(main_text):
-        # 检查是否是颜色标签开始
-        if main_text[i : i + 7] == "<color=" and i + 14 < len(main_text):
-            # 匹配 <color=#XXXXXX>
-            color_match = re.match(r"<color=(#[0-9a-fA-F]{6})>", main_text[i:])
+        # 检查颜色标签开始
+        if main_text[i : i + 7].lower() == "<color=" and i + 14 < len(main_text):
+            color_match = re.match(
+                r"<color=(#[0-9a-fA-F]{6})>", main_text[i:], re.IGNORECASE
+            )
             if color_match:
-                # 保存当前文本
                 if current_text:
                     segments.append((current_text, current_color))
                     current_text = ""
@@ -2784,9 +2735,8 @@ async def _parse_rich_text_segments(text: str, default_color: tuple) -> list:
                 i += len(color_match.group(0))
                 continue
 
-        # 检查是否是颜色标签结束
-        if main_text[i : i + 8] == "</color>":
-            # 保存当前文本
+        # 检查颜色标签结束
+        if main_text[i : i + 8].lower() == "</color>":
             if current_text:
                 segments.append((current_text, current_color))
                 current_text = ""
@@ -2799,45 +2749,33 @@ async def _parse_rich_text_segments(text: str, default_color: tuple) -> list:
             i += 8
             continue
 
-        # 检查是否是全角括号标记（高亮文本）
         if main_text[i] == "＜":
-            # 查找对应的结束标记
             end_idx = main_text.find("＞", i)
             if end_idx != -1:
-                # 保存当前文本
                 if current_text:
                     segments.append((current_text, current_color))
                     current_text = ""
-
-                # 添加高亮文本（包括括号）
                 highlight_text = main_text[i : end_idx + 1]
                 segments.append((highlight_text, TEXT_HIGHLIGHT))
                 i = end_idx + 1
                 continue
 
         # 检查是否是半角尖括号内容（比如 <火龙>）
-        # 这些不是color标签也不是数字.类型占位符，应该保持原样
         if main_text[i] == "<" and i + 1 < len(main_text):
-            # 查找结束的 >
             end_idx = main_text.find(">", i)
             if end_idx != -1:
                 bracket_content = main_text[i + 1 : end_idx]
-                # 检查是否是占位符格式 (数字.类型)，如果不是则保持原样
                 if not re.match(r"^\d+\.(VALUE|DURATION)$", bracket_content):
-                    # 不是占位符，直接添加到当前文本（包括括号）
                     current_text += main_text[i : end_idx + 1]
                     i = end_idx + 1
                     continue
 
-        # 普通字符
         current_text += main_text[i]
         i += 1
 
-    # 保存最后的文本
     if current_text:
         segments.append((current_text, current_color))
 
-    # 添加后缀
     if suffix_text:
         segments.append((suffix_text, TEXT_GRAY))
 
@@ -2847,11 +2785,7 @@ async def _parse_rich_text_segments(text: str, default_color: tuple) -> list:
 async def _draw_checkmark(draw: ImageDraw.Draw, x: int, y: int, size: int):
     """绘制勾号标记"""
     CHECKMARK_COLOR = (45, 155, 0)
-
-    # 绘制圆形背景
     draw.ellipse([x, y, x + size, y + size], fill=CHECKMARK_COLOR)
-
-    # 绘制勾号
     cx, cy = x + size / 2, y + size / 2
     points = [
         (cx - size * 0.25, cy),
@@ -2884,39 +2818,34 @@ async def _draw_text_block(
     start_x = x
     current_y = y
 
-    # 获取行高
+    # 行高
     try:
         ascent, descent = font.getmetrics()
         line_height = ascent + descent + 12
     except:
         line_height = 36
 
-    # 首先将segments转换为字符列表，保留颜色信息
     char_list = []  # [(char, color), ...]
     for text, color in segments:
         i = 0
         while i < len(text):
             char = text[i]
 
-            # 处理回车换行
             if char == "\r" and i + 1 < len(text) and text[i + 1] == "\n":
                 char_list.append(("\n", color))
                 i += 2
                 continue
 
-            # 处理换行符
             if char == "\n" or char == "\r":
                 char_list.append(("\n", color))
                 i += 1
                 continue
 
-            # 处理制表符
             if char == "\t":
                 char_list.append(("\t", color))
                 i += 1
                 continue
 
-            # 忽略其他控制字符
             if ord(char) < 32:
                 i += 1
                 continue
@@ -2924,7 +2853,6 @@ async def _draw_text_block(
             char_list.append((char, color))
             i += 1
 
-    # 按行分组字符
     lines = []  # [[(char, color, width), ...], ...]
     current_line = []
     current_line_width = 0
@@ -2932,13 +2860,12 @@ async def _draw_text_block(
     for char, color in char_list:
         if char == "\n":
             # 强制换行
-            lines.append((current_line, current_line_width, True))  # True表示强制换行
+            lines.append((current_line, current_line_width, True))
             current_line = []
             current_line_width = 0
             continue
 
         if char == "\t":
-            # 制表符宽度
             try:
                 if hasattr(font, "getlength"):
                     tab_width = font.getlength(" ") * 4
@@ -2965,7 +2892,6 @@ async def _draw_text_block(
         except:
             char_width = 24
 
-        # 检查是否需要自动换行
         if current_line_width + char_width > max_width and current_line:
             lines.append((current_line, current_line_width, False))  # False表示自动换行
             current_line = []
@@ -2974,33 +2900,24 @@ async def _draw_text_block(
         current_line.append((char, color, char_width))
         current_line_width += char_width
 
-    # 添加最后一行
     if current_line:
         lines.append((current_line, current_line_width, True))  # 最后一行标记为强制换行
 
-    # 绘制每一行（两端对齐）
     for line_chars, line_width, is_hard_break in lines:
         if not line_chars:
             current_y += line_height
             continue
 
-        # 计算额外间距（仅对非强制换行且不是最后一行的行进行两端对齐）
         extra_spacing = 0
         num_chars = len(line_chars)
-
-        # 两端对齐条件：自动换行 且 行宽度超过最大宽度的70%
         if (
             not is_hard_break
             and line_width < max_width
             and line_width > max_width * 0.7
             and num_chars > 1
         ):
-            # 计算需要分配的额外空间
             total_extra_space = max_width - line_width
-            # 平均分配到字符间隙中
             extra_spacing = total_extra_space / (num_chars - 1)
-
-        # 绘制这一行
         current_x = start_x
         for i, (char, color, char_width) in enumerate(line_chars):
             if char == "\t":
@@ -3008,7 +2925,6 @@ async def _draw_text_block(
             else:
                 draw.text((current_x, current_y), char, font=font, fill=color)
                 current_x += char_width
-                # 添加额外间距（最后一个字符后不加）
                 if i < num_chars - 1:
                     current_x += extra_spacing
 
