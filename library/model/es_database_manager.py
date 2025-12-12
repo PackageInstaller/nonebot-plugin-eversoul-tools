@@ -117,6 +117,61 @@ class EversoulUser:
                         )
                         await db.commit()
                         logger.info("数据库表 push_history 创建成功")
+                    
+                    # 迁移旧的 live/review 数据到 gl_live/gl_review
+                    cursor = await db.execute(
+                        "SELECT server_type FROM server WHERE server_type IN ('live', 'review')"
+                    )
+                    old_records = await cursor.fetchall()
+                    
+                    if old_records:
+                        logger.info("检测到旧的服务器类型命名，开始迁移...")
+                        
+                        # 迁移 live -> gl_live
+                        cursor = await db.execute(
+                            "SELECT * FROM server WHERE server_type = 'live'"
+                        )
+                        live_record = await cursor.fetchone()
+                        if live_record:
+                            await db.execute(
+                                """
+                                INSERT OR REPLACE INTO server 
+                                (server_type, version, cdn_date, table_version, last_checked)
+                                VALUES (?, ?, ?, ?, ?)
+                                """,
+                                ("gl_live", live_record[1], live_record[2], live_record[3], live_record[4])
+                            )
+                            await db.execute("DELETE FROM server WHERE server_type = 'live'")
+                            logger.info("已迁移 live -> gl_live")
+                        
+                        # 迁移 review -> gl_review
+                        cursor = await db.execute(
+                            "SELECT * FROM server WHERE server_type = 'review'"
+                        )
+                        review_record = await cursor.fetchone()
+                        if review_record:
+                            await db.execute(
+                                """
+                                INSERT OR REPLACE INTO server 
+                                (server_type, version, cdn_date, table_version, last_checked)
+                                VALUES (?, ?, ?, ?, ?)
+                                """,
+                                ("gl_review", review_record[1], review_record[2], review_record[3], review_record[4])
+                            )
+                            await db.execute("DELETE FROM server WHERE server_type = 'review'")
+                            logger.info("已迁移 review -> gl_review")
+                        
+                        # 迁移 push_history 表
+                        await db.execute(
+                            "UPDATE push_history SET server_type = 'gl_live' WHERE server_type = 'live'"
+                        )
+                        await db.execute(
+                            "UPDATE push_history SET server_type = 'gl_review' WHERE server_type = 'review'"
+                        )
+                        
+                        await db.commit()
+                        logger.info("数据库迁移完成")
+                        
             except Exception as e:
                 logger.error(f"升级数据库结构失败: {e}")
 

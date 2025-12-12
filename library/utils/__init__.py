@@ -85,7 +85,11 @@ es_update_check = on_command(
     "es检查更新", aliases={"es更新检查"}, priority=5, block=True
 )
 es_check_datasource = on_command(
-    "es检查数据源", aliases={"es数据源检查"}, priority=5, block=True, permission=SUPERUSER
+    "es检查数据源",
+    aliases={"es数据源检查"},
+    priority=5,
+    block=True,
+    permission=SUPERUSER,
 )
 emoji_vote = on_notice(priority=1, block=False)
 es_zodiac = on_command("es星座信息", priority=5, block=True)
@@ -128,7 +132,7 @@ from .es_image_utils import (
     generate_zodiac_html,
     generate_love_level_html,
     generate_building_html,
-    generate_skill_description_image
+    generate_skill_description_image,
 )
 
 # 更新检查相关

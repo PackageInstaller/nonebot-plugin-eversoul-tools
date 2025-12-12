@@ -12,18 +12,14 @@ import matplotlib.pyplot as plt
 
 def get_banner_suffix(server: str) -> str:
     """根据服务器类型获取banner文件后缀
-    
+
     Args:
         server: 服务器类型 ("global", "cn", "jp")
-        
+
     Returns:
         str: banner文件后缀 (如 "ZH_TW", "ZH_CN", "JA")
     """
-    suffix_map = {
-        "global": "ZH_TW",
-        "cn": "ZH_CN",
-        "jp": "JA"
-    }
+    suffix_map = {"global": "ZH_TW", "cn": "ZH_CN", "jp": "JA"}
     return suffix_map.get(server, "ZH_TW")
 
 
@@ -180,6 +176,7 @@ async def get_character_illustration(data, hero_id):
     images = []
     result_dict = {}
     old_design_suffix = " (1)"  # 旧设立绘的后缀
+    censored_suffix = " (2)"  # 和谐后立绘的后缀
 
     # 列出所有可能的立绘文件
     all_files = list(Path(image_path).glob("*_2048*.*"))
@@ -188,8 +185,8 @@ async def get_character_illustration(data, hero_id):
     for file in all_files:
         file_stem = file.stem
 
-        # 跳过旧设文件，稍后处理
-        if " (1)" in file_stem:
+        # 跳过旧设文件和和谐后文件，稍后处理
+        if " (1)" in file_stem or " (2)" in file_stem:
             continue
 
         # 提取基础名称，移除_2048后缀
@@ -245,9 +242,9 @@ async def get_character_illustration(data, hero_id):
                     display_name_kr = f"{costume_name_kr}_旧设"
                     display_name_en = f"{costume_name_en}_old"
 
-                    # 解锁条件设置为"尽请期待"
+                    # 解锁条件设置为"敬请期待"
                     old_condition_tw = "敬請期待"
-                    old_condition_cn = "尽请期待"
+                    old_condition_cn = "敬请期待"
                     old_condition_kr = "기대해 주세요"
                     old_condition_en = "Stay tuned"
 
@@ -266,12 +263,46 @@ async def get_character_illustration(data, hero_id):
                         )
                     )
 
-    # 处理独立的旧设立绘文件（没有对应的常规立绘）
+                # 检查是否存在对应的和谐后立绘 (格式: 基础名称_2048 (2).后缀)
+                censored_file = (
+                    file.parent / f"{base_name}_2048{censored_suffix}{file.suffix}"
+                )
+
+                if censored_file.exists():
+                    # 添加和谐后立绘
+                    display_name_tw = f"{costume_name_zh_tw}_和谐后"
+                    display_name_cn = f"{costume_name_zh_cn}_和谐后"
+                    display_name_kr = f"{costume_name_kr}_조화 후"
+                    display_name_en = f"{costume_name_en}_censored"
+
+                    # 解锁条件设置为"敬请期待"
+                    censored_condition_tw = "IsEnableReview = true"
+                    censored_condition_cn = "IsEnableReview = true"
+                    censored_condition_kr = "IsEnableReview = true"
+                    censored_condition_en = "IsEnableReview = true"
+
+                    # 将和谐后立绘添加到结果列表中（在旧设立绘后面）
+                    result_dict[base_name].append(
+                        (
+                            censored_file,
+                            display_name_tw,
+                            display_name_cn,
+                            display_name_kr,
+                            display_name_en,
+                            censored_condition_tw,
+                            censored_condition_cn,
+                            censored_condition_kr,
+                            censored_condition_en,
+                        )
+                    )
+
+    # 处理独立的旧设立绘文件和和谐后立绘文件（没有对应的常规立绘）
     for file in all_files:
         file_stem = file.stem
-        # 检查是否是旧设立绘
-        if "(1)" in file_stem and "_2048" in file_stem:
-            # 提取原始基础名称，要去掉_2048和 (1)
+
+        # 检查是否是旧设立绘或和谐后立绘
+        if ("(1)" in file_stem or "(2)" in file_stem) and "_2048" in file_stem:
+            # 提取原始基础名称，要去掉_2048和 (1)或(2)
             original_base_name = file_stem.split("_2048")[0]
 
             # 如果这个基础名称已经处理过，跳过
@@ -291,21 +322,35 @@ async def get_character_illustration(data, hero_id):
                     _,
                 ) = costume_info[original_base_name]
 
-                # 添加"_旧设"标记
-                display_name_tw = f"{costume_name_zh_tw}_旧设"
-                display_name_cn = f"{costume_name_zh_cn}_旧设"
-                display_name_kr = f"{costume_name_kr}_旧设"
-                display_name_en = f"{costume_name_en}_old"
-                condition_tw = "敬請期待"
-                condition_cn = "尽请期待"
-                condition_kr = "기대해 주세요"
-                condition_en = "Stay tuned"
+                # 判断是旧设还是和谐后
+                if "(1)" in file_stem:
+                    # 添加"_旧设"标记
+                    display_name_tw = f"{costume_name_zh_tw}_旧设"
+                    display_name_cn = f"{costume_name_zh_cn}_旧设"
+                    display_name_kr = f"{costume_name_kr}_旧设"
+                    display_name_en = f"{costume_name_en}_old"
+                    # 旧设的解锁条件
+                    condition_tw = "敬請期待"
+                    condition_cn = "敬请期待"
+                    condition_kr = "기대해 주세요"
+                    condition_en = "Stay tuned"
+                elif "(2)" in file_stem:
+                    # 添加"_和谐后"标记
+                    display_name_tw = f"{costume_name_zh_tw}_和谐后"
+                    display_name_cn = f"{costume_name_zh_cn}_和谐后"
+                    display_name_kr = f"{costume_name_kr}_조화 후"
+                    display_name_en = f"{costume_name_en}_censored"
+                    # 和谐后的解锁条件
+                    condition_tw = "IsEnableReview = true"
+                    condition_cn = "IsEnableReview = true"
+                    condition_kr = "IsEnableReview = true"
+                    condition_en = "IsEnableReview = true"
 
                 # 创建新的结果条目
                 if original_base_name not in result_dict:
                     result_dict[original_base_name] = []
 
-                # 添加旧设立绘
+                # 添加立绘
                 result_dict[original_base_name].append(
                     (
                         file,
@@ -521,7 +566,7 @@ async def get_schedule_event(
 
         # 获取banner后缀
         banner_suffix = get_banner_suffix(server)
-        
+
         # 对于Pickup类型，从Gacha.json中获取banner_path
         if schedule_key.startswith("Calender_PickUp_") and gacha_no:
             if "gacha" in data:
@@ -640,7 +685,7 @@ async def get_mail_event(data, target_month, target_year):
 
 async def get_calendar_event(data, target_month, target_year, server="global"):
     """获取一般活动信息
-    
+
     Args:
         data: JSON数据字典
         target_month: 目标月份
@@ -662,7 +707,7 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
             (
                 not schedule_key.startswith("Calender_")
                 and not schedule_key.startswith("EventInfo_")
-            ) 
+            )
             or schedule_key.startswith("Calender_PickUp_")
             or schedule_key.endswith("_Main")  # 主要活动
             or schedule_key.endswith("_Quest")  # 7日任务
@@ -706,7 +751,7 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
 
         # 获取banner后缀
         banner_suffix = get_banner_suffix(server)
-        
+
         # 对于EventInfo_开头的活动，直接从event_info中获取信息
         if schedule_key.startswith("EventInfo_") and (
             (schedule_key.endswith("_Pass")) or (schedule_key.endswith("_Attend"))
@@ -2679,24 +2724,32 @@ async def generate_skill_description_image(
 
     for desc in skill_descriptions:
         level = desc.get("hero_level", desc.get("level", 1))
-        
+
         # 根据服务器和数据类型选择描述语言
         if server == "cn":
             # 国服使用简体中文
-            desc_text = desc.get("desc_zh_cn", desc.get("desc_zh_tw", desc.get("desc", "")))
+            desc_text = desc.get(
+                "desc_zh_cn", desc.get("desc_zh_tw", desc.get("desc", ""))
+            )
         elif server == "jp":
             # 日服使用日文
             desc_text = desc.get("desc_ja", desc.get("desc_kr", desc.get("desc", "")))
         elif server == "global":
             if data_type == "review":
                 # 国际服review使用韩文
-                desc_text = desc.get("desc_kr", desc.get("desc_zh_tw", desc.get("desc", "")))
+                desc_text = desc.get(
+                    "desc_kr", desc.get("desc_zh_tw", desc.get("desc", ""))
+                )
             else:
                 # 国际服live使用繁体中文
-                desc_text = desc.get("desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", "")))
+                desc_text = desc.get(
+                    "desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", ""))
+                )
         else:
             # 默认使用繁体中文
-            desc_text = desc.get("desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", "")))
+            desc_text = desc.get(
+                "desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", ""))
+            )
 
         is_upgrade = level > 1 and not support
         default_color = TEXT_GREEN if is_upgrade else TEXT_GRAY
