@@ -10,6 +10,23 @@ from nonebot.log import logger
 import matplotlib.pyplot as plt
 
 
+def get_banner_suffix(server: str) -> str:
+    """根据服务器类型获取banner文件后缀
+    
+    Args:
+        server: 服务器类型 ("global", "cn", "jp")
+        
+    Returns:
+        str: banner文件后缀 (如 "ZH_TW", "ZH_CN", "JA")
+    """
+    suffix_map = {
+        "global": "ZH_TW",
+        "cn": "ZH_CN",
+        "jp": "JA"
+    }
+    return suffix_map.get(server, "ZH_TW")
+
+
 async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
     """对图标应用颜色
 
@@ -415,7 +432,7 @@ async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path
 
 
 async def get_schedule_event(
-    data, target_month, target_year, schedule_prefix, event_type
+    data, target_month, target_year, schedule_prefix, event_type, server="global"
 ):
     """获取活动日程事件信息
 
@@ -425,6 +442,7 @@ async def get_schedule_event(
         target_year: 目标年份
         schedule_prefix: 日程key前缀(如"Calender_PickUp_")
         event_type: 事件类型显示名称(如"Pickup")
+        server: 服务器类型 ("global", "cn", "jp")
 
     Returns:
         list: 事件信息列表
@@ -501,6 +519,9 @@ async def get_schedule_event(
                             break
                 break
 
+        # 获取banner后缀
+        banner_suffix = get_banner_suffix(server)
+        
         # 对于Pickup类型，从Gacha.json中获取banner_path
         if schedule_key.startswith("Calender_PickUp_") and gacha_no:
             if "gacha" in data:
@@ -508,7 +529,7 @@ async def get_schedule_event(
                     if gacha.get("no") == gacha_no:
                         banner_raw = gacha.get("banner_path", "")
                         if banner_raw:
-                            banner_path = f"{banner_raw}_ZH_TW.png"
+                            banner_path = f"{banner_raw}_{banner_suffix}.png"
                         break
         # 从EventInfo中获取banner路径
         elif name_sno:
@@ -516,7 +537,7 @@ async def get_schedule_event(
                 if event_info.get("name_sno") == name_sno:
                     banner_raw = event_info.get("banner_path", "")
                     if banner_raw:
-                        banner_path = f"{banner_raw}_ZH_TW.png"
+                        banner_path = f"{banner_raw}_{banner_suffix}.png"
                     break
 
         if event_name_tw:
@@ -617,8 +638,15 @@ async def get_mail_event(data, target_month, target_year):
     return mail_events
 
 
-async def get_calendar_event(data, target_month, target_year):
-    """获取一般活动信息"""
+async def get_calendar_event(data, target_month, target_year, server="global"):
+    """获取一般活动信息
+    
+    Args:
+        data: JSON数据字典
+        target_month: 目标月份
+        target_year: 目标年份
+        server: 服务器类型 ("global", "cn", "jp")
+    """
     from .es_string_utils import get_string_by_type
     from ...config import HERO_NAME_MAPPING, STICKER_DIR, BANNER_DIR
 
@@ -676,6 +704,9 @@ async def get_calendar_event(data, target_month, target_year):
         name_sno = None
         gacha_no = None
 
+        # 获取banner后缀
+        banner_suffix = get_banner_suffix(server)
+        
         # 对于EventInfo_开头的活动，直接从event_info中获取信息
         if schedule_key.startswith("EventInfo_") and (
             (schedule_key.endswith("_Pass")) or (schedule_key.endswith("_Attend"))
@@ -685,7 +716,7 @@ async def get_calendar_event(data, target_month, target_year):
                     name_sno = event_info.get("name_sno")
                     banner_raw = event_info.get("banner_path", "")
                     if banner_raw:
-                        banner_path = f"{banner_raw}_ZH_TW.png"
+                        banner_path = f"{banner_raw}_{banner_suffix}.png"
                     # 如果找到name_sno，从StringUI中获取名称
                     if name_sno:
                         event_name_tw = (
@@ -760,7 +791,7 @@ async def get_calendar_event(data, target_month, target_year):
                 if event_info.get("name_sno") == name_sno:
                     banner_raw = event_info.get("banner_path", "")
                     if banner_raw:
-                        banner_path = f"{banner_raw}_ZH_TW.png"
+                        banner_path = f"{banner_raw}_{banner_suffix}.png"
                     break
 
         if event_name_tw:

@@ -34,6 +34,10 @@ async def handle_es_month(bot: Bot, event: Event, args: Message = CommandArg()):
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         data = await load_json_data(group_id)
+        
+        # 获取服务器配置
+        config = await get_group_data_source(group_id)
+        server = config.get("server", "global")
 
         # 收集指定月份的事件
         month_events = []
@@ -45,19 +49,19 @@ async def handle_es_month(bot: Bot, event: Event, args: Message = CommandArg()):
                 prefix = schedule_key
                 main_events.extend(
                     await get_schedule_event(
-                        data, target_month, target_year, prefix, "主要活动"
+                        data, target_month, target_year, prefix, "主要活动", server
                     )
                 )
         month_events.extend(main_events)
 
         month_events.extend(
             await get_schedule_event(
-                data, target_month, target_year, "Calender_PickUp_", "Pickup"
+                data, target_month, target_year, "Calender_PickUp_", "Pickup", server
             )
         )
 
         # 获取一般活动事件
-        calendar_events = await get_calendar_event(data, target_month, target_year)
+        calendar_events = await get_calendar_event(data, target_month, target_year, server)
         month_events.extend(calendar_events)
 
         # 获取邮箱事件
