@@ -20,8 +20,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             aliases_data = yaml.safe_load(f)
         alias_map = await load_aliases(group_id)
 
-        # 判断是否为测试模式
-        review = config["type"] == "review"
+        # 获取服务器和数据类型
+        server = config.get("server", "global")
+        data_type = config.get("type", "live")
 
         # 尝试从别名映射中获取hero_id
         hero_id = alias_map.get(hero_name)
@@ -236,14 +237,15 @@ CV_KR：{cv_kr}"""
                 intro_zh_tw = intro_data["zh_tw"]
                 intro_kr = intro_data["kr"]
                 intro_zh_cn = intro_data["zh_cn"]
-                if intro_zh_tw or intro_kr:
+                intro_ja = intro_data.get("ja", "")
+                if intro_zh_tw or intro_kr or intro_zh_cn or intro_ja:
                     intro_text = await select_text_by_priority(
-                        intro_zh_tw, intro_zh_cn, intro_kr, review
+                        intro_zh_tw, intro_zh_cn, intro_kr, intro_ja, server, data_type
                     )
                     messages.append("【自我介绍】\n" + intro_text)
 
         # 获取灵魂链接信息
-        soullink_info = await get_character_soullink(data, hero_id, review)
+        soullink_info = await get_character_soullink(data, hero_id, server, data_type)
         if soullink_info:
             for link in soullink_info:
                 link_msg = ["【灵魂链接】"]
@@ -274,7 +276,7 @@ CV_KR：{cv_kr}"""
         # 添加好感故事攻略
         has_story, episode_info, endings = await get_character_story(data, hero_id)
         if has_story:
-            messages.append(await format_character_story(episode_info, endings, review))
+            messages.append(await format_character_story(episode_info, endings, server, data_type))
 
         # 好感故事CG
         cg_images = await get_character_affection_cg(data, hero_id)
@@ -290,7 +292,7 @@ CV_KR：{cv_kr}"""
             messages.append("".join(str(x) for x in cg_msg))
 
         # 添加角色关键字信息
-        keyword_info = await get_character_keyword(data, hero_id, review)
+        keyword_info = await get_character_keyword(data, hero_id, server, data_type)
         if keyword_info:
             messages.append(keyword_info)
 
@@ -304,7 +306,7 @@ CV_KR：{cv_kr}"""
             messages.append("".join(str(x) for x in illust_msg))
 
         # 添加专属领地物品信息
-        town_objects = await get_character_town_object(data, hero_id, review)
+        town_objects = await get_character_town_object(data, hero_id, server, data_type)
         if town_objects:
             objects_msg: list = ["【专属领地物品】"]
             if town_objects["img_path"] and os.path.exists(town_objects["img_path"]):
@@ -323,7 +325,7 @@ CV_KR：{cv_kr}"""
 
                 # 添加可进行的任务信息
                 tasks = await get_character_town_object_task(
-                    data, town_objects["obj_no"], review
+                    data, town_objects["obj_no"], server, data_type
                 )
                 if tasks:
                     objects_msg.append(f"\n{town_objects["tooltip"]}")

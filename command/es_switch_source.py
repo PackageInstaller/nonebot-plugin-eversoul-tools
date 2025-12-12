@@ -13,17 +13,21 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         config = await get_group_data_source(group_id)
         server = config.get("server", "global")
         data_type = config.get("type", "live")
-        server_name = {"global": "国际服", "cn": "国服"}.get(server, server)
+        server_name = {"global": "国际服", "cn": "国服", "jp": "日服"}.get(server, server)
         await es_switch_source.finish(f"当前群组数据源为: {server_name} - {data_type}")
 
-    # 支持的参数：cn, live, review
-    if args_str not in ["cn", "live", "review"]:
+    # 支持的参数：cn_live, cn_review, gl_live, gl_review, jp_live, jp_review
+    if args_str not in ["cn_live", "cn_review", "gl_live", "gl_review", "jp_live", "jp_review"]:
         await es_switch_source.finish(
             "参数错误！\n"
             "可用选项:\n"
-            "  cn - 国服(仅live)\n"
-            "  live - 国际服live\n"
-            "  review - 国际服review"
+            "  cn_live - 国服live\n"
+            "  cn_review - 国服review\n"
+            "  gl_live - 国际服live\n"
+            "  gl_review - 国际服review\n"
+            "  下面两个没用，不要切过去\n"
+            "  jp_live - 日服live\n"
+            "  jp_review - 日服review"
         )
 
     # 确保CURRENT_DATA_SOURCE包含default配置
@@ -36,8 +40,8 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         CURRENT_DATA_SOURCE[group_id] = CURRENT_DATA_SOURCE["default"].copy()
 
     # 根据参数设置server和type
-    if args_str == "cn":
-        # 国服只支持live
+    if args_str == "cn_live":
+        # 国服live
         CURRENT_DATA_SOURCE[group_id]["server"] = "cn"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
 
@@ -47,9 +51,48 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
             )
         else:
             await es_switch_source.finish(
-                "未配置国服数据源路径，请在env中设置eversoul_cn_live_path"
+                "未配置国服live数据源路径，请在env中设置eversoul_cn_live_path"
             )
-    elif args_str == "live":
+    elif args_str == "cn_review":
+        # 国服review
+        CURRENT_DATA_SOURCE[group_id]["server"] = "cn"
+        CURRENT_DATA_SOURCE[group_id]["type"] = "review"
+
+        if plugin_config.eversoul_cn_review_path:
+            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
+                plugin_config.eversoul_cn_review_path
+            )
+        else:
+            await es_switch_source.finish(
+                "未配置国服review数据源路径，请在env中设置eversoul_cn_review_path"
+            )
+    elif args_str == "jp_live":
+        # 日服live
+        CURRENT_DATA_SOURCE[group_id]["server"] = "jp"
+        CURRENT_DATA_SOURCE[group_id]["type"] = "live"
+
+        if plugin_config.eversoul_jp_live_path:
+            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
+                plugin_config.eversoul_jp_live_path
+            )
+        else:
+            await es_switch_source.finish(
+                "未配置日服live数据源路径，请在env中设置eversoul_jp_live_path"
+            )
+    elif args_str == "jp_review":
+        # 日服review
+        CURRENT_DATA_SOURCE[group_id]["server"] = "jp"
+        CURRENT_DATA_SOURCE[group_id]["type"] = "review"
+
+        if plugin_config.eversoul_jp_review_path:
+            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
+                plugin_config.eversoul_jp_review_path
+            )
+        else:
+            await es_switch_source.finish(
+                "未配置日服review数据源路径，请在env中设置eversoul_jp_review_path"
+            )
+    elif args_str == "gl_live":
         # 国际服live
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
@@ -62,7 +105,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
             await es_switch_source.finish(
                 "未配置国际服live数据源路径，请在env中设置eversoul_live_path"
             )
-    else:  # review
+    else:  # gl_review
         # 国际服review
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "review"
@@ -98,7 +141,7 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
                 f"错误行号: {error_location.lineno}\n"
             )
 
-    server_name = {"global": "国际服", "cn": "国服"}.get(
+    server_name = {"global": "国际服", "cn": "国服", "jp": "日服"}.get(
         CURRENT_DATA_SOURCE[group_id]["server"], CURRENT_DATA_SOURCE[group_id]["server"]
     )
     await es_switch_source.finish(

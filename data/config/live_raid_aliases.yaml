@@ -77,7 +77,7 @@ names:
     aliases: []
     hero_id: 8120
   - zh_tw_name: 凱林浮士德
-    zh_cn_name: ''
+    zh_cn_name: 凯琳·浮士德
     kr_name: 케이린 파우스트
     en_name: Kayrin Faust
     ja_name: ''
@@ -105,7 +105,7 @@ names:
     aliases: []
     hero_id: 8270
   - zh_tw_name: 凱林浮士德
-    zh_cn_name: ''
+    zh_cn_name: 凯琳·浮士德
     kr_name: 케이린 파우스트
     en_name: Kayrin Faust
     ja_name: ''
@@ -231,7 +231,7 @@ names:
     aliases: []
     hero_id: 9901
   - zh_tw_name: 貪官汙吏克羅伊
-    zh_cn_name: 贪官污吏克罗伊
+    zh_cn_name: 腐败官员克罗伊
     kr_name: 탐관오리 클로이
     en_name: Corrupt Official Chloe
     ja_name: 悪代官クロエ
@@ -987,7 +987,7 @@ names:
     aliases: []
     hero_id: 60011
   - zh_tw_name: 貪官汙吏克羅伊
-    zh_cn_name: 贪官污吏克罗伊
+    zh_cn_name: 腐败官员克罗伊
     kr_name: 탐관오리 클로이
     en_name: Corrupt Official Chloe
     ja_name: 悪代官クロエ

@@ -14,6 +14,9 @@ class Config(BaseModel):
     eversoul_live_path: str | None = None  # 国际服live数据源
     eversoul_review_path: str | None = None  # 国际服review数据源
     eversoul_cn_live_path: str | None = None  # 国服live数据源
+    eversoul_cn_review_path: str | None = None  # 国服review数据源
+    eversoul_jp_live_path: str | None = None  # 日服live数据源
+    eversoul_jp_review_path: str | None = None  # 日服review数据源
     eversoul_file_check_interval: int = 5  # 文件监视检查间隔（秒）
     _warned: ClassVar[bool] = False
 
@@ -31,8 +34,20 @@ class Config(BaseModel):
                 logger.warning("请在配置文件中添加 eversoul_review_path 配置项。")
 
             if self.eversoul_cn_live_path is None:
-                logger.warning("eversoul_cn_live_path 未配置，国服功能将无法使用。")
+                logger.warning("eversoul_cn_live_path 未配置，国服live功能将无法使用。")
                 logger.warning("请在配置文件中添加 eversoul_cn_live_path 配置项。")
+
+            if self.eversoul_cn_review_path is None:
+                logger.warning("eversoul_cn_review_path 未配置，国服review功能将无法使用。")
+                logger.warning("请在配置文件中添加 eversoul_cn_review_path 配置项。")
+
+            if self.eversoul_jp_live_path is None:
+                logger.warning("eversoul_jp_live_path 未配置，日服live功能将无法使用。")
+                logger.warning("请在配置文件中添加 eversoul_jp_live_path 配置项。")
+
+            if self.eversoul_jp_review_path is None:
+                logger.warning("eversoul_jp_review_path 未配置，日服review功能将无法使用。")
+                logger.warning("请在配置文件中添加 eversoul_jp_review_path 配置项。")
 
             Config._warned = True
 

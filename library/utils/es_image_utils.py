@@ -2413,14 +2413,15 @@ async def generate_skill_description_image(
     support: bool = False,
     icon_bytes: bytes = None,
     extra_info: dict = None,
-    review: bool = False,
+    server: str = "global",
+    data_type: str = "live",
 ) -> bytes:
     """
     生成技能描述图片
     Args:
         skill_descriptions: 技能描述列表
-        skill_name: 技能名称（已根据review模式选择的语言）
-        skill_type: 技能类型（已根据review模式选择的语言）
+        skill_name: 技能名称（已根据服务器类型选择的语言）
+        skill_type: 技能类型（已根据服务器类型选择的语言）
         support: 是否为支援技能
         icon_bytes: 技能图标字节流
         extra_info: 额外信息（如遗物属性），格式：
@@ -2430,7 +2431,8 @@ async def generate_skill_description_image(
                 "battle_power_per": 数值,
                 "max_level": 数值
             }
-        review: 是否为review模式（用于选择描述语言）
+        server: 服务器类型 (global/cn/jp)
+        data_type: 数据类型 (live/review)
     Returns:
         bytes: WebP图片字节流（quality=85, method=6高压缩）
     """
@@ -2646,14 +2648,24 @@ async def generate_skill_description_image(
 
     for desc in skill_descriptions:
         level = desc.get("hero_level", desc.get("level", 1))
-        if review:
-            desc_text = desc.get(
-                "desc_kr", desc.get("desc_zh_tw", desc.get("desc", ""))
-            )
+        
+        # 根据服务器和数据类型选择描述语言
+        if server == "cn":
+            # 国服使用简体中文
+            desc_text = desc.get("desc_zh_cn", desc.get("desc_zh_tw", desc.get("desc", "")))
+        elif server == "jp":
+            # 日服使用日文
+            desc_text = desc.get("desc_ja", desc.get("desc_kr", desc.get("desc", "")))
+        elif server == "global":
+            if data_type == "review":
+                # 国际服review使用韩文
+                desc_text = desc.get("desc_kr", desc.get("desc_zh_tw", desc.get("desc", "")))
+            else:
+                # 国际服live使用繁体中文
+                desc_text = desc.get("desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", "")))
         else:
-            desc_text = desc.get(
-                "desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", ""))
-            )
+            # 默认使用繁体中文
+            desc_text = desc.get("desc_zh_tw", desc.get("desc_zh_cn", desc.get("desc", "")))
 
         is_upgrade = level > 1 and not support
         default_color = TEXT_GREEN if is_upgrade else TEXT_GRAY

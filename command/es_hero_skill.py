@@ -32,8 +32,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             aliases_data = yaml.safe_load(f)
         alias_map = await load_aliases(group_id)
 
-        # 是否为测试模式
-        review = config["type"] == "review"
+        # 获取服务器和数据类型
+        server = config.get("server", "global")
+        data_type = config.get("type", "live")
         hero_id = alias_map.get(hero_name)
         if not hero_id and hero_name.isascii():
             hero_id = alias_map.get(hero_name.lower())
@@ -113,7 +114,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         ]
 
         # 技能释放顺序
-        skill_pattern = await get_character_skill_pattern(data, hero_id, review)
+        skill_pattern = await get_character_skill_pattern(data, hero_id, server, data_type)
         if skill_pattern:
             pattern_text = ["▼ 技能释放顺序"]
             for i, (skill_name, skill_type) in enumerate(skill_pattern, 1):
@@ -136,7 +137,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         support = skill_key == "support_skill_no"
                         # 获取技能信息（根据标志决定是否生成图片）
                         skill_info = await get_character_skill(
-                            data, skill_no, support, generate_image=generate_image_flag, review=review
+                            data, skill_no, support, generate_image=generate_image_flag, server=server, data_type=data_type
                         )
                         skill_types.append(
                             (
@@ -185,13 +186,15 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     skill_text.append(MessageSegment.image(colored_icon))
 
                 skill_type_text = await select_text_by_priority(
-                    skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, review
+                    skill_type_zh_tw, skill_type_zh_cn, skill_type_kr, skill_type_data.get("ja", ""), server, data_type
                 )
                 skill_name_text = await select_text_by_priority(
                     skill_info["name"]["zh_tw"],
                     skill_info["name"]["zh_cn"],
                     skill_info["name"]["kr"],
-                    review,
+                    skill_info["name"].get("ja", ""),
+                    server,
+                    data_type,
                 )
 
                 # 添加文字描述（清理颜色代码）
@@ -203,7 +206,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                                 desc["desc_zh_tw"],
                                 desc["desc_zh_cn"],
                                 desc["desc_kr"],
-                                review,
+                                desc.get("desc_ja", ""),
+                                server,
+                                data_type,
                             )
                             # 清理颜色代码
                             desc_text = await clean_rich_text(desc_text)
@@ -216,7 +221,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     skill_text.append(f"【{skill_type_text}】{skill_name_text}")
                     for i, desc in enumerate(skill_info["descriptions"]):
                         desc_text = await select_text_by_priority(
-                            desc["desc_zh_tw"], desc["desc_zh_cn"], desc["desc_kr"], review
+                            desc["desc_zh_tw"], desc["desc_zh_cn"], desc["desc_kr"], desc.get("desc_ja", ""), server, data_type
                         )
                         # 清理颜色代码
                         desc_text = await clean_rich_text(desc_text)
@@ -227,7 +232,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             messages.append(skill_text)
 
         signature_info = await get_character_signature(
-            data, hero_id, generate_image=generate_image_flag, review=review
+            data, hero_id, generate_image=generate_image_flag, server=server, data_type=data_type
         )
         if signature_info["name"]["kr"] or signature_info["name"]["zh_cn"]:
             signature_stats = signature_info["stats"]
@@ -257,26 +262,32 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     signature_info["name"]["zh_tw"],
                     signature_info["name"]["zh_cn"],
                     signature_info["name"]["kr"],
-                    review,
+                    signature_info["name"].get("ja", ""),
+                    server,
+                    data_type,
                 )
                 signature_desc_text = await select_text_by_priority(
                     signature_info["description"]["zh_tw"],
                     signature_info["description"]["zh_cn"],
                     signature_info["description"]["kr"],
-                    review,
+                    signature_info["description"].get("ja", ""),
+                    server,
+                    data_type,
                 )
                 signature_title_text = await select_text_by_priority(
                     signature_info["title"]["zh_tw"],
                     signature_info["title"]["zh_cn"],
                     signature_info["title"]["kr"],
-                    review,
+                    signature_info["title"].get("ja", ""),
+                    server,
+                    data_type,
                 )
 
                 # 生成文字描述（清理颜色代码）
                 skill_descriptions_text = []
                 for i, skill in enumerate(signature_info["skills"]):
                     desc_text = await select_text_by_priority(
-                        skill["desc_zh_tw"], skill["desc_zh_cn"], skill["desc_kr"], review
+                        skill["desc_zh_tw"], skill["desc_zh_cn"], skill["desc_kr"], skill.get("desc_ja", ""), server, data_type
                     )
                     # 清理颜色代码
                     desc_text = await clean_rich_text(desc_text)
