@@ -31,19 +31,19 @@ async def select_text_by_priority(
     """
     if server == "cn":
         # 国服使用简体中文
-        return zh_cn if zh_cn else zh_tw
+        return zh_cn
     elif server == "jp":
         # 日服使用日文
-        return ja if ja else kr
+        return ja
     elif server == "global":
         # 国际服根据数据类型选择
         if data_type == "review":
-            return kr if kr else zh_tw
+            return kr
         else:  # live
-            return zh_tw if zh_tw else zh_cn
+            return zh_tw
     else:
         # 默认返回繁体中文
-        return zh_tw if zh_tw else zh_cn
+        return zh_tw
 
 
 async def clean_rich_text(text: str) -> str:
