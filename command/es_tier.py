@@ -36,7 +36,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             (
                 s["no"]
                 for s in data["string_system"]["json"]
-                if s.get("zh_tw") == grade_name
+                if (s.get("zh_tw")) == grade_name or s.get("zh_cn") == grade_name
             ),
             None,
         )
