@@ -215,7 +215,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                             main_effects.append(desc_text)
 
                     if main_effects:
-                        skill_text.append(f"【{skill_type_text}】{skill_name_text}")
+                        skill_text.append(f"【{skill_type_text}】{skill_name_text}\n")
                         skill_text.extend(main_effects)
                 else:
                     skill_text.append(f"【{skill_type_text}】{skill_name_text}")
