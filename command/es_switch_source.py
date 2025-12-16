@@ -97,26 +97,26 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
 
-        if plugin_config.eversoul_live_path:
+        if plugin_config.eversoul_gl_live_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_live_path
+                plugin_config.eversoul_gl_live_path
             )
         else:
             await es_switch_source.finish(
-                "未配置国际服live数据源路径，请在env中设置eversoul_live_path"
+                "未配置国际服live数据源路径，请在env中设置eversoul_gl_live_path"
             )
     else:  # gl_review
         # 国际服review
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "review"
 
-        if plugin_config.eversoul_review_path:
+        if plugin_config.eversoul_gl_review_path:
             CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_review_path
+                plugin_config.eversoul_gl_review_path
             )
         else:
             await es_switch_source.finish(
-                "未配置国际服review数据源路径，请在env中设置eversoul_review_path"
+                "未配置国际服review数据源路径，请在env中设置eversoul_gl_review_path"
             )
 
     # 使用DATA_DIR中的别名文件

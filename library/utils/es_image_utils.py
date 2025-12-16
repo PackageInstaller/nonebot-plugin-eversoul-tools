@@ -1663,7 +1663,7 @@ async def generate_potential_html(data: dict) -> str:
         potential_names = {}  # {tooltip_sno: name}
         for string in data["string_ui"]["json"]:
             if string.get("no") in potentials:
-                potential_names[string["no"]] = string.get("zh_tw", "")
+                potential_names[string["no"]] = string.get("zh_tw", "") if string.get("zh_tw", "") != "" else string.get("zh_cn", "")
 
         # 生成HTML
         html = """
@@ -1699,7 +1699,7 @@ async def generate_potential_html(data: dict) -> str:
                     text-align: center;
                 }
                 .potential-name {
-                    text-align: left;
+                    text-align: center;
                     font-weight: bold;
                 }
             </style>

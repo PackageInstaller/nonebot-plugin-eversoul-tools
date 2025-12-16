@@ -11,20 +11,19 @@ Eversoul QQ机器人插件是为永恒灵魂游戏玩家开发的一款多功能
 
 `git clone https://github.com/PackageInstaller/nonebot-plugin-eversoul-tools`
 
-
 ## ⚙️ 配置
 
-在 nonebot2 项目的`.env`文件中添加下表中的必填配置
+在 nonebot2 项目的 `.env`文件中添加下表中的必填配置
 
-| 配置项 | 必填 | 默认值 | 说明 |
-|:-----:|:----:|:----:|:----:|
-| eversoul_live_path | 是 | 无 | live数据源json路径 |
-| eversoul_review_path | 否 | 无 | review数据源json路径 |
+|        配置项        | 必填 | 默认值 |         说明         |
+| :------------------: | :--: | :----: | :------------------: |
+|  eversoul_gl_live_path  |  是  |   无   |  live数据源json路径  |
+| eversoul_gl_review_path |  否  |   无   | review数据源json路径 |
 
 ## 🎉 使用
 
 ### 指令表
 
-| 指令 | 权限 | 需要@ | 范围 | 说明 |
-|:-----:|:----:|:----:|:----:|:----:|
-| es帮助 | 所有人 | 否 | 群聊/私聊 | 查看插件帮助信息 |
+|  指令  |  权限  | 需要@ |   范围   |       说明       |
+| :----: | :----: | :---: | :-------: | :--------------: |
+| es帮助 | 所有人 |  否  | 群聊/私聊 | 查看插件帮助信息 |

@@ -11,8 +11,8 @@ driver = get_driver()
 
 class Config(BaseModel):
     # Eversoul相关配置项，live和review数据源
-    eversoul_live_path: str | None = None  # 国际服live数据源
-    eversoul_review_path: str | None = None  # 国际服review数据源
+    eversoul_gl_live_path: str | None = None  # 国际服live数据源
+    eversoul_gl_review_path: str | None = None  # 国际服review数据源
     eversoul_cn_live_path: str | None = None  # 国服live数据源
     eversoul_cn_review_path: str | None = None  # 国服review数据源
     eversoul_jp_live_path: str | None = None  # 日服live数据源
@@ -23,15 +23,15 @@ class Config(BaseModel):
     @model_validator(mode="after")
     def check_paths(self):
         if not Config._warned:
-            if self.eversoul_live_path is None:
-                logger.error("eversoul_live_path 未配置，这会导致功能无法正常使用。")
-                logger.error("请在配置文件中添加 eversoul_live_path 配置项。")
+            if self.eversoul_gl_live_path is None:
+                logger.error("eversoul_gl_live_path 未配置，这会导致功能无法正常使用。")
+                logger.error("请在配置文件中添加 eversoul_gl_live_path 配置项。")
 
-            if self.eversoul_review_path is None:
+            if self.eversoul_gl_review_path is None:
                 logger.warning(
-                    "eversoul_review_path 未配置，这会导致部分功能无法正常使用。"
+                    "eversoul_gl_review_path 未配置，这会导致部分功能无法正常使用。"
                 )
-                logger.warning("请在配置文件中添加 eversoul_review_path 配置项。")
+                logger.warning("请在配置文件中添加 eversoul_gl_review_path 配置项。")
 
             if self.eversoul_cn_live_path is None:
                 logger.warning("eversoul_cn_live_path 未配置，国服live功能将无法使用。")
@@ -215,8 +215,8 @@ DEFAULT_CONFIG = {
     "server": "global",  # 服务器: global(国际服) 或 cn(国服)
     "type": "live",  # 数据类型: live 或 review
     "json_path": (
-        str(Path(plugin_config.eversoul_live_path))
-        if plugin_config.eversoul_live_path
+        str(Path(plugin_config.eversoul_gl_live_path))
+        if plugin_config.eversoul_gl_live_path
         else ""
     ),
     "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
@@ -227,8 +227,8 @@ CURRENT_DATA_SOURCE = {
         "server": "global",
         "type": "live",
         "json_path": (
-            str(Path(plugin_config.eversoul_live_path))
-            if plugin_config.eversoul_live_path
+            str(Path(plugin_config.eversoul_gl_live_path))
+            if plugin_config.eversoul_gl_live_path
             else ""
         ),
         "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",

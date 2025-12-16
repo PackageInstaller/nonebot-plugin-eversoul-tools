@@ -1,7 +1,6 @@
 import json
 import yaml
 import asyncio
-import os
 from pathlib import Path
 from typing import Tuple, Dict
 from nonebot.log import logger
@@ -63,12 +62,12 @@ async def check_and_regenerate_aliases(manual_trigger: bool = False) -> Dict[str
     # 获取需要监视的目录
     directories_to_watch = []
 
-    if plugin_config.eversoul_live_path:
-        directories_to_watch.append(("gl_live", Path(plugin_config.eversoul_live_path)))
+    if plugin_config.eversoul_gl_live_path:
+        directories_to_watch.append(("gl_live", Path(plugin_config.eversoul_gl_live_path)))
 
-    if plugin_config.eversoul_review_path:
+    if plugin_config.eversoul_gl_review_path:
         directories_to_watch.append(
-            ("gl_review", Path(plugin_config.eversoul_review_path))
+            ("gl_review", Path(plugin_config.eversoul_gl_review_path))
         )
 
     if plugin_config.eversoul_cn_live_path:
@@ -181,8 +180,8 @@ async def init_plugin():
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
     # 根据env更新默认配置
-    if plugin_config.eversoul_live_path:
-        DEFAULT_CONFIG["json_path"] = str(Path(plugin_config.eversoul_live_path))
+    if plugin_config.eversoul_gl_live_path:
+        DEFAULT_CONFIG["json_path"] = str(Path(plugin_config.eversoul_gl_live_path))
 
     if DATA_SOURCE_CONFIG.exists():
         try:
@@ -306,18 +305,18 @@ async def sync_aliases(file1: Path, file2: Path) -> None:
 async def generate_aliases() -> None:
     """生成别名文件"""
     # 检查配置是否存在
-    if plugin_config.eversoul_live_path is None:
-        logger.error("未配置 eversoul_live_path，无法生成国际服Live版本别名文件")
-        logger.error('请在 .env 文件中添加配置项：eversoul_live_path="数据文件路径"')
+    if plugin_config.eversoul_gl_live_path is None:
+        logger.error("未配置 eversoul_gl_live_path，无法生成国际服Live版本别名文件")
+        logger.error('请在 .env 文件中添加配置项：eversoul_gl_live_path="数据文件路径"')
         return
 
-    if plugin_config.eversoul_review_path is None:
-        logger.error("未配置 eversoul_review_path，无法生成国际服Review版本别名文件")
-        logger.error('请在 .env 文件中添加配置项：eversoul_review_path="数据文件路径"')
+    if plugin_config.eversoul_gl_review_path is None:
+        logger.error("未配置 eversoul_gl_review_path，无法生成国际服Review版本别名文件")
+        logger.error('请在 .env 文件中添加配置项：eversoul_gl_review_path="数据文件路径"')
         return
 
-    gl_live_json_path = Path(plugin_config.eversoul_live_path)
-    gl_review_json_path = Path(plugin_config.eversoul_review_path)
+    gl_live_json_path = Path(plugin_config.eversoul_gl_live_path)
+    gl_review_json_path = Path(plugin_config.eversoul_gl_review_path)
 
     # 获取国服路径（可选）
     cn_live_json_path = None
@@ -735,7 +734,7 @@ async def load_json_data(group_id: int):
     # 检查json_path是否有效
     if not json_path:
         logger.error("数据源路径未配置，无法加载游戏数据")
-        logger.error("请在配置文件中设置正确的eversoul_live_path和eversoul_review_path")
+        logger.error("请在配置文件中设置正确的eversoul_gl_live_path和eversoul_gl_review_path")
         return {"hero": {"json": []}}  # 返回空数据
 
     # 确保json_path是Path对象
@@ -846,15 +845,15 @@ async def load_data_source_config():
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
     # 检查配置
-    has_live_path = plugin_config.eversoul_live_path is not None
-    has_review_path = plugin_config.eversoul_review_path is not None
+    has_live_path = plugin_config.eversoul_gl_live_path is not None
+    has_review_path = plugin_config.eversoul_gl_review_path is not None
     has_cn_live_path = plugin_config.eversoul_cn_live_path is not None
     has_cn_review_path = plugin_config.eversoul_cn_review_path is not None
     has_jp_live_path = plugin_config.eversoul_jp_live_path is not None
     has_jp_review_path = plugin_config.eversoul_jp_review_path is not None
 
-    live_path = plugin_config.eversoul_live_path or ""
-    review_path = plugin_config.eversoul_review_path or ""
+    live_path = plugin_config.eversoul_gl_live_path or ""
+    review_path = plugin_config.eversoul_gl_review_path or ""
     cn_live_path = plugin_config.eversoul_cn_live_path or ""
     cn_review_path = plugin_config.eversoul_cn_review_path or ""
     jp_live_path = plugin_config.eversoul_jp_live_path or ""
@@ -1228,25 +1227,25 @@ async def get_group_data_source(group_id):
                 result_config["json_path"] = ""
                 logger.error(f"未配置日服{data_type}数据源路径，请在env中设置eversoul_jp_{data_type}_path")
         else:  # global
-            if data_type == "live" and plugin_config.eversoul_live_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_live_path)
-            elif data_type == "review" and plugin_config.eversoul_review_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_review_path)
+            if data_type == "live" and plugin_config.eversoul_gl_live_path:
+                result_config["json_path"] = Path(plugin_config.eversoul_gl_live_path)
+            elif data_type == "review" and plugin_config.eversoul_gl_review_path:
+                result_config["json_path"] = Path(plugin_config.eversoul_gl_review_path)
             else:
                 # 默认使用国际服live路径
-                if plugin_config.eversoul_live_path:
-                    result_config["json_path"] = Path(plugin_config.eversoul_live_path)
+                if plugin_config.eversoul_gl_live_path:
+                    result_config["json_path"] = Path(plugin_config.eversoul_gl_live_path)
                     result_config["type"] = "live"
-                elif plugin_config.eversoul_review_path:
+                elif plugin_config.eversoul_gl_review_path:
                     result_config["json_path"] = Path(
-                        plugin_config.eversoul_review_path
+                        plugin_config.eversoul_gl_review_path
                     )
                     result_config["type"] = "review"
                 else:
                     # 如果都没有配置，使用空字符串
                     result_config["json_path"] = ""
                     logger.error(
-                        "未配置国际服数据源路径，请在env中设置eversoul_live_path或eversoul_review_path"
+                        "未配置国际服数据源路径，请在env中设置eversoul_gl_live_path或eversoul_gl_review_path"
                     )
 
     # 确保hero_alias_file有值
