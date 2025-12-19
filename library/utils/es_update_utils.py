@@ -126,7 +126,8 @@ class EversoulUpdateChecker:
         """
         if server_type == "global":
             url = f"https://patch.esoul.kakaogames.com/Live/{version}/Table/const_data_version.json"
-        else:  # cn
+        else:  
+            # cn
             # 国服需要从配置获取下载URL
             cn_config = await self.get_cn_server_config()
             if not cn_config.is_valid:

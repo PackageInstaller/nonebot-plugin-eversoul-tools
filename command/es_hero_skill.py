@@ -20,7 +20,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         else:
             hero_name = raw_text
             generate_image_flag = False
-
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id

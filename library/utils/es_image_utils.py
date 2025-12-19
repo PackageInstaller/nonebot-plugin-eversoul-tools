@@ -372,18 +372,19 @@ async def get_character_illustration(data, hero_id):
     return images  # 原始立绘在前，旧设立绘在后
 
 
-async def get_character_affection_cg(data, hero_id):
+async def get_character_affection_cg(data, hero_id, server, data_type):
     """获取角色好感CG
 
     Args:
         data: JSON数据字典
         hero_id: 角色ID
-
+        server: 服务器类型
+        data_type: 数据类型
     Returns:
         list: [(图片路径, CG编号, 章节标题)] 的列表
     """
     from ...config import CG_DIR
-
+    from .es_string_utils import get_string_by_type, select_text_by_priority
     if not CG_DIR.exists():
         return []
 
@@ -426,14 +427,16 @@ async def get_character_affection_cg(data, hero_id):
             # 获取章节标题
             episode_title = ""
             if episode_info["episode_name_sno"]:
-                for string in data["string_talk"]["json"]:
-                    if string["no"] == episode_info["episode_name_sno"]:
-                        episode_title = (
-                            string.get("zh_tw")
-                            if string.get("zh_tw") != ""
-                            else string.get("zh_cn")
-                        )
-                        break
+
+                string_data = await get_string_by_type(data, "talk", episode_info["episode_name_sno"])
+                episode_title = await select_text_by_priority(
+                    string_data.get("zh_tw", ""),
+                    string_data.get("zh_cn", ""),
+                    string_data.get("kr", ""),
+                    string_data.get("en", ""),
+                    server,
+                    data_type
+                )
             images.append((file, f"CG_{no}", episode_info["episode"], episode_title))
             break  # 找到一个匹配的文件就跳出
 
@@ -2724,7 +2727,7 @@ async def generate_skill_description_image(
 
     for desc in skill_descriptions:
         level = desc.get("hero_level", desc.get("level", 1))
-
+        
         # 根据服务器和数据类型选择描述语言
         if server == "cn":
             # 国服使用简体中文

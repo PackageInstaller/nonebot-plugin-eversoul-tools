@@ -34,7 +34,7 @@ async def handle_es_month(bot: Bot, event: Event, args: Message = CommandArg()):
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
         data = await load_json_data(group_id)
-        
+
         # 获取服务器配置
         config = await get_group_data_source(group_id)
         server = config.get("server", "global")

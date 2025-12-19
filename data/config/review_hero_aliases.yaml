@@ -609,6 +609,13 @@ names:
     ja_name: カーネリアン
     aliases: [卡内, 尼妹, 卡神, 脆皮鸡, 丹辰子, 黑鹰, 雷震子]
     hero_id: 5060
+  - zh_tw_name: 克勞迪婭（大天使）
+    zh_cn_name: 克劳迪娅（大天使）
+    kr_name: 클라우디아(대천사)
+    en_name: Claudia (Archangel)
+    ja_name: ''
+    aliases: [界克劳迪娅, 界克劳]
+    hero_id: 5080
   - zh_tw_name: 拉利瑪
     zh_cn_name: 拉利玛
     kr_name: 라리마

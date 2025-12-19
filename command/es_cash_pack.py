@@ -4,6 +4,13 @@ from ..library.utils import *
 @es_cash_pack.handle()
 async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
+        if isinstance(event, GroupMessageEvent):
+            group_id = event.group_id
+        config = await get_group_data_source(group_id)
+        server = config.get("server", "global")
+
+        if server == "cn":
+            await es_cash_pack.finish("国服暂不支持突发礼包信息查询")
         # 获取参数文本. get args text
         args_text = args.extract_plain_text().strip()
 

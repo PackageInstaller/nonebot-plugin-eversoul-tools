@@ -279,7 +279,7 @@ CV_KR：{cv_kr}"""
             messages.append(await format_character_story(episode_info, endings, server, data_type))
 
         # 好感故事CG
-        cg_images = await get_character_affection_cg(data, hero_id)
+        cg_images = await get_character_affection_cg(data, hero_id, server, data_type)
         if cg_images:
             cg_msg = []
             cg_msg.append("【好感CG】\n")
