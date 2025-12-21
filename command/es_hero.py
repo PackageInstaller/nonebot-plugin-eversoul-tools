@@ -138,7 +138,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         grade_zh_tw = (
             await get_string_by_type(data, "system", hero_data["grade_sno"])
         ).get("zh_tw", "")
-
+        # 获取属性排名
+        stats_ranking = await get_character_stats_ranking(data, hero_id, hero_data)
         atk_range = await get_character_attack_range(data, hero_id)
 
         # 构建消息列表
@@ -193,14 +194,26 @@ CV_KR：{cv_kr}"""
         if cv_jp:
             basic_info_zh_tw += f"\nCV_JP：{cv_jp}"
 
+        
+        
         basic_info_zh_tw += f"""
 实装日期：{character_release_date}
 攻击范围：{await format_value(atk_range, True)}
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
+以上三个属性受品质以及等级加成影响，具体公式为
+int((math.ceil(品质加成率 * 100) / 100) * (基础属性 + 每级提升属性 * (等级 - 1)) * 等级加成率)
+下面两个属性则是线性增长，具体公式为
+int(基础属性 + 每级提升属性 * (等级 - 1))
 暴击率：{hero_data.get('critical_rate', 0) * 100:.1f}% + {hero_data.get('inc_critical_rate', 0) * 100:.3f}%/级
 暴击威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
+        
+        # 添加属性排名信息
+        basic_info_zh_tw += f"\n同职业1级基础属性排名："
+        for stat_key in ["attack", "defence", "max_hp", "critical_rate", "critical_power"]:
+            rank_info = stats_ranking[stat_key]
+            basic_info_zh_tw += f"\n{rank_info['name']}：第{rank_info['rank']}/{rank_info['total']}名"
         basic_info_msg.append(basic_info_zh_tw)
         messages.append("".join(str(x) for x in basic_info_msg))
 
@@ -211,6 +224,7 @@ CV_KR：{cv_kr}"""
                 if images:
                     image_msg = []
                     image_msg.append("【立绘】")
+                    
                     for (
                         img_path,
                         display_name_zh_tw,
@@ -222,8 +236,14 @@ CV_KR：{cv_kr}"""
                         condition_kr,
                         condition_en,
                     ) in images:
+                        display_name = await select_text_by_priority(
+                            display_name_zh_tw, display_name_zh_cn, display_name_kr, display_name_en, server, data_type
+                        )
+                        condition_text = await select_text_by_priority(
+                            condition_tw, condition_cn, condition_kr, condition_en, server, data_type
+                        )
                         image_msg.append(
-                            f"{display_name_zh_tw}\n解锁条件: {condition_tw}"
+                            f"{display_name}\n解锁条件: {condition_text}"
                         )
                         image_msg.append(MessageSegment.image(f"file:///{img_path}"))
                     messages.append("\n".join(str(x) for x in image_msg))

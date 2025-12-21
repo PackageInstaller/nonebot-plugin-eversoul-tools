@@ -764,6 +764,7 @@ async def load_json_data(group_id: int):
         "skill_pattern": "SkillPattern.json",  # 技能释放顺序
         "signature": "Signature.json",  # 遗物
         "signature_level": "SignatureLevel.json",  # 遗物等级
+        "signature_grade": "SignatureGrade.json",  # 遗物品质
         "string_evertalk": "StringEverTalk.json",  # 聊天文本
         "story_info": "StoryInfo.json",  # 故事信息
         "talk": "Talk.json",  # 对话

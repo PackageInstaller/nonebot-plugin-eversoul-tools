@@ -225,8 +225,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         # 清理颜色代码
                         desc_text = await clean_rich_text(desc_text)
                         hero_level = desc.get("hero_level", 1)
-                        unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
-                        skill_text.append(f"\n等级{i+1}：{desc_text}{unlock_text}\n")
+                        unlock_text = f"（{hero_level}解锁）" if hero_level >= 1 else ""
+                        skill_text.append(f"\n{desc_text}{unlock_text}\n")
 
             messages.append(skill_text)
 
@@ -290,7 +290,12 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     )
                     # 清理颜色代码
                     desc_text = await clean_rich_text(desc_text)
-                    skill_descriptions_text.append(f"\n等級{i+1}：{desc_text}")
+                    
+                    # 添加解锁品质信息
+                    unlock_grade = skill.get("unlock_grade", "")
+                    unlock_text = f"（{unlock_grade}解锁）" if unlock_grade else ""
+                    
+                    skill_descriptions_text.append(f"\n{desc_text}{unlock_text}")
 
                 signature_info_text = f"""{signature_name_text}
 {signature_desc_text}

@@ -7,17 +7,22 @@ from difflib import get_close_matches
 
 
 async def select_text_by_priority(
-    zh_tw: str, zh_cn: str, kr: str, ja: str = "", server: str = "global", data_type: str = "live"
+    zh_tw: str,
+    zh_cn: str,
+    kr: str,
+    ja: str = "",
+    server: str = "global",
+    data_type: str = "live",
 ) -> str:
     """
     根据服务器和数据类型选择文本
-    
+
     选择逻辑：
     - cn (国服) -> zh_cn (简体中文)
     - jp (日服) -> ja (日文)
     - global + review -> kr (韩文)
     - global + live -> zh_tw (繁体中文)
-    
+
     Args:
         zh_tw: 繁体中文文本
         zh_cn: 简体中文文本
@@ -598,24 +603,19 @@ async def get_drop_item_rate(data, group_no):
                 rate_percent = drop_rate * 0.001
                 drop_items.append((item_name, value, rate_percent))
 
-    # 名称作为键，保存概率最高的物品
     name_to_best_item = {}
 
     for item in drop_items:
         item_name = item[0]["zh_tw"]
         item_rate = item[2]
 
-        # 如果名称还没有记录，或者当前概率更高，则更新
         if (
             item_name not in name_to_best_item
             or item_rate > name_to_best_item[item_name][2]
         ):
             name_to_best_item[item_name] = item
 
-    # 将字典值转换为列表
     unique_items = list(name_to_best_item.values())
-
-    # 按掉落率从高到低排序
     return sorted(unique_items, key=lambda x: -x[2])
 
 
@@ -802,7 +802,14 @@ async def get_character_similar_name(query, alias_map):
     return results
 
 
-async def get_character_skill(data, skill_no, support=False, generate_image=False, server="global", data_type="live"):
+async def get_character_skill(
+    data,
+    skill_no,
+    support=False,
+    generate_image=False,
+    server="global",
+    data_type="live",
+):
     """
     获取角色技能
     Args:
@@ -843,7 +850,9 @@ async def get_character_skill(data, skill_no, support=False, generate_image=Fals
                         break
 
     if skill_data_list:
-        skill_name_data = await get_string_by_type(data, "skill", skill_data_list[0]["name_sno"])
+        skill_name_data = await get_string_by_type(
+            data, "skill", skill_data_list[0]["name_sno"]
+        )
         skill_name_zh_tw = skill_name_data.get("zh_tw", "")
         skill_name_zh_cn = skill_name_data.get("zh_cn", "")
         skill_name_kr = skill_name_data.get("kr", "")
@@ -980,9 +989,9 @@ async def get_character_skill(data, skill_no, support=False, generate_image=Fals
                         skill_type_data.get("kr", ""),
                         skill_type_data.get("ja", ""),
                         server,
-                        data_type
+                        data_type,
                     )
-            
+
             # 根据服务器选择技能名称
             skill_name_display = await select_text_by_priority(
                 skill_name_zh_tw,
@@ -990,11 +999,10 @@ async def get_character_skill(data, skill_no, support=False, generate_image=Fals
                 skill_name_kr,
                 skill_name_ja,
                 server,
-                data_type
+                data_type,
             )
 
             # 准备技能图标
-            icon_bytes_data = None
             if skill_icon_info:
                 try:
                     from ...config import ICON_DIR
@@ -1062,7 +1070,9 @@ async def get_character_keyword_point(data: dict, keyword_type: str) -> list:
     return ast.literal_eval(points)
 
 
-async def get_story_chapter_name(data: dict, story: dict, server: str = "global", data_type: str = "live") -> str:
+async def get_story_chapter_name(
+    data: dict, story: dict, server: str = "global", data_type: str = "live"
+) -> str:
     """
     获取故事章节名称
     Args:
@@ -1087,12 +1097,22 @@ async def get_story_chapter_name(data: dict, story: dict, server: str = "global"
     else:
         default_data = await get_string_by_type(data, "ui", 652000)
         return await select_text_by_priority(
-            default_data["zh_tw"], default_data["zh_cn"], default_data["kr"], default_data.get("ja", ""), server, data_type
+            default_data["zh_tw"],
+            default_data["zh_cn"],
+            default_data["kr"],
+            default_data.get("ja", ""),
+            server,
+            data_type,
         )
 
 
 async def get_character_keyword_source(
-    data: dict, source_sno: int, details: int, keyword_type: int, server: str = "global", data_type: str = "live"
+    data: dict,
+    source_sno: int,
+    details: int,
+    keyword_type: int,
+    server: str = "global",
+    data_type: str = "live",
 ) -> tuple[str, str]:
     """
     获取角色关键字来源和地点信息
@@ -1201,7 +1221,11 @@ async def get_character_keyword_source(
 
 
 async def get_character_keyword_info(
-    data: dict, keyword_info: dict, trip_info: dict, server: str = "global", data_type: str = "live"
+    data: dict,
+    keyword_info: dict,
+    trip_info: dict,
+    server: str = "global",
+    data_type: str = "live",
 ) -> dict:
     """
     获取完整的角色关键字信息
@@ -1261,7 +1285,9 @@ async def get_character_keyword_info(
     }
 
 
-async def get_character_keyword(data: dict, hero_id: int, server: str = "global", data_type: str = "live") -> str:
+async def get_character_keyword(
+    data: dict, hero_id: int, server: str = "global", data_type: str = "live"
+) -> str:
     """
     获取角色关键字
     Args:
@@ -1484,7 +1510,9 @@ async def get_character_town_object(
                         }
 
 
-async def get_character_town_object_task(data: dict, obj_no: int, server: str = "global", data_type: str = "live") -> list:
+async def get_character_town_object_task(
+    data: dict, obj_no: int, server: str = "global", data_type: str = "live"
+) -> list:
     """
     获取角色专属领地物品任务
     Args:
@@ -1520,7 +1548,12 @@ async def get_character_town_object_task(data: dict, obj_no: int, server: str = 
                                     rarity_kr = string.get("kr", "")
                                     rarity_ja = string.get("ja", "")
                                     rarity = await select_text_by_priority(
-                                        rarity_zh_tw, rarity_zh_cn, rarity_kr, rarity_ja, server, data_type
+                                        rarity_zh_tw,
+                                        rarity_zh_cn,
+                                        rarity_kr,
+                                        rarity_ja,
+                                        server,
+                                        data_type,
                                     )
                                     break
 
@@ -1535,7 +1568,12 @@ async def get_character_town_object_task(data: dict, obj_no: int, server: str = 
                                     name_kr = string.get("kr", "")
                                     name_ja = string.get("ja", "")
                                     name = await select_text_by_priority(
-                                        name_zh_tw, name_zh_cn, name_kr, name_ja, server, data_type
+                                        name_zh_tw,
+                                        name_zh_cn,
+                                        name_kr,
+                                        name_ja,
+                                        server,
+                                        data_type,
                                     )
                                     break
 
@@ -1718,12 +1756,22 @@ async def get_character_soullink(
         # 获取灵魂链接标题和故事
         title = await get_string_by_type(data, "character", link.get("Group_Title"))
         title = await select_text_by_priority(
-            title["zh_tw"], title["zh_cn"], title["kr"], title.get("ja", ""), server, data_type
+            title["zh_tw"],
+            title["zh_cn"],
+            title["kr"],
+            title.get("ja", ""),
+            server,
+            data_type,
         )
 
         story = await get_string_by_type(data, "character", link.get("Group_Story"))
         story = await select_text_by_priority(
-            story["zh_tw"], story["zh_cn"], story["kr"], story.get("ja", ""), server, data_type
+            story["zh_tw"],
+            story["zh_cn"],
+            story["kr"],
+            story.get("ja", ""),
+            server,
+            data_type,
         )
 
         # 获取所有角色名称
@@ -1869,7 +1917,9 @@ async def get_character_signature_value(data, level_group):
     return formatted_stats, max_level, max_level_data["battle_power_per"]
 
 
-async def get_character_signature(data, hero_id, generate_image=False, server="global", data_type="live"):
+async def get_character_signature(
+    data, hero_id, generate_image=False, server="global", data_type="live"
+):
     """获取角色遗物
 
     Args:
@@ -1904,15 +1954,17 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
         signature_name_kr = signature_name_data.get("kr", "")
         signature_name_en = signature_name_data.get("en", "")
         signature_name_ja = signature_name_data.get("ja", "")
-        
+
         # 获取遗物技能名称
-        signature_title_data = await get_string_by_type(data, "skill", signature_data["skill_name_sno"])
+        signature_title_data = await get_string_by_type(
+            data, "skill", signature_data["skill_name_sno"]
+        )
         signature_title_zh_tw = signature_title_data.get("zh_tw", "")
         signature_title_zh_cn = signature_title_data.get("zh_cn", "")
         signature_title_kr = signature_title_data.get("kr", "")
         signature_title_en = signature_title_data.get("en", "")
         signature_title_ja = signature_title_data.get("ja", "")
-        
+
         # 获取遗物描述
         signature_desc_data = await get_string_by_type(
             data, "skill", signature_data["tooltip_explain_sno"]
@@ -1922,6 +1974,29 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
         signature_desc_kr = signature_desc_data.get("kr", "")
         signature_desc_en = signature_desc_data.get("en", "")
         signature_desc_ja = signature_desc_data.get("ja", "")
+        # 查找解锁品质
+        grade_group = signature_data.get("grade_group")
+        skill_level_to_grade_name = {}
+        if grade_group and "signature_grade" in data:
+            for grade_data in data["signature_grade"]["json"]:
+                if grade_data.get("group") == grade_group:
+                    skill_level = grade_data.get("skill_level", 0)
+                    signature_grade = grade_data.get("signature_grade", 0)
+                    
+                    # 获取品质名称
+                    if signature_grade > 0:
+                        grade_name_data = await get_string_by_type(data, "system", signature_grade)
+                        grade_name = await select_text_by_priority(
+                            grade_name_data.get("zh_tw", ""),
+                            grade_name_data.get("zh_cn", ""),
+                            grade_name_data.get("kr", ""),
+                            grade_name_data.get("ja", ""),
+                            server,
+                            data_type,
+                        )
+                        if skill_level > 0 and grade_name:
+                            skill_level_to_grade_name[skill_level] = grade_name
+        
         # 获取所有等级的技能描述
         for i in range(1, 8):
             sno_key = f"skill_tooltip_sno{i}"
@@ -1957,6 +2032,9 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
                     True,
                 )
 
+                # 获取该技能等级对应的遗物解锁品质
+                unlock_grade = skill_level_to_grade_name.get(i, "")
+                
                 skill_descriptions.append(
                     {
                         "desc_zh_tw": desc_tw,
@@ -1964,6 +2042,7 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
                         "desc_kr": desc_kr,
                         "desc_en": desc_en,
                         "level": i,
+                        "unlock_grade": unlock_grade,  # 添加解锁品质
                     }
                 )
     # 添加图标路径
@@ -2007,7 +2086,6 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
         if generate_image and skill_descriptions:
             try:
                 # 准备遗物图标（使用遗物背景图片）
-                icon_bytes_data = None
                 if signature_bg_path:
                     try:
                         from ...config import SOUL_DIR
@@ -2027,7 +2105,7 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
                     signature_name_kr,
                     signature_name_ja,
                     server,
-                    data_type
+                    data_type,
                 )
                 signature_title_display = await select_text_by_priority(
                     signature_title_zh_tw,
@@ -2035,7 +2113,7 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
                     signature_title_kr,
                     signature_title_ja,
                     server,
-                    data_type
+                    data_type,
                 )
                 signature_desc_display = await select_text_by_priority(
                     signature_desc_zh_tw,
@@ -2043,14 +2121,16 @@ async def get_character_signature(data, hero_id, generate_image=False, server="g
                     signature_desc_kr,
                     signature_desc_ja,
                     server,
-                    data_type
+                    data_type,
                 )
 
                 # 准备额外信息（遗物属性）
                 extra_info = {
                     "description": signature_desc_display,
                     "stats": signature_stats[0] if signature_stats else [],
-                    "battle_power_per": signature_stats[2] if len(signature_stats) > 2 else 0,
+                    "battle_power_per": (
+                        signature_stats[2] if len(signature_stats) > 2 else 0
+                    ),
                     "max_level": signature_stats[1] if len(signature_stats) > 1 else 0,
                 }
 
@@ -2292,7 +2372,12 @@ async def process_episode_choices(ep, server: str = "global", data_type: str = "
             all_choices.append(choice_info)
 
     title = await select_text_by_priority(
-        ep["zh_tw_title"], ep["zh_cn_title"], ep["kr_title"], ep.get("ja_title", ""), server, data_type
+        ep["zh_tw_title"],
+        ep["zh_cn_title"],
+        ep["kr_title"],
+        ep.get("ja_title", ""),
+        server,
+        data_type,
     )
     return all_choices, title
 
@@ -2486,7 +2571,9 @@ async def get_character_story(data, hero_id):
         return False, [], {}
 
 
-async def format_character_story(episode_info, endings, server: str = "global", data_type: str = "live"):
+async def format_character_story(
+    episode_info, endings, server: str = "global", data_type: str = "live"
+):
     """
     格式化角色故事
     Args:
@@ -2739,7 +2826,9 @@ async def get_character_skill_pattern(
                     if skill["no"] == skill_no:
                         if "name_sno" not in skill:
                             break
-                        skill_name_data = await get_string_by_type(data, "skill", skill["name_sno"])
+                        skill_name_data = await get_string_by_type(
+                            data, "skill", skill["name_sno"]
+                        )
                         skill_name_zh_tw = skill_name_data.get("zh_tw", "")
                         skill_name_zh_cn = skill_name_data.get("zh_cn", "")
                         skill_name_kr = skill_name_data.get("kr", "")
@@ -2749,7 +2838,12 @@ async def get_character_skill_pattern(
                         ).get("zh_tw", "")
 
                         skill_name = await select_text_by_priority(
-                            skill_name_zh_tw, skill_name_zh_cn, skill_name_kr, skill_name_ja, server, data_type
+                            skill_name_zh_tw,
+                            skill_name_zh_cn,
+                            skill_name_kr,
+                            skill_name_ja,
+                            server,
+                            data_type,
                         )
                         if skill_name:
                             skill_pattern.append((skill_name, skill_type))
@@ -3253,3 +3347,79 @@ async def format_love_level_data(data):
     love_levels.sort(key=lambda x: x["level"])
 
     return love_levels
+
+
+async def get_character_stats_ranking(
+    data: dict, hero_id: str, hero_data: dict
+) -> dict:
+    """
+    计算角色1级基础属性在同职业中的排名
+
+    Args:
+        data: 游戏数据
+        hero_id: 角色ID
+        hero_data: 角色数据
+
+    Returns:
+        dict: 包含各属性排名信息的字典
+    """
+    try:
+        # 获取当前角色的职业
+        current_class = hero_data.get("class_sno")
+        if not current_class:
+            return {}
+        class_heroes = []
+        for hero in data["hero"]["json"]:
+            if (
+                hero.get("class_sno") == current_class
+                and hero.get("battle_power_type") == 1
+            ):
+                class_heroes.append(
+                    {
+                        "hero_id": hero.get("hero_id"),
+                        "attack": int(hero.get("attack", 0)),
+                        "defence": int(hero.get("defence", 0)),
+                        "max_hp": int(hero.get("max_hp", 0)),
+                        "critical_rate": hero.get("critical_rate", 0),
+                        "critical_power": hero.get("critical_power", 0),
+                    }
+                )
+
+        total_count = len(class_heroes)
+        if total_count == 0:
+            return {}
+
+        # 计算每个属性的排名
+        rankings = {}
+        stat_names = {
+            "attack": "攻击力",
+            "defence": "防御力",
+            "max_hp": "生命值",
+            "critical_rate": "暴击率",
+            "critical_power": "暴击威力",
+        }
+
+        for stat_key, stat_name in stat_names.items():
+            # 按属性值降序排序
+            sorted_heroes = sorted(
+                class_heroes, key=lambda x: x[stat_key], reverse=True
+            )
+
+            # 找到当前角色的排名
+            rank = 1
+            for i, hero in enumerate(sorted_heroes):
+                if hero["hero_id"] == hero_id:
+                    rank = i + 1
+                    break
+
+            rankings[stat_key] = {
+                "name": stat_name,
+                "rank": rank,
+                "total": total_count,
+            }
+
+        return rankings
+
+    except Exception as e:
+        logger.error(f"计算属性排名时出错: {e}")
+        return {}
