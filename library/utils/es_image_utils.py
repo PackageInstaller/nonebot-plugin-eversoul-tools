@@ -120,7 +120,11 @@ async def get_character_illustration(data, hero_id):
         data: JSON数据字典
         hero_id: 角色ID
     Returns:
-        list: [(图片路径, 显示名称_tw, 显示名称_cn, 显示名称_kr, 显示名称_en, 解锁条件_tw, 解锁条件_cn, 解锁条件_kr, 解锁条件_en)] 的列表
+        list: [dict] 字典列表，每个字典包含:
+            - img_path: 图片路径
+            - display_name_tw/cn/kr/en: 显示名称
+            - condition_tw/cn/kr/en: 解锁条件
+            - desc_tw/cn/kr/en: 描述
     """
     from .es_string_utils import get_string_by_type
     from ...config import SOUL_DIR
@@ -134,9 +138,18 @@ async def get_character_illustration(data, hero_id):
     for costume in data["item_costume"]["json"]:
         if costume.get("hero_no") == hero_id:
             portrait_path = costume.get("portrait_path", "")
+            costume_no = costume.get("no")  # 获取costume的no
             name_sno = costume.get("name_sno")
             type_sno = costume.get("type_sno")  # 获取时装的type_sno
-            if portrait_path and name_sno and type_sno:
+            
+            if portrait_path and name_sno and type_sno and costume_no:
+                # 通过costume的no去item中查找desc_sno
+                desc_sno = None
+                for item in data["item"]["json"]:
+                    if item.get("no") == costume_no:
+                        desc_sno = item.get("desc_sno")
+                        break
+                
                 costume_name_zh_tw = (
                     await get_string_by_type(data, "item", name_sno)
                 ).get("zh_tw", "")
@@ -161,16 +174,38 @@ async def get_character_illustration(data, hero_id):
                 condition_en = (await get_string_by_type(data, "ui", type_sno)).get(
                     "en", ""
                 )
-                costume_info[portrait_path] = (
-                    costume_name_zh_tw,
-                    costume_name_zh_cn,
-                    costume_name_kr,
-                    costume_name_en,
-                    condition_tw,
-                    condition_cn,
-                    condition_kr,
-                    condition_en,
-                )
+                # 获取描述信息
+                desc_tw = ""
+                desc_cn = ""
+                desc_kr = ""
+                desc_en = ""
+                if desc_sno:
+                    desc_tw = (await get_string_by_type(data, "item", desc_sno)).get(
+                        "zh_tw", ""
+                    )
+                    desc_cn = (await get_string_by_type(data, "item", desc_sno)).get(
+                        "zh_cn", ""
+                    )
+                    desc_kr = (await get_string_by_type(data, "item", desc_sno)).get(
+                        "kr", ""
+                    )
+                    desc_en = (await get_string_by_type(data, "item", desc_sno)).get(
+                        "en", ""
+                    )
+                costume_info[portrait_path] = {
+                    "name_tw": costume_name_zh_tw,
+                    "name_cn": costume_name_zh_cn,
+                    "name_kr": costume_name_kr,
+                    "name_en": costume_name_en,
+                    "condition_tw": condition_tw,
+                    "condition_cn": condition_cn,
+                    "condition_kr": condition_kr,
+                    "condition_en": condition_en,
+                    "desc_tw": desc_tw,
+                    "desc_cn": desc_cn,
+                    "desc_kr": desc_kr,
+                    "desc_en": desc_en,
+                }
 
     # 查找匹配的图片
     images = []
@@ -195,40 +230,28 @@ async def get_character_illustration(data, hero_id):
 
             # 处理常规立绘
             if base_name in costume_info:
-                # 构建 "角色名_立绘名" 的格式
-                (
-                    costume_name_zh_tw,
-                    costume_name_zh_cn,
-                    costume_name_kr,
-                    costume_name_en,
-                    condition_tw,
-                    condition_cn,
-                    condition_kr,
-                    condition_en,
-                ) = costume_info[base_name]
-                display_name_tw = f"{costume_name_zh_tw}"
-                display_name_cn = f"{costume_name_zh_cn}"
-                display_name_kr = f"{costume_name_kr}"
-                display_name_en = f"{costume_name_en}"
-
+                info = costume_info[base_name]
+                
                 # 添加到结果字典，键为立绘基础名称
                 if base_name not in result_dict:
                     result_dict[base_name] = []
 
                 # 添加原始立绘
-                result_dict[base_name].append(
-                    (
-                        file,
-                        display_name_tw,
-                        display_name_cn,
-                        display_name_kr,
-                        display_name_en,
-                        condition_tw,
-                        condition_cn,
-                        condition_kr,
-                        condition_en,
-                    )
-                )
+                result_dict[base_name].append({
+                    "img_path": file,
+                    "display_name_tw": info["name_tw"],
+                    "display_name_cn": info["name_cn"],
+                    "display_name_kr": info["name_kr"],
+                    "display_name_en": info["name_en"],
+                    "condition_tw": info["condition_tw"],
+                    "condition_cn": info["condition_cn"],
+                    "condition_kr": info["condition_kr"],
+                    "condition_en": info["condition_en"],
+                    "desc_tw": info["desc_tw"],
+                    "desc_cn": info["desc_cn"],
+                    "desc_kr": info["desc_kr"],
+                    "desc_en": info["desc_en"],
+                })
 
                 # 检查是否存在对应的旧设立绘 (格式: 基础名称_2048 (1).后缀)
                 old_design_file = (
@@ -236,32 +259,22 @@ async def get_character_illustration(data, hero_id):
                 )
 
                 if old_design_file.exists():
-                    # 添加旧设立绘
-                    display_name_tw = f"{costume_name_zh_tw}_旧设"
-                    display_name_cn = f"{costume_name_zh_cn}_旧设"
-                    display_name_kr = f"{costume_name_kr}_旧设"
-                    display_name_en = f"{costume_name_en}_old"
-
-                    # 解锁条件设置为"敬请期待"
-                    old_condition_tw = "敬請期待"
-                    old_condition_cn = "敬请期待"
-                    old_condition_kr = "기대해 주세요"
-                    old_condition_en = "Stay tuned"
-
                     # 将旧设立绘添加到结果列表中（在原始立绘后面）
-                    result_dict[base_name].append(
-                        (
-                            old_design_file,
-                            display_name_tw,
-                            display_name_cn,
-                            display_name_kr,
-                            display_name_en,
-                            old_condition_tw,
-                            old_condition_cn,
-                            old_condition_kr,
-                            old_condition_en,
-                        )
-                    )
+                    result_dict[base_name].append({
+                        "img_path": old_design_file,
+                        "display_name_tw": f"{info['name_tw']}_旧设",
+                        "display_name_cn": f"{info['name_cn']}_旧设",
+                        "display_name_kr": f"{info['name_kr']}_旧设",
+                        "display_name_en": f"{info['name_en']}_old",
+                        "condition_tw": "敬請期待",
+                        "condition_cn": "敬请期待",
+                        "condition_kr": "기대해 주세요",
+                        "condition_en": "Stay tuned",
+                        "desc_tw": info["desc_tw"],
+                        "desc_cn": info["desc_cn"],
+                        "desc_kr": info["desc_kr"],
+                        "desc_en": info["desc_en"],
+                    })
 
                 # 检查是否存在对应的和谐后立绘 (格式: 基础名称_2048 (2).后缀)
                 censored_file = (
@@ -269,32 +282,22 @@ async def get_character_illustration(data, hero_id):
                 )
 
                 if censored_file.exists():
-                    # 添加和谐后立绘
-                    display_name_tw = f"{costume_name_zh_tw}_和谐后"
-                    display_name_cn = f"{costume_name_zh_cn}_和谐后"
-                    display_name_kr = f"{costume_name_kr}_조화 후"
-                    display_name_en = f"{costume_name_en}_censored"
-
-                    # 解锁条件设置为"敬请期待"
-                    censored_condition_tw = "IsEnableReview = true"
-                    censored_condition_cn = "IsEnableReview = true"
-                    censored_condition_kr = "IsEnableReview = true"
-                    censored_condition_en = "IsEnableReview = true"
-
                     # 将和谐后立绘添加到结果列表中（在旧设立绘后面）
-                    result_dict[base_name].append(
-                        (
-                            censored_file,
-                            display_name_tw,
-                            display_name_cn,
-                            display_name_kr,
-                            display_name_en,
-                            censored_condition_tw,
-                            censored_condition_cn,
-                            censored_condition_kr,
-                            censored_condition_en,
-                        )
-                    )
+                    result_dict[base_name].append({
+                        "img_path": censored_file,
+                        "display_name_tw": f"{info['name_tw']}_和谐后",
+                        "display_name_cn": f"{info['name_cn']}_和谐后",
+                        "display_name_kr": f"{info['name_kr']}_조화 후",
+                        "display_name_en": f"{info['name_en']}_censored",
+                        "condition_tw": "IsEnableReview",
+                        "condition_cn": "IsEnableReview",
+                        "condition_kr": "IsEnableReview",
+                        "condition_en": "IsEnableReview",
+                        "desc_tw": info["desc_tw"],
+                        "desc_cn": info["desc_cn"],
+                        "desc_kr": info["desc_kr"],
+                        "desc_en": info["desc_en"],
+                    })
 
     # 处理独立的旧设立绘文件和和谐后立绘文件（没有对应的常规立绘）
     for file in all_files:
@@ -311,59 +314,47 @@ async def get_character_illustration(data, hero_id):
 
             # 查找原始立绘的信息
             if original_base_name in costume_info:
-                (
-                    costume_name_zh_tw,
-                    costume_name_zh_cn,
-                    costume_name_kr,
-                    costume_name_en,
-                    _,
-                    _,
-                    _,
-                    _,
-                ) = costume_info[original_base_name]
-
-                # 判断是旧设还是和谐后
-                if "(1)" in file_stem:
-                    # 添加"_旧设"标记
-                    display_name_tw = f"{costume_name_zh_tw}_旧设"
-                    display_name_cn = f"{costume_name_zh_cn}_旧设"
-                    display_name_kr = f"{costume_name_kr}_旧设"
-                    display_name_en = f"{costume_name_en}_old"
-                    # 旧设的解锁条件
-                    condition_tw = "敬請期待"
-                    condition_cn = "敬请期待"
-                    condition_kr = "기대해 주세요"
-                    condition_en = "Stay tuned"
-                elif "(2)" in file_stem:
-                    # 添加"_和谐后"标记
-                    display_name_tw = f"{costume_name_zh_tw}_和谐后"
-                    display_name_cn = f"{costume_name_zh_cn}_和谐后"
-                    display_name_kr = f"{costume_name_kr}_조화 후"
-                    display_name_en = f"{costume_name_en}_censored"
-                    # 和谐后的解锁条件
-                    condition_tw = "IsEnableReview = true"
-                    condition_cn = "IsEnableReview = true"
-                    condition_kr = "IsEnableReview = true"
-                    condition_en = "IsEnableReview = true"
+                info = costume_info[original_base_name]
 
                 # 创建新的结果条目
                 if original_base_name not in result_dict:
                     result_dict[original_base_name] = []
 
-                # 添加立绘
-                result_dict[original_base_name].append(
-                    (
-                        file,
-                        display_name_tw,
-                        display_name_cn,
-                        display_name_kr,
-                        display_name_en,
-                        condition_tw,
-                        condition_cn,
-                        condition_kr,
-                        condition_en,
-                    )
-                )
+                # 判断是旧设还是和谐后
+                if "(1)" in file_stem:
+                    # 添加旧设立绘
+                    result_dict[original_base_name].append({
+                        "img_path": file,
+                        "display_name_tw": f"{info['name_tw']}_旧设",
+                        "display_name_cn": f"{info['name_cn']}_旧设",
+                        "display_name_kr": f"{info['name_kr']}_旧设",
+                        "display_name_en": f"{info['name_en']}_old",
+                        "condition_tw": "敬請期待",
+                        "condition_cn": "敬请期待",
+                        "condition_kr": "기대해 주세요",
+                        "condition_en": "Stay tuned",
+                        "desc_tw": info["desc_tw"],
+                        "desc_cn": info["desc_cn"],
+                        "desc_kr": info["desc_kr"],
+                        "desc_en": info["desc_en"],
+                    })
+                elif "(2)" in file_stem:
+                    # 添加和谐后立绘
+                    result_dict[original_base_name].append({
+                        "img_path": file,
+                        "display_name_tw": f"{info['name_tw']}_和谐后",
+                        "display_name_cn": f"{info['name_cn']}_和谐后",
+                        "display_name_kr": f"{info['name_kr']}_조화 후",
+                        "display_name_en": f"{info['name_en']}_censored",
+                        "condition_tw": "IsEnableReview",
+                        "condition_cn": "IsEnableReview",
+                        "condition_kr": "IsEnableReview",
+                        "condition_en": "IsEnableReview",
+                        "desc_tw": info["desc_tw"],
+                        "desc_cn": info["desc_cn"],
+                        "desc_kr": info["desc_kr"],
+                        "desc_en": info["desc_en"],
+                    })
 
     result_dict_sorted = dict(sorted(result_dict.items()))
     for base_name, entries in result_dict_sorted.items():

@@ -210,7 +210,7 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
 暴击威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
         
         # 添加属性排名信息
-        basic_info_zh_tw += f"\n同职业1级基础属性排名："
+        basic_info_zh_tw += f"\n同职业基础属性排名："
         for stat_key in ["attack", "defence", "max_hp", "critical_rate", "critical_power"]:
             rank_info = stats_ranking[stat_key]
             basic_info_zh_tw += f"\n{rank_info['name']}：第{rank_info['rank']}/{rank_info['total']}名"
@@ -225,27 +225,37 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
                     image_msg = []
                     image_msg.append("【立绘】")
                     
-                    for (
-                        img_path,
-                        display_name_zh_tw,
-                        display_name_zh_cn,
-                        display_name_kr,
-                        display_name_en,
-                        condition_tw,
-                        condition_cn,
-                        condition_kr,
-                        condition_en,
-                    ) in images:
+                    for img_info in images:
                         display_name = await select_text_by_priority(
-                            display_name_zh_tw, display_name_zh_cn, display_name_kr, display_name_en, server, data_type
+                            img_info["display_name_tw"],
+                            img_info["display_name_cn"],
+                            img_info["display_name_kr"],
+                            img_info["display_name_en"],
+                            server,
+                            data_type
                         )
                         condition_text = await select_text_by_priority(
-                            condition_tw, condition_cn, condition_kr, condition_en, server, data_type
+                            img_info["condition_tw"],
+                            img_info["condition_cn"],
+                            img_info["condition_kr"],
+                            img_info["condition_en"],
+                            server,
+                            data_type
                         )
-                        image_msg.append(
-                            f"{display_name}\n解锁条件: {condition_text}"
+                        desc_text = await select_text_by_priority(
+                            img_info["desc_tw"],
+                            img_info["desc_cn"],
+                            img_info["desc_kr"],
+                            img_info["desc_en"],
+                            server,
+                            data_type
                         )
-                        image_msg.append(MessageSegment.image(f"file:///{img_path}"))
+                        # 构建显示文本
+                        display_text = f"{display_name}\n解锁条件: {condition_text}"
+                        if desc_text:
+                            display_text += f"\n描述: {desc_text}"
+                        image_msg.append(display_text)
+                        image_msg.append(MessageSegment.image(f"file:///{img_info['img_path']}"))
                     messages.append("\n".join(str(x) for x in image_msg))
                 break
 
