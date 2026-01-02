@@ -34,6 +34,16 @@ async def init_database():
         logger.error(f"初始化 Eversoul 用户数据库时发生错误: {e}")
 
 
+@driver.on_startup
+async def init_tables():
+    """初始化数据表"""
+    try:
+        from .library.utils.es_table_init import check_and_download_tables
+        await check_and_download_tables()
+    except Exception as e:
+        logger.error(f"初始化数据表时发生错误: {e}")
+
+
 sub_plugins = nonebot.load_plugins(
     str(Path(__file__).parent.joinpath("plugins").resolve())
 )

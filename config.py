@@ -10,48 +10,9 @@ driver = get_driver()
 
 
 class Config(BaseModel):
-    # Eversoul相关配置项，live和review数据源
-    eversoul_gl_live_path: str | None = None  # 国际服live数据源
-    eversoul_gl_review_path: str | None = None  # 国际服review数据源
-    eversoul_cn_live_path: str | None = None  # 国服live数据源
-    eversoul_cn_review_path: str | None = None  # 国服review数据源
-    eversoul_jp_live_path: str | None = None  # 日服live数据源
-    eversoul_jp_review_path: str | None = None  # 日服review数据源
+    # Eversoul相关配置项
     eversoul_file_check_interval: int = 5  # 文件监视检查间隔（秒）
-    _warned: ClassVar[bool] = False
-
-    @model_validator(mode="after")
-    def check_paths(self):
-        if not Config._warned:
-            if self.eversoul_gl_live_path is None:
-                logger.error("eversoul_gl_live_path 未配置，这会导致功能无法正常使用。")
-                logger.error("请在配置文件中添加 eversoul_gl_live_path 配置项。")
-
-            if self.eversoul_gl_review_path is None:
-                logger.warning(
-                    "eversoul_gl_review_path 未配置，这会导致部分功能无法正常使用。"
-                )
-                logger.warning("请在配置文件中添加 eversoul_gl_review_path 配置项。")
-
-            if self.eversoul_cn_live_path is None:
-                logger.warning("eversoul_cn_live_path 未配置，国服live功能将无法使用。")
-                logger.warning("请在配置文件中添加 eversoul_cn_live_path 配置项。")
-
-            if self.eversoul_cn_review_path is None:
-                logger.warning("eversoul_cn_review_path 未配置，国服review功能将无法使用。")
-                logger.warning("请在配置文件中添加 eversoul_cn_review_path 配置项。")
-
-            if self.eversoul_jp_live_path is None:
-                logger.warning("eversoul_jp_live_path 未配置，日服live功能将无法使用。")
-                logger.warning("请在配置文件中添加 eversoul_jp_live_path 配置项。")
-
-            if self.eversoul_jp_review_path is None:
-                logger.warning("eversoul_jp_review_path 未配置，日服review功能将无法使用。")
-                logger.warning("请在配置文件中添加 eversoul_jp_review_path 配置项。")
-
-            Config._warned = True
-
-        return self
+    eversoul_auto_update: bool = True  # 是否自动更新数据表
 
 
 plugin_config = get_plugin_config(Config)
@@ -210,15 +171,27 @@ COUPON_DIR = DATA_DIR / "coupon"
 COUPON_YAML_PATH = COUPON_DIR / "coupons.yaml"
 DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"
 
+# 数据表路径（从插件目录下的data/table获取）
+TABLE_DIR = DATA_DIR / "table"
+GL_LIVE_TABLE_DIR = TABLE_DIR / "global" / "live"
+GL_REVIEW_TABLE_DIR = TABLE_DIR / "global" / "review"
+CN_LIVE_TABLE_DIR = TABLE_DIR / "cn" / "live"
+CN_REVIEW_TABLE_DIR = TABLE_DIR / "cn" / "review"
+JP_LIVE_TABLE_DIR = TABLE_DIR / "jp" / "live"
+JP_REVIEW_TABLE_DIR = TABLE_DIR / "jp" / "review"
+TABLE_INFO_PATH = TABLE_DIR / "table_info.json"
+
+# Schema路径
+SCHEMA_DIR = RESOURCE_DIR / "schema"
+GL_SCHEMA_DIR = SCHEMA_DIR / "global"
+CN_SCHEMA_DIR = SCHEMA_DIR / "cn"
+JP_SCHEMA_DIR = SCHEMA_DIR / "jp"
+
 # 默认配置
 DEFAULT_CONFIG = {
     "server": "global",  # 服务器: global(国际服) 或 cn(国服)
     "type": "live",  # 数据类型: live 或 review
-    "json_path": (
-        str(Path(plugin_config.eversoul_gl_live_path))
-        if plugin_config.eversoul_gl_live_path
-        else ""
-    ),
+    "json_path": str(GL_LIVE_TABLE_DIR),
     "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
 }
 
@@ -226,11 +199,7 @@ CURRENT_DATA_SOURCE = {
     "default": {
         "server": "global",
         "type": "live",
-        "json_path": (
-            str(Path(plugin_config.eversoul_gl_live_path))
-            if plugin_config.eversoul_gl_live_path
-            else ""
-        ),
+        "json_path": str(GL_LIVE_TABLE_DIR),
         "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
     }
 }

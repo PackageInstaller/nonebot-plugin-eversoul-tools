@@ -126,7 +126,7 @@ class EversoulUpdateChecker:
         """
         if server_type == "global":
             url = f"https://patch.esoul.kakaogames.com/Live/{version}/Table/const_data_version.json"
-        else:  
+        else:
             # cn
             # 国服需要从配置获取下载URL
             cn_config = await self.get_cn_server_config()
@@ -595,6 +595,9 @@ class EversoulUpdateChecker:
                 },
             }
 
+        # 用于跟踪是否有任何服务器更新
+        any_table_updated = False
+
         # 检查国际服Live服务器
         live_has_update = await self.check_live_table_update(current_version)
         live_current_version = ""
@@ -614,6 +617,16 @@ class EversoulUpdateChecker:
             await self.update_server_in_db(
                 "gl_live", current_version, "", live_table_info.version
             )
+
+            # 下载并更新本地数据表（暂不重新生成别名）
+            success = await self.download_table_if_needed(
+                "gl_live",
+                current_version,
+                live_table_info.version,
+                regenerate_aliases=False,
+            )
+            if success:
+                any_table_updated = True
 
         # 检查国际服Review服务器
         review_info = await self.check_review_server(current_version)
@@ -640,6 +653,17 @@ class EversoulUpdateChecker:
                     review_info.cdn_date,
                     review_info.table_info.version,
                 )
+
+                # 下载并更新本地数据表（暂不重新生成别名）
+                success = await self.download_table_if_needed(
+                    "gl_review",
+                    review_info.version,
+                    review_info.table_info.version,
+                    review_info.cdn_date,
+                    regenerate_aliases=False,
+                )
+                if success:
+                    any_table_updated = True
 
         # 检查国服配置
         cn_config = await self.get_cn_server_config()
@@ -673,6 +697,18 @@ class EversoulUpdateChecker:
                                 await self.update_server_in_db(
                                     "cn_live", cn_config.version, "", table_version
                                 )
+
+                                # 下载并更新本地数据表（暂不重新生成别名）
+                                success = await self.download_table_if_needed(
+                                    "cn_live",
+                                    cn_config.version,
+                                    table_version,
+                                    "",
+                                    cn_config.download_urls,
+                                    regenerate_aliases=False,
+                                )
+                                if success:
+                                    any_table_updated = True
                                 break
                     except:
                         continue
@@ -711,6 +747,18 @@ class EversoulUpdateChecker:
                                     "",
                                     table_version,
                                 )
+
+                                # 下载并更新本地数据表（暂不重新生成别名）
+                                success = await self.download_table_if_needed(
+                                    "cn_review",
+                                    cn_config.review_version,
+                                    table_version,
+                                    "",
+                                    cn_config.review_download_urls,
+                                    regenerate_aliases=False,
+                                )
+                                if success:
+                                    any_table_updated = True
                                 break
                     except:
                         continue
@@ -781,7 +829,110 @@ class EversoulUpdateChecker:
                 except:
                     continue
 
+        # 如果有任何数据表更新，统一重新生成别名文件
+        if any_table_updated:
+            try:
+                from .es_data_utils import generate_aliases
+
+                logger.info("检测到数据表更新，正在重新生成别名文件...")
+                await generate_aliases()
+                logger.info("别名文件重新生成完成！")
+            except Exception as alias_error:
+                logger.error(f"重新生成别名文件失败: {alias_error}")
+
         return result
+
+    async def download_table_if_needed(
+        self,
+        server_type: str,
+        version: str,
+        table_version: int,
+        cdn_date: str = "",
+        download_urls: list = None,
+        regenerate_aliases: bool = True,
+    ):
+        """如果需要，下载并更新本地数据表
+
+        Args:
+            server_type: 服务器类型
+            version: 版本号
+            table_version: 表版本号
+            cdn_date: CDN日期（仅Review服务器需要）
+            download_urls: 下载URL列表（仅国服需要）
+            regenerate_aliases: 是否在下载成功后重新生成别名文件
+        """
+        try:
+            from ...config import (
+                GL_LIVE_TABLE_DIR,
+                GL_REVIEW_TABLE_DIR,
+                CN_LIVE_TABLE_DIR,
+                CN_REVIEW_TABLE_DIR,
+                GL_SCHEMA_DIR,
+                CN_SCHEMA_DIR,
+                JP_SCHEMA_DIR,
+                plugin_config,
+            )
+            from .es_table_manager import download_and_setup_table
+
+            # 检查是否启用自动更新
+            if not plugin_config.eversoul_auto_update:
+                logger.info(f"{server_type} 自动更新已禁用")
+                return
+
+            # 获取目标目录和Schema目录
+            if server_type == "gl_live":
+                target_dir = GL_LIVE_TABLE_DIR
+                schema_dir = GL_SCHEMA_DIR
+            elif server_type == "gl_review":
+                target_dir = GL_REVIEW_TABLE_DIR
+                schema_dir = GL_SCHEMA_DIR
+            elif server_type == "cn_live":
+                target_dir = CN_LIVE_TABLE_DIR
+                schema_dir = CN_SCHEMA_DIR
+            elif server_type == "cn_review":
+                target_dir = CN_REVIEW_TABLE_DIR
+                schema_dir = CN_SCHEMA_DIR
+            else:
+                logger.error(f"不支持的服务器类型: {server_type}")
+                return
+
+            # 检查Schema是否存在
+            if not schema_dir.exists() or not any(schema_dir.glob("*.fbs")):
+                logger.error(f"Schema文件不存在，无法下载数据表: {schema_dir}")
+                return
+
+            logger.info(f"开始下载 {server_type} 数据表...")
+            success = await download_and_setup_table(
+                server_type,
+                version,
+                table_version,
+                target_dir,
+                schema_dir,
+                cdn_date,
+                download_urls,
+            )
+
+            if success:
+                logger.info(f"{server_type} 数据表下载和更新完成")
+
+                # 下载成功后重新生成别名文件（如果需要）
+                if regenerate_aliases:
+                    try:
+                        from .es_data_utils import generate_aliases
+
+                        logger.info("数据表已更新，正在重新生成别名文件...")
+                        await generate_aliases()
+                        logger.info("别名文件重新生成完成！")
+                    except Exception as alias_error:
+                        logger.error(f"重新生成别名文件失败: {alias_error}")
+
+                return True
+            else:
+                logger.error(f"{server_type} 数据表下载失败")
+                return False
+
+        except Exception as e:
+            logger.error(f"下载数据表失败: {e}")
 
 
 async def check_eversoul_updates() -> Dict[str, Any]:

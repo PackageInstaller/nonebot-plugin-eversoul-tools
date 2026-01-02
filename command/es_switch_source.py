@@ -44,79 +44,67 @@ async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
         # 国服live
         CURRENT_DATA_SOURCE[group_id]["server"] = "cn"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
-
-        if plugin_config.eversoul_cn_live_path:
-            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_cn_live_path
-            )
-        else:
+        CURRENT_DATA_SOURCE[group_id]["json_path"] = CN_LIVE_TABLE_DIR
+        
+        # 检查数据表是否存在
+        if not CN_LIVE_TABLE_DIR.exists() or not any(CN_LIVE_TABLE_DIR.glob("*.json")):
             await es_switch_source.finish(
-                "未配置国服live数据源路径，请在env中设置eversoul_cn_live_path"
+                "国服live数据表不存在，请等待自动下载完成或手动触发更新检查"
             )
     elif args_str == "cn_review":
         # 国服review
         CURRENT_DATA_SOURCE[group_id]["server"] = "cn"
         CURRENT_DATA_SOURCE[group_id]["type"] = "review"
-
-        if plugin_config.eversoul_cn_review_path:
-            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_cn_review_path
-            )
-        else:
+        CURRENT_DATA_SOURCE[group_id]["json_path"] = CN_REVIEW_TABLE_DIR
+        
+        # 检查数据表是否存在
+        if not CN_REVIEW_TABLE_DIR.exists() or not any(CN_REVIEW_TABLE_DIR.glob("*.json")):
             await es_switch_source.finish(
-                "未配置国服review数据源路径，请在env中设置eversoul_cn_review_path"
+                "国服review数据表不存在，请等待自动下载完成或手动触发更新检查"
             )
     elif args_str == "jp_live":
         # 日服live
         CURRENT_DATA_SOURCE[group_id]["server"] = "jp"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
-
-        if plugin_config.eversoul_jp_live_path:
-            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_jp_live_path
-            )
-        else:
+        CURRENT_DATA_SOURCE[group_id]["json_path"] = JP_LIVE_TABLE_DIR
+        
+        # 检查数据表是否存在
+        if not JP_LIVE_TABLE_DIR.exists() or not any(JP_LIVE_TABLE_DIR.glob("*.json")):
             await es_switch_source.finish(
-                "未配置日服live数据源路径，请在env中设置eversoul_jp_live_path"
+                "日服live数据表不存在，请等待自动下载完成或手动触发更新检查"
             )
     elif args_str == "jp_review":
         # 日服review
         CURRENT_DATA_SOURCE[group_id]["server"] = "jp"
         CURRENT_DATA_SOURCE[group_id]["type"] = "review"
-
-        if plugin_config.eversoul_jp_review_path:
-            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_jp_review_path
-            )
-        else:
+        CURRENT_DATA_SOURCE[group_id]["json_path"] = JP_REVIEW_TABLE_DIR
+        
+        # 检查数据表是否存在
+        if not JP_REVIEW_TABLE_DIR.exists() or not any(JP_REVIEW_TABLE_DIR.glob("*.json")):
             await es_switch_source.finish(
-                "未配置日服review数据源路径，请在env中设置eversoul_jp_review_path"
+                "日服review数据表不存在，请等待自动下载完成或手动触发更新检查"
             )
     elif args_str == "gl_live":
         # 国际服live
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "live"
-
-        if plugin_config.eversoul_gl_live_path:
-            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_gl_live_path
-            )
-        else:
+        CURRENT_DATA_SOURCE[group_id]["json_path"] = GL_LIVE_TABLE_DIR
+        
+        # 检查数据表是否存在
+        if not GL_LIVE_TABLE_DIR.exists() or not any(GL_LIVE_TABLE_DIR.glob("*.json")):
             await es_switch_source.finish(
-                "未配置国际服live数据源路径，请在env中设置eversoul_gl_live_path"
+                "国际服live数据表不存在，请等待自动下载完成或手动触发更新检查"
             )
     else:  # gl_review
         # 国际服review
         CURRENT_DATA_SOURCE[group_id]["server"] = "global"
         CURRENT_DATA_SOURCE[group_id]["type"] = "review"
-
-        if plugin_config.eversoul_gl_review_path:
-            CURRENT_DATA_SOURCE[group_id]["json_path"] = Path(
-                plugin_config.eversoul_gl_review_path
-            )
-        else:
+        CURRENT_DATA_SOURCE[group_id]["json_path"] = GL_REVIEW_TABLE_DIR
+        
+        # 检查数据表是否存在
+        if not GL_REVIEW_TABLE_DIR.exists() or not any(GL_REVIEW_TABLE_DIR.glob("*.json")):
             await es_switch_source.finish(
-                "未配置国际服review数据源路径，请在env中设置eversoul_gl_review_path"
+                "国际服review数据表不存在，请等待自动下载完成或手动触发更新检查"
             )
 
     # 使用DATA_DIR中的别名文件

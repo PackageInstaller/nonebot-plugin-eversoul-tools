@@ -59,36 +59,15 @@ async def check_and_regenerate_aliases(manual_trigger: bool = False) -> Dict[str
         "error": None,
     }
 
-    # 获取需要监视的目录
-    directories_to_watch = []
-
-    if plugin_config.eversoul_gl_live_path:
-        directories_to_watch.append(("gl_live", Path(plugin_config.eversoul_gl_live_path)))
-
-    if plugin_config.eversoul_gl_review_path:
-        directories_to_watch.append(
-            ("gl_review", Path(plugin_config.eversoul_gl_review_path))
-        )
-
-    if plugin_config.eversoul_cn_live_path:
-        directories_to_watch.append(
-            ("cn_live", Path(plugin_config.eversoul_cn_live_path))
-        )
-
-    if plugin_config.eversoul_cn_review_path:
-        directories_to_watch.append(
-            ("cn_review", Path(plugin_config.eversoul_cn_review_path))
-        )
-
-    if plugin_config.eversoul_jp_live_path:
-        directories_to_watch.append(
-            ("jp_live", Path(plugin_config.eversoul_jp_live_path))
-        )
-
-    if plugin_config.eversoul_jp_review_path:
-        directories_to_watch.append(
-            ("jp_review", Path(plugin_config.eversoul_jp_review_path))
-        )
+    # 获取需要监视的目录（使用本地数据表目录）
+    directories_to_watch = [
+        ("gl_live", GL_LIVE_TABLE_DIR),
+        ("gl_review", GL_REVIEW_TABLE_DIR),
+        ("cn_live", CN_LIVE_TABLE_DIR),
+        ("cn_review", CN_REVIEW_TABLE_DIR),
+        ("jp_live", JP_LIVE_TABLE_DIR),
+        ("jp_review", JP_REVIEW_TABLE_DIR),
+    ]
 
     if not directories_to_watch:
         result["error"] = "未配置任何数据源路径"
@@ -114,12 +93,8 @@ async def check_and_regenerate_aliases(manual_trigger: bool = False) -> Dict[str
             added = set(current_state.keys()) - set(old_state.keys())
             removed = set(old_state.keys()) - set(current_state.keys())
             if added:
-                msg = f"{name} 数据源新增文件: {', '.join(added)}"
-                logger.info(f"检测到 {msg}")
                 change_details.append(msg)
             if removed:
-                msg = f"{name} 数据源删除文件: {', '.join(removed)}"
-                logger.info(f"检测到 {msg}")
                 change_details.append(msg)
             has_changes = True
             file_watch_state[name] = current_state
@@ -179,9 +154,8 @@ async def init_plugin():
     global DEFAULT_CONFIG, file_watch_task
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
-    # 根据env更新默认配置
-    if plugin_config.eversoul_gl_live_path:
-        DEFAULT_CONFIG["json_path"] = str(Path(plugin_config.eversoul_gl_live_path))
+    # 使用本地数据表路径更新默认配置
+    DEFAULT_CONFIG["json_path"] = str(GL_LIVE_TABLE_DIR)
 
     if DATA_SOURCE_CONFIG.exists():
         try:
@@ -202,10 +176,6 @@ async def init_plugin():
     else:
         logger.info("配置文件不存在，将创建默认配置")
     await load_data_source_config()
-    try:
-        await generate_aliases()
-    except Exception as e:
-        logger.error(f"生成别名文件时出错: {e}")
 
     file_watch_task = asyncio.create_task(file_watcher_task())
 
@@ -304,51 +274,53 @@ async def sync_aliases(file1: Path, file2: Path) -> None:
 
 async def generate_aliases() -> None:
     """生成别名文件"""
-    # 检查配置是否存在
-    if plugin_config.eversoul_gl_live_path is None:
-        logger.error("未配置 eversoul_gl_live_path，无法生成国际服Live版本别名文件")
-        logger.error('请在 .env 文件中添加配置项：eversoul_gl_live_path="数据文件路径"')
+    # 使用本地数据表路径
+    gl_live_json_path = GL_LIVE_TABLE_DIR
+    gl_review_json_path = GL_REVIEW_TABLE_DIR
+    cn_live_json_path = CN_LIVE_TABLE_DIR
+    cn_review_json_path = CN_REVIEW_TABLE_DIR
+    jp_live_json_path = JP_LIVE_TABLE_DIR
+    jp_review_json_path = JP_REVIEW_TABLE_DIR
+
+    # 检查国际服数据表是否存在
+    if not gl_live_json_path.exists() or not any(gl_live_json_path.glob("*.json")):
+        logger.warning("国际服Live数据表不存在，跳过别名生成")
         return
 
-    if plugin_config.eversoul_gl_review_path is None:
-        logger.error("未配置 eversoul_gl_review_path，无法生成国际服Review版本别名文件")
-        logger.error('请在 .env 文件中添加配置项：eversoul_gl_review_path="数据文件路径"')
+    if not gl_review_json_path.exists() or not any(gl_review_json_path.glob("*.json")):
+        logger.warning("国际服Review数据表不存在，跳过别名生成")
         return
-
-    gl_live_json_path = Path(plugin_config.eversoul_gl_live_path)
-    gl_review_json_path = Path(plugin_config.eversoul_gl_review_path)
-
-    # 获取国服路径（可选）
-    cn_live_json_path = None
-    if plugin_config.eversoul_cn_live_path:
-        cn_live_json_path = Path(plugin_config.eversoul_cn_live_path)
-
-    cn_review_json_path = None
-    if plugin_config.eversoul_cn_review_path:
-        cn_review_json_path = Path(plugin_config.eversoul_cn_review_path)
-
-    # 获取日服路径（可选）
-    jp_live_json_path = None
-    if plugin_config.eversoul_jp_live_path:
-        jp_live_json_path = Path(plugin_config.eversoul_jp_live_path)
-
-    jp_review_json_path = None
-    if plugin_config.eversoul_jp_review_path:
-        jp_review_json_path = Path(plugin_config.eversoul_jp_review_path)
 
     # 生成Live版本别名（国际服+国服+日服）
     try:
         live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
         live_raid_aliases = CONFIG_DIR / "live_raid_aliases.yaml"
+
+        # 检查国服和日服数据表是否存在
+        cn_live_path = (
+            cn_live_json_path
+            if cn_live_json_path.exists() and any(cn_live_json_path.glob("*.json"))
+            else None
+        )
+        jp_live_path = (
+            jp_live_json_path
+            if jp_live_json_path.exists() and any(jp_live_json_path.glob("*.json"))
+            else None
+        )
+
         live_hero_count, live_raid_count = await process_json_files(
-            gl_live_json_path, live_hero_aliases, live_raid_aliases, cn_live_json_path, jp_live_json_path
+            gl_live_json_path,
+            live_hero_aliases,
+            live_raid_aliases,
+            cn_live_path,
+            jp_live_path,
         )
         if live_hero_count > 0 or live_raid_count > 0:
             logger.info(
                 f"Live版本别名生成完成！总共生成 {live_hero_count} 个角色条目, {live_raid_count} 个讨伐条目"
             )
         else:
-            logger.info("请检查Live版本JSON文件路径配置是否正确")
+            logger.warning("Live版本别名生成失败，请检查数据表是否完整")
     except Exception as e:
         logger.error(f"处理live别名文件时出错: {e}")
 
@@ -356,15 +328,32 @@ async def generate_aliases() -> None:
     try:
         review_hero_aliases = CONFIG_DIR / "review_hero_aliases.yaml"
         review_raid_aliases = CONFIG_DIR / "review_raid_aliases.yaml"
+
+        # 检查国服和日服数据表是否存在
+        cn_review_path = (
+            cn_review_json_path
+            if cn_review_json_path.exists() and any(cn_review_json_path.glob("*.json"))
+            else None
+        )
+        jp_review_path = (
+            jp_review_json_path
+            if jp_review_json_path.exists() and any(jp_review_json_path.glob("*.json"))
+            else None
+        )
+
         review_hero_count, review_raid_count = await process_json_files(
-            gl_review_json_path, review_hero_aliases, review_raid_aliases, cn_review_json_path, jp_review_json_path
+            gl_review_json_path,
+            review_hero_aliases,
+            review_raid_aliases,
+            cn_review_path,
+            jp_review_path,
         )
         if review_hero_count > 0 or review_raid_count > 0:
             logger.info(
                 f"Review版本别名生成完成！总共生成 {review_hero_count} 个角色条目, {review_raid_count} 个讨伐条目"
             )
         else:
-            logger.info("请检查Review版本JSON文件路径配置是否正确")
+            logger.warning("Review版本别名生成失败，请检查数据表是否完整")
     except Exception as e:
         logger.error(f"处理review别名文件时出错: {e}")
 
@@ -734,7 +723,9 @@ async def load_json_data(group_id: int):
     # 检查json_path是否有效
     if not json_path:
         logger.error("数据源路径未配置，无法加载游戏数据")
-        logger.error("请在配置文件中设置正确的eversoul_gl_live_path和eversoul_gl_review_path")
+        logger.error(
+            "请在配置文件中设置正确的eversoul_gl_live_path和eversoul_gl_review_path"
+        )
         return {"hero": {"json": []}}  # 返回空数据
 
     # 确保json_path是Path对象
@@ -845,34 +836,13 @@ async def load_data_source_config():
 
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
-    # 检查配置
-    has_live_path = plugin_config.eversoul_gl_live_path is not None
-    has_review_path = plugin_config.eversoul_gl_review_path is not None
-    has_cn_live_path = plugin_config.eversoul_cn_live_path is not None
-    has_cn_review_path = plugin_config.eversoul_cn_review_path is not None
-    has_jp_live_path = plugin_config.eversoul_jp_live_path is not None
-    has_jp_review_path = plugin_config.eversoul_jp_review_path is not None
-
-    live_path = plugin_config.eversoul_gl_live_path or ""
-    review_path = plugin_config.eversoul_gl_review_path or ""
-    cn_live_path = plugin_config.eversoul_cn_live_path or ""
-    cn_review_path = plugin_config.eversoul_cn_review_path or ""
-    jp_live_path = plugin_config.eversoul_jp_live_path or ""
-    jp_review_path = plugin_config.eversoul_jp_review_path or ""
-
-    # 确保路径是字符串形式，方便比较
-    if has_live_path and isinstance(live_path, Path):
-        live_path = str(live_path)
-    if has_review_path and isinstance(review_path, Path):
-        review_path = str(review_path)
-    if has_cn_live_path and isinstance(cn_live_path, Path):
-        cn_live_path = str(cn_live_path)
-    if has_cn_review_path and isinstance(cn_review_path, Path):
-        cn_review_path = str(cn_review_path)
-    if has_jp_live_path and isinstance(jp_live_path, Path):
-        jp_live_path = str(jp_live_path)
-    if has_jp_review_path and isinstance(jp_review_path, Path):
-        jp_review_path = str(jp_review_path)
+    # 使用本地数据表路径
+    live_path = str(GL_LIVE_TABLE_DIR)
+    review_path = str(GL_REVIEW_TABLE_DIR)
+    cn_live_path = str(CN_LIVE_TABLE_DIR)
+    cn_review_path = str(CN_REVIEW_TABLE_DIR)
+    jp_live_path = str(JP_LIVE_TABLE_DIR)
+    jp_review_path = str(JP_REVIEW_TABLE_DIR)
 
     # 检查是否有路径变更
     config_updated = False
@@ -882,8 +852,8 @@ async def load_data_source_config():
 
     # 确保有默认配置
     default_config = DEFAULT_CONFIG.copy()
-    # 确保json_path为字符串而不是Path对象，避免None值错误
-    default_config["json_path"] = live_path if has_live_path else ""
+    # 确保json_path为字符串而不是Path对象
+    default_config["json_path"] = live_path
 
     # 如果没有任何配置或者没有default配置，则初始化
     if not current_config or "default" not in current_config:
@@ -915,34 +885,44 @@ async def load_data_source_config():
                     data_type = config["default"].get("type", "live")
 
                     if server == "cn":
-                        if data_type == "live" and has_cn_live_path:
+                        if data_type == "live":
                             if str(config["default"].get("json_path")) != cn_live_path:
                                 config["default"]["json_path"] = cn_live_path
                                 config_updated = True
                                 logger.info(f"检测到国服live路径变更: {cn_live_path}")
-                        elif data_type == "review" and has_cn_review_path:
-                            if str(config["default"].get("json_path")) != cn_review_path:
+                        elif data_type == "review":
+                            if (
+                                str(config["default"].get("json_path"))
+                                != cn_review_path
+                            ):
                                 config["default"]["json_path"] = cn_review_path
                                 config_updated = True
-                                logger.info(f"检测到国服review路径变更: {cn_review_path}")
+                                logger.info(
+                                    f"检测到国服review路径变更: {cn_review_path}"
+                                )
                     elif server == "jp":
-                        if data_type == "live" and has_jp_live_path:
+                        if data_type == "live":
                             if str(config["default"].get("json_path")) != jp_live_path:
                                 config["default"]["json_path"] = jp_live_path
                                 config_updated = True
                                 logger.info(f"检测到日服live路径变更: {jp_live_path}")
-                        elif data_type == "review" and has_jp_review_path:
-                            if str(config["default"].get("json_path")) != jp_review_path:
+                        elif data_type == "review":
+                            if (
+                                str(config["default"].get("json_path"))
+                                != jp_review_path
+                            ):
                                 config["default"]["json_path"] = jp_review_path
                                 config_updated = True
-                                logger.info(f"检测到日服review路径变更: {jp_review_path}")
+                                logger.info(
+                                    f"检测到日服review路径变更: {jp_review_path}"
+                                )
                     elif server == "global":
-                        if data_type == "live" and has_live_path:
+                        if data_type == "live":
                             if str(config["default"].get("json_path")) != live_path:
                                 config["default"]["json_path"] = live_path
                                 config_updated = True
                                 logger.info(f"检测到国际服live路径变更: {live_path}")
-                        elif data_type == "review" and has_review_path:
+                        elif data_type == "review":
                             if str(config["default"].get("json_path")) != review_path:
                                 config["default"]["json_path"] = review_path
                                 config_updated = True
@@ -965,14 +945,14 @@ async def load_data_source_config():
                     data_type = group_config.get("type", "live")
 
                     if server == "cn":
-                        if data_type == "live" and has_cn_live_path:
+                        if data_type == "live":
                             if str(group_config.get("json_path", "")) != cn_live_path:
                                 group_config["json_path"] = cn_live_path
                                 config_updated = True
                                 logger.info(
                                     f"群组{group_id}的国服live路径已更新: {cn_live_path}"
                                 )
-                        elif data_type == "review" and has_cn_review_path:
+                        elif data_type == "review":
                             if str(group_config.get("json_path", "")) != cn_review_path:
                                 group_config["json_path"] = cn_review_path
                                 config_updated = True
@@ -980,14 +960,14 @@ async def load_data_source_config():
                                     f"群组{group_id}的国服review路径已更新: {cn_review_path}"
                                 )
                     elif server == "jp":
-                        if data_type == "live" and has_jp_live_path:
+                        if data_type == "live":
                             if str(group_config.get("json_path", "")) != jp_live_path:
                                 group_config["json_path"] = jp_live_path
                                 config_updated = True
                                 logger.info(
                                     f"群组{group_id}的日服live路径已更新: {jp_live_path}"
                                 )
-                        elif data_type == "review" and has_jp_review_path:
+                        elif data_type == "review":
                             if str(group_config.get("json_path", "")) != jp_review_path:
                                 group_config["json_path"] = jp_review_path
                                 config_updated = True
@@ -995,14 +975,14 @@ async def load_data_source_config():
                                     f"群组{group_id}的日服review路径已更新: {jp_review_path}"
                                 )
                     elif server == "global":
-                        if data_type == "live" and has_live_path:
+                        if data_type == "live":
                             if str(group_config.get("json_path", "")) != live_path:
                                 group_config["json_path"] = live_path
                                 config_updated = True
                                 logger.info(
                                     f"群组{group_id}的国际服live路径已更新: {live_path}"
                                 )
-                        elif data_type == "review" and has_review_path:
+                        elif data_type == "review":
                             if str(group_config.get("json_path", "")) != review_path:
                                 group_config["json_path"] = review_path
                                 config_updated = True
@@ -1080,19 +1060,19 @@ async def load_data_source_config():
             data_type = CURRENT_DATA_SOURCE[group_id].get("type", "live")
 
             if server == "cn":
-                if data_type == "live" and has_cn_live_path:
+                if data_type == "live":
                     json_path = cn_live_path
-                elif data_type == "review" and has_cn_review_path:
+                elif data_type == "review":
                     json_path = cn_review_path
             elif server == "jp":
-                if data_type == "live" and has_jp_live_path:
+                if data_type == "live":
                     json_path = jp_live_path
-                elif data_type == "review" and has_jp_review_path:
+                elif data_type == "review":
                     json_path = jp_review_path
             else:  # global
-                if data_type == "live" and has_live_path:
+                if data_type == "live":
                     json_path = live_path
-                elif data_type == "review" and has_review_path:
+                elif data_type == "review":
                     json_path = review_path
 
             if "json_path" in group_settings:
@@ -1212,42 +1192,24 @@ async def get_group_data_source(group_id):
         data_type = result_config.get("type", "live")
 
         if server == "cn":
-            if data_type == "live" and plugin_config.eversoul_cn_live_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_cn_live_path)
-            elif data_type == "review" and plugin_config.eversoul_cn_review_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_cn_review_path)
-            else:
-                result_config["json_path"] = ""
-                logger.error(f"未配置国服{data_type}数据源路径，请在env中设置eversoul_cn_{data_type}_path")
+            if data_type == "live":
+                result_config["json_path"] = CN_LIVE_TABLE_DIR
+            elif data_type == "review":
+                result_config["json_path"] = CN_REVIEW_TABLE_DIR
         elif server == "jp":
-            if data_type == "live" and plugin_config.eversoul_jp_live_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_jp_live_path)
-            elif data_type == "review" and plugin_config.eversoul_jp_review_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_jp_review_path)
-            else:
-                result_config["json_path"] = ""
-                logger.error(f"未配置日服{data_type}数据源路径，请在env中设置eversoul_jp_{data_type}_path")
+            if data_type == "live":
+                result_config["json_path"] = JP_LIVE_TABLE_DIR
+            elif data_type == "review":
+                result_config["json_path"] = JP_REVIEW_TABLE_DIR
         else:  # global
-            if data_type == "live" and plugin_config.eversoul_gl_live_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_gl_live_path)
-            elif data_type == "review" and plugin_config.eversoul_gl_review_path:
-                result_config["json_path"] = Path(plugin_config.eversoul_gl_review_path)
+            if data_type == "live":
+                result_config["json_path"] = GL_LIVE_TABLE_DIR
+            elif data_type == "review":
+                result_config["json_path"] = GL_REVIEW_TABLE_DIR
             else:
                 # 默认使用国际服live路径
-                if plugin_config.eversoul_gl_live_path:
-                    result_config["json_path"] = Path(plugin_config.eversoul_gl_live_path)
-                    result_config["type"] = "live"
-                elif plugin_config.eversoul_gl_review_path:
-                    result_config["json_path"] = Path(
-                        plugin_config.eversoul_gl_review_path
-                    )
-                    result_config["type"] = "review"
-                else:
-                    # 如果都没有配置，使用空字符串
-                    result_config["json_path"] = ""
-                    logger.error(
-                        "未配置国际服数据源路径，请在env中设置eversoul_gl_live_path或eversoul_gl_review_path"
-                    )
+                result_config["json_path"] = GL_LIVE_TABLE_DIR
+                result_config["type"] = "live"
 
     # 确保hero_alias_file有值
     if "hero_alias_file" not in result_config or not result_config["hero_alias_file"]:
