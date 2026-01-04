@@ -9,149 +9,11 @@ from ...config import *
 
 driver = get_driver()
 
-# 用于存储文件监视状态
-file_watch_state: Dict[str, Dict[str, any]] = {}
-file_watch_task = None
-
-
-def get_directory_state(directory: Path) -> Dict[str, any]:
-    """获取目录状态（文件列表和大小）
-
-    Args:
-        directory: 要检查的目录路径
-
-    Returns:
-        dict: 包含文件名和大小的字典
-    """
-    if not directory.exists():
-        return {}
-
-    state = {}
-    try:
-        # 只检查 JSON 文件
-        for file_path in directory.glob("*.json"):
-            if file_path.is_file():
-                state[file_path.name] = {
-                    "size": file_path.stat().st_size,
-                    "mtime": file_path.stat().st_mtime,
-                }
-    except Exception as e:
-        logger.error(f"获取目录状态时出错 {directory}: {e}")
-
-    return state
-
-
-async def check_and_regenerate_aliases(manual_trigger: bool = False) -> Dict[str, any]:
-    """检查数据源目录变化并重新生成别名文件
-
-    Args:
-        manual_trigger: 是否为手动触发（用于返回详细信息）
-
-    Returns:
-        dict: 包含检查结果的字典
-    """
-    global file_watch_state
-
-    result = {
-        "has_changes": False,
-        "changes": [],
-        "directories_watched": [],
-        "error": None,
-    }
-
-    # 获取需要监视的目录（使用本地数据表目录）
-    directories_to_watch = [
-        ("gl_live", GL_LIVE_TABLE_DIR),
-        ("gl_review", GL_REVIEW_TABLE_DIR),
-        ("cn_live", CN_LIVE_TABLE_DIR),
-        ("cn_review", CN_REVIEW_TABLE_DIR),
-        ("jp_live", JP_LIVE_TABLE_DIR),
-        ("jp_review", JP_REVIEW_TABLE_DIR),
-    ]
-
-    if not directories_to_watch:
-        result["error"] = "未配置任何数据源路径"
-        return result
-
-    result["directories_watched"] = [name for name, _ in directories_to_watch]
-    has_changes = False
-    change_details = []
-
-    for name, directory in directories_to_watch:
-        current_state = get_directory_state(directory)
-
-        if name not in file_watch_state:
-            file_watch_state[name] = current_state
-            if manual_trigger:
-                change_details.append(
-                    f"{name}: 首次检查，已记录状态（{len(current_state)} 个文件）"
-                )
-            continue
-
-        old_state = file_watch_state[name]
-        if set(current_state.keys()) != set(old_state.keys()):
-            added = set(current_state.keys()) - set(old_state.keys())
-            removed = set(old_state.keys()) - set(current_state.keys())
-            if added:
-                change_details.append(msg)
-            if removed:
-                change_details.append(msg)
-            has_changes = True
-            file_watch_state[name] = current_state
-            continue
-        changed_files = []
-        for filename, info in current_state.items():
-            if filename not in old_state:
-                continue
-
-            old_info = old_state[filename]
-            if info["size"] != old_info["size"] or info["mtime"] != old_info["mtime"]:
-                changed_files.append(filename)
-                has_changes = True
-
-        if changed_files:
-            msg = f"{name} 数据源文件变化: {', '.join(changed_files)}"
-            logger.info(f"检测到 {msg}")
-            change_details.append(msg)
-            file_watch_state[name] = current_state
-        elif manual_trigger:
-            change_details.append(f"{name}: 无变化（{len(current_state)} 个文件）")
-
-    result["has_changes"] = has_changes
-    result["changes"] = change_details
-
-    if has_changes:
-        logger.info("数据源文件发生变化，正在重新生成别名文件...")
-        try:
-            await generate_aliases()
-            logger.info("别名文件重新生成完成！")
-        except Exception as e:
-            error_msg = f"重新生成别名文件时出错: {e}"
-            logger.error(error_msg)
-            result["error"] = str(e)
-
-    return result
-
-
-async def file_watcher_task():
-    """文件监视后台任务"""
-    check_interval = plugin_config.eversoul_file_check_interval
-    logger.info(f"文件监视器已启动，将每 {check_interval} 秒检查数据源文件变化...")
-
-    while True:
-        try:
-            await check_and_regenerate_aliases()
-        except Exception as e:
-            logger.error(f"文件监视任务出错: {e}")
-
-        # 使用配置的检查间隔
-        await asyncio.sleep(check_interval)
-
 
 @driver.on_startup
 async def init_plugin():
     """插件启动时初始化"""
-    global DEFAULT_CONFIG, file_watch_task
+    global DEFAULT_CONFIG
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
     # 使用本地数据表路径更新默认配置
@@ -176,22 +38,6 @@ async def init_plugin():
     else:
         logger.info("配置文件不存在，将创建默认配置")
     await load_data_source_config()
-
-    file_watch_task = asyncio.create_task(file_watcher_task())
-
-
-@driver.on_shutdown
-async def cleanup():
-    """插件关闭时清理"""
-    global file_watch_task
-    if file_watch_task:
-        file_watch_task.cancel()
-        try:
-            await file_watch_task
-        except asyncio.CancelledError:
-            logger.info("文件监视任务已停止")
-        except Exception as e:
-            logger.error(f"停止文件监视任务时出错: {e}")
 
 
 async def sync_aliases(file1: Path, file2: Path) -> None:

@@ -11,7 +11,6 @@ driver = get_driver()
 
 class Config(BaseModel):
     # Eversoul相关配置项
-    eversoul_file_check_interval: int = 5  # 文件监视检查间隔（秒）
     eversoul_auto_update: bool = True  # 是否自动更新数据表
 
 

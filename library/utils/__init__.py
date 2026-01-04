@@ -84,13 +84,6 @@ es_account = on_command(
 es_update_check = on_command(
     "es检查更新", aliases={"es更新检查"}, priority=5, block=True
 )
-es_check_datasource = on_command(
-    "es检查数据源",
-    aliases={"es数据源检查"},
-    priority=5,
-    block=True,
-    permission=SUPERUSER,
-)
 emoji_vote = on_notice(priority=1, block=False)
 es_zodiac = on_command("es星座信息", priority=5, block=True)
 es_love_level = on_command("es好感等级信息", priority=5, block=True)
@@ -107,7 +100,6 @@ from .es_data_utils import (
     sync_aliases,
     generate_aliases,
     process_json_files,
-    check_and_regenerate_aliases,
 )
 
 # 图片相关
