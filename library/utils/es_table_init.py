@@ -20,6 +20,9 @@ from ..model import EversoulUser
 from .es_table_manager import download_and_setup_table
 from .es_update_utils import EversoulUpdateChecker
 
+# 导入下载状态管理
+from . import es_update_utils
+
 
 async def generate_aliases_after_download():
     """在数据表下载完成后生成别名文件"""
@@ -64,6 +67,10 @@ async def check_and_download_tables():
 
 async def download_all_tables():
     """后台下载所有数据表"""
+    # 设置下载状态标志
+    async with es_update_utils._download_lock:
+        es_update_utils._downloading_tables = True
+    
     try:
         from rich.console import Console
         from rich.progress import (
@@ -155,6 +162,10 @@ async def download_all_tables():
 
     except Exception as e:
         logger.error(f"后台下载数据表失败: {e}")
+    finally:
+        # 无论成功失败，都要清除下载状态标志
+        async with es_update_utils._download_lock:
+            es_update_utils._downloading_tables = False
 
 
 async def check_and_download_server_table(server_type: str, progress_manager=None):
@@ -229,6 +240,7 @@ async def check_and_download_server_table(server_type: str, progress_manager=Non
                     cdn_date,
                     download_urls,
                     progress_manager,
+                    infinite_retry=True,  # 启用无限重试
                 )
 
                 if not success:
@@ -288,6 +300,7 @@ async def download_latest_table(
                     "",
                     None,
                     progress_manager,
+                    infinite_retry=True,  # 启用无限重试
                 )
 
                 if success:
@@ -330,6 +343,7 @@ async def download_latest_table(
                     review_info.cdn_date,
                     None,
                     progress_manager,
+                    infinite_retry=True,  # 启用无限重试
                 )
 
                 if success:
@@ -392,6 +406,7 @@ async def download_latest_table(
                     "",
                     download_urls,
                     progress_manager,
+                    infinite_retry=True,  # 启用无限重试
                 )
 
                 if success:

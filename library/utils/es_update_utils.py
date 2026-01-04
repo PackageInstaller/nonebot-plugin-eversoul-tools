@@ -8,6 +8,10 @@ from concurrent.futures import ThreadPoolExecutor
 from nonebot.log import logger
 from ..model import EversoulUser
 
+# 全局下载状态标志
+_downloading_tables = False
+_download_lock = asyncio.Lock()
+
 
 @dataclass
 class TableInfo:
@@ -569,6 +573,34 @@ class EversoulUpdateChecker:
         Returns:
             Dict[str, Any]: 包含所有服务器状态的JSON格式结果
         """
+        global _downloading_tables
+
+        # 检查是否正在下载数据表
+        if _downloading_tables:
+            logger.info("数据表正在下载中，跳过本次更新检查")
+            return {
+                "gl_live": {
+                    "hasUpdate": False,
+                    "currentVersion": "",
+                    "updateVersion": "",
+                },
+                "gl_review": {
+                    "hasUpdate": False,
+                    "currentVersion": "",
+                    "updateVersion": "",
+                },
+                "cn_live": {
+                    "hasUpdate": False,
+                    "currentVersion": "",
+                    "updateVersion": "",
+                },
+                "cn_review": {
+                    "hasUpdate": False,
+                    "currentVersion": "",
+                    "updateVersion": "",
+                },
+            }
+
         # 获取国际服当前版本号
         current_version = await self.get_version_with_google_play()
         if not current_version:
@@ -595,9 +627,6 @@ class EversoulUpdateChecker:
                 },
             }
 
-        # 用于跟踪是否有任何服务器更新
-        any_table_updated = False
-
         # 检查国际服Live服务器
         live_has_update = await self.check_live_table_update(current_version)
         live_current_version = ""
@@ -612,21 +641,8 @@ class EversoulUpdateChecker:
 
         if live_has_update:
             live_update_version = current_version
-            # 获取Live服务器的tableVersion并更新数据库
+            # 获取Live服务器的tableVersion
             live_table_info = await self.get_table_info(current_version, "global")
-            await self.update_server_in_db(
-                "gl_live", current_version, "", live_table_info.version
-            )
-
-            # 下载并更新本地数据表（暂不重新生成别名）
-            success = await self.download_table_if_needed(
-                "gl_live",
-                current_version,
-                live_table_info.version,
-                regenerate_aliases=False,
-            )
-            if success:
-                any_table_updated = True
 
         # 检查国际服Review服务器
         review_info = await self.check_review_server(current_version)
@@ -646,24 +662,8 @@ class EversoulUpdateChecker:
                 review_current_table_version = review_status.get("table_version", 0)
 
             if review_has_update:
-                # 更新数据库
-                await self.update_server_in_db(
-                    "gl_review",
-                    review_info.version,
-                    review_info.cdn_date,
-                    review_info.table_info.version,
-                )
-
-                # 下载并更新本地数据表（暂不重新生成别名）
-                success = await self.download_table_if_needed(
-                    "gl_review",
-                    review_info.version,
-                    review_info.table_info.version,
-                    review_info.cdn_date,
-                    regenerate_aliases=False,
-                )
-                if success:
-                    any_table_updated = True
+                # 记录更新信息，但不立即下载
+                pass
 
         # 检查国服配置
         cn_config = await self.get_cn_server_config()
@@ -685,7 +685,7 @@ class EversoulUpdateChecker:
 
             if cn_live_has_update:
                 cn_live_update_version = cn_config.version
-                # 获取国服Live服务器的tableVersion并更新数据库
+                # 获取国服Live服务器的tableVersion（但不下载）
                 for base_url in cn_config.download_urls:
                     try:
                         version_url = f"{base_url}/{cn_config.version}/Table/const_data_version.json"
@@ -694,21 +694,7 @@ class EversoulUpdateChecker:
                             data = json.loads(response)
                             table_version = data.get("version", 0)
                             if table_version > 0:
-                                await self.update_server_in_db(
-                                    "cn_live", cn_config.version, "", table_version
-                                )
-
-                                # 下载并更新本地数据表（暂不重新生成别名）
-                                success = await self.download_table_if_needed(
-                                    "cn_live",
-                                    cn_config.version,
-                                    table_version,
-                                    "",
-                                    cn_config.download_urls,
-                                    regenerate_aliases=False,
-                                )
-                                if success:
-                                    any_table_updated = True
+                                # 只记录版本信息，不下载
                                 break
                     except:
                         continue
@@ -732,7 +718,7 @@ class EversoulUpdateChecker:
 
             if cn_review_has_update:
                 cn_review_update_version = cn_config.review_version
-                # 获取国服Review服务器的tableVersion并更新数据库
+                # 获取国服Review服务器的tableVersion（但不下载）
                 for base_url in cn_config.review_download_urls:
                     try:
                         version_url = f"{base_url}/{cn_config.review_version}/Table/const_data_version.json"
@@ -741,24 +727,7 @@ class EversoulUpdateChecker:
                             data = json.loads(response)
                             table_version = data.get("version", 0)
                             if table_version > 0:
-                                await self.update_server_in_db(
-                                    "cn_review",
-                                    cn_config.review_version,
-                                    "",
-                                    table_version,
-                                )
-
-                                # 下载并更新本地数据表（暂不重新生成别名）
-                                success = await self.download_table_if_needed(
-                                    "cn_review",
-                                    cn_config.review_version,
-                                    table_version,
-                                    "",
-                                    cn_config.review_download_urls,
-                                    regenerate_aliases=False,
-                                )
-                                if success:
-                                    any_table_updated = True
+                                # 只记录版本信息，不下载
                                 break
                     except:
                         continue
@@ -798,8 +767,10 @@ class EversoulUpdateChecker:
 
         if review_has_update and review_info.exists:
             result["gl_review"]["newTableVersion"] = review_info.table_info.version
+            result["gl_review"]["cdnDate"] = review_info.cdn_date
 
         if cn_live_has_update:
+            result["cn_live"]["downloadUrls"] = cn_config.download_urls
             for base_url in cn_config.download_urls:
                 try:
                     version_url = (
@@ -816,6 +787,7 @@ class EversoulUpdateChecker:
                     continue
 
         if cn_review_has_update:
+            result["cn_review"]["downloadUrls"] = cn_config.review_download_urls
             for base_url in cn_config.review_download_urls:
                 try:
                     version_url = f"{base_url}/{cn_config.review_version}/Table/const_data_version.json"
@@ -829,6 +801,91 @@ class EversoulUpdateChecker:
                 except:
                     continue
 
+        return result
+
+    async def download_updates_from_result(self, result: Dict[str, Any]) -> bool:
+        """根据检查结果下载更新
+        
+        Args:
+            result: check_all_servers() 返回的结果
+            
+        Returns:
+            bool: 是否有任何更新被下载
+        """
+        any_table_updated = False
+        
+        # 下载国际服Live更新
+        live_info = result.get("gl_live", {})
+        if live_info.get("hasUpdate", False):
+            version = live_info.get("updateVersion", "")
+            table_version = live_info.get("newTableVersion", 0)
+            if version and table_version > 0:
+                success = await self.download_table_if_needed(
+                    "gl_live",
+                    version,
+                    table_version,
+                    regenerate_aliases=False,
+                )
+                if success:
+                    await self.update_server_in_db("gl_live", version, "", table_version)
+                    any_table_updated = True
+        
+        # 下载国际服Review更新
+        review_info = result.get("gl_review", {})
+        if review_info.get("hasUpdate", False):
+            version = review_info.get("updateVersion", "")
+            table_version = review_info.get("newTableVersion", 0)
+            cdn_date = review_info.get("cdnDate", "")
+            if version and table_version > 0:
+                success = await self.download_table_if_needed(
+                    "gl_review",
+                    version,
+                    table_version,
+                    cdn_date,
+                    regenerate_aliases=False,
+                )
+                if success:
+                    await self.update_server_in_db("gl_review", version, cdn_date, table_version)
+                    any_table_updated = True
+        
+        # 下载国服Live更新
+        cn_live_info = result.get("cn_live", {})
+        if cn_live_info.get("hasUpdate", False):
+            version = cn_live_info.get("updateVersion", "")
+            table_version = cn_live_info.get("newTableVersion", 0)
+            download_urls = cn_live_info.get("downloadUrls", [])
+            if version and table_version > 0 and download_urls:
+                success = await self.download_table_if_needed(
+                    "cn_live",
+                    version,
+                    table_version,
+                    "",
+                    download_urls,
+                    regenerate_aliases=False,
+                )
+                if success:
+                    await self.update_server_in_db("cn_live", version, "", table_version)
+                    any_table_updated = True
+        
+        # 下载国服Review更新
+        cn_review_info = result.get("cn_review", {})
+        if cn_review_info.get("hasUpdate", False):
+            version = cn_review_info.get("updateVersion", "")
+            table_version = cn_review_info.get("newTableVersion", 0)
+            download_urls = cn_review_info.get("downloadUrls", [])
+            if version and table_version > 0 and download_urls:
+                success = await self.download_table_if_needed(
+                    "cn_review",
+                    version,
+                    table_version,
+                    "",
+                    download_urls,
+                    regenerate_aliases=False,
+                )
+                if success:
+                    await self.update_server_in_db("cn_review", version, "", table_version)
+                    any_table_updated = True
+        
         # 如果有任何数据表更新，统一重新生成别名文件
         if any_table_updated:
             try:
@@ -839,8 +896,8 @@ class EversoulUpdateChecker:
                 logger.info("别名文件重新生成完成！")
             except Exception as alias_error:
                 logger.error(f"重新生成别名文件失败: {alias_error}")
-
-        return result
+        
+        return any_table_updated
 
     async def download_table_if_needed(
         self,
@@ -861,6 +918,8 @@ class EversoulUpdateChecker:
             download_urls: 下载URL列表（仅国服需要）
             regenerate_aliases: 是否在下载成功后重新生成别名文件
         """
+        global _downloading_tables, _download_lock
+        
         try:
             from ...config import (
                 GL_LIVE_TABLE_DIR,
@@ -877,7 +936,7 @@ class EversoulUpdateChecker:
             # 检查是否启用自动更新
             if not plugin_config.eversoul_auto_update:
                 logger.info(f"{server_type} 自动更新已禁用")
-                return
+                return False
 
             # 获取目标目录和Schema目录
             if server_type == "gl_live":
@@ -894,23 +953,33 @@ class EversoulUpdateChecker:
                 schema_dir = CN_SCHEMA_DIR
             else:
                 logger.error(f"不支持的服务器类型: {server_type}")
-                return
+                return False
 
             # 检查Schema是否存在
             if not schema_dir.exists() or not any(schema_dir.glob("*.fbs")):
                 logger.error(f"Schema文件不存在，无法下载数据表: {schema_dir}")
-                return
+                return False
 
-            logger.info(f"开始下载 {server_type} 数据表...")
-            success = await download_and_setup_table(
-                server_type,
-                version,
-                table_version,
-                target_dir,
-                schema_dir,
-                cdn_date,
-                download_urls,
-            )
+            # 设置下载状态标志
+            async with _download_lock:
+                _downloading_tables = True
+
+            try:
+                logger.info(f"开始下载 {server_type} 数据表...")
+                success = await download_and_setup_table(
+                    server_type,
+                    version,
+                    table_version,
+                    target_dir,
+                    schema_dir,
+                    cdn_date,
+                    download_urls,
+                    infinite_retry=True,  # 启用无限重试
+                )
+            finally:
+                # 无论成功失败，都要清除下载状态标志
+                async with _download_lock:
+                    _downloading_tables = False
 
             if success:
                 logger.info(f"{server_type} 数据表下载和更新完成")

@@ -46,38 +46,50 @@ class TableDownloader:
         if self.session:
             await self.session.close()
 
-    async def download_file(self, url: str, filepath: Path, description: str = "下载", retries: int = 3, progress_manager=None) -> bool:
+    async def download_file(
+        self,
+        url: str,
+        filepath: Path,
+        description: str = "下载",
+        retries: int = 3,
+        progress_manager=None,
+        infinite_retry: bool = False,
+    ) -> bool:
         """下载文件（带进度条）
-        
+
         Args:
             url: 下载URL
             filepath: 保存路径
             description: 下载描述
-            retries: 重试次数
+            retries: 重试次数（当infinite_retry=False时有效）
             progress_manager: 可选的共享进度条管理器
-            
+            infinite_retry: 是否无限重试（适用于网络不稳定的情况）
+
         Returns:
             bool: 是否成功
         """
         if not self.session:
             return False
 
-        for attempt in range(retries):
+        attempt = 0
+        max_backoff = 300  # 最大退避时间：5分钟
+
+        while True:
             try:
                 async with self.session.get(url) as response:
                     if response.status == 200:
                         filepath.parent.mkdir(parents=True, exist_ok=True)
-                        total_size = int(response.headers.get('content-length', 0))
-                        
+                        total_size = int(response.headers.get("content-length", 0))
+
                         # 如果提供了共享的进度条管理器，使用它；否则创建新的
                         if progress_manager:
                             task = progress_manager.add_task(description, total=total_size)
-                            
-                            with open(filepath, 'wb') as f:
+
+                            with open(filepath, "wb") as f:
                                 async for chunk in response.content.iter_chunked(8192):
                                     f.write(chunk)
                                     progress_manager.update(task, advance=len(chunk))
-                            
+
                             progress_manager.remove_task(task)
                         else:
                             with Progress(
@@ -89,23 +101,46 @@ class TableDownloader:
                                 console=console,
                             ) as progress:
                                 task = progress.add_task(description, total=total_size)
-                                
-                                with open(filepath, 'wb') as f:
-                                    async for chunk in response.content.iter_chunked(8192):
+
+                                with open(filepath, "wb") as f:
+                                    async for chunk in response.content.iter_chunked(
+                                        8192
+                                    ):
                                         f.write(chunk)
                                         progress.update(task, advance=len(chunk))
-                        
+
                         logger.info(f"下载完成: {filepath.name}")
                         return True
                     else:
                         logger.warning(f"下载失败，状态码: {response.status}")
+            except aiohttp.ClientError as e:
+                # 网络相关错误，可能是暂时性的
+                attempt += 1
+                if infinite_retry:
+                    # 指数退避策略：2^n 秒，最大5分钟
+                    backoff = min(2**min(attempt, 8), max_backoff)
+                    logger.warning(
+                        f"下载遇到网络问题 (尝试 {attempt}): {e}，将在 {backoff} 秒后重试..."
+                    )
+                    await asyncio.sleep(backoff)
+                    continue
+                else:
+                    logger.warning(f"下载异常 (尝试 {attempt}/{retries}): {e}")
             except Exception as e:
-                logger.warning(f"下载异常 (尝试 {attempt + 1}/{retries}): {e}")
-                
-            if attempt < retries - 1:
-                await asyncio.sleep(2)
+                # 其他错误
+                attempt += 1
+                logger.warning(f"下载异常 (尝试 {attempt}): {e}")
 
-        return False
+            # 非无限重试模式下，检查是否达到重试次数
+            if not infinite_retry:
+                if attempt >= retries:
+                    return False
+                await asyncio.sleep(2)
+            else:
+                # 无限重试模式下，其他异常也使用退避策略
+                backoff = min(2**min(attempt, 8), max_backoff)
+                logger.warning(f"将在 {backoff} 秒后重试...")
+                await asyncio.sleep(backoff)
 
     @staticmethod
     def derive_key_and_iv() -> tuple[bytes, bytes]:
@@ -315,9 +350,10 @@ async def download_and_setup_table(
     cdn_date: str = "",
     download_urls: list = None,
     progress_manager=None,
+    infinite_retry: bool = False,
 ) -> bool:
     """下载并设置数据表
-    
+
     Args:
         server_type: 服务器类型 ("gl_live", "gl_review", "cn_live", "cn_review")
         version: 版本号
@@ -327,7 +363,8 @@ async def download_and_setup_table(
         cdn_date: CDN日期（仅Review服务器需要）
         download_urls: 下载URL列表（仅国服需要）
         progress_manager: 可选的共享进度条管理器
-        
+        infinite_retry: 是否无限重试下载（适用于网络不稳定的情况）
+
     Returns:
         bool: 是否成功
     """
@@ -366,9 +403,15 @@ async def download_and_setup_table(
         
         if not progress_manager:
             console.print(f"[bold cyan]正在下载 {server_name} 数据表...[/bold cyan]")
-        
+
         async with TableDownloader() as downloader:
-            if not await downloader.download_file(zip_url, zip_path, f"下载 {server_name}", progress_manager=progress_manager):
+            if not await downloader.download_file(
+                zip_url,
+                zip_path,
+                f"下载 {server_name}",
+                progress_manager=progress_manager,
+                infinite_retry=infinite_retry,
+            ):
                 logger.error(f"{server_name} 数据表下载失败")
                 return False
 

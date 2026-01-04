@@ -162,6 +162,9 @@ async def check_and_push_updates():
                     f"📊 当前版本: {live_info.get('currentVersion', '未知')}"
                 )
                 push_messages.append(f"🆕 更新版本: {live_version}")
+                current_table_version = live_info.get('currentTableVersion', 0)
+                if current_table_version > 0:
+                    push_messages.append(f"📋 当前数据表版本: {current_table_version}")
                 if live_table_version > 0:
                     push_messages.append(f"📋 新数据表版本: {live_table_version}")
                 push_messages.append("")
@@ -188,6 +191,9 @@ async def check_and_push_updates():
                     f"📊 当前版本: {review_info.get('currentVersion', '未知')}"
                 )
                 push_messages.append(f"🆕 更新版本: {review_version}")
+                current_table_version = review_info.get('currentTableVersion', 0)
+                if current_table_version > 0:
+                    push_messages.append(f"📋 当前数据表版本: {current_table_version}")
                 if review_table_version > 0:
                     push_messages.append(f"📋 新数据表版本: {review_table_version}")
                 push_messages.append("")
@@ -214,6 +220,9 @@ async def check_and_push_updates():
                     f"📊 当前版本: {cn_live_info.get('currentVersion', '未知')}"
                 )
                 push_messages.append(f"🆕 更新版本: {cn_live_version}")
+                current_table_version = cn_live_info.get('currentTableVersion', 0)
+                if current_table_version > 0:
+                    push_messages.append(f"📋 当前数据表版本: {current_table_version}")
                 if cn_live_table_version > 0:
                     push_messages.append(f"📋 新数据表版本: {cn_live_table_version}")
                 push_messages.append("")
@@ -240,6 +249,9 @@ async def check_and_push_updates():
                     f"📊 当前版本: {cn_review_info.get('currentVersion', '未知')}"
                 )
                 push_messages.append(f"🆕 更新版本: {cn_review_version}")
+                current_table_version = cn_review_info.get('currentTableVersion', 0)
+                if current_table_version > 0:
+                    push_messages.append(f"📋 当前数据表版本: {current_table_version}")
                 if cn_review_table_version > 0:
                     push_messages.append(f"📋 新数据表版本: {cn_review_table_version}")
 
@@ -258,6 +270,17 @@ async def check_and_push_updates():
                 logger.info(f"已向群 {TARGET_GROUP_ID} 推送更新消息")
             except Exception as e:
                 logger.error(f"推送消息到群 {TARGET_GROUP_ID} 失败: {e}")
+        
+        # 推送消息后，下载更新
+        if (
+            live_info.get("hasUpdate", False)
+            or review_info.get("hasUpdate", False)
+            or cn_live_info.get("hasUpdate", False)
+            or cn_review_info.get("hasUpdate", False)
+        ):
+            logger.info("检测到更新，开始下载数据表...")
+            async with EversoulUpdateChecker() as checker:
+                await checker.download_updates_from_result(result)
 
     except Exception as e:
         logger.error(f"定时检查更新失败: {e}")
