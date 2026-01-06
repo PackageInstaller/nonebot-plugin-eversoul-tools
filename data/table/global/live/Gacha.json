@@ -1046,7 +1046,7 @@
       "get_mileage": 651,
       "category_path": "ToggleEventCatherineBraveNewYear02",
       "ui_path": "EventPickupPanelCatherineBraveNewYear02",
-      "banner_path": "banner_event_pickup_CatherineBrave_EdenGotTalent02",
+      "banner_path": "banner_pickup_CatherineBrave_NewYear02",
       "pickup": 6510,
       "schedule_key_1": "Gacha_548",
       "schedule_key_2": "Gate_548"

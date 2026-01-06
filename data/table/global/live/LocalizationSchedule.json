@@ -3468,8 +3468,8 @@
       "index": 30168,
       "schedule_key": "Calender_Rotation_AutoArbeit2",
       "schedule_type": 3,
-      "start_date": "2025-07-23 00:00:00",
-      "end_date": "2025-07-30 00:00:00",
+      "start_date": "2026-01-21 00:00:00",
+      "end_date": "2026-01-28 00:00:00",
       "value_date_01": ""
     },
     {
@@ -5748,9 +5748,9 @@
       "index": 40285,
       "schedule_key": "EventInfo_Rotation_AutoArbeit2",
       "schedule_type": 4,
-      "start_date": "2025-07-23 00:00:00",
-      "end_date": "2025-07-30 00:00:00",
-      "value_date_01": "2025-07-30 00:00:00"
+      "start_date": "2026-01-21 00:00:00",
+      "end_date": "2026-01-28 00:00:00",
+      "value_date_01": "2026-01-28 00:00:00"
     },
     {
       "index": 40286,

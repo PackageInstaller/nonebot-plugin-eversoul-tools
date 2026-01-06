@@ -1892,64 +1892,64 @@
       "index": 238,
       "schedule_key": "Cashshop_Pickup_Linzythanatos_CN",
       "schedule_type": 1,
-      "start_date": "2025-12-12 00:00:00",
-      "end_date": "2026-02-11 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 239,
       "schedule_key": "Cashshop_Pickup_Yuria_CN",
       "schedule_type": 1,
-      "start_date": "2025-12-12 00:00:00",
-      "end_date": "2026-02-04 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 240,
       "schedule_key": "Cashshop_Pickup_Nia_CN",
       "schedule_type": 1,
-      "start_date": "2025-12-12 00:00:00",
-      "end_date": "2026-02-25 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 241,
       "schedule_key": "Cashshop_Pickup_Wheri_CN",
       "schedule_type": 1,
-      "start_date": "2025-12-12 00:00:00",
-      "end_date": "2026-03-04 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 242,
       "schedule_key": "Cashshop_Heropass_Linzythanatos_CN",
       "schedule_type": 1,
-      "start_date": "2026-01-28 00:00:00",
-      "end_date": "2026-02-25 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 243,
       "schedule_key": "Cashshop_Heropass_Yuria_CN",
       "schedule_type": 1,
-      "start_date": "2026-01-21 00:00:00",
-      "end_date": "2026-02-18 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 244,
       "schedule_key": "Cashshop_Heropass_Nia_CN",
       "schedule_type": 1,
-      "start_date": "2026-02-11 00:00:00",
-      "end_date": "2026-03-04 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 245,
       "schedule_key": "Cashshop_Heropass_Wheri_CN",
       "schedule_type": 1,
-      "start_date": "2026-02-18 00:00:00",
-      "end_date": "2026-03-18 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
@@ -1972,8 +1972,8 @@
       "index": 248,
       "schedule_key": "Cashshop_EventPeriod_NewYear2_2026_CN",
       "schedule_type": 1,
-      "start_date": "2026-01-21 00:00:00",
-      "end_date": "2026-01-28 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
@@ -2020,32 +2020,32 @@
       "index": 30001,
       "schedule_key": "Calender_MaidPlan2_Main",
       "schedule_type": 3,
-      "start_date": "2025-12-31 00:00:00",
-      "end_date": "2026-03-25 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 30002,
       "schedule_key": "Calender_MaidPlan_Main",
       "schedule_type": 3,
-      "start_date": "2025-12-31 00:00:00",
-      "end_date": "2026-03-11 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 30003,
       "schedule_key": "Calender_Valentine_Main",
       "schedule_type": 3,
-      "start_date": "2025-12-31 00:00:00",
-      "end_date": "2026-02-18 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 30004,
       "schedule_key": "Calender_NewYear_Main",
       "schedule_type": 3,
-      "start_date": "2025-12-31 00:00:00",
-      "end_date": "2026-02-04 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
@@ -2060,8 +2060,8 @@
       "index": 30006,
       "schedule_key": "Calender_honglan_spine",
       "schedule_type": 3,
-      "start_date": "2025-12-31 00:00:00",
-      "end_date": "2026-02-04 00:00:00",
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
       "value_date_01": ""
     },
     {
@@ -2524,25 +2524,25 @@
       "index": 40013,
       "schedule_key": "EventInfo_NewYear_Main",
       "schedule_type": 4,
-      "start_date": "2026-01-21 00:00:00",
-      "end_date": "2026-02-04 00:00:00",
-      "value_date_01": "2026-02-04 00:00:00"
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
+      "value_date_01": "2000-01-01 00:00:00"
     },
     {
       "index": 40014,
       "schedule_key": "EventInfo_NewYear_Quest",
       "schedule_type": 4,
-      "start_date": "2026-01-21 00:00:00",
-      "end_date": "2026-02-04 00:00:00",
-      "value_date_01": "2026-02-04 00:00:00"
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
+      "value_date_01": "2000-01-01 00:00:00"
     },
     {
       "index": 40015,
       "schedule_key": "EventInfo_NewYear_Attend",
       "schedule_type": 4,
-      "start_date": "2026-01-21 00:00:00",
-      "end_date": "2026-02-04 00:00:00",
-      "value_date_01": "2026-02-04 00:00:00"
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
+      "value_date_01": "2000-01-01 00:00:00"
     },
     {
       "index": 40016,
@@ -2612,7 +2612,7 @@
       "index": 40024,
       "schedule_key": "EventInfo_QuestGuildRaid_1",
       "schedule_type": 4,
-      "start_date": "2025-12-18 00:00:00",
+      "start_date": "2025-12-31 00:00:00",
       "end_date": "2026-01-21 00:00:00",
       "value_date_01": "2026-01-21 00:00:00"
     },
@@ -2652,9 +2652,9 @@
       "index": 40029,
       "schedule_key": "EventInfo_honglan_spine",
       "schedule_type": 4,
-      "start_date": "2025-12-18 00:00:00",
-      "end_date": "2026-01-28 00:00:00",
-      "value_date_01": "2026-01-28 00:00:00"
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
+      "value_date_01": "2000-01-01 00:00:00"
     },
     {
       "index": 40030,
@@ -2724,9 +2724,9 @@
       "index": 40038,
       "schedule_key": "EventInfo_Rotation_Arena",
       "schedule_type": 4,
-      "start_date": "2026-01-28 00:00:00",
-      "end_date": "2026-02-11 00:00:00",
-      "value_date_01": "2026-02-11 00:00:00"
+      "start_date": "2000-01-01 00:00:00",
+      "end_date": "2000-01-01 00:00:00",
+      "value_date_01": "2000-01-01 00:00:00"
     },
     {
       "index": 40039,
@@ -2884,8 +2884,8 @@
       "index": 50013,
       "schedule_key": "Gacha_506",
       "schedule_type": 5,
-      "start_date": "2026-01-21 00:00:00",
-      "end_date": "2026-01-28 00:00:00",
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
       "value_date_01": ""
     },
     {
@@ -3060,8 +3060,8 @@
       "index": 50035,
       "schedule_key": "Gacha_528",
       "schedule_type": 5,
-      "start_date": "2026-01-21 00:00:00",
-      "end_date": "2026-02-11 00:00:00",
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
       "value_date_01": ""
     },
     {
@@ -3300,8 +3300,8 @@
       "index": 50065,
       "schedule_key": "Gacha_558",
       "schedule_type": 5,
-      "start_date": "2026-02-04 00:00:00",
-      "end_date": "2026-02-18 00:00:00",
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
       "value_date_01": ""
     },
     {
@@ -3316,8 +3316,8 @@
       "index": 50067,
       "schedule_key": "Gacha_560",
       "schedule_type": 5,
-      "start_date": "2026-02-18 00:00:00",
-      "end_date": "2026-03-04 00:00:00",
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
       "value_date_01": ""
     },
     {
@@ -3436,8 +3436,8 @@
       "index": 50082,
       "schedule_key": "Gacha_575",
       "schedule_type": 5,
-      "start_date": "2026-02-11 00:00:00",
-      "end_date": "2026-03-04 00:00:00",
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
       "value_date_01": ""
     },
     {
@@ -4804,7 +4804,7 @@
       "index": 60001,
       "schedule_key": "GuildRaid_1_1001",
       "schedule_type": 6,
-      "start_date": "2026-01-15 00:00:00",
+      "start_date": "2025-12-31 00:00:00",
       "end_date": "2026-01-21 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
@@ -4836,7 +4836,7 @@
       "index": 60005,
       "schedule_key": "GuildRaid_2_1001",
       "schedule_type": 6,
-      "start_date": "2026-01-15 00:00:00",
+      "start_date": "2025-12-31 00:00:00",
       "end_date": "2026-01-21 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
@@ -4868,7 +4868,7 @@
       "index": 60009,
       "schedule_key": "GuildRaid_4_1001",
       "schedule_type": 6,
-      "start_date": "2025-12-18 00:00:00",
+      "start_date": "2025-12-31 00:00:00",
       "end_date": "2026-01-21 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
@@ -4900,7 +4900,7 @@
       "index": 60013,
       "schedule_key": "GuildRaid_3_10001",
       "schedule_type": 6,
-      "start_date": "2025-12-18 00:00:00",
+      "start_date": "2025-12-31 00:00:00",
       "end_date": "2026-01-21 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
