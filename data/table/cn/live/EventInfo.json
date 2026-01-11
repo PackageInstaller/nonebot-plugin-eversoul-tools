@@ -241,6 +241,7 @@
     },
     {
       "no": 13,
+      "category_type": 1,
       "show_list": 1,
       "event_type": 6,
       "group": 1,
@@ -261,6 +262,7 @@
     },
     {
       "no": 14,
+      "category_type": 1,
       "show_list": 1,
       "event_type": 3,
       "group": 3,
@@ -279,6 +281,7 @@
     },
     {
       "no": 15,
+      "category_type": 1,
       "show_list": 1,
       "event_type": 1,
       "group": 13,
