@@ -67,7 +67,6 @@ async def get_character_portrait(data, prefab_path):
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
     from ...config import SOUL_DIR
-
     if prefab_path == "":
         return []
 
@@ -83,13 +82,10 @@ async def get_character_portrait(data, prefab_path):
             base_name = costume.get("portrait_path", "")
             controller_path = costume.get("portrait_path", "")
             break
-
     if base_name and (SOUL_DIR / f"{base_name}_512.png").exists():
         base_portrait_path = str(SOUL_DIR / f"{base_name}_512.png")
         portraits.append(base_portrait_path)
         added_portraits.add(base_name)
-    else:
-        return None
 
     if controller_path:
         costume_portraits = set()
@@ -107,9 +103,6 @@ async def get_character_portrait(data, prefab_path):
             if (SOUL_DIR / f"{portrait_name}_512.png").exists():
                 portraits.append(str(SOUL_DIR / f"{portrait_name}_512.png"))
                 added_portraits.add(portrait_name)
-            else:
-                return None
-
     return portraits
 
 
