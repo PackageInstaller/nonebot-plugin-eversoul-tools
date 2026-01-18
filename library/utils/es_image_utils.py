@@ -67,6 +67,7 @@ async def get_character_portrait(data, prefab_path):
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
     from ...config import SOUL_DIR
+
     if prefab_path == "":
         return []
 
@@ -134,7 +135,7 @@ async def get_character_illustration(data, hero_id):
             costume_no = costume.get("no")  # 获取costume的no
             name_sno = costume.get("name_sno")
             type_sno = costume.get("type_sno")  # 获取时装的type_sno
-            
+
             if portrait_path and name_sno and type_sno and costume_no:
                 # 通过costume的no去item中查找desc_sno
                 desc_sno = None
@@ -142,7 +143,7 @@ async def get_character_illustration(data, hero_id):
                     if item.get("no") == costume_no:
                         desc_sno = item.get("desc_sno")
                         break
-                
+
                 costume_name_zh_tw = (
                     await get_string_by_type(data, "item", name_sno)
                 ).get("zh_tw", "")
@@ -224,27 +225,29 @@ async def get_character_illustration(data, hero_id):
             # 处理常规立绘
             if base_name in costume_info:
                 info = costume_info[base_name]
-                
+
                 # 添加到结果字典，键为立绘基础名称
                 if base_name not in result_dict:
                     result_dict[base_name] = []
 
                 # 添加原始立绘
-                result_dict[base_name].append({
-                    "img_path": file,
-                    "display_name_tw": info["name_tw"],
-                    "display_name_cn": info["name_cn"],
-                    "display_name_kr": info["name_kr"],
-                    "display_name_en": info["name_en"],
-                    "condition_tw": info["condition_tw"],
-                    "condition_cn": info["condition_cn"],
-                    "condition_kr": info["condition_kr"],
-                    "condition_en": info["condition_en"],
-                    "desc_tw": info["desc_tw"],
-                    "desc_cn": info["desc_cn"],
-                    "desc_kr": info["desc_kr"],
-                    "desc_en": info["desc_en"],
-                })
+                result_dict[base_name].append(
+                    {
+                        "img_path": file,
+                        "display_name_tw": info["name_tw"],
+                        "display_name_cn": info["name_cn"],
+                        "display_name_kr": info["name_kr"],
+                        "display_name_en": info["name_en"],
+                        "condition_tw": info["condition_tw"],
+                        "condition_cn": info["condition_cn"],
+                        "condition_kr": info["condition_kr"],
+                        "condition_en": info["condition_en"],
+                        "desc_tw": info["desc_tw"],
+                        "desc_cn": info["desc_cn"],
+                        "desc_kr": info["desc_kr"],
+                        "desc_en": info["desc_en"],
+                    }
+                )
 
                 # 检查是否存在对应的旧设立绘 (格式: 基础名称_2048 (1).后缀)
                 old_design_file = (
@@ -253,21 +256,23 @@ async def get_character_illustration(data, hero_id):
 
                 if old_design_file.exists():
                     # 将旧设立绘添加到结果列表中（在原始立绘后面）
-                    result_dict[base_name].append({
-                        "img_path": old_design_file,
-                        "display_name_tw": f"{info['name_tw']}_旧设",
-                        "display_name_cn": f"{info['name_cn']}_旧设",
-                        "display_name_kr": f"{info['name_kr']}_旧设",
-                        "display_name_en": f"{info['name_en']}_old",
-                        "condition_tw": "敬請期待",
-                        "condition_cn": "敬请期待",
-                        "condition_kr": "기대해 주세요",
-                        "condition_en": "Stay tuned",
-                        "desc_tw": info["desc_tw"],
-                        "desc_cn": info["desc_cn"],
-                        "desc_kr": info["desc_kr"],
-                        "desc_en": info["desc_en"],
-                    })
+                    result_dict[base_name].append(
+                        {
+                            "img_path": old_design_file,
+                            "display_name_tw": f"{info['name_tw']}_旧设",
+                            "display_name_cn": f"{info['name_cn']}_旧设",
+                            "display_name_kr": f"{info['name_kr']}_旧设",
+                            "display_name_en": f"{info['name_en']}_old",
+                            "condition_tw": "敬請期待",
+                            "condition_cn": "敬请期待",
+                            "condition_kr": "기대해 주세요",
+                            "condition_en": "Stay tuned",
+                            "desc_tw": info["desc_tw"],
+                            "desc_cn": info["desc_cn"],
+                            "desc_kr": info["desc_kr"],
+                            "desc_en": info["desc_en"],
+                        }
+                    )
 
                 # 检查是否存在对应的和谐后立绘 (格式: 基础名称_2048 (2).后缀)
                 censored_file = (
@@ -276,21 +281,23 @@ async def get_character_illustration(data, hero_id):
 
                 if censored_file.exists():
                     # 将和谐后立绘添加到结果列表中（在旧设立绘后面）
-                    result_dict[base_name].append({
-                        "img_path": censored_file,
-                        "display_name_tw": f"{info['name_tw']}_和谐后",
-                        "display_name_cn": f"{info['name_cn']}_和谐后",
-                        "display_name_kr": f"{info['name_kr']}_조화 후",
-                        "display_name_en": f"{info['name_en']}_censored",
-                        "condition_tw": "IsEnableReview",
-                        "condition_cn": "IsEnableReview",
-                        "condition_kr": "IsEnableReview",
-                        "condition_en": "IsEnableReview",
-                        "desc_tw": info["desc_tw"],
-                        "desc_cn": info["desc_cn"],
-                        "desc_kr": info["desc_kr"],
-                        "desc_en": info["desc_en"],
-                    })
+                    result_dict[base_name].append(
+                        {
+                            "img_path": censored_file,
+                            "display_name_tw": f"{info['name_tw']}_和谐后",
+                            "display_name_cn": f"{info['name_cn']}_和谐后",
+                            "display_name_kr": f"{info['name_kr']}_조화 후",
+                            "display_name_en": f"{info['name_en']}_censored",
+                            "condition_tw": "IsEnableReview",
+                            "condition_cn": "IsEnableReview",
+                            "condition_kr": "IsEnableReview",
+                            "condition_en": "IsEnableReview",
+                            "desc_tw": info["desc_tw"],
+                            "desc_cn": info["desc_cn"],
+                            "desc_kr": info["desc_kr"],
+                            "desc_en": info["desc_en"],
+                        }
+                    )
 
     # 处理独立的旧设立绘文件和和谐后立绘文件（没有对应的常规立绘）
     for file in all_files:
@@ -316,38 +323,42 @@ async def get_character_illustration(data, hero_id):
                 # 判断是旧设还是和谐后
                 if "(1)" in file_stem:
                     # 添加旧设立绘
-                    result_dict[original_base_name].append({
-                        "img_path": file,
-                        "display_name_tw": f"{info['name_tw']}_旧设",
-                        "display_name_cn": f"{info['name_cn']}_旧设",
-                        "display_name_kr": f"{info['name_kr']}_旧设",
-                        "display_name_en": f"{info['name_en']}_old",
-                        "condition_tw": "敬請期待",
-                        "condition_cn": "敬请期待",
-                        "condition_kr": "기대해 주세요",
-                        "condition_en": "Stay tuned",
-                        "desc_tw": info["desc_tw"],
-                        "desc_cn": info["desc_cn"],
-                        "desc_kr": info["desc_kr"],
-                        "desc_en": info["desc_en"],
-                    })
+                    result_dict[original_base_name].append(
+                        {
+                            "img_path": file,
+                            "display_name_tw": f"{info['name_tw']}_旧设",
+                            "display_name_cn": f"{info['name_cn']}_旧设",
+                            "display_name_kr": f"{info['name_kr']}_旧设",
+                            "display_name_en": f"{info['name_en']}_old",
+                            "condition_tw": "敬請期待",
+                            "condition_cn": "敬请期待",
+                            "condition_kr": "기대해 주세요",
+                            "condition_en": "Stay tuned",
+                            "desc_tw": info["desc_tw"],
+                            "desc_cn": info["desc_cn"],
+                            "desc_kr": info["desc_kr"],
+                            "desc_en": info["desc_en"],
+                        }
+                    )
                 elif "(2)" in file_stem:
                     # 添加和谐后立绘
-                    result_dict[original_base_name].append({
-                        "img_path": file,
-                        "display_name_tw": f"{info['name_tw']}_和谐后",
-                        "display_name_cn": f"{info['name_cn']}_和谐后",
-                        "display_name_kr": f"{info['name_kr']}_조화 후",
-                        "display_name_en": f"{info['name_en']}_censored",
-                        "condition_tw": "IsEnableReview",
-                        "condition_cn": "IsEnableReview",
-                        "condition_kr": "IsEnableReview",
-                        "condition_en": "IsEnableReview",
-                        "desc_tw": info["desc_tw"],
-                        "desc_cn": info["desc_cn"],
-                        "desc_kr": info["desc_kr"],
-                        "desc_en": info["desc_en"],
-                    })
+                    result_dict[original_base_name].append(
+                        {
+                            "img_path": file,
+                            "display_name_tw": f"{info['name_tw']}_和谐后",
+                            "display_name_cn": f"{info['name_cn']}_和谐后",
+                            "display_name_kr": f"{info['name_kr']}_조화 후",
+                            "display_name_en": f"{info['name_en']}_censored",
+                            "condition_tw": "IsEnableReview",
+                            "condition_cn": "IsEnableReview",
+                            "condition_kr": "IsEnableReview",
+                            "condition_en": "IsEnableReview",
+                            "desc_tw": info["desc_tw"],
+                            "desc_cn": info["desc_cn"],
+                            "desc_kr": info["desc_kr"],
+                            "desc_en": info["desc_en"],
+                        }
+                    )
 
     result_dict_sorted = dict(sorted(result_dict.items()))
     for base_name, entries in result_dict_sorted.items():
@@ -369,6 +380,7 @@ async def get_character_affection_cg(data, hero_id, server, data_type):
     """
     from ...config import CG_DIR
     from .es_string_utils import get_string_by_type, select_text_by_priority
+
     if not CG_DIR.exists():
         return []
 
@@ -412,14 +424,16 @@ async def get_character_affection_cg(data, hero_id, server, data_type):
             episode_title = ""
             if episode_info["episode_name_sno"]:
 
-                string_data = await get_string_by_type(data, "talk", episode_info["episode_name_sno"])
+                string_data = await get_string_by_type(
+                    data, "talk", episode_info["episode_name_sno"]
+                )
                 episode_title = await select_text_by_priority(
                     string_data.get("zh_tw", ""),
                     string_data.get("zh_cn", ""),
                     string_data.get("kr", ""),
                     string_data.get("en", ""),
                     server,
-                    data_type
+                    data_type,
                 )
             images.append((file, f"CG_{no}", episode_info["episode"], episode_title))
             break  # 找到一个匹配的文件就跳出
@@ -481,6 +495,7 @@ async def get_schedule_event(
     """
     events = []
     now = datetime.now()
+    from .es_string_utils import get_string_by_type
 
     # 跳过已经迁移到get_calendar_event函数中的类型
     if (
@@ -529,40 +544,64 @@ async def get_schedule_event(
         event_name_tw = ""
         banner_path = ""
         name_sno = None
-        gacha_no = None
 
         # 从EventCalender中获取name_sno和gacha_no
         for event in data["event_calender"]["json"]:
             if event.get("schedule_key") == schedule_key:
                 name_sno = event.get("name_sno")
-                # 如果是Pickup类型，获取gacha_no
-                if schedule_key.startswith("Calender_PickUp_"):
-                    gacha_no = event.get("gacha_no")
                 if name_sno:
                     # 从StringUI中获取名称
-                    for string in data["string_ui"]["json"]:
-                        if string["no"] == name_sno:
-                            event_name_tw = (
-                                string.get("zh_tw", "")
-                                .replace("\\r\\n", " ")
-                                .replace("\r\n", " ")
-                                .replace("\n", " ")
-                            )
-                            break
-                break
+                    string_data = await get_string_by_type(data, "ui", name_sno)
+                    event_name_tw = (
+                        string_data.get("zh_tw", "")
+                        .replace("\\r\\n", " ")
+                        .replace("\r\n", " ")
+                        .replace("\\n", " ")
+                        .replace("\n", " ")
+                    )
 
         # 获取banner后缀
         banner_suffix = get_banner_suffix(server)
 
         # 对于Pickup类型，从Gacha.json中获取banner_path
-        if schedule_key.startswith("Calender_PickUp_") and gacha_no:
-            if "gacha" in data:
-                for gacha in data["gacha"]["json"]:
-                    if gacha.get("no") == gacha_no:
-                        banner_raw = gacha.get("banner_path", "")
-                        if banner_raw:
-                            banner_path = f"{banner_raw}_{banner_suffix}.png"
+        # 需要找到schedule_key_1时间范围包含当前Pickup开始时间的Gacha
+        if schedule_key.startswith("Calender_PickUp_") and "gacha" in data:
+            # 从schedule_key中提取角色名: Calender_PickUp_HeroName -> HeroName
+            hero_name = schedule_key.replace("Calender_PickUp_", "")
+            
+            # 遍历所有Gacha，找到正确的那个
+            for gacha in data["gacha"]["json"]:
+                gacha_schedule_key_1 = gacha.get("schedule_key_1", "")
+                if not gacha_schedule_key_1:
+                    continue
+                
+                # 检查banner_path是否包含角色名（不区分大小写）
+                banner_raw = gacha.get("banner_path", "")
+                if not banner_raw or hero_name.lower() not in banner_raw.lower():
+                    continue
+                
+                # 在LocalizationSchedule中查找对应的时间信息
+                for schedule_item in data["localization_schedule"]["json"]:
+                    if schedule_item.get("schedule_key") == gacha_schedule_key_1:
+                        gacha_start_date = schedule_item.get("start_date")
+                        gacha_end_date = schedule_item.get("end_date")
+                        
+                        # 检查当前Pickup的开始时间是否在Gacha的schedule_key_1时间范围内
+                        if gacha_start_date and gacha_end_date:
+                            try:
+                                gacha_start = datetime.strptime(gacha_start_date, "%Y-%m-%d %H:%M:%S")
+                                gacha_end = datetime.strptime(gacha_end_date, "%Y-%m-%d %H:%M:%S")
+                                
+                                # 如果Pickup的开始时间在Gacha的时间范围内，且banner匹配
+                                if gacha_start <= start_date <= gacha_end:
+                                    banner_path = f"{banner_raw}_{banner_suffix}.png"
+                                    break
+                            except (ValueError, TypeError):
+                                continue
                         break
+                
+                if banner_path:
+                    break
         # 从EventInfo中获取banner路径
         elif name_sno:
             for event_info in data["event_info"]["json"]:
@@ -700,6 +739,8 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
             or schedule_key.endswith("_Quest")  # 7日任务
             or schedule_key.endswith("_Infinity")  # 无限挑战
             or schedule_key.endswith("_Rewardgame")  # 小游戏
+            or schedule_key.endswith("_Pass")
+            or schedule_key.endswith("_Attend")
             or (
                 schedule_key.startswith("EventInfo_")
                 and not schedule_key.endswith("_Pass")
@@ -751,9 +792,14 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
                         banner_path = f"{banner_raw}_{banner_suffix}.png"
                     # 如果找到name_sno，从StringUI中获取名称
                     if name_sno:
+                        string_data = await get_string_by_type(data, "ui", name_sno)
                         event_name_tw = (
-                            await get_string_by_type(data, "ui", name_sno)
-                        ).get("zh_tw", "")
+                            string_data.get("zh_tw", "")
+                            .replace("\\r\\n", " ")
+                            .replace("\r\n", " ")
+                            .replace("\\n", " ")
+                            .replace("\n", " ")
+                        )
                         break
                     break
         else:
@@ -763,9 +809,14 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
                     name_sno = event.get("name_sno")
                     if name_sno:
                         # 从StringUI中获取名称
+                        string_data = await get_string_by_type(data, "ui", name_sno)
                         event_name_tw = (
-                            await get_string_by_type(data, "ui", name_sno)
-                        ).get("zh_tw", "")
+                            string_data.get("zh_tw", "")
+                            .replace("\\r\\n", " ")
+                            .replace("\r\n", " ")
+                            .replace("\\n", " ")
+                            .replace("\n", " ")
+                        )
                         break
                     break
 
@@ -774,9 +825,14 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
                 if event.get("schedule_key") == schedule_key:
                     name_sno = event.get("name_sno")
                     if name_sno:
+                        string_data = await get_string_by_type(data, "ui", name_sno)
                         event_name_tw = (
-                            await get_string_by_type(data, "ui", name_sno)
-                        ).get("zh_tw", "")
+                            string_data.get("zh_tw", "")
+                            .replace("\\r\\n", " ")
+                            .replace("\r\n", " ")
+                            .replace("\\n", " ")
+                            .replace("\n", " ")
+                        )
                         break
                     break
 
@@ -1650,7 +1706,11 @@ async def generate_potential_html(data: dict) -> str:
         potential_names = {}  # {tooltip_sno: name}
         for string in data["string_ui"]["json"]:
             if string.get("no") in potentials:
-                potential_names[string["no"]] = string.get("zh_tw", "") if string.get("zh_tw", "") != "" else string.get("zh_cn", "")
+                potential_names[string["no"]] = (
+                    string.get("zh_tw", "")
+                    if string.get("zh_tw", "") != ""
+                    else string.get("zh_cn", "")
+                )
 
         # 生成HTML
         html = """
@@ -2711,7 +2771,7 @@ async def generate_skill_description_image(
 
     for desc in skill_descriptions:
         level = desc.get("hero_level", desc.get("level", 1))
-        
+
         # 根据服务器和数据类型选择描述语言
         if server == "cn":
             # 国服使用简体中文

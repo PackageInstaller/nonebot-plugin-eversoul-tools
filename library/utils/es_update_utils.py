@@ -644,27 +644,6 @@ class EversoulUpdateChecker:
             # 获取Live服务器的tableVersion
             live_table_info = await self.get_table_info(current_version, "global")
 
-        # 检查国际服Review服务器
-        review_info = await self.check_review_server(current_version)
-        review_has_update = False
-        review_current_version = ""
-        review_update_version = ""
-        review_current_table_version = 0
-
-        if review_info.exists:
-            review_has_update = await self.check_review_table_update(review_info)
-            review_update_version = review_info.version if review_has_update else ""
-
-            # 始终先从数据库获取当前版本
-            review_status = await self.get_server_from_db("gl_review")
-            if review_status:
-                review_current_version = review_status.get("version", "")
-                review_current_table_version = review_status.get("table_version", 0)
-
-            if review_has_update:
-                # 记录更新信息，但不立即下载
-                pass
-
         # 检查国服配置
         cn_config = await self.get_cn_server_config()
 
@@ -731,6 +710,27 @@ class EversoulUpdateChecker:
                                 break
                     except:
                         continue
+
+        # 最后检查国际服Review服务器（耗时较长，放在最后）
+        review_info = await self.check_review_server(current_version)
+        review_has_update = False
+        review_current_version = ""
+        review_update_version = ""
+        review_current_table_version = 0
+
+        if review_info.exists:
+            review_has_update = await self.check_review_table_update(review_info)
+            review_update_version = review_info.version if review_has_update else ""
+
+            # 始终先从数据库获取当前版本
+            review_status = await self.get_server_from_db("gl_review")
+            if review_status:
+                review_current_version = review_status.get("version", "")
+                review_current_table_version = review_status.get("table_version", 0)
+
+            if review_has_update:
+                # 记录更新信息，但不立即下载
+                pass
 
         # 构建结果
         result = {

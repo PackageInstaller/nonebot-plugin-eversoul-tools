@@ -6,7 +6,7 @@ import asyncio
 import nonebot
 import aiohttp
 import requests
-from typing import Any, Tuple, Dict
+from typing import Any, Tuple, Dict, Set
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
 from nonebot import (
