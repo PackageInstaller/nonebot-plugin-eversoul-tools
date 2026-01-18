@@ -150,10 +150,10 @@ async def handle(bot: Bot, event: Event):
                         </tr>
                         <tr>
                             <td>
-                                es日程信息
+                                es日程信息 + 日期[可选]
                             </td>
                             <td>查询当月的所有事件</td>
-                            <td>es日程信息</td>
+                            <td>es日程信息/es日程信息2026-02</td>
                         </tr>
                         <tr>
                             <td>
@@ -221,15 +221,15 @@ async def handle(bot: Bot, event: Event):
                         <tr>
                             <td>
                                 es数据源
-                                + [review/live]</td>
+                                + [gl/cn_review/gl/cn_live]</td>
                             <td>切换数据源</td>
-                            <td>es数据源review</td>
+                            <td>es数据源gl_review</td>
                         </tr>
                         <tr>
                             <td>
                                 es兑换码
                             </td>
-                            <td>兑换游戏礼包码</td>
+                            <td>兑换游戏礼包码，不支持国服</td>
                             <td>es兑换码</td>
                         </tr>
                         <tr>
@@ -301,13 +301,6 @@ async def handle(bot: Bot, event: Event):
                             </td>
                             <td>手动检查服务器更新状态</td>
                             <td>es检查更新</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                es检查数据源
-                            </td>
-                            <td>手动检查数据源文件变化并重新生成别名（仅超级用户）</td>
-                            <td>es检查数据源</td>
                         </tr>
                     </tbody>
                 </table>
