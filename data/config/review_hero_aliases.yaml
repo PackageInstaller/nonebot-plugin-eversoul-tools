@@ -679,6 +679,13 @@ names:
     ja_name: メフィストフェレス(暁)
     aliases: [菲姬, 牢梅, 黎梅, 飞机, 黎梅菲, 暗梅菲, 界梅菲, 李梅, 大梅妃, 飛機, 界梅妃, 大梅菲, 光梅菲]
     hero_id: 6530
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 유리아(아폴리온)
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 6540
   - zh_tw_name: 時崎狂三
     zh_cn_name: 时崎狂三
     kr_name: 토키사키 쿠루미

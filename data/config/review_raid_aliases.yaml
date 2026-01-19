@@ -167,6 +167,41 @@ names:
     ja_name: ''
     aliases: []
     hero_id: 8700
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 소원 도둑 오닉스
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8710
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 소원 도둑 오닉스
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8720
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 소원 도둑 오닉스
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8730
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 소원 도둑 오닉스
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8740
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 소원 도둑 오닉스
+    en_name: ''
+    ja_name: ''
+    aliases: []
+    hero_id: 8750
   - zh_tw_name: 艾拉
     zh_cn_name: 艾拉
     kr_name: 아이라
@@ -216,6 +251,20 @@ names:
     ja_name: ジャクリーン
     aliases: []
     hero_id: 9680
+  - zh_tw_name: 薇薇安
+    zh_cn_name: 薇薇安
+    kr_name: 비비안
+    en_name: Vivienne
+    ja_name: ビビアン
+    aliases: []
+    hero_id: 9690
+  - zh_tw_name: 阿德里安
+    zh_cn_name: 阿德里安
+    kr_name: 아드리안
+    en_name: Adrianne
+    ja_name: アドリアン
+    aliases: []
+    hero_id: 9700
   - zh_tw_name: 魯德拉
     zh_cn_name: 鲁德拉
     kr_name: 루드라
