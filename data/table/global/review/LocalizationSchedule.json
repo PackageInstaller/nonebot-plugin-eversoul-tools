@@ -2044,72 +2044,72 @@
       "index": 256,
       "schedule_key": "Cashshop_Event_Christmas_2024_2",
       "schedule_type": 1,
-      "start_date": "2025-12-25 00:00:00",
-      "end_date": "2026-01-15 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 257,
       "schedule_key": "Cashshop_Event_Newyear_2025_2",
       "schedule_type": 1,
-      "start_date": "2026-01-01 00:00:00",
-      "end_date": "2026-01-08 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 258,
       "schedule_key": "Cashshop_EventPass_32000",
       "schedule_type": 1,
-      "start_date": "",
-      "end_date": "",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 259,
       "schedule_key": "Cashshop_Event_3rdPack_1",
       "schedule_type": 1,
-      "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-02-19 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 260,
       "schedule_key": "Cashshop_Event_3rdPack_2",
       "schedule_type": 1,
-      "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-02-19 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 261,
       "schedule_key": "Cashshop_Heropass_Apollyon",
       "schedule_type": 1,
-      "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-02-19 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 262,
       "schedule_key": "Cashshop_Pickup_Apollyon",
       "schedule_type": 1,
-      "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-02-19 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 263,
       "schedule_key": "Cashshop_Event_Newyear3_1",
       "schedule_type": 1,
-      "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-02-19 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 264,
       "schedule_key": "Cashshop_Event_Newyear3_2",
       "schedule_type": 1,
-      "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-02-19 00:00:00",
+      "start_date": "2025-11-18 00:00:00",
+      "end_date": "2025-11-30 00:00:00",
       "value_date_01": ""
     },
     {
