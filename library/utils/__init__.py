@@ -69,7 +69,7 @@ es_stats = on_regex(r"^es(身高|体重)排行$", priority=5, block=True)
 es_range_ranking = on_fullmatch("es攻击范围排行", priority=5, block=True)
 es_switch_source = on_command("es数据源", priority=5, block=True)
 es_tier = on_command("es礼品信息", priority=5, block=True)
-es_coupon = on_fullmatch("es兑换码", priority=5, block=True)
+es_coupon = on_command("es兑换码", priority=5, block=True)
 es_bind = on_command(
     "es绑定", aliases={"es绑定账号", "es账号绑定"}, priority=5, block=True
 )

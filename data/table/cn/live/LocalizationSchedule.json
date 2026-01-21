@@ -2613,8 +2613,8 @@
       "schedule_key": "EventInfo_QuestGuildRaid_1",
       "schedule_type": 4,
       "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-01-21 00:00:00",
-      "value_date_01": "2026-01-28 00:00:00"
+      "end_date": "2026-01-28 00:00:00",
+      "value_date_01": "2026-02-04 00:00:00"
     },
     {
       "index": 40025,
@@ -4805,7 +4805,7 @@
       "schedule_key": "GuildRaid_1_1001",
       "schedule_type": 6,
       "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-01-21 00:00:00",
+      "end_date": "2026-01-28 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
     {
@@ -4837,7 +4837,7 @@
       "schedule_key": "GuildRaid_2_1001",
       "schedule_type": 6,
       "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-01-21 00:00:00",
+      "end_date": "2026-01-28 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
     {
@@ -4869,7 +4869,7 @@
       "schedule_key": "GuildRaid_4_1001",
       "schedule_type": 6,
       "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-01-21 00:00:00",
+      "end_date": "2026-01-28 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
     {
@@ -4901,7 +4901,7 @@
       "schedule_key": "GuildRaid_3_10001",
       "schedule_type": 6,
       "start_date": "2026-01-15 00:00:00",
-      "end_date": "2026-01-21 00:00:00",
+      "end_date": "2026-01-28 00:00:00",
       "value_date_01": "2026-02-04 00:00:00"
     },
     {

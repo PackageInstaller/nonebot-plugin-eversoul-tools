@@ -72,7 +72,7 @@ async def redeem_coupon(
     event: Event,
     max_retries: int = 3,
     retry_delay: float = 1.0,
-) -> Tuple[bool, str]:
+) -> Tuple[bool, str, str]:
     """兑换礼包码
 
     Args:
@@ -84,7 +84,7 @@ async def redeem_coupon(
         retry_delay: 重试间隔时间（秒，默认为1秒）
 
     Returns:
-        Tuple[bool, str]: (是否成功, 结果信息)
+        Tuple[bool, str, str]: (是否成功, 结果信息, 奖励描述)
     """
     url = "https://openapi-zinny3.game.kakao.com/service/v3/coupon/useFromWeb"
 
@@ -141,33 +141,38 @@ async def redeem_coupon(
 
                         if reward_info:
                             rewards = "、".join(reward_info)
-                            return True, f"✅获得: {rewards}"
+                            reward_desc = rewards  # 保存奖励描述
+                            return True, f"✅获得: {rewards}", reward_desc
+                        else:
+                            return True, "✅兑换成功", ""
 
                     elif status_code == 403:
-                        return False, "❎兑换码无效\n"
+                        return False, "❎兑换码无效\n", ""
                     elif status_code == 461:
-                        return False, "❎兑换码售罄\n"
+                        return False, "❎兑换码售罄\n", ""
                     elif status_code == 462:
-                        return False, "❎兑换码过期\n"
+                        return False, "❎兑换码过期\n", ""
                     elif status_code == 463:
-                        return False, "❎兑换码超限\n"
+                        return False, "❎兑换码超限\n", ""
                     elif status_code == 466:
-                        return False, "❎账号不存在\n"
+                        return False, "❎账号不存在\n", ""
                     elif status_code == 503:
-                        return False, "❎服务器错误\n"
+                        return False, "❎服务器错误\n", ""
 
         except aiohttp.ClientError as e:
             retry_count += 1
             if retry_count <= max_retries:
                 await asyncio.sleep(retry_delay)
                 continue
-            return False, f"网络请求错误: {str(e)}"
+            return False, f"网络请求错误: {str(e)}", ""
         except asyncio.TimeoutError:
             retry_count += 1
             if retry_count <= max_retries:
                 await asyncio.sleep(retry_delay)
                 continue
-            return False, "请求超时，服务器未响应"
+            return False, "请求超时，服务器未响应", ""
+    
+    return False, "未知错误", ""
 
 
 async def redeem_coupons_concurrently(
@@ -202,8 +207,9 @@ async def redeem_coupons_concurrently(
             item = await queue.get()
             code = item["code"]
             desc = item.get("desc", "无描述")
+            is_custom = item.get("is_custom", False)
 
-            success, result = await redeem_coupon(app_id, player_id, code, event)
+            success, result, reward_desc = await redeem_coupon(app_id, player_id, code, event)
 
             status = "成功" if success else "失败"
 
@@ -215,6 +221,8 @@ async def redeem_coupons_concurrently(
                     "result": f"{code}\n({desc})\n{result}",
                     "success": success,
                     "message": result,
+                    "is_custom": is_custom,
+                    "reward_desc": reward_desc,  # 添加奖励描述
                 }
             )
 
