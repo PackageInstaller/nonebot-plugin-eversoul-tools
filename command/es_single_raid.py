@@ -19,7 +19,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         # 加载数据
         data = await load_json_data(group_id)
-
+        config = await get_group_data_source(group_id)
+        server = config.get("server", "global")
         # 查找角色数据
         hero_data = None
         for hero in data["hero"]["json"]:
@@ -203,22 +204,30 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 获取护盾削减系数和解除眩晕时间
         groggy_info = []
         if boss_data and boss_data.get("no"):
-            for groggy_trigger in data["single_raid_boss_groggy_trigger"]["json"]:
-                if groggy_trigger.get("single_raid_boss_no") == boss_data.get("no"):
-                    condition_group_id = groggy_trigger.get("condition_group")
-                    recovery_duration = groggy_trigger.get("recovery_duration", 0)
-                    break
-        if condition_group_id:
-            for condition in data["single_raid_boss_groggy_condition"]["json"]:
-                if condition.get("condition_group") == condition_group_id:
-                    buff_type = condition.get("condition_buff")
-                    value = condition.get("value", 0)
-                    status_name = SINGLE_RAID_GROGGY_TYPE_MAPPING.get(buff_type)
+            if server == "cn":
+                for groggy in data["single_raid_boss_groggy_trigger"]["json"]:
+                    if groggy.get("single_raid_boss_no") == boss_data.get("no"):
+                        recovery_duration = groggy.get("recovery_duration", 0)
+                        for buff_type , status_name in SINGLE_RAID_GROGGY_TYPE_MAPPING.items():
+                            if ( (buff_type - 201) & 0xFFFFFFFF <= 6 and (((0x63 >> ((buff_type + 55) % 32)) & 1) != 0 )):
+                                groggy_info.append(f"{status_name}类技能：{await format_value(groggy.get(f"value_{SINGLE_RAID_GROGGY_REDUCE_MAPPING[buff_type - 201]}"), True)}")
+            else:
+                for groggy_trigger in data["single_raid_boss_groggy_trigger"]["json"]:
+                    if groggy_trigger.get("single_raid_boss_no") == boss_data.get("no"):
+                        condition_group_id = groggy_trigger.get("condition_group")
+                        recovery_duration = groggy_trigger.get("recovery_duration", 0)
+                        break
+                if condition_group_id:
+                    for condition in data["single_raid_boss_groggy_condition"]["json"]:
+                        if condition.get("condition_group") == condition_group_id:
+                            buff_type = condition.get("condition_buff")
+                            value = condition.get("value", 0)
+                            status_name = SINGLE_RAID_GROGGY_TYPE_MAPPING.get(buff_type)
 
-                    if status_name and value != 0:
-                        groggy_info.append(
-                            f"{status_name}类技能：{await format_value(value, True)}"
-                        )
+                            if status_name and value != 0:
+                                groggy_info.append(
+                                    f"{status_name}类技能：{await format_value(value, True)}"
+                                )
 
         messages = []
         basic_info = []

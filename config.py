@@ -157,6 +157,9 @@ SINGLE_RAID_GROGGY_TYPE_MAPPING = {
     215: "束縛",
 }
 
+# 恶灵讨伐护盾削减系数映射，适用于国服旧版
+SINGLE_RAID_GROGGY_REDUCE_MAPPING = [1, 2, 1, 1, 1, 3, 4]
+
 # app_id到服务器名称的反向映射
 SERVER_NAME_REVERSE_MAPPING = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
 
