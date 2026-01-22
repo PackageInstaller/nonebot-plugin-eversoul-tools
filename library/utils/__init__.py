@@ -102,8 +102,6 @@ from .es_data_utils import (
     process_json_files,
 )
 
-# 文件监控相关
-from .es_file_watcher import file_watcher
 
 # 图片相关
 from .es_image_utils import (

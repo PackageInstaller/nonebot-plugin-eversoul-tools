@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Tuple, Dict
 from nonebot.log import logger
 from ...config import *
-from .es_file_watcher import file_watcher
 
 
 driver = get_driver()
@@ -67,36 +66,6 @@ async def init_plugin():
     else:
         logger.info("配置文件不存在，将创建默认配置")
     await load_data_source_config()
-    
-    # 启动文件监控
-    await start_file_watcher()
-
-
-async def start_file_watcher():
-    """启动文件监控器"""
-    try:
-        # 监控 live 版本的别名文件
-        live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
-        live_raid_aliases = CONFIG_DIR / "live_raid_aliases.yaml"
-        
-        if live_hero_aliases.exists():
-            file_watcher.watch(live_hero_aliases, on_alias_file_changed)
-            logger.info(f"已添加文件监控: {live_hero_aliases}")
-        else:
-            logger.warning(f"文件不存在，无法监控: {live_hero_aliases}")
-        
-        if live_raid_aliases.exists():
-            file_watcher.watch(live_raid_aliases, on_alias_file_changed)
-            logger.info(f"已添加文件监控: {live_raid_aliases}")
-        else:
-            logger.warning(f"文件不存在，无法监控: {live_raid_aliases}")
-        
-        # 在后台启动监控任务
-        asyncio.create_task(file_watcher.start())
-        logger.info("文件监控任务已启动")
-        
-    except Exception as e:
-        logger.error(f"启动文件监控时出错: {e}")
 
 
 async def sync_aliases(file1: Path, file2: Path) -> None:
