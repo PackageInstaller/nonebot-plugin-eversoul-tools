@@ -25,3 +25,4 @@ from .es_hero_skill import *
 from .es_zodiac import *
 from .es_love_level import *
 from .es_building import *
+from .es_alias_add import *
