@@ -495,7 +495,7 @@ names:
     kr_name: 재클린
     en_name: Jacqueline
     ja_name: ジャクリーン
-    aliases: [jk0, 機器人]
+    aliases: [jk0, 機器人, 紫皮人, 机器人]
     hero_id: 4070
   - zh_tw_name: 貝拉納
     zh_cn_name: 贝拉纳
@@ -572,7 +572,7 @@ names:
     kr_name: 클라우디아
     en_name: Claudia
     ja_name: クラウディア
-    aliases: [克劳, 牢克, 克勞]
+    aliases: [克劳, 牢克, 克勞, 小天使, 克牢]
     hero_id: 5010
   - zh_tw_name: 阿德里安
     zh_cn_name: 阿德里安
@@ -614,7 +614,7 @@ names:
     kr_name: 클라우디아(대천사)
     en_name: Claudia (Archangel)
     ja_name: ''
-    aliases: [界克劳, 大克劳, 界克劳迪娅, 大克劳迪娅, 劳大, 牢大, 坠机王]
+    aliases: [界克劳, 大克劳, 界克劳迪娅, 大克劳迪娅, 劳大, 牢大, 坠机王, 大天使, 电劳大]
     hero_id: 5080
   - zh_tw_name: 拉利瑪
     zh_cn_name: 拉利玛
@@ -684,7 +684,7 @@ names:
     kr_name: 유리아(아폴리온)
     en_name: Yuria (Apollyon)
     ja_name: ''
-    aliases: [界女王, 界尤里娅, 大尤里娅, 阿巴顿]
+    aliases: [界女王, 界尤里娅, 大尤里娅, 阿巴顿, 亚巴顿, 哑巴, 黑女王, abd]
     hero_id: 6540
   - zh_tw_name: 時崎狂三
     zh_cn_name: 时崎狂三
