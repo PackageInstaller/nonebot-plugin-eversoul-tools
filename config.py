@@ -188,17 +188,17 @@ JP_SCHEMA_DIR = SCHEMA_DIR / "jp"
 
 # 默认配置
 DEFAULT_CONFIG = {
-    "server": "global",  # 服务器: global(国际服) 或 cn(国服)
+    "server": "cn",  # 服务器: global(国际服) 或 cn(国服)
     "type": "live",  # 数据类型: live 或 review
-    "json_path": str(GL_LIVE_TABLE_DIR),
+    "json_path": str(CN_LIVE_TABLE_DIR),
     "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
 }
 
 CURRENT_DATA_SOURCE = {
     "default": {
-        "server": "global",
+        "server": "cn",
         "type": "live",
-        "json_path": str(GL_LIVE_TABLE_DIR),
+        "json_path": str(CN_LIVE_TABLE_DIR),
         "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
     }
 }
