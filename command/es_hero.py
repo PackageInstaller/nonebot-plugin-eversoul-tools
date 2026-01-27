@@ -155,7 +155,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         basic_info_msg = []
         basic_info_msg.append("【基础信息】")
         portrait_paths = await get_character_portrait(
-            data, hero_data.get("prefab_path", "")
+            data, hero_id
         )
         if portrait_paths:
             for portrait_path in portrait_paths:

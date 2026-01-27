@@ -56,54 +56,37 @@ async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
         return output.getvalue()
 
 
-async def get_character_portrait(data, prefab_path):
-    """获取角色头像（包括基础头像和所有皮肤头像），动态查找所有皮肤。
+async def get_character_portrait(data, hero_id):
+    """获取角色头像（包括基础头像和所有皮肤头像）。
 
     Args:
-        data: JSON数据字典 (保留以备将来使用或用于查找基础头像).
-        hero_id: 角色ID (保留以备将来使用或用于查找基础头像).
-        prefab_path: 角色预设头像路径.
+        data: JSON数据字典.
+        hero_id: 角色ID.
+
     Returns:
         list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
     """
     from ...config import SOUL_DIR
 
-    if prefab_path == "":
+    if not hero_id:
         return []
 
     portraits = []
-    added_portraits = set()  # 用于去重
-
-    base_name = ""
-    controller_path = ""
-
-    # 基础头像
+    portrait_paths = set()
+    
+    # 遍历所有时装寻找匹配的角色ID
     for costume in data["item_costume"]["json"]:
-        if costume.get("no") == prefab_path:
-            base_name = costume.get("portrait_path", "")
-            controller_path = costume.get("portrait_path", "")
-            break
-    if base_name and (SOUL_DIR / f"{base_name}_512.png").exists():
-        base_portrait_path = str(SOUL_DIR / f"{base_name}_512.png")
-        portraits.append(base_portrait_path)
-        added_portraits.add(base_name)
-
-    if controller_path:
-        costume_portraits = set()
-        for costume in data["item_costume"]["json"]:
-            if (
-                costume.get("controller_path") == controller_path
-                and costume.get("no") != prefab_path
-                and costume.get("icon_path") != ""
-            ):  # 排除基础时装本身
-                portrait_path = costume.get("portrait_path", "")
-                if portrait_path and portrait_path not in added_portraits:  # 去重
-                    costume_portraits.add(portrait_path)
-
-        for portrait_name in sorted(costume_portraits):
-            if (SOUL_DIR / f"{portrait_name}_512.png").exists():
-                portraits.append(str(SOUL_DIR / f"{portrait_name}_512.png"))
-                added_portraits.add(portrait_name)
+        if costume.get("hero_no") == hero_id:
+            portrait_path = costume.get("portrait_path", "")
+            if portrait_path and portrait_path not in portrait_paths:
+                full_path = SOUL_DIR / f"{portrait_path}_512.png"
+                if full_path.exists():
+                    portraits.append(str(full_path))
+                    portrait_paths.add(portrait_path)
+    
+    # 对结果进行排序，保证顺序一致
+    portraits.sort()
+    
     return portraits
 
 
