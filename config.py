@@ -6,8 +6,6 @@ from typing import ClassVar
 from nonebot import get_driver, get_plugin_config
 from nonebot.log import logger
 
-driver = get_driver()
-
 
 class Config(BaseModel):
     # Eversoul相关配置项
@@ -172,8 +170,6 @@ DATABASE_DIR = DATA_DIR / "database"
 COUPON_DIR = DATA_DIR / "coupon"
 COUPON_YAML_PATH = COUPON_DIR / "coupons.yaml"
 DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"
-# 推送配置文件路径
-PUSH_CONFIG_PATH = CONFIG_DIR / "update_push_config.yaml"
 
 # 数据表路径（从插件目录下的data/table获取）
 TABLE_DIR = DATA_DIR / "table"
@@ -183,7 +179,6 @@ CN_LIVE_TABLE_DIR = TABLE_DIR / "cn" / "live"
 CN_REVIEW_TABLE_DIR = TABLE_DIR / "cn" / "review"
 JP_LIVE_TABLE_DIR = TABLE_DIR / "jp" / "live"
 JP_REVIEW_TABLE_DIR = TABLE_DIR / "jp" / "review"
-TABLE_INFO_PATH = TABLE_DIR / "table_info.json"
 
 # Schema路径
 SCHEMA_DIR = RESOURCE_DIR / "schema"

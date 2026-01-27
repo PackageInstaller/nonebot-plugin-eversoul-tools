@@ -45,6 +45,8 @@ from datetime import datetime
 from ...config import *
 from ..model import *
 
+driver = get_driver()
+
 es_help = on_command(
     "es命令列表",
     aliases={"es帮助", "es指令列表", "es功能", "es菜单", "es命令", "es指令"},

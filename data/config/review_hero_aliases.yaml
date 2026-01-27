@@ -271,7 +271,7 @@ names:
     kr_name: 루테
     en_name: Lute
     ja_name: ルーテ
-    aliases: [羊羊, 綿羊]
+    aliases: [羊羊, 綿羊, 佐巴羊]
     hero_id: 2100
   - zh_tw_name: 克拉拉
     zh_cn_name: 克拉拉
@@ -313,7 +313,7 @@ names:
     kr_name: 홍란(무쌍)
     en_name: Honglan (Peerless)
     ja_name: ホンラン(無双)
-    aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰]
+    aliases: [大红兰, 红兰无双, 子龙, 武圣, 关羽, 武兰, 龙女, 大痣, 刀狼, 界红兰, 猫山兰, 洪然猫桑]
     hero_id: 2160
   - zh_tw_name: 河路（神威）
     zh_cn_name: 河路（神威）
@@ -614,7 +614,7 @@ names:
     kr_name: 클라우디아(대천사)
     en_name: Claudia (Archangel)
     ja_name: ''
-    aliases: [界克劳, 大克劳, 界克劳迪娅, 大克劳迪娅, 劳大, 牢大, 坠机王, 大天使, 电劳大]
+    aliases: [界克劳, 大克劳, 界克劳迪娅, 大克劳迪娅, 劳大, 牢大, 坠机王, 大天使, 电劳大, 黄大哲]
     hero_id: 5080
   - zh_tw_name: 拉利瑪
     zh_cn_name: 拉利玛
@@ -670,7 +670,7 @@ names:
     kr_name: 린지(타나토스)
     en_name: Linzy (Thanatos)
     ja_name: リンジー(タナトス)
-    aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽, 界琳赛]
+    aliases: [暗琳, 黑赛, 大琳赛, 大林賽, 大琳賽, 黑賽, 界琳赛, 面包]
     hero_id: 6520
   - zh_tw_name: 梅菲斯托佩萊斯（黎明）
     zh_cn_name: 梅菲斯托佩莱斯（黎明）
