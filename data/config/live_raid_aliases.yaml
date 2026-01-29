@@ -202,6 +202,13 @@ names:
     ja_name: ''
     aliases: []
     hero_id: 8750
+  - zh_tw_name: 末日天使
+    zh_cn_name: ''
+    kr_name: 종말의 천사
+    en_name: Angel of the End
+    ja_name: ''
+    aliases: []
+    hero_id: 8760
   - zh_tw_name: 艾拉
     zh_cn_name: 艾拉
     kr_name: 아이라
