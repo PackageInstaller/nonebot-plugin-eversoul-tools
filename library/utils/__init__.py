@@ -91,6 +91,8 @@ es_zodiac = on_command("es星座信息", priority=5, block=True)
 es_love_level = on_command("es好感等级信息", priority=5, block=True)
 es_building = on_command("es建筑信息", aliases={"建筑信息"}, priority=5, block=True)
 es_alias_add = on_command("es别名添加", aliases={"es添加别名"}, priority=5, block=True, permission=SUPERUSER)
+es_guild_boss = on_command("es工会boss信息", priority=5, block=True)
+es_world_raid_boss = on_command("es世界boss信息", priority=5, block=True)
 
 
 # 数据相关

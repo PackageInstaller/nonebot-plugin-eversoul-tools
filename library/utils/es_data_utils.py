@@ -681,6 +681,8 @@ async def load_json_data(group_id: int):
         "soullink": "Soullink.json",  # 灵魂链接文本相关
         "soullink_collection": "SoullinkCollection.json",  # 灵魂链接数值相关
         "gacha": "Gacha.json",  # 抽卡相关
+        "guild_raid": "GuildRaid.json",  # 工会讨伐boss相关
+        "guild_raid_affix": "GuildRaidAffix.json",  # 工会讨伐boss词条相关
         "single_raid_boss": "SingleRaidBoss.json",  # 恶灵讨伐BOSS
         "single_raid": "SingleRaid.json",  # 恶灵讨伐
         "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json",  # 恶灵讨伐BOSS等级
@@ -690,6 +692,7 @@ async def load_json_data(group_id: int):
         "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json",  # 恶灵讨伐护盾削减系数
         "single_raid_boss_groggy_condition": "SingleRaidBossGroggyCondition.json",  # 恶灵讨伐各类CCBuff削减系数定义
         "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json",  # 恶灵讨伐特殊之人
+        "world_raid_boss": "WorldRaidBoss.json",  # 世界讨伐boss相关
         "zodiac": "Zodiac.json",  # 星座
     }
 

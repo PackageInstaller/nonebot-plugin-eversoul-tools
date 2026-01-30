@@ -232,7 +232,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         messages = []
         basic_info = []
 
-        portrait_paths = await get_character_portrait(data, hero_data["prefab_path"])
+        portrait_paths = await get_character_portrait(data, hero_id)
         basic_info.append(f"【恶灵讨伐：{name_zh_tw}】")
         if portrait_paths:
             basic_info.append(MessageSegment.image(f"file:///{portrait_paths[0]}"))

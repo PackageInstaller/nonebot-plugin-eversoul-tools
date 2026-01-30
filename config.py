@@ -44,7 +44,13 @@ STAT_NAME_MAPPING = {
 }
 
 # 属性限制映射
-STAT_TYPE_MAPPING = {"智力": 110044, "敏捷": 110043, "力量": 110042, "共用": 110041}
+STAT_TYPE_MAPPING = {
+    "智力": 110044, 
+    "敏捷": 110043, 
+    "力量": 110042, 
+    "共用": 110041
+}
+
 
 # 组合效果映射
 EFFECT_TYPE_MAPPING = {
@@ -136,6 +142,7 @@ SERVER_APP_ID_MAPPING = {
     "kr": 743487,  # 韩服
     "en": 750066,  # 欧美服
     "cn": 743493,  # 国服
+    "jp": 981921,  # 日服
 }
 
 SERVER_NAME_MAPPING = {
@@ -143,6 +150,7 @@ SERVER_NAME_MAPPING = {
     "kr": "韩服",
     "en": "欧美服",
     "cn": "国服",
+    "jp": "日服"
 }
 
 # 恶灵讨伐护盾削减系数映射
@@ -170,6 +178,7 @@ DATABASE_DIR = DATA_DIR / "database"
 COUPON_DIR = DATA_DIR / "coupon"
 COUPON_YAML_PATH = COUPON_DIR / "coupons.yaml"
 DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"
+HELP_CONFIG = CONFIG_DIR / "help_commands.yaml"
 
 # 数据表路径（从插件目录下的data/table获取）
 TABLE_DIR = DATA_DIR / "table"

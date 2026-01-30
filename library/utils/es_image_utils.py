@@ -58,35 +58,86 @@ async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
 
 async def get_character_portrait(data, hero_id):
     """获取角色头像（包括基础头像和所有皮肤头像）。
+    
+    逻辑：
+    1. 在Hero表中查找hero_id对应的角色，获取prefab_path
+    2. 使用prefab_path作为no在ItemCostume表中查找对应时装（基础时装）
+    3. 如果找到基础时装，获取其hero_no
+    4. 使用hero_no在ItemCostume表中查找所有相关时装（皮肤）
+    5. 如果没找到基础时装，直接使用prefab_path作为头像路径
 
     Args:
         data: JSON数据字典.
         hero_id: 角色ID.
 
     Returns:
-        list: 头像图片路径列表，第一个是基础头像，后面是按名称排序的皮肤头像.
+        list: 头像图片路径列表，第一个是基础头像，后面是按no排序的皮肤头像.
     """
     from ...config import SOUL_DIR
 
     if not hero_id:
         return []
 
+    hero_data = None
+    for hero in data["hero"]["json"]:
+        if hero.get("hero_id") == hero_id:
+            hero_data = hero
+            break
+    
+    if not hero_data:
+        return []
+        
+    prefab_key = hero_data.get("prefab_path")
+    if not prefab_key:
+        return []
+
     portraits = []
-    portrait_paths = set()
+    base_costume = None
+    target_no = None
+    try:
+        target_no = int(prefab_key)
+    except (ValueError, TypeError):
+        pass
+
+    if target_no:
+        for costume in data["item_costume"]["json"]:
+            if costume.get("no") == target_no:
+                base_costume = costume
+                break
     
-    # 遍历所有时装寻找匹配的角色ID
-    for costume in data["item_costume"]["json"]:
-        if costume.get("hero_no") == hero_id:
-            portrait_path = costume.get("portrait_path", "")
-            if portrait_path and portrait_path not in portrait_paths:
-                full_path = SOUL_DIR / f"{portrait_path}_512.png"
-                if full_path.exists():
-                    portraits.append(str(full_path))
-                    portrait_paths.add(portrait_path)
-    
-    # 对结果进行排序，保证顺序一致
-    portraits.sort()
-    
+    # 基础时装和皮肤
+    if base_costume:
+        base_path = base_costume.get("portrait_path") or base_costume.get("prefab_path")
+        if base_path:
+            full_path = SOUL_DIR / f"{base_path}_512.png"
+            if full_path.exists():
+                portraits.append(str(full_path))
+        
+        hero_id = base_costume.get("hero_no")
+        if hero_id:
+            skin_costumes = []
+            for costume in data["item_costume"]["json"]:
+                # 找同一个组的，且不是基础时装的
+                if costume.get("hero_no") == hero_id and costume.get("no") != target_no:
+                    skin_costumes.append(costume)
+            
+            # no排序
+            skin_costumes.sort(key=lambda x: x.get("no", 0))
+            
+            for skin in skin_costumes:
+                skin_path = skin.get("portrait_path") or skin.get("prefab_path")
+                if skin_path:
+                    # 检查重复
+                    full_path = SOUL_DIR / f"{skin_path}_512.png"
+                    if full_path.exists() and str(full_path) not in portraits:
+                         portraits.append(str(full_path))
+
+        else:
+            # 没找到hero_id，直接使用 prefab_key 构建
+            full_path = SOUL_DIR / f"{prefab_key}_512.png"
+            if full_path.exists():
+                portraits.append(str(full_path))
+            
     return portraits
 
 

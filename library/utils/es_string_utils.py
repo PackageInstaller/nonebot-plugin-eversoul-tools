@@ -5,6 +5,226 @@ import asyncio
 from nonebot.log import logger
 from difflib import get_close_matches
 
+"""
+public enum BuffDotType 
+{
+		Burn = 301,
+		Poison = 302,
+		Electric = 303,
+		Bleed = 304,
+		Frost = 305,
+		Curse = 306,
+		Max_HP_Dmg = 310,
+		Delayed_Dmg = 311,
+		LifeSteal = 312,
+		DamageUsedTargetAttack = 313,
+		Heal = 401,
+		Target_Max_Hp_Heal = 410,
+		Max_Hp_Heal = 411,
+		ManaGain = 420
+}
+public enum BuffCCType // TypeDefIndex: 12971
+	{
+		None = 0,
+		Stun = 201,
+		Sleep = 202,
+		Bind = 204,
+		Freeze = 205,
+		Silence = 206,
+		Charm = 207,
+		Taunt = 208,
+		ForceStun = 210,
+		Daze = 212,
+		Mark = 213,
+		Grip = 215,
+		Stay = 216
+	}
+
+	public enum BuffCategory // TypeDefIndex: 12967
+	{
+		None = 0,
+		Buff = 1,
+		DeBuff = 2,
+		SpecialBuff = 3,
+		SpecialDeBuff = 4,
+		ContentsBuff = 5,
+		ContentsDeBuff = 6
+	}
+public enum BuffFlagType // TypeDefIndex: 12975
+	{
+		Refuge = 209,
+		Detect = 214,
+		RefugeLimitDistance = 217,
+		ImmuneBuff = 601,
+		ImmuneBuffNo = 602,
+		Immune_Move = 701,
+		Invincivble = 901,
+		Undying = 902,
+		ImmuneDecreaseGroggy = 903,
+		ManaDecreaseImmune = 1003,
+		ManaRecoveryBanWhenHit = 1004,
+		TriggerBuff = 1301,
+		DamageDuplicateToSummoner = 2001,
+		ChangeBaseAttackTimeline = 2201,
+		ChangeActiveSkillDirecting = 2202,
+		DeactiveAura = 2501
+	}
+
+	public enum BuffGimmickType // TypeDefIndex: 12970
+	{
+		GuildRaidBoss = 1901,
+		CopyGuildRaidBoss = 1902,
+		EventRaidBoss = 1903,
+		CopyEventRaidBoss = 1904,
+		EventNormalRaidBoss = 1905,
+		CopyEventNormalRaidBoss = 1906,
+		GuildRaidBossAttackAfterRate = 2901,
+		CopyGuildRaidBossAttackAfterRate = 2902,
+		EventRaidBossAttackAfterRate = 2903,
+		CopyEventRaidBossAttackAfterRate = 2904,
+		EventNormalRaidBossAttackAfterRate = 2905,
+		CopyEventNormalRaidBossAttackAfterRate = 2906,
+		GuildRaidBossDefenceAfterRate = 2911,
+		CopyGuildRaidBossDefenceAfterRate = 2912,
+		EventRaidBossDefenceAfterRate = 2913,
+		CopyEventRaidBossDefenceAfterRate = 2914,
+		EventNormalRaidBossDefenceAfterRate = 2915,
+		CopyEventNormalRaidBossDefenceAfterRate = 2916
+	}
+
+	public enum BuffLinkType // TypeDefIndex: 12976
+	{
+		DamageLink = 510
+	}
+public enum BuffRaceChange // TypeDefIndex: 12980
+	{
+		Human = 2101,
+		Beast = 2102,
+		Undead = 2103,
+		Elf = 2104,
+		Angel = 2105,
+		Demon = 2106
+	}
+
+	public enum BuffRateChangeType // TypeDefIndex: 12974
+	{
+		CriticalResistance = 801,
+		CriticalPowerReceived = 802,
+		Heal = 1001,
+		MPGain = 1002,
+		PROP_CHANGE = 1101,
+		ReinforceDamageDOT = 1201,
+		ReinforceHealDOT = 1202,
+		ReceivedDamageRate = 1401,
+		DamageRate = 1402,
+		BaseAttakSkillRate = 1403,
+		ActiveSkillRate = 1404,
+		SubSkillRate = 1405,
+		UltimateSkillRate = 1406,
+		AmplifyBuff = 1501,
+		AmplifyDebuff = 1502,
+		ReinforceDotBurn = 2301,
+		ReinforceDotPoison = 2302,
+		ReinforceDotBleed = 2304,
+		ReceivedDamageRateAdditional = 3401
+	}
+
+	public enum BuffRecord // TypeDefIndex: 12981
+	{
+		Position = 1303,
+		Damage = 1701,
+		DamageCodeOnDispose = 1702,
+		HealCodeOnDispose = 1703
+	}
+public enum BuffShieldType // TypeDefIndex: 12973
+	{
+		Shield_ATK = 501,
+		Shield_Target_HP = 502,
+		CasterMaxHP = 503
+	}
+
+	public enum BuffState // TypeDefIndex: 12982
+	{
+		Init = 0,
+		Run = 1,
+		Dispose = 2
+	}
+
+	public enum BuffStatusType // TypeDefIndex: 12968
+	{
+		AttackBuff = 101,
+		DefenceBuff = 102,
+		MaxHPBuff = 103,
+		CriticalRateBuff = 104,
+		CriticalPowerBuff = 105,
+		HitBuff = 106,
+		DodgeBuff = 107,
+		PhysicalResistBuff = 108,
+		MagicResistBuff = 109,
+		LifeLeechBuff = 110,
+		ATKSPDBuff = 111,
+		SpecialAttackAll = 1801,
+		SpecialAttackHuman = 1802,
+		SpecialAttackFurry = 1803,
+		SpecialAttackUndead = 1804,
+		SpecialAttackElf = 1805,
+		SpecialAttackAngel = 1806,
+		SpecialAttackDemon = 1807,
+		SpecialAttackChaos = 1808,
+		State_ShareBuff_Target = 3001,
+		State_ShareBuff_Caster = 3002,
+		AttackBuff_Const = 10101,
+		DefenceBuff_Const = 10102,
+		MaxHPBuff_Const = 10103,
+		CriticalRateBuff_Const = 10104,
+		CriticalPowerBuff_Const = 10105,
+		HitBuff_Const = 10106,
+		DodgeBuff_Const = 10107,
+		PhysicalResistBuff_Const = 10108,
+		MagicResistBuff_Const = 10109,
+		LifeLeechBuff_Const = 10110,
+		ATKSPDBuff_Const = 10111,
+		AttackBuffPerCaster_Const = 10201,
+		DefenceBuffPerCaster_Const = 10202,
+		AttackBuffPerCasterBaseAttack_Const = 10301,
+		DefenceBuffPerCasterBaseDefence_Const = 10302
+	}
+
+	public enum BuffTriggerSkillCode // TypeDefIndex: 12978
+	{
+		OnTickCount = 1601,
+		OnDisposeWithoutDispel = 1602,
+		OnActive = 1603,
+		OnUltimate = 1604,
+		OnDead = 1605,
+		OnDisposeDispel = 1612,
+		OnDispose = 1622,
+		OnTickCountCurrentStatus = 1631,
+		OnDisposeWithoutDispelCurrentStatus = 1632,
+		OnActiveCurrentStatus = 1633,
+		OnUltimateCurrentStatus = 1634,
+		OnDeadCurrentStatus = 1635
+	}
+
+	public enum BuffTriggerSkillCodeCurrentStatus // TypeDefIndex: 12979
+	{
+		OnTickCountCurrentStatus = 1631,
+		OnDisposeWithoutDispelCurrentStatus = 1632,
+		OnActiveCurrentStatus = 1633,
+		OnUltimateCurrentStatus = 1634,
+		OnDeadCurrentStatus = 1635
+	}
+public enum BuffState // TypeDefIndex: 4307
+	{
+		Stun = 0,
+		Sleep = 1,
+		Bind = 2,
+		Silence = 3,
+		Charm = 4,
+		None = 5
+	}
+"""
+
 
 async def select_text_by_priority(
     zh_tw: str,

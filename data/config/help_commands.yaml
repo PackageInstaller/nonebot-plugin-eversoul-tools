@@ -1,0 +1,174 @@
+# EverSoul 命令列表配置文件
+# 用于自动生成帮助信息
+
+commands:
+  # 角色相关
+  - name: "es角色信息 + 角色名"
+    description: "查询角色的详细信息"
+    example: "es角色信息大帝"
+    category: "角色"
+
+  - name: "es技能信息 + 角色名"
+    description: "查询角色的技能信息"
+    example: "es技能信息大帝"
+    category: "角色"
+
+  - name: "es角色列表"
+    description: "查询所有角色以及别名"
+    example: "es角色列表"
+    category: "角色"
+
+  - name: "es别名添加 + 角色名 + 别名"
+    description: "为角色添加自定义别名（管理员）"
+    example: "es别名添加 阿德里安娜 女帝"
+    category: "角色"
+
+  # 关卡相关
+  - name: "es主线信息 + 章节-关卡"
+    description: "查询主线关卡的详细信息"
+    example: "es主线信息31-60"
+    category: "关卡"
+
+  - name: "es人类/野兽/妖精/不死/自由传送门信息 + 层数"
+    description: "查询传送门信息"
+    example: "es人类传送门信息10"
+    category: "关卡"
+
+  # BOSS相关
+  - name: "es恶灵信息 + 恶灵ID"
+    description: "查询恶灵讨伐BOSS的详细信息"
+    example: "es恶灵信息66009"
+    category: "BOSS"
+
+  - name: "es工会boss信息 + BOSS名称"
+    description: "查询工会讨伐BOSS的详细信息"
+    example: "es工会boss信息黑骑士"
+    category: "BOSS"
+
+  - name: "es世界boss信息 + BOSS名称"
+    description: "查询世界boss的详细信息"
+    example: "es世界boss信息灯塔守望者"
+    category: "BOSS"
+
+  # 日程活动
+  - name: "es日程信息 + 日期[可选]"
+    description: "查询当月的所有事件"
+    example: "es日程信息 / es日程信息2026-02"
+    category: "活动"
+
+  - name: "es公告"
+    description: "查询游戏公告"
+    example: "es公告"
+    category: "活动"
+
+  - name: "es故事信息 + 数字ID"
+    description: "查询活动故事的详细信息"
+    example: "es故事信息12044"
+    category: "活动"
+
+  # 养成相关
+  - name: "es升级消耗 + 等级"
+    description: "查询指定等级的升级消耗"
+    example: "es升级消耗1000"
+    category: "养成"
+
+  - name: "es方舟等级信息 + 等级"
+    description: "查询指定方舟等级的信息"
+    example: "es方舟等级信息500"
+    category: "养成"
+
+  - name: "es超频消耗 + 等级"
+    description: "查询方舟超频到指定等级的消耗"
+    example: "es超频消耗10"
+    category: "养成"
+
+  - name: "es潜能信息"
+    description: "查询潜能信息"
+    example: "es潜能信息"
+    category: "养成"
+
+  - name: "es星座信息"
+    description: "查询星座信息"
+    example: "es星座信息"
+    category: "养成"
+
+  - name: "es好感等级信息"
+    description: "查询好感等级信息"
+    example: "es好感等级信息"
+    category: "养成"
+
+  - name: "es建筑信息"
+    description: "查询建筑信息"
+    example: "es建筑信息"
+    category: "养成"
+
+  # 礼品相关
+  - name: "es礼品信息 + [品质][类型][种类]"
+    description: "查询礼品信息"
+    example: "es礼品信息粉1智力加速"
+    category: "礼品"
+
+  - name: "es突发礼包信息 + 主线[章节]/[种类]传送门/起源塔/升阶"
+    description: "查询突发礼包信息"
+    example: "es突发礼包信息主线31"
+    category: "礼品"
+
+  # 排行榜
+  - name: "es身高/体重排行"
+    description: "查询身高/体重排行"
+    example: "es身高排行"
+    category: "排行"
+
+  - name: "es攻击范围排行"
+    description: "查询攻击范围排行"
+    example: "es攻击范围排行"
+    category: "排行"
+
+  # 账号相关
+  - name: "es绑定账号 + [地区+ID]"
+    description: "绑定游戏账号，支持多账号"
+    example: "es绑定账号 kr123456789012"
+    category: "账号"
+
+  - name: "es解绑账号"
+    description: "解除当前绑定的游戏账号"
+    example: "es解绑账号"
+    category: "账号"
+
+  - name: "es账号信息"
+    description: "查看当前绑定的所有游戏账号信息"
+    example: "es账号信息"
+    category: "账号"
+
+  - name: "es兑换码"
+    description: "兑换游戏礼包码，不支持国服"
+    example: "es兑换码"
+    category: "账号"
+
+  # 系统相关
+  - name: "es数据源 + [gl/cn_review/gl/cn_live]"
+    description: "切换数据源"
+    example: "es数据源gl_review"
+    category: "系统"
+
+  - name: "es检查更新"
+    description: "手动检查服务器更新状态"
+    example: "es检查更新"
+    category: "系统"
+
+  - name: "es命令列表"
+    description: "显示所有可用命令"
+    example: "es命令列表"
+    category: "系统"
+
+# 分类颜色配置
+category_colors:
+  角色: "#FF6B6B"
+  关卡: "#4ECDC4"
+  BOSS: "#FF8C42"
+  活动: "#A06CD5"
+  养成: "#45B7D1"
+  礼品: "#F7DC6F"
+  排行: "#82E0AA"
+  账号: "#5DADE2"
+  系统: "#AAB7B8"

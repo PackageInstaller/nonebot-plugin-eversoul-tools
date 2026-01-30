@@ -20,9 +20,11 @@ from .es_account_info import *
 from .es_ark_overlock import *
 from .es_notice import *
 from .es_story_info import *
-from .es_update_check import * # 这里可以注释掉
+from .es_update_check import *
 from .es_hero_skill import *
 from .es_zodiac import *
 from .es_love_level import *
 from .es_building import *
 from .es_alias_add import *
+from .es_guild_boss import *
+from .es_world_raid_boss import *

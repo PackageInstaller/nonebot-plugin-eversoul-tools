@@ -193,9 +193,6 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 CV_KR：{cv_kr}"""
         if cv_jp:
             basic_info_zh_tw += f"\nCV_JP：{cv_jp}"
-
-        
-        
         basic_info_zh_tw += f"""
 实装日期：{character_release_date}
 攻击范围：{await format_value(atk_range, True)}
