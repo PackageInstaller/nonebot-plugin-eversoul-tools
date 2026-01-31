@@ -259,6 +259,11 @@ https://docs.qq.com/pdf/DRndPTmtYbFpScWZa
 https://eversoul.3000y.cloud/
 游戏wiki
 https://www.gamekee.com/eversoul/
+国际服T榜
+【腾讯文档】永恒灵魂攻略（T榜更新至1月末），原作者冰水鱼，由我代上传
+https://docs.qq.com/sheet/DY05heEVKenVWWmFo?tab=000002
+【腾讯文档】es伤害公式分析，卷狗必看
+https://docs.qq.com/pdf/DY0RETFN1WUFzVk5L
 Powered by 少姜
 欢迎推广，致力于做最好的es攻略机器人（实际上也确实是最好的）
 """
