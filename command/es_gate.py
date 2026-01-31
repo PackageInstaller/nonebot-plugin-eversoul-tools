@@ -156,28 +156,8 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
 
             all_messages.extend(messages)
 
-        # 发送合并转发消息
-        forward_msgs = [
-            {
-                "type": "node",
-                "data": {
-                    "name": "Eversoul Info",
-                    "uin": bot.self_id,
-                    "content": "\n".join(all_messages),
-                },
-            }
-        ]
-
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=forward_msgs,
-            )
+        # 发送合并转发消息（合并成一条）
+        await send_forward_messages(bot, event, ["\n".join(all_messages)])
 
     except Exception as e:
         if not isinstance(e, FinishedException):

@@ -251,4 +251,20 @@ async def handle(bot: Bot, event: Event):
         """
 
     pic = await html_to_pic(html, viewport={"width": 1000, "height": 10})
-    await es_help.finish(MessageSegment.image(pic))
+    
+    # 附带的文字信息
+    text_info = """【腾讯文档】永恒灵魂从入门到入土1.2
+https://docs.qq.com/pdf/DRndPTmtYbFpScWZa
+国际服作业网
+https://eversoul.3000y.cloud/
+游戏wiki
+https://www.gamekee.com/eversoul/
+Powered by 少姜
+欢迎推广，致力于做最好的es攻略机器人（实际上也确实是最好的）
+"""
+    
+    # 发送图片和文字
+    await es_help.finish(Message([
+        MessageSegment.image(pic),
+        MessageSegment.text(text_info)
+    ]))

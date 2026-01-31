@@ -7,7 +7,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         # 获取输入
         boss_name = args.extract_plain_text().strip()
         if not boss_name:
-            await es_world_raid_boss.finish("请输入世界讨伐BOSS名称！")
+            await es_world_raid_boss.finish("请输入世界BOSS名称！")
 
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
@@ -113,7 +113,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
                 if matched_hero_id:
                     # 构建"是否想查询"的消息
-                    response_parts = ["未找到世界讨伐BOSS " + boss_name + "\n您是否想查询："]
+                    response_parts = ["未找到世界BOSS " + boss_name + "\n您是否想查询："]
 
                     main_names = {
                         "繁体": None,
@@ -148,12 +148,12 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
                     await es_world_raid_boss.finish("\n".join(response_parts))
                 else:
-                    await es_world_raid_boss.finish(f"未找到世界讨伐BOSS: {boss_name}")
+                    await es_world_raid_boss.finish(f"未找到世界BOSS: {boss_name}")
             else:
-                await es_world_raid_boss.finish(f"未找到世界讨伐BOSS: {boss_name}")
+                await es_world_raid_boss.finish(f"未找到世界BOSS: {boss_name}")
 
         if not boss_data:
-            await es_world_raid_boss.finish("未找到该BOSS的世界讨伐数据")
+            await es_world_raid_boss.finish("未找到该BOSS的数据")
 
         # 查找 Hero 数据
         hero_data = None
@@ -187,7 +187,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         msgs = []
         basic_msg = []
-        basic_msg.append(f"【世界讨伐：{name_zh_tw}】")
+        basic_msg.append(f"【世界BOSS：{name_zh_tw}】")
 
         # 尝试获取立绘
         portrait_paths = await get_character_portrait(data, hero_id)
@@ -218,17 +218,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 cleaned_guide = await clean_rich_text(guide_zh_tw)
                 msgs.append(f"【攻略情报】\n{cleaned_guide}")
 
-        # 技能释放顺序
-        skill_pattern = await get_character_skill_pattern(
-            data, hero_id, server, data_type
-        )
-        if skill_pattern:
-            pattern_text = ["【技能释放顺序】"]
-            for i, (skill_name, skill_type) in enumerate(skill_pattern, 1):
-                pattern_text.append(f"{i}. [{skill_type}] {skill_name}")
-            msgs.append("\n".join(pattern_text))
-
-        skill_types = []
+        # 获取技能信息（使用通用函数）
         skill_keys = [
             "skill_no_1",
             "skill_no_2",
@@ -236,61 +226,33 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             "skill_no_4",
             "ultimate_skill_no",
         ]
+        
+        skills_data = await get_skills_info(
+            data, hero_data, skill_keys, server, data_type
+        )
 
-        # 先检查角色有哪些技能
-        for skill_key in skill_keys:
-            skill_no = hero_data.get(skill_key)
-            if skill_no:
-                # 在skill表中查找
-                found_skill = None
-                for skill in data["skill"]["json"]:
-                    if skill["no"] == skill_no:
-                        found_skill = skill
-                        break
+        # 技能释放顺序
+        if skills_data["skill_pattern"]:
+            pattern_text = ["【技能释放顺序】"]
+            for i, (skill_name, skill_type) in enumerate(skills_data["skill_pattern"], 1):
+                pattern_text.append(f"{i}. [{skill_type}] {skill_name}")
+            msgs.append("\n".join(pattern_text))
 
-                if found_skill:
-                    skill_type_data = await get_string_by_type(
-                        data, "system", found_skill["type"]
-                    )
-                    skill_type_zh_tw = skill_type_data["zh_tw"]
-                    skill_type_zh_cn = skill_type_data["zh_cn"]
-                    skill_type_kr = skill_type_data["kr"]
-                    skill_type_en = skill_type_data["en"]
-                    skill_info = await get_character_skill(
-                        data, skill_no, server=server, data_type=data_type
-                    )
-                    skill_types.append(
-                        (
-                            skill_type_zh_tw,
-                            skill_type_zh_cn,
-                            skill_type_kr,
-                            skill_type_en,
-                            skill_info,
-                        )
-                    )
-
-        for idx, (
-            skill_type_zh_tw,
-            skill_type_zh_cn,
-            skill_type_kr,
-            skill_type_en,
-            skill_info,
-        ) in enumerate(skill_types):
-
+        # 技能详情
+        for skill_data in skills_data["skills"]:
+            skill_info = skill_data["skill_info"]
             skill_text = []
 
-            # 只显示文字（带技能图标）
+            # 显示技能图标
             if skill_info["icon_info"]:
                 icon_path = str(ICON_DIR / f"{skill_info['icon_info']['icon']}.png")
                 cache_filename = f"{skill_info['icon_info']['icon']}_{skill_info['icon_info']['color'].replace('#', '')}.png"
                 cache_path = str(ICON_DIR / cache_filename)
 
-                # 如果存在缓存图标，直接使用
                 if os.path.exists(cache_path):
                     with open(cache_path, "rb") as f:
                         colored_icon = f.read()
                 else:
-                    # 没有缓存，重新生成并保存
                     colored_icon = await apply_color_to_icon(
                         icon_path, skill_info["icon_info"]["color"]
                     )
@@ -299,78 +261,17 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
                 skill_text.append(MessageSegment.image(colored_icon))
 
-            skill_type_text = await select_text_by_priority(
-                skill_type_zh_tw,
-                skill_type_zh_cn,
-                skill_type_kr,
-                skill_type_en,
-                server,
-                data_type,
-            )
-            skill_name_text = await select_text_by_priority(
-                skill_info["name"]["zh_tw"],
-                skill_info["name"]["zh_cn"],
-                skill_info["name"]["kr"],
-                skill_info["name"].get("ja", ""),
-                server,
-                data_type,
-            )
+            skill_text.append(f"【{skill_data['skill_type']}】{skill_data['skill_name']}")
 
-            skill_text.append(f"【{skill_type_text}】{skill_name_text}")
+            # 格式化技能描述
+            descriptions = await format_skill_descriptions(skill_info, server, data_type)
+            for desc in descriptions:
+                skill_text.append(f"\n{desc['text']}{desc['unlock_text']}\n")
 
-            for i, desc in enumerate(skill_info["descriptions"]):
-                desc_text = await select_text_by_priority(
-                    desc["desc_zh_tw"],
-                    desc["desc_zh_cn"],
-                    desc["desc_kr"],
-                    desc.get("desc_ja", ""),
-                    server,
-                    data_type,
-                )
-                # 清理颜色代码
-                desc_text = await clean_rich_text(desc_text)
-                hero_level = desc.get("hero_level", 1)
-                unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
-                skill_text.append(f"\n{desc_text}{unlock_text}\n")
-
-            # 每个技能单独添加到msgs
             msgs.append(skill_text)
 
         # 发送合并转发消息
-        forward_msgs = []
-        for msg in msgs:
-            content = msg
-            if isinstance(msg, list):
-                # 处理列表中可能的图片和文本混合
-                content_parts = []
-                for part in msg:
-                    if isinstance(part, str):
-                        content_parts.append(part)
-                    else:
-                        content_parts.append(str(part))
-                content = "\n".join(content_parts)
-
-            forward_msgs.append(
-                {
-                    "type": "node",
-                    "data": {
-                        "name": "Eversoul World Raid Boss",
-                        "uin": bot.self_id,
-                        "content": content,
-                    },
-                }
-            )
-
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=forward_msgs,
-            )
+        await send_forward_messages(bot, event, msgs, name="Eversoul World Raid Boss")
 
     except Exception as e:
         if not isinstance(e, FinishedException):
@@ -378,7 +279,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
             error_location = traceback.extract_tb(e.__traceback__)[-1]
             logger.error(
-                f"处理世界讨伐BOSS信息时发生错误:\n"
+                f"处理世界BOSS信息时发生错误:\n"
                 f"错误类型: {type(e).__name__}\n"
                 f"错误信息: {str(e)}\n"
                 f"函数名称: {error_location.name}\n"

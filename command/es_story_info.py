@@ -81,27 +81,15 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         if not all_story_info:
             await es_story.finish(f"未找到ID为 {target_id} 的故事信息")
 
-        # 生成合并转发消息
-        forward_msgs = []
+        # 生成转发消息
+        messages = []
 
         for story_info in all_story_info:
             event_name = story_info["event_name"]
-            story_act = story_info["story_act"]
             episodes = story_info["episodes"]
 
             # 添加总览消息
-            overview_msg = [f"{event_name}"]
-
-            forward_msgs.append(
-                {
-                    "type": "node",
-                    "data": {
-                        "name": "Eversoul Info",
-                        "uin": bot.self_id,
-                        "content": "\n".join(overview_msg),
-                    },
-                }
-            )
+            messages.append(event_name)
 
             # 为每个章节创建单独的消息
             for episode in episodes:
@@ -129,28 +117,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 if episode_summary:
                     episode_parts.append(f"{episode_summary}")
 
-                forward_msgs.append(
-                    {
-                        "type": "node",
-                        "data": {
-                            "name": "Eversoul Info",
-                            "uin": bot.self_id,
-                            "content": "\n".join(episode_parts),
-                        },
-                    }
-                )
+                messages.append("\n".join(episode_parts))
 
         # 发送合并转发消息
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=forward_msgs,
-            )
+        await send_forward_messages(bot, event, messages)
 
     except Exception as e:
         if not isinstance(e, FinishedException):

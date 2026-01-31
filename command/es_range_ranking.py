@@ -44,27 +44,7 @@ async def handle(bot: Bot, event: Event):
             for i, name in enumerate(unknown_range, 1):
                 messages.append(f"{i}. {name}")
 
-        forward_msgs = [
-            {
-                "type": "node",
-                "data": {
-                    "name": f"EverSoul Range",
-                    "uin": bot.self_id,
-                    "content": "\n".join(messages),
-                },
-            }
-        ]
-
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=forward_msgs,
-            )
+        await send_forward_messages(bot, event, ["\n".join(messages)], name="EverSoul Range")
 
     except Exception as e:
         if not isinstance(e, FinishedException):

@@ -3643,3 +3643,303 @@ async def get_character_stats_ranking(
     except Exception as e:
         logger.error(f"计算属性排名时出错: {e}")
         return {}
+
+
+async def get_skills_info(
+    data: dict,
+    hero_data: dict,
+    skill_keys: list,
+    server: str = "global",
+    data_type: str = "live",
+    generate_image: bool = False,
+) -> dict:
+    """
+    获取角色技能信息的通用函数
+
+    Args:
+        data: JSON 数据字典
+        hero_data: 角色数据字典
+        skill_keys: 要获取的技能字段列表，如 ["skill_no_1", "skill_no_2", "ultimate_skill_no", "support_skill_no"]
+                    如果包含 "support_skill_no" 则会自动处理支援技能
+        server: 服务器类型 ("global", "cn", "jp")
+        data_type: 数据类型 ("live", "review")
+        generate_image: 是否生成技能图片
+
+    Returns:
+        dict: 包含以下字段:
+            - skill_pattern: 技能释放顺序列表 [(skill_name, skill_type), ...]
+            - skills: 技能信息列表，每个元素包含:
+                - skill_type: 技能类型文本 (根据服务器选择语言)
+                - skill_type_all: 技能类型所有语言 {"zh_tw", "zh_cn", "kr", "en"}
+                - skill_name: 技能名称文本 (根据服务器选择语言)
+                - skill_info: get_character_skill 返回的完整技能信息
+                - is_support: 是否为支援技能
+    """
+    result = {
+        "skill_pattern": [],
+        "skills": [],
+    }
+
+    hero_id = hero_data.get("hero_id")
+    if not hero_id:
+        return result
+
+    # 获取技能释放顺序
+    skill_pattern = await get_character_skill_pattern(data, hero_id, server, data_type)
+    result["skill_pattern"] = skill_pattern
+
+    # 获取各个技能的详细信息
+    for skill_key in skill_keys:
+        skill_no = hero_data.get(skill_key)
+        if not skill_no:
+            continue
+
+        # 在skill表中查找
+        found_skill = None
+        for skill in data["skill"]["json"]:
+            if skill["no"] == skill_no:
+                found_skill = skill
+                break
+
+        if not found_skill:
+            continue
+
+        # 获取技能类型
+        skill_type_data = await get_string_by_type(data, "system", found_skill["type"])
+        skill_type_zh_tw = skill_type_data.get("zh_tw", "")
+        skill_type_zh_cn = skill_type_data.get("zh_cn", "")
+        skill_type_kr = skill_type_data.get("kr", "")
+        skill_type_en = skill_type_data.get("en", "")
+
+        # 根据服务器选择技能类型文本
+        skill_type_text = await select_text_by_priority(
+            skill_type_zh_tw,
+            skill_type_zh_cn,
+            skill_type_kr,
+            skill_type_en,
+            server,
+            data_type,
+        )
+
+        # 判断是否为支援技能
+        is_support = skill_key == "support_skill_no"
+
+        # 获取技能详细信息
+        skill_info = await get_character_skill(
+            data,
+            skill_no,
+            support=is_support,
+            generate_image=generate_image,
+            server=server,
+            data_type=data_type,
+        )
+
+        # 根据服务器选择技能名称
+        skill_name_text = await select_text_by_priority(
+            skill_info["name"]["zh_tw"],
+            skill_info["name"]["zh_cn"],
+            skill_info["name"]["kr"],
+            skill_info["name"].get("ja", ""),
+            server,
+            data_type,
+        )
+
+        result["skills"].append({
+            "skill_key": skill_key,
+            "skill_type": skill_type_text,
+            "skill_type_all": {
+                "zh_tw": skill_type_zh_tw,
+                "zh_cn": skill_type_zh_cn,
+                "kr": skill_type_kr,
+                "en": skill_type_en,
+            },
+            "skill_name": skill_name_text,
+            "skill_info": skill_info,
+            "is_support": is_support,
+        })
+
+    return result
+
+
+async def format_skill_descriptions(
+    skill_info: dict,
+    server: str = "global",
+    data_type: str = "live",
+    clean_text: bool = True,
+) -> list:
+    """
+    格式化技能描述列表
+
+    Args:
+        skill_info: get_character_skill 返回的技能信息
+        server: 服务器类型
+        data_type: 数据类型
+        clean_text: 是否清理富文本标签
+
+    Returns:
+        list: 格式化后的描述列表，每个元素包含:
+            - text: 描述文本
+            - hero_level: 解锁等级
+            - unlock_text: 解锁文本 (如 "（等级1解锁）")
+    """
+    descriptions = []
+
+    for desc in skill_info.get("descriptions", []):
+        desc_text = await select_text_by_priority(
+            desc.get("desc_zh_tw", ""),
+            desc.get("desc_zh_cn", ""),
+            desc.get("desc_kr", ""),
+            desc.get("desc_ja", ""),
+            server,
+            data_type,
+        )
+
+        if clean_text:
+            desc_text = await clean_rich_text(desc_text)
+
+        hero_level = desc.get("hero_level", 1)
+        unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
+
+        descriptions.append({
+            "text": desc_text,
+            "hero_level": hero_level,
+            "unlock_text": unlock_text,
+            "type": desc.get("type", ""),
+        })
+
+    return descriptions
+
+
+def build_forward_message(
+    content,
+    bot_id: str,
+    name: str = "Eversoul Info",
+) -> dict:
+    """
+    构建单条转发消息节点
+
+    Args:
+        content: 消息内容，可以是：
+            - str: 纯文本
+            - list: 包含字符串和/或MessageSegment的列表
+            - MessageSegment: 单个消息段
+            - Message: 消息对象
+        bot_id: 机器人ID
+        name: 显示的发送者名称
+
+    Returns:
+        dict: 转发消息节点
+    """
+    from nonebot.adapters.onebot.v11 import Message, MessageSegment
+
+    # 处理不同类型的内容
+    if isinstance(content, str):
+        final_content = content
+    elif isinstance(content, list):
+        # 处理列表中可能的图片和文本混合
+        content_parts = []
+        for item in content:
+            if isinstance(item, MessageSegment):
+                content_parts.append(item)
+            else:
+                content_parts.append(str(item))
+        final_content = Message(content_parts)
+    elif isinstance(content, MessageSegment):
+        final_content = Message([content])
+    elif isinstance(content, Message):
+        final_content = content
+    else:
+        final_content = str(content)
+
+    return {
+        "type": "node",
+        "data": {
+            "name": name,
+            "uin": bot_id,
+            "content": final_content,
+        },
+    }
+
+
+def build_forward_messages(
+    messages: list,
+    bot_id: str,
+    name: str = "Eversoul Info",
+) -> list:
+    """
+    批量构建转发消息节点列表
+
+    Args:
+        messages: 消息内容列表，每个元素可以是：
+            - str: 纯文本
+            - list: 包含字符串和/或MessageSegment的列表
+            - MessageSegment: 单个消息段
+            - Message: 消息对象
+            - dict: 已经构建好的节点（直接使用）
+        bot_id: 机器人ID
+        name: 显示的发送者名称（对所有消息统一使用）
+
+    Returns:
+        list: 转发消息节点列表
+    """
+    forward_msgs = []
+    for msg in messages:
+        # 如果已经是构建好的节点，直接使用
+        if isinstance(msg, dict) and msg.get("type") == "node":
+            forward_msgs.append(msg)
+        else:
+            forward_msgs.append(build_forward_message(msg, bot_id, name))
+    return forward_msgs
+
+
+async def send_forward_messages(
+    bot,
+    event,
+    messages: list,
+    name: str = "Eversoul Info",
+):
+    """
+    发送合并转发消息
+
+    Args:
+        bot: Bot 实例
+        event: Event 实例
+        messages: 消息内容列表，每个元素可以是：
+            - str: 纯文本
+            - list: 包含字符串和/或MessageSegment的列表
+            - MessageSegment: 单个消息段
+            - Message: 消息对象
+            - dict: 已经构建好的节点（直接使用）
+        name: 显示的发送者名称
+
+    Usage:
+        # 简单用法 - 多条字符串消息
+        await send_forward_messages(bot, event, ["消息1", "消息2", "消息3"])
+
+        # 混合类型消息
+        await send_forward_messages(bot, event, [
+            "文本消息",
+            [MessageSegment.image(...), "带图片的消息"],
+            MessageSegment.image(...),
+        ])
+
+        # 自定义名称
+        await send_forward_messages(bot, event, messages, name="Guild Boss")
+
+        # 单条消息也可以
+        await send_forward_messages(bot, event, ["所有内容合并成一条"])
+    """
+    from nonebot.adapters.onebot.v11 import GroupMessageEvent
+
+    forward_msgs = build_forward_messages(messages, bot.self_id, name)
+
+    if isinstance(event, GroupMessageEvent):
+        await bot.call_api(
+            "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
+        )
+    else:
+        await bot.call_api(
+            "send_private_forward_msg",
+            user_id=event.get_user_id(),
+            messages=forward_msgs,
+        )

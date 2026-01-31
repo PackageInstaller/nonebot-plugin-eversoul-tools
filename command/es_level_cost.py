@@ -68,37 +68,14 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if "mana_crystal" in next_level_data:
                 text_msg.append(f"魔力水晶：{next_level_data.get('mana_crystal', 0)}")
 
-        messages.append(
-            {
-                "type": "node",
-                "data": {
-                    "name": "Eversoul Info",
-                    "uin": bot.self_id,
-                    "content": "\n".join(text_msg),
-                },
-            }
-        )
+        messages.append("\n".join(text_msg))
 
         # 添加统计图
         chart = await generate_level_cost_chart(data)
-        messages.append(
-            {
-                "type": "node",
-                "data": {"name": "Eversoul Info", "uin": bot.self_id, "content": chart},
-            }
-        )
+        messages.append(chart)
 
         # 发送消息
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=messages
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=messages,
-            )
+        await send_forward_messages(bot, event, messages)
 
     except Exception as e:
         if not isinstance(e, FinishedException):

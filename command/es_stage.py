@@ -143,25 +143,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             messages.append("\n".join(drop_info))
 
         # 发送合并转发消息
-        forward_msgs = []
-        for msg in messages:
-            forward_msgs.append(
-                {
-                    "type": "node",
-                    "data": {"name": "Stage Info", "uin": bot.self_id, "content": msg},
-                }
-            )
-
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=forward_msgs,
-            )
+        await send_forward_messages(bot, event, messages, name="Stage Info")
 
     except Exception as e:
         if not isinstance(e, FinishedException):

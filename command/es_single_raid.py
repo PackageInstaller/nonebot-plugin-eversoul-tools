@@ -269,41 +269,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         messages.append("\n".join(str(x) for x in basic_info))
 
-        forward_msgs = []
-        for msg in messages:
-            if isinstance(msg, str):
-                forward_msgs.append(
-                    {
-                        "type": "node",
-                        "data": {
-                            "name": "Eversoul Info",
-                            "uin": bot.self_id,
-                            "content": msg,
-                        },
-                    }
-                )
-            elif isinstance(msg, list):
-                forward_msgs.append(
-                    {
-                        "type": "node",
-                        "data": {
-                            "name": "Eversoul Info",
-                            "uin": bot.self_id,
-                            "content": "\n".join(str(x) for x in msg),
-                        },
-                    }
-                )
-
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=forward_msgs,
-            )
+        await send_forward_messages(bot, event, messages)
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback

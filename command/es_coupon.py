@@ -102,14 +102,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
             f"账号{account_index+1}/{accounts_count}: {server_name}, ID: {player_id}"
         )
         forward_messages.append(
-            {
-                "type": "node",
-                "data": {
-                    "name": "Eversoul Info",
-                    "uin": event.self_id,
-                    "content": f"开始为 {account_info} 兑换",
-                },
-            }
+            build_forward_message(f"开始为 {account_info} 兑换", event.self_id)
         )
         coupon_history = await EversoulUser.get_coupon_history(
             int(user_id), str(player_id)
@@ -140,14 +133,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                 [result_item["result"] for result_item in success_results]
             )
             forward_messages.append(
-                {
-                    "type": "node",
-                    "data": {
-                        "name": "Eversoul Info",
-                        "uin": event.self_id,
-                        "content": success_content,
-                    },
-                }
+                build_forward_message(success_content, event.self_id)
             )
 
         if failed_results:
@@ -155,14 +141,7 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                 [result_item["result"] for result_item in failed_results]
             )
             forward_messages.append(
-                {
-                    "type": "node",
-                    "data": {
-                        "name": "Eversoul Info",
-                        "uin": event.self_id,
-                        "content": failed_content,
-                    },
-                }
+                build_forward_message(failed_content, event.self_id)
             )
 
         for result_item in sorted_results:
@@ -269,47 +248,19 @@ async def handle_coupon(bot: Bot, event: Event, args: Message = CommandArg()):
                 feedback_parts.append(f"过期时间: {expiry_date}")
                 
                 forward_messages.append(
-                    {
-                        "type": "node",
-                        "data": {
-                            "name": "Eversoul Info",
-                            "uin": event.self_id,
-                            "content": "\n".join(feedback_parts),
-                        },
-                    }
+                    build_forward_message("\n".join(feedback_parts), event.self_id)
                 )
         except Exception as e:
             logger.error(f"保存自定义兑换码到YAML失败: {e}")
             forward_messages.append(
-                {
-                    "type": "node",
-                    "data": {
-                        "name": "Eversoul Info",
-                        "uin": event.self_id,
-                        "content": f"⚠️ 保存兑换码到配置文件失败: {str(e)}",
-                    },
-                }
+                build_forward_message(f"⚠️ 保存兑换码到配置文件失败: {str(e)}", event.self_id)
             )
 
     forward_messages.append(
-        {
-            "type": "node",
-            "data": {
-                "name": "Eversoul Info",
-                "uin": event.self_id,
-                "content": f"共{accounts_count}个账号，{len(all_coupons)}个兑换码",
-            },
-        }
+        build_forward_message(f"共{accounts_count}个账号，{len(all_coupons)}个兑换码", event.self_id)
     )
 
     # 发送合并转发消息
-    if isinstance(event, GroupMessageEvent):
-        await bot.call_api(
-            "send_group_forward_msg", group_id=event.group_id, messages=forward_messages
-        )
-    else:
-        await bot.call_api(
-            "send_private_forward_msg", user_id=int(user_id), messages=forward_messages
-        )
+    await send_forward_messages(bot, event, forward_messages)
 
     await es_coupon.finish()

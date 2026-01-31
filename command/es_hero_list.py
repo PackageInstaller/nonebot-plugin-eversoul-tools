@@ -57,32 +57,14 @@ async def handle(bot: Bot, event: Event):
             hero_categories[race_tw].append(hero_info)
 
         # 生成转发消息
-        forward_msgs = []
+        messages = []
         for category, heroes in hero_categories.items():
             if heroes:  # 只显示有角色的分类
                 msg = f"【{category}】\n"
                 msg += "\n".join(f"・{hero}" for hero in sorted(heroes))  # 按名称排序
-                forward_msgs.append(
-                    {
-                        "type": "node",
-                        "data": {
-                            "name": "Eversoul Info",
-                            "uin": bot.self_id,
-                            "content": msg,
-                        },
-                    }
-                )
+                messages.append(msg)
 
-        if isinstance(event, GroupMessageEvent):
-            await bot.call_api(
-                "send_group_forward_msg", group_id=event.group_id, messages=forward_msgs
-            )
-        else:
-            await bot.call_api(
-                "send_private_forward_msg",
-                user_id=event.get_user_id(),
-                messages=forward_msgs,
-            )
+        await send_forward_messages(bot, event, messages)
     except Exception as e:
         if not isinstance(e, FinishedException):
             import traceback
