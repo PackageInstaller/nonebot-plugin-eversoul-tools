@@ -253,7 +253,8 @@ async def handle(bot: Bot, event: Event):
     pic = await html_to_pic(html, viewport={"width": 1000, "height": 10})
     
     # 附带的文字信息
-    text_info = """【腾讯文档】永恒灵魂从入门到入土1.2
+    text_info = """T榜仅供参考，切勿直接照抄
+【腾讯文档】永恒灵魂从入门到入土1.2
 https://docs.qq.com/pdf/DRndPTmtYbFpScWZa
 国际服作业网
 https://eversoul.3000y.cloud/
@@ -262,7 +263,7 @@ https://www.gamekee.com/eversoul/
 【腾讯文档】永恒灵魂攻略（T榜更新至1月末），原作者冰水鱼，由我代上传
 https://docs.qq.com/sheet/DY05heEVKenVWWmFo?tab=000002
 【腾讯文档】es伤害公式分析，卷狗必看
-https://docs.qq.com/pdf/DY0RETFN1WUFzVk5L
+https://docs.qq.com/pdf/DY2pFSU12V2hDUGdD
 【金山文档 | WPS云文档】 国服节奏榜
 https://www.kdocs.cn/l/caX44iQa7VNG
 Powered by 少姜

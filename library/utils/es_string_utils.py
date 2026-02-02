@@ -2011,7 +2011,7 @@ async def get_character_soullink(
         # 获取收集效果
         collection_effects = []
 
-        if collection_id := link.get("collection"):
+        if collection_id := link.get("Collection"):
             # 按condition_list排序
             collection_items = sorted(
                 [
@@ -2059,7 +2059,7 @@ async def get_character_soullink(
                                 stat_name = STAT_NAME_MAPPING[key]
                                 if key in SOULLINK_INTEGER_STAT_MAPPING:
                                     buff_effects.append(
-                                        f"{stat_name}：{await format_value(value, True)}%"
+                                        f"{stat_name}：{await format_value(value, True)}"
                                     )
                                 else:
                                     buff_effects.append(
@@ -2091,7 +2091,6 @@ async def get_character_soullink(
                 "open_date": link.get("Open_date", ""),
             }
         )
-
     return soullink_info
 
 
@@ -2202,10 +2201,12 @@ async def get_character_signature(
                 if grade_data.get("group") == grade_group:
                     skill_level = grade_data.get("skill_level", 0)
                     signature_grade = grade_data.get("signature_grade", 0)
-                    
+
                     # 获取品质名称
                     if signature_grade > 0:
-                        grade_name_data = await get_string_by_type(data, "system", signature_grade)
+                        grade_name_data = await get_string_by_type(
+                            data, "system", signature_grade
+                        )
                         grade_name = await select_text_by_priority(
                             grade_name_data.get("zh_tw", ""),
                             grade_name_data.get("zh_cn", ""),
@@ -2216,7 +2217,7 @@ async def get_character_signature(
                         )
                         if skill_level > 0 and grade_name:
                             skill_level_to_grade_name[skill_level] = grade_name
-        
+
         # 获取所有等级的技能描述
         for i in range(1, 8):
             sno_key = f"skill_tooltip_sno{i}"
@@ -2254,7 +2255,7 @@ async def get_character_signature(
 
                 # 获取该技能等级对应的遗物解锁品质
                 unlock_grade = skill_level_to_grade_name.get(i, "")
-                
+
                 skill_descriptions.append(
                     {
                         "desc_zh_tw": desc_tw,
@@ -3744,19 +3745,21 @@ async def get_skills_info(
             data_type,
         )
 
-        result["skills"].append({
-            "skill_key": skill_key,
-            "skill_type": skill_type_text,
-            "skill_type_all": {
-                "zh_tw": skill_type_zh_tw,
-                "zh_cn": skill_type_zh_cn,
-                "kr": skill_type_kr,
-                "en": skill_type_en,
-            },
-            "skill_name": skill_name_text,
-            "skill_info": skill_info,
-            "is_support": is_support,
-        })
+        result["skills"].append(
+            {
+                "skill_key": skill_key,
+                "skill_type": skill_type_text,
+                "skill_type_all": {
+                    "zh_tw": skill_type_zh_tw,
+                    "zh_cn": skill_type_zh_cn,
+                    "kr": skill_type_kr,
+                    "en": skill_type_en,
+                },
+                "skill_name": skill_name_text,
+                "skill_info": skill_info,
+                "is_support": is_support,
+            }
+        )
 
     return result
 
@@ -3800,12 +3803,14 @@ async def format_skill_descriptions(
         hero_level = desc.get("hero_level", 1)
         unlock_text = f"（等级{hero_level}解锁）" if hero_level >= 1 else ""
 
-        descriptions.append({
-            "text": desc_text,
-            "hero_level": hero_level,
-            "unlock_text": unlock_text,
-            "type": desc.get("type", ""),
-        })
+        descriptions.append(
+            {
+                "text": desc_text,
+                "hero_level": hero_level,
+                "unlock_text": unlock_text,
+                "type": desc.get("type", ""),
+            }
+        )
 
     return descriptions
 

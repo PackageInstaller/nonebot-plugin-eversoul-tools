@@ -295,8 +295,8 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
                         else:
                             link_msg.append("  未知效果")
 
-                if link['open_date']:
-                    link_msg.append(f"\n开启时间：{link['open_date']}")
+                # if link['open_date']:
+                #     link_msg.append(f"\n开启时间：{link['open_date']}")
 
                 messages.append("\n".join(link_msg))
 
