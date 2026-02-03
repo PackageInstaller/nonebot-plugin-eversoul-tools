@@ -25,9 +25,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         elif len(levels) < 7:
             levels.extend([levels[0]] * (7 - len(levels)))
 
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         ark_types = {

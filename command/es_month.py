@@ -29,10 +29,7 @@ async def handle_es_month(bot: Bot, event: Event, args: Message = CommandArg()):
                 await es_month.finish("请输入合理的年份(2023-2099)")
         
         # 加载数据
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         # 获取服务器配置

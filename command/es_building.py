@@ -5,10 +5,7 @@ from ..library.utils import *
 async def handle(bot: Bot, event: Event):
     """处理建筑信息查询"""
     try:
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
-
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         if not data.get("town_object") or not data["town_object"].get("json"):

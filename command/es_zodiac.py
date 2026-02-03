@@ -5,12 +5,7 @@ from ..library.utils import *
 async def handle(bot: Bot, event: Event):
     """处理星座信息查询"""
     try:
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
-
-        # 加载游戏数据
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
         # 生成星座信息HTML
         html = await generate_zodiac_html(data)

@@ -9,8 +9,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         if not hero_name:
             await es_hero.finish("请输入角色名！")
 
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        # 获取群组ID，私聊时返回None（将使用默认数据源）
+        group_id = get_group_id(event)
 
         config = await get_group_data_source(group_id)
         data = await load_json_data(group_id)

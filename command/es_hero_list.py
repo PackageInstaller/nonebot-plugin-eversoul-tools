@@ -6,10 +6,7 @@ async def handle(bot: Bot, event: Event):
     """处理角色列表查询"""
     try:
         # 加载数据
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         # 加载别名配置

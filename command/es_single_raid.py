@@ -14,8 +14,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         except ValueError:
             await es_single_raid.finish("恶灵ID必须是数字")
 
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
 
         # 加载数据
         data = await load_json_data(group_id)

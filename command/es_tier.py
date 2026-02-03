@@ -16,9 +16,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             )
 
         grade, level, stat_type, set_type = match.groups()
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         # 获取品质对应的grade_sno

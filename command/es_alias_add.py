@@ -29,10 +29,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         hero_name = parts[0]
         new_aliases = parts[1:]
         
-        # 获取群组ID（如果是群消息）
-        group_id = None
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         
         # 加载别名映射，查找hero_id
         alias_map = await load_aliases(group_id)

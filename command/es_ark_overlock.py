@@ -11,10 +11,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         target_level = int(target_level)
 
         # 加载数据
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         # 查找超频信息

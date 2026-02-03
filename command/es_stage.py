@@ -6,10 +6,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取参数文本
         stage_text = args.extract_plain_text().strip()
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         # 检查格式
         match = re.match(r"^(\d+)-(\d+)$", stage_text)
         if not match:

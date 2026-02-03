@@ -8,10 +8,7 @@ async def handle(bot: Bot, event: Event):
         stat_type = event.get_plaintext()[2:4]  # 获取"身高"或"体重"
 
         # 加载数据
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         # 收集角色信息

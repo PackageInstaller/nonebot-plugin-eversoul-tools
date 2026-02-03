@@ -4,8 +4,7 @@ from ..library.utils import *
 @es_range_ranking.handle()
 async def handle(bot: Bot, event: Event):
     try:
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         range_info = []

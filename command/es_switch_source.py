@@ -2,12 +2,13 @@ from ..library.utils import *
 
 
 @es_switch_source.handle()
-async def handle(event: GroupMessageEvent, args: Message = CommandArg()):
+@require_group("私聊无法切换数据源，请在群聊中使用此命令。")
+async def handle(event: Event, args: Message = CommandArg()):
     # 获取参数
     args_str = str(args).strip().lower()
 
-    # 获取群组ID
-    group_id = str(event.group_id)
+    # 获取群组ID（装饰器已确保是群聊）
+    group_id = str(get_group_id(event))
 
     if not args_str:
         config = await get_group_data_source(group_id)

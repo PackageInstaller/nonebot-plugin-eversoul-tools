@@ -5,10 +5,7 @@ from ..library.utils import *
 async def handle(bot: Bot, event: Event):
     """处理好感等级信息查询"""
     try:
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
-
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
         if not data.get("love_level") or not data["love_level"].get("json"):
             await es_love_level.finish("未找到好感等级数据，请检查数据源配置！")

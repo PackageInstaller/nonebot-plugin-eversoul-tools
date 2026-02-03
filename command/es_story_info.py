@@ -12,13 +12,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         target_id = int(story_match)
 
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
-
-        # 加载数据
-        # load the data
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         # 第一步：在event_info中查找name_sno相符的所有内容

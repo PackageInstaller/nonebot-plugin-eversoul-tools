@@ -42,10 +42,64 @@ from PIL import Image
 from io import BytesIO
 from bs4 import BeautifulSoup
 from datetime import datetime
+from functools import wraps
 from ...config import *
 from ..model import *
 
 driver = get_driver()
+
+
+def get_group_id(event: Event) -> int | None:
+    """
+    从事件中获取群组ID
+    
+    Args:
+        event: 事件对象
+        
+    Returns:
+        int | None: 群聊返回群组ID，私聊返回None
+    """
+    if isinstance(event, GroupMessageEvent):
+        return event.group_id
+    return None
+
+
+def require_group(error_msg: str = "此命令仅支持群聊使用"):
+    """
+    装饰器：要求命令必须在群聊中使用
+    
+    Args:
+        error_msg: 私聊时的错误提示信息
+        
+    Usage:
+        @some_matcher.handle()
+        @require_group("请在群聊中使用此命令")
+        async def handle(bot: Bot, event: Event):
+            group_id = get_group_id(event)  # 此时一定是群聊，group_id 不为 None
+            ...
+    """
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            # 从参数中找到 event
+            event = None
+            for arg in args:
+                if isinstance(arg, Event):
+                    event = arg
+                    break
+            if event is None:
+                event = kwargs.get('event')
+            
+            if event and not isinstance(event, GroupMessageEvent):
+                # 私聊时直接返回错误信息
+                # 需要从 matcher 中获取 finish 方法
+                from nonebot.matcher import current_matcher
+                matcher = current_matcher.get()
+                await matcher.finish(error_msg)
+            
+            return await func(*args, **kwargs)
+        return wrapper
+    return decorator
 
 es_help = on_command(
     "es命令列表",

@@ -9,11 +9,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         if not boss_name:
             await es_world_raid_boss.finish("请输入世界BOSS名称！")
 
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
-        else:
-            group_id = None
-
+        group_id = get_group_id(event)
         config = await get_group_data_source(group_id)
         data = await load_json_data(group_id)
 

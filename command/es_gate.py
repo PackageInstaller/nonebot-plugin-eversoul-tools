@@ -9,10 +9,7 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
         stage_no = int(matched[1])
 
         # 加载数据
-        # 获取群组ID
-        group_id = 0
-        if isinstance(event, GroupMessageEvent):
-            group_id = event.group_id
+        group_id = get_group_id(event)
         data = await load_json_data(group_id)
 
         # 从Barrier.json获取传送门基本信息
