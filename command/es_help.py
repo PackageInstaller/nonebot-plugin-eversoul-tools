@@ -1,14 +1,14 @@
 from ..library.utils import *
 
 
-
 async def load_help_config():
     """加载帮助配置文件"""
     from ..config import HELP_CONFIG
+
     if not HELP_CONFIG.exists():
         logger.warning(f"帮助配置文件不存在: {HELP_CONFIG}")
         return None
-    
+
     try:
         with open(HELP_CONFIG, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
@@ -21,7 +21,7 @@ async def generate_help_html(config: dict) -> str:
     """根据配置生成帮助HTML"""
     commands = config.get("commands", [])
     category_colors = config.get("category_colors", {})
-    
+
     # 按分类分组
     categories = {}
     for cmd in commands:
@@ -29,7 +29,7 @@ async def generate_help_html(config: dict) -> str:
         if category not in categories:
             categories[category] = []
         categories[category].append(cmd)
-    
+
     # 生成表格行
     table_rows = ""
     for category, cmds in categories.items():
@@ -38,20 +38,20 @@ async def generate_help_html(config: dict) -> str:
             # 第一行显示分类标签
             category_cell = ""
             if i == 0:
-                category_cell = f'''
+                category_cell = f"""
                     <td rowspan="{len(cmds)}" class="category-cell" style="background-color: {color};">
                         <span class="category-tag">{category}</span>
-                    </td>'''
-            
-            table_rows += f'''
+                    </td>"""
+
+            table_rows += f"""
                 <tr>
                     {category_cell}
                     <td class="command-cell">{cmd.get("name", "")}</td>
                     <td class="desc-cell">{cmd.get("description", "")}</td>
                     <td class="example-cell"><code>{cmd.get("example", "")}</code></td>
-                </tr>'''
-    
-    html = f'''
+                </tr>"""
+
+    html = f"""
     <!DOCTYPE html>
     <html lang="zh-CN">
     <head>
@@ -207,8 +207,8 @@ async def generate_help_html(config: dict) -> str:
         </div>
     </body>
     </html>
-    '''
-    
+    """
+
     return html
 
 
@@ -216,7 +216,7 @@ async def generate_help_html(config: dict) -> str:
 async def handle(bot: Bot, event: Event):
     # 加载配置
     config = await load_help_config()
-    
+
     if config:
         # 从配置生成HTML
         html = await generate_help_html(config)
@@ -251,27 +251,13 @@ async def handle(bot: Bot, event: Event):
         """
 
     pic = await html_to_pic(html, viewport={"width": 1000, "height": 10})
-    
-    # 附带的文字信息
-    text_info = """T榜仅供参考，切勿直接照抄
-【腾讯文档】永恒灵魂从入门到入土1.2
-https://docs.qq.com/pdf/DRndPTmtYbFpScWZa
-国际服作业网
-https://eversoul.3000y.cloud/
-游戏wiki
-https://www.gamekee.com/eversoul/
-【腾讯文档】永恒灵魂攻略（T榜更新至1月末），原作者冰水鱼，由我代上传
-https://docs.qq.com/sheet/DY05heEVKenVWWmFo?tab=000002
-【腾讯文档】es伤害公式分析，卷狗必看
-https://docs.qq.com/pdf/DY2pFSU12V2hDUGdD
-【金山文档 | WPS云文档】 国服节奏榜
-https://www.kdocs.cn/l/caX44iQa7VNG
+
+    text_info = """【腾讯文档】永恒灵魂(空灵诗篇)攻略推广
+https://docs.qq.com/doc/DY2VBTFFZUHVLZ25H
 Powered by 少姜
 欢迎推广，致力于做最好的es攻略机器人（实际上也确实是最好的）
 """
-    
-    # 发送图片和文字
-    await es_help.finish(Message([
-        MessageSegment.image(pic),
-        MessageSegment.text(text_info)
-    ]))
+
+    await es_help.finish(
+        Message([MessageSegment.image(pic), MessageSegment.text(text_info)])
+    )
