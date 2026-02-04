@@ -13,7 +13,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         target_id = int(story_match)
 
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es故事信息")
 
         # 第一步：在event_info中查找name_sno相符的所有内容
         # first step: find all event_info that match the condition

@@ -6,7 +6,7 @@ async def handle(bot: Bot, event: Event):
     """处理建筑信息查询"""
     try:
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es建筑信息")
 
         if not data.get("town_object") or not data["town_object"].get("json"):
             await es_building.finish("未找到建筑数据，请检查数据源配置！")

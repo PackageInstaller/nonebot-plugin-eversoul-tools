@@ -1,11 +1,11 @@
 import json
 import yaml
 import asyncio
+import sys
 from pathlib import Path
 from typing import Tuple, Dict
 from nonebot.log import logger
 from ...config import *
-
 
 driver = get_driver()
 
@@ -14,7 +14,7 @@ async def on_alias_file_changed(file_path: Path):
     """当 alias 文件变化时的回调函数"""
     try:
         logger.info(f"检测到别名文件变更: {file_path}")
-        
+
         # 判断是哪个文件变化了
         if file_path.name == "live_hero_aliases.yaml":
             target_file = CONFIG_DIR / "review_hero_aliases.yaml"
@@ -24,16 +24,16 @@ async def on_alias_file_changed(file_path: Path):
             logger.info("同步 live_raid_aliases.yaml -> review_raid_aliases.yaml")
         else:
             return
-        
+
         # 检查目标文件是否存在
         if not target_file.exists():
             logger.warning(f"目标文件不存在: {target_file}")
             return
-        
+
         # 执行同步
         await sync_aliases(file_path, target_file)
         logger.info(f"别名同步完成: {file_path.name} -> {target_file.name}")
-        
+
     except Exception as e:
         logger.error(f"同步别名文件时出错: {e}")
 
@@ -581,26 +581,35 @@ async def load_aliases(group_id=None):
 
 
 # 加载所需的JSON文件
-async def load_json_data(group_id: int):
+async def load_json_data(
+    group_id: int = None, tables: list = None, command_name: str = "unknown"
+) -> LazyJsonData:
     """
-    load json data
+    加载JSON数据（懒加载模式）
 
     Args:
-        group_id: group id
+        group_id: 群组ID，用于获取数据源配置
+        tables: 需要预加载的表名列表（可选），如果不提供则使用懒加载
+        command_name: 调用的命令名称，用于日志记录
 
     Returns:
-        dict: json data
+        LazyJsonData: 懒加载数据容器，访问时自动加载对应的表
+
+    Usage:
+        # 懒加载模式 - 只在访问时才加载
+        data = await load_json_data(group_id, command_name="es角色")
+        heroes = data["hero"]["json"]  # 此时才加载 Hero.json
+
+        # 预加载模式 - 提前加载指定的表
+        data = await load_json_data(group_id, tables=["hero", "hero_desc"], command_name="es角色")
     """
     config = await get_group_data_source(group_id)
-    logger.info(f"当前使用的数据源配置: {config}")
     json_path = config["json_path"]
+
     # 检查json_path是否有效
     if not json_path:
         logger.error("数据源路径未配置，无法加载游戏数据")
-        logger.error(
-            "请在配置文件中设置正确的eversoul_gl_live_path和eversoul_gl_review_path"
-        )
-        return {"hero": {"json": []}}  # 返回空数据
+        return LazyJsonData(Path("."), command_name)  # 返回空的懒加载容器
 
     # 确保json_path是Path对象
     if not isinstance(json_path, Path):
@@ -610,101 +619,16 @@ async def load_json_data(group_id: int):
     if not json_path.exists():
         logger.error(f"数据源路径不存在: {json_path}")
         logger.error("请检查配置的路径是否正确")
-        return {"hero": {"json": []}}  # 返回空数据
+        return LazyJsonData(Path("."), command_name)  # 返回空的懒加载容器
 
-    json_files = {
-        "hero": "Hero.json",  # 角色
-        "hero_option": "HeroOption.json",  # 角色潜能
-        "hero_gift": "HeroGift.json",  # 角色喜好礼物
-        "hero_desc": "HeroDesc.json",  # 角色描述
-        "hero_level_grade": "HeroLevelGrade.json",  # 角色等级加成率
-        "hero_grade": "HeroGrade.json",  # 角色品质
-        "string_character": "StringCharacter.json",  # 角色文本
-        "string_system": "StringSystem.json",  # 系统文本
-        "skill": "Skill.json",  # 技能
-        "string_skill": "StringSkill.json",  # 技能文本
-        "skill_code": "SkillCode.json",  # 技能代码
-        "skill_buff": "SkillBuff.json",  # 技能效果
-        "skill_icon": "SkillIcon.json",  # 技能图标
-        "skill_pattern": "SkillPattern.json",  # 技能释放顺序
-        "signature": "Signature.json",  # 遗物
-        "signature_level": "SignatureLevel.json",  # 遗物等级
-        "signature_grade": "SignatureGrade.json",  # 遗物品质
-        "string_evertalk": "StringEverTalk.json",  # 聊天文本
-        "story_info": "StoryInfo.json",  # 故事信息
-        "talk": "Talk.json",  # 对话
-        "string_talk": "StringTalk.json",  # 对话文本
-        "item_costume": "ItemCostume.json",  # 物品信息
-        "item": "Item.json",  # 物品
-        "item_stat": "ItemStat.json",  # 物品属性
-        "string_item": "StringItem.json",  # 物品文本
-        "illust": "Illust.json",  # 插画
-        "item_drop_group": "ItemDropGroup.json",  # 掉落组
-        "item_set_effect": "ItemSetEffect.json",  # 套装效果
-        "stage": "Stage.json",  # 关卡
-        "stage_battle": "StageBattle.json",  # 关卡战斗
-        "formation": "Formation.json",  # 队伍
-        "message_mail": "MessageMail.json",  # 邮件
-        "level": "Level.json",  # 等级
-        "love_level": "LoveLevel.json",  # 好感等级
-        "ark_enhance": "ArkEnhance.json",  # 方舟强化
-        "ark_overclock": "ArkOverClock.json",  # 超频
-        "promotion_movie": "PromotionMovie.json",  # 宣传片
-        "localization_schedule": "LocalizationSchedule.json",  # 活动日历
-        "event_calender": "EventCalender.json",  # 活动日历
-        "event_info": "EventInfo.json",  # 活动信息
-        "event_story": "EventStory.json",  # 活动剧情
-        "string_ui": "StringUI.json",  # UI文本
-        "eden_alliance": "EdenAlliance.json",  # 联合作战
-        "stage_equip": "StageEquip.json",  # 关卡装备
-        "string_stage": "StringStage.json",  # 关卡文本
-        "cash_shop_item": "CashShopItem.json",  # 商店物品
-        "string_cashshop": "StringCashshop.json",  # 商店文本
-        "barrier": "Barrier.json",  # 传送门相关信息
-        "trip_hero": "TripHero.json",  # 角色关键字
-        "trip_keyword": "TripKeyword.json",  # 角色关键字
-        "key_values": "KeyValues.json",  # 一些数值定义
-        "town_location": "TownLocation.json",  # 地点
-        "town_object": "TownObjet.json",  # 专属领地物品
-        "string_town": "StringTown.json",  # 地点文本
-        "town_lost_item": "TownLostItem.json",  # 遗失物品
-        "town_buff": "TownBuff.json",  # 专属领地物品buff
-        "thumbnail": "Thumbnail.json",  # 缩略图
-        "arbeit_fairy_level": "ArbeitFairyLevel.json",  # 打工等级
-        "tower": "Tower.json",  # 起源塔
-        "contents_buff": "ContentsBuff.json",  # buff数值内容
-        "battle_buff": "BattleBuff.json",  # 战斗buff
-        "world_raid_partner_buff": "WorldRaidPartnerBuff.json",  # 支援伙伴buff
-        "arbeit_choice": "ArbeitChoice.json",  # 专属物品任务选择
-        "arbeit_list": "ArbeitList.json",  # 专属物品任务列表
-        "evertalk_desc": "EverTalkDesc.json",  # everphton聊天相关，拿插图
-        "soullink": "Soullink.json",  # 灵魂链接文本相关
-        "soullink_collection": "SoullinkCollection.json",  # 灵魂链接数值相关
-        "gacha": "Gacha.json",  # 抽卡相关
-        "guild_raid": "GuildRaid.json",  # 工会讨伐boss相关
-        "guild_raid_affix": "GuildRaidAffix.json",  # 工会讨伐boss词条相关
-        "single_raid_boss": "SingleRaidBoss.json",  # 恶灵讨伐BOSS
-        "single_raid": "SingleRaid.json",  # 恶灵讨伐
-        "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json",  # 恶灵讨伐BOSS等级
-        "single_raid_schedule": "SingleRaidSchedule.json",  # 恶灵讨伐日程(记录了赛季，以及日程键值)
-        "single_raid_season": "SingleRaidSeason.json",  # 恶灵讨伐赛季
-        "single_raid_boss_interaction_detail": "SingleRaidBossInteractionDetail.json",  # 恶灵讨伐开场白角色
-        "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json",  # 恶灵讨伐护盾削减系数
-        "single_raid_boss_groggy_condition": "SingleRaidBossGroggyCondition.json",  # 恶灵讨伐各类CCBuff削减系数定义
-        "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json",  # 恶灵讨伐特殊之人
-        "world_raid_boss": "WorldRaidBoss.json",  # 世界讨伐boss相关
-        "zodiac": "Zodiac.json",  # 星座
-    }
+    # 创建懒加载容器
+    lazy_data = LazyJsonData(json_path, command_name)
 
-    data = {}
-    for key, filename in json_files.items():
-        try:
-            with open(json_path / filename, "r", encoding="utf-8") as f:
-                data[key] = json.load(f)
-        except Exception as e:
-            logger.error(f"加载JSON文件出错: {filename}, 错误: {e}")
-            data[key] = {"json": []}  # 提供一个空的默认值
-    return data
+    # 如果指定了需要预加载的表，则预加载
+    if tables:
+        lazy_data.preload(tables)
+
+    return lazy_data
 
 
 async def load_data_source_config():

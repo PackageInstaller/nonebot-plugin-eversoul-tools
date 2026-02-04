@@ -6,7 +6,7 @@ async def handle(bot: Bot, event: Event):
     """处理星座信息查询"""
     try:
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es星座信息")
         # 生成星座信息HTML
         html = await generate_zodiac_html(data)
 

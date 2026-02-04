@@ -12,7 +12,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         # 加载数据
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es超频消耗")
 
         # 查找超频信息
         current_level_cost = 0

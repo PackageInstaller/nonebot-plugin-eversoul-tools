@@ -6,7 +6,7 @@ async def handle(bot: Bot, event: Event):
     """处理潜能信息查询"""
     try:
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es潜能信息")
         # 生成潜能信息HTML
         html = await generate_potential_html(data)
         # 转换为图片

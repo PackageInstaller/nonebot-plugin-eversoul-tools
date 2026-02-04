@@ -111,7 +111,7 @@ async def redeem_coupon(
                         response_data = json.loads(response_text)
                         reward_info = []
 
-                        data = await load_json_data(group_id)
+                        data = await load_json_data(group_id, command_name="es礼包信息")
                         if "item" in response_data:
                             item = response_data["item"]
                             item_code = item.get("itemCode")

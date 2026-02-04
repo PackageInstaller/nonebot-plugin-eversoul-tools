@@ -23,7 +23,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = get_group_id(event)
 
         config = await get_group_data_source(group_id)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es角色技能信息")
 
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             aliases_data = yaml.safe_load(f)
@@ -255,7 +255,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     )
                     desc_text = await clean_rich_text(desc_text)
                     unlock_grade = skill.get("unlock_grade", "")
-                    unlock_text = f"（等级{unlock_grade}解锁）" if unlock_grade else ""
+                    unlock_text = f"（{unlock_grade}解锁）" if unlock_grade else ""
 
                     skill_descriptions_text.append(f"\n{desc_text}{unlock_text}")
 

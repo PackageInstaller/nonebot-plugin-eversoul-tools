@@ -13,7 +13,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = get_group_id(event)
 
         config = await get_group_data_source(group_id)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es角色信息")
 
         # 加载别名配置和原始别名数据
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:

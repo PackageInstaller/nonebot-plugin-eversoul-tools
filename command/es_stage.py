@@ -16,7 +16,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         stage_no = int(match.group(2))
 
         # 加载数据
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es关卡信息")
 
         # 查找关卡信息
         main_stage = None

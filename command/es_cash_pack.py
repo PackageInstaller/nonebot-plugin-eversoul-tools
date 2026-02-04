@@ -37,7 +37,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = 0
         if isinstance(event, GroupMessageEvent):
             group_id = event.group_id
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es突发礼包信息")
         messages = []
 
         if item_type == "主线":

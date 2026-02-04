@@ -9,7 +9,7 @@ async def handle(bot: Bot, event: Event):
 
         # 加载数据
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es角色身高体重排行")
 
         # 收集角色信息
         stats_info = []

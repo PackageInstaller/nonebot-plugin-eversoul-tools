@@ -5,6 +5,132 @@ from pydantic import BaseModel, model_validator
 from typing import ClassVar
 from nonebot import get_driver, get_plugin_config
 from nonebot.log import logger
+import json
+from typing import Dict
+
+
+def get_object_size(obj) -> int:
+    """
+    递归计算对象的内存占用（字节）
+    """
+    import sys
+
+    size = sys.getsizeof(obj)
+    if isinstance(obj, dict):
+        size += sum(get_object_size(k) + get_object_size(v) for k, v in obj.items())
+    elif isinstance(obj, (list, tuple, set, frozenset)):
+        size += sum(get_object_size(i) for i in obj)
+    return size
+
+
+def format_memory_size(size_bytes: int) -> str:
+    """
+    将字节数格式化为可读的内存大小
+    """
+    if size_bytes < 1024:
+        return f"{size_bytes} B"
+    elif size_bytes < 1024 * 1024:
+        return f"{size_bytes / 1024:.2f} KB"
+    else:
+        return f"{size_bytes / (1024 * 1024):.2f} MB"
+
+
+class LazyJsonData:
+    """
+    懒加载JSON数据的容器类
+    只有在访问具体表时才会加载对应的JSON文件
+    """
+
+    def __init__(self, json_path: Path, command_name: str = "unknown"):
+        self._json_path = json_path
+        self._cache: Dict[str, dict] = {}
+        self._table_sizes: Dict[str, int] = {}  # 记录每个表的内存占用
+        self._command_name = command_name  # 记录调用的命令名
+
+    def __getitem__(self, key: str) -> dict:
+        """按需加载并返回JSON数据"""
+        if key not in self._cache:
+            self._load_table(key)
+        return self._cache[key]
+
+    def __contains__(self, key: str) -> bool:
+        """检查键是否存在于映射表中"""
+        return key in JSON_FILE_MAPPING
+
+    def __del__(self):
+        """析构函数，打印本次执行的统计信息"""
+        self._print_stats()
+
+    def get(self, key: str, default=None):
+        """获取数据，如果不存在则返回默认值"""
+        if key not in JSON_FILE_MAPPING:
+            return default
+        try:
+            return self[key]
+        except Exception:
+            return default
+
+    def _load_table(self, key: str):
+        """加载单个JSON表"""
+        if key not in JSON_FILE_MAPPING:
+            logger.warning(f"未知的JSON表: {key}")
+            self._cache[key] = {"json": []}
+            self._table_sizes[key] = 0
+            return
+
+        filename = JSON_FILE_MAPPING[key]
+        file_path = self._json_path / filename
+
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                self._cache[key] = data
+                # 计算内存占用
+                size = get_object_size(data)
+                self._table_sizes[key] = size
+        except FileNotFoundError:
+            logger.warning(f"JSON文件不存在: {filename}")
+            self._cache[key] = {"json": []}
+            self._table_sizes[key] = 0
+        except Exception as e:
+            logger.error(f"加载JSON文件出错: {filename}, 错误: {e}")
+            self._cache[key] = {"json": []}
+            self._table_sizes[key] = 0
+
+    def preload(self, keys: list):
+        """预加载指定的表"""
+        for key in keys:
+            if key not in self._cache:
+                self._load_table(key)
+
+    def clear_cache(self):
+        """清除缓存"""
+        self._cache.clear()
+        self._table_sizes.clear()
+
+    @property
+    def loaded_tables(self) -> list:
+        """返回已加载的表名列表"""
+        return list(self._cache.keys())
+
+    @property
+    def total_memory(self) -> int:
+        """返回总内存占用（字节）"""
+        return sum(self._table_sizes.values())
+
+    def _print_stats(self):
+        """打印统计信息"""
+        if not self._cache:
+            return
+
+        total_size = self.total_memory
+        table_count = len(self._cache)
+        tables_str = ", ".join(self._cache.keys())
+        logger.warning(
+            f"[{self._command_name}] 数据加载统计: "
+            f"共加载 {table_count} 个表 ({tables_str}), "
+            f"表内存占用: {format_memory_size(total_size)},"
+        )
 
 
 class Config(BaseModel):
@@ -44,12 +170,7 @@ STAT_NAME_MAPPING = {
 }
 
 # 属性限制映射
-STAT_TYPE_MAPPING = {
-    "智力": 110044, 
-    "敏捷": 110043, 
-    "力量": 110042, 
-    "共用": 110041
-}
+STAT_TYPE_MAPPING = {"智力": 110044, "敏捷": 110043, "力量": 110042, "共用": 110041}
 
 
 # 组合效果映射
@@ -150,7 +271,7 @@ SERVER_NAME_MAPPING = {
     "kr": "韩服",
     "en": "欧美服",
     "cn": "国服",
-    "jp": "日服"
+    "jp": "日服",
 }
 
 # 恶灵讨伐护盾削减系数映射
@@ -168,6 +289,91 @@ SINGLE_RAID_GROGGY_REDUCE_MAPPING = [1, 2, 1, 1, 1, 3, 4]
 
 # app_id到服务器名称的反向映射
 SERVER_NAME_REVERSE_MAPPING = {v: k for k, v in SERVER_APP_ID_MAPPING.items()}
+
+# JSON文件名映射表
+JSON_FILE_MAPPING = {
+    "hero": "Hero.json",  # 角色
+    "hero_option": "HeroOption.json",  # 角色潜能
+    "hero_gift": "HeroGift.json",  # 角色喜好礼物
+    "hero_desc": "HeroDesc.json",  # 角色描述
+    "hero_level_grade": "HeroLevelGrade.json",  # 角色等级加成率
+    "hero_grade": "HeroGrade.json",  # 角色品质
+    "string_character": "StringCharacter.json",  # 角色文本
+    "string_system": "StringSystem.json",  # 系统文本
+    "skill": "Skill.json",  # 技能
+    "string_skill": "StringSkill.json",  # 技能文本
+    "skill_code": "SkillCode.json",  # 技能代码
+    "skill_buff": "SkillBuff.json",  # 技能效果
+    "skill_icon": "SkillIcon.json",  # 技能图标
+    "skill_pattern": "SkillPattern.json",  # 技能释放顺序
+    "signature": "Signature.json",  # 遗物
+    "signature_level": "SignatureLevel.json",  # 遗物等级
+    "signature_grade": "SignatureGrade.json",  # 遗物品质
+    "string_evertalk": "StringEverTalk.json",  # 聊天文本
+    "story_info": "StoryInfo.json",  # 故事信息
+    "talk": "Talk.json",  # 对话
+    "string_talk": "StringTalk.json",  # 对话文本
+    "item_costume": "ItemCostume.json",  # 物品信息
+    "item": "Item.json",  # 物品
+    "item_stat": "ItemStat.json",  # 物品属性
+    "string_item": "StringItem.json",  # 物品文本
+    "illust": "Illust.json",  # 插画
+    "item_drop_group": "ItemDropGroup.json",  # 掉落组
+    "item_set_effect": "ItemSetEffect.json",  # 套装效果
+    "stage": "Stage.json",  # 关卡
+    "stage_battle": "StageBattle.json",  # 关卡战斗
+    "formation": "Formation.json",  # 队伍
+    "message_mail": "MessageMail.json",  # 邮件
+    "level": "Level.json",  # 等级
+    "love_level": "LoveLevel.json",  # 好感等级
+    "ark_enhance": "ArkEnhance.json",  # 方舟强化
+    "ark_overclock": "ArkOverClock.json",  # 超频
+    "promotion_movie": "PromotionMovie.json",  # 宣传片
+    "localization_schedule": "LocalizationSchedule.json",  # 活动日历
+    "event_calender": "EventCalender.json",  # 活动日历
+    "event_info": "EventInfo.json",  # 活动信息
+    "event_story": "EventStory.json",  # 活动剧情
+    "string_ui": "StringUI.json",  # UI文本
+    "eden_alliance": "EdenAlliance.json",  # 联合作战
+    "stage_equip": "StageEquip.json",  # 关卡装备
+    "string_stage": "StringStage.json",  # 关卡文本
+    "cash_shop_item": "CashShopItem.json",  # 商店物品
+    "string_cashshop": "StringCashshop.json",  # 商店文本
+    "barrier": "Barrier.json",  # 传送门相关信息
+    "trip_hero": "TripHero.json",  # 角色关键字
+    "trip_keyword": "TripKeyword.json",  # 角色关键字
+    "key_values": "KeyValues.json",  # 一些数值定义
+    "town_location": "TownLocation.json",  # 地点
+    "town_object": "TownObjet.json",  # 专属领地物品
+    "string_town": "StringTown.json",  # 地点文本
+    "town_lost_item": "TownLostItem.json",  # 遗失物品
+    "town_buff": "TownBuff.json",  # 专属领地物品buff
+    "thumbnail": "Thumbnail.json",  # 缩略图
+    "arbeit_fairy_level": "ArbeitFairyLevel.json",  # 打工等级
+    "tower": "Tower.json",  # 起源塔
+    "contents_buff": "ContentsBuff.json",  # buff数值内容
+    "battle_buff": "BattleBuff.json",  # 战斗buff
+    "world_raid_partner_buff": "WorldRaidPartnerBuff.json",  # 支援伙伴buff
+    "arbeit_choice": "ArbeitChoice.json",  # 专属物品任务选择
+    "arbeit_list": "ArbeitList.json",  # 专属物品任务列表
+    "evertalk_desc": "EverTalkDesc.json",  # everphton聊天相关，拿插图
+    "soullink": "Soullink.json",  # 灵魂链接文本相关
+    "soullink_collection": "SoullinkCollection.json",  # 灵魂链接数值相关
+    "gacha": "Gacha.json",  # 抽卡相关
+    "guild_raid": "GuildRaid.json",  # 工会讨伐boss相关
+    "guild_raid_affix": "GuildRaidAffix.json",  # 工会讨伐boss词条相关
+    "single_raid_boss": "SingleRaidBoss.json",  # 恶灵讨伐BOSS
+    "single_raid": "SingleRaid.json",  # 恶灵讨伐
+    "single_raid_boss_level_grade": "SingleRaidBossLevelGrade.json",  # 恶灵讨伐BOSS等级
+    "single_raid_schedule": "SingleRaidSchedule.json",  # 恶灵讨伐日程(记录了赛季，以及日程键值)
+    "single_raid_season": "SingleRaidSeason.json",  # 恶灵讨伐赛季
+    "single_raid_boss_interaction_detail": "SingleRaidBossInteractionDetail.json",  # 恶灵讨伐开场白角色
+    "single_raid_boss_groggy_trigger": "SingleRaidBossGroggyTrigger.json",  # 恶灵讨伐护盾削减系数
+    "single_raid_boss_groggy_condition": "SingleRaidBossGroggyCondition.json",  # 恶灵讨伐各类CCBuff削减系数定义
+    "single_raid_season_gimmick": "SingleRaidSeasonGimmick.json",  # 恶灵讨伐特殊之人
+    "world_raid_boss": "WorldRaidBoss.json",  # 世界讨伐boss相关
+    "zodiac": "Zodiac.json",  # 星座
+}
 
 # 资源路径
 RESOURCE_DIR = Path(__file__).parent / "resource"

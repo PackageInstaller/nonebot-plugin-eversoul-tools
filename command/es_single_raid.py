@@ -17,7 +17,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         group_id = get_group_id(event)
 
         # 加载数据
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es恶灵讨伐信息")
         config = await get_group_data_source(group_id)
         server = config.get("server", "global")
         # 查找角色数据

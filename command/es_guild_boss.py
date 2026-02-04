@@ -11,7 +11,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         group_id = get_group_id(event)
         config = await get_group_data_source(group_id)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es工会BOSS信息")
 
         # 确定使用哪个别名文件
         server = config.get("server", "global")

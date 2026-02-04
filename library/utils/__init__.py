@@ -159,6 +159,8 @@ from .es_data_utils import (
     sync_aliases,
     generate_aliases,
     process_json_files,
+    LazyJsonData,
+    JSON_FILE_MAPPING,
 )
 
 

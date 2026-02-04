@@ -6,7 +6,7 @@ async def handle(bot: Bot, event: Event):
     """处理好感等级信息查询"""
     try:
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es好感等级信息")
         if not data.get("love_level") or not data["love_level"].get("json"):
             await es_love_level.finish("未找到好感等级数据，请检查数据源配置！")
         html = await generate_love_level_html(data)

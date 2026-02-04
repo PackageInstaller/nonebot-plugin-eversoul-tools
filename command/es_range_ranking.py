@@ -5,7 +5,7 @@ from ..library.utils import *
 async def handle(bot: Bot, event: Event):
     try:
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es攻击范围排行")
 
         range_info = []
         unknown_range = []

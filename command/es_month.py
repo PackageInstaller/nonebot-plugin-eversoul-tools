@@ -30,7 +30,7 @@ async def handle_es_month(bot: Bot, event: Event, args: Message = CommandArg()):
         
         # 加载数据
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es日程信息")
 
         # 获取服务器配置
         config = await get_group_data_source(group_id)

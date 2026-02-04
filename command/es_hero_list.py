@@ -7,7 +7,7 @@ async def handle(bot: Bot, event: Event):
     try:
         # 加载数据
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es角色列表")
 
         # 加载别名配置
         aliases_data = {}

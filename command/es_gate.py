@@ -10,7 +10,7 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
 
         # 加载数据
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es传送门信息")
 
         # 从Barrier.json获取传送门基本信息
         barrier_info = None

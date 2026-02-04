@@ -26,7 +26,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             levels.extend([levels[0]] * (7 - len(levels)))
 
         group_id = get_group_id(event)
-        data = await load_json_data(group_id)
+        data = await load_json_data(group_id, command_name="es方舟等级信息")
 
         ark_types = {
             110051: {"level": levels[0], "arks": []},  # 主方舟
