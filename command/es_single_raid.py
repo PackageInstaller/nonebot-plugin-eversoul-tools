@@ -23,7 +23,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 hero_aliases_data = yaml.safe_load(f) or {"names": []}
 
         hero_ids = None
-        # 步骤1：先在角色别名中查找
+        # 先在角色别名中查找
         matched_hero_id = hero_alias_map.get(input_text)
         if not matched_hero_id and input_text.isascii():
             matched_hero_id = hero_alias_map.get(input_text.lower())
@@ -45,13 +45,13 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                         f"通过角色「{input_text}」的韩文名「{kr_name}」找到恶灵"
                     )
 
-        # 步骤2：如果角色别名中没找到，直接在恶灵别名中查找
+        # 直接在恶灵别名中查找
         if not hero_ids:
             hero_ids = raid_alias_map.get(input_text)
             if not hero_ids and input_text.isascii():
                 hero_ids = raid_alias_map.get(input_text.lower())
 
-        # 步骤3：如果都没找到，尝试模糊匹配
+        # 尝试模糊匹配
         if not hero_ids:
             # 合并两个别名表的所有名称用于模糊匹配
             all_names = list(
@@ -332,12 +332,13 @@ async def _show_raid_info(
                         buff_type,
                         status_name,
                     ) in SINGLE_RAID_GROGGY_TYPE_MAPPING.items():
-                        if (buff_type - 201) & 0xFFFFFFFF <= 6 and (
-                            ((0x63 >> ((buff_type + 55) % 32)) & 1) != 0
-                        ):
-                            groggy_info.append(
-                                f"{status_name}类技能：{await format_value(groggy.get(f'value_{SINGLE_RAID_GROGGY_REDUCE_MAPPING[buff_type - 201]}'), True)}"
-                            )
+                        if (buff_type - 201) & 0xFFFFFFFF <= 6 and (((0x63 >> ((buff_type + 55) % 32)) & 1) != 0):
+                            mapping_index = SINGLE_RAID_GROGGY_REDUCE_MAPPING[buff_type - 201]
+                            val = groggy.get(f"value_{mapping_index}")
+                            if val:
+                                groggy_info.append(
+                                    f"{status_name}类技能：{await format_value(val, True)}"
+                                )
         else:
             for groggy_trigger in data["single_raid_boss_groggy_trigger"]["json"]:
                 if groggy_trigger.get("single_raid_boss_no") == boss_data.get("no"):
