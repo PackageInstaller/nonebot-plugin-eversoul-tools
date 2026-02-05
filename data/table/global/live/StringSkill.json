@@ -39194,10 +39194,10 @@
     },
     {
       "no": 356545,
-      "kr": "하늘에서 운석을 떨어 뜨려 공격력 <654510.VALUE>의 피해를 입히고 모든 적에게 <종말의 나팔> 상태를 영구적으로 부여한다.\r\n\r\n이후 아폴리온은 6초 마다 <color=#FFFFFF><종말의 나팔></color> 대상자에게 모든 속성 피해를 지닌 검을 떨어뜨려 공격력 <654416.VALUE>의 화상/빙결/저주/감전/출혈/냉기 속성 피해를 각 속성 별 피해로 가한다.(총 <color=#E67373>660%</color> 피해)",
-      "en": "Calls down meteorites from the sky, dealing damage equal to <654510.VALUE> of ATK to all enemies and permanently inflicting <color=#FFFFFF>\"Trumpet of the End\"</color> on them.\r\n\r\nThen, Apollyon drops a sword with all damage types upon the <color=#FFFFFF>\"Trumpet of the End\"</color> targets every 6 sec, dealing Burn/Frost/Curse/Shock/Bleeding/Freeze damage equal to <654416.VALUE> of ATK each (<color=#E67373>660%</color> total).",
+      "kr": "하늘에서 운석을 떨어 뜨려 공격력 <654510.VALUE>의 피해를 입히고 모든 적에게 <종말의 나팔> 상태를 영구적으로 부여한다.\r\n\r\n이후 아폴리온은 6초 마다 <color=#FFFFFF><종말의 나팔></color> 대상자에게 모든 속성 피해를 지닌 검을 떨어뜨려 공격력 <654416.VALUE>의 화상/중독/저주/감전/출혈/냉기 속성 피해를 각 속성 별 피해로 가한다.(총 <color=#E67373>660%</color> 피해)",
+      "en": "Calls down meteorites from the sky, dealing damage equal to <654510.VALUE> of ATK to all enemies and permanently inflicting <color=#FFFFFF>\"Trumpet of the End\"</color> on them.\r\n\r\nThen, Apollyon drops a sword with all damage types upon the <color=#FFFFFF>\"Trumpet of the End\"</color> targets every 6 sec, dealing Burn/Poison/Curse/Shock/Bleeding/Freeze damage equal to <654416.VALUE> of ATK each (<color=#E67373>660%</color> total).",
       "ja": "",
-      "zh_tw": "從天而降的隕石造成攻擊力<654510.VALUE>的傷害，並永久賦予所有敵人<color=#FFFFFF>＜末日的號角＞</color>狀態。\r\n\r\n之後，阿巴頓每6秒對<color=#FFFFFF>＜末日的號角＞</color>目標降下具所有屬性傷害的劍，造成攻擊力<654416.VALUE>的燒傷／凍結／詛咒／觸電／出血／寒氣各屬性傷害（總共<color=#E67373>660%</color>傷害）",
+      "zh_tw": "從天而降的隕石造成攻擊力<654510.VALUE>的傷害，並永久賦予所有敵人<color=#FFFFFF>＜末日的號角＞</color>狀態。\r\n\r\n之後，阿巴頓每6秒對<color=#FFFFFF>＜末日的號角＞</color>目標降下具所有屬性傷害的劍，造成攻擊力<654416.VALUE>的燒傷／中毒／詛咒／觸電／出血／寒氣各屬性傷害<color=#E67373>660%</color>傷害）",
       "zh_cn": ""
     },
     {
@@ -40098,10 +40098,10 @@
     },
     {
       "no": 358761,
-      "kr": "전투 시작 30초 후 하늘에서 운석을 떨어 뜨려 공격력 <654510.VALUE>의 피해를 입히고 모든 적에게 <종말의 나팔> 상태를 영구적으로 부여한다.\r\n\r\n이후 아폴리온은 6초 마다 <color=#FFFFFF><종말의 나팔></color> 대상자에게 모든 속성 피해를 지닌 검을 떨어뜨려 공격력 <654416.VALUE>의 화상/빙결/저주/감전/출혈/냉기 속성 피해를 각 속성 별 피해로 가한다.(총 <color=#E67373>660%</color> 피해)",
-      "en": "Calls down meteorites from the sky 30 sec into the battle, dealing damage equal to <654510.VALUE> of ATK to all enemies and permanently inflicting <color=#FFFFFF>\"Trumpet of the End\"</color> on them.\r\n\r\nThen, Apollyon drops a sword with all damage types upon the \"Trumpet of the End\" targets every 6 sec, dealing Burn/Frost/Curse/Shock/Bleeding/Freeze damage equal to <654416.VALUE> of ATK each (<color=#E67373>660%</color> total).",
+      "kr": "전투 시작 30초 후 하늘에서 운석을 떨어 뜨려 공격력 <654510.VALUE>의 피해를 입히고 모든 적에게 <종말의 나팔> 상태를 영구적으로 부여한다.\r\n\r\n이후 아폴리온은 6초 마다 <color=#FFFFFF><종말의 나팔></color> 대상자에게 모든 속성 피해를 지닌 검을 떨어뜨려 공격력 <654416.VALUE>의 화상/중독/저주/감전/출혈/냉기 속성 피해를 각 속성 별 피해로 가한다.(총 <color=#E67373>660%</color> 피해)",
+      "en": "Calls down meteorites from the sky 30 sec into the battle, dealing damage equal to <654510.VALUE> of ATK to all enemies and permanently inflicting <color=#FFFFFF>\"Trumpet of the End\"</color> on them.\r\n\r\nThen, Apollyon drops a sword with all damage types upon the \"Trumpet of the End\" targets every 6 sec, dealing Burn/Poison/Curse/Shock/Bleeding/Freeze damage equal to <654416.VALUE> of ATK each (<color=#E67373>660%</color> total).",
       "ja": "",
-      "zh_tw": "戰鬥開始30秒後，從天而降的隕石造成攻擊力<654510.VALUE>的傷害，並永久賦予所有敵人＜末日的號角＞狀態。\r\n\r\n之後，阿巴頓每6秒對<color=#FFFFFF>＜末日的號角＞</color>目標降下具所有屬性傷害的劍，造成攻擊力<654416.VALUE>的燒傷／凍結／詛咒／觸電／出血／寒氣各屬性傷害（總共<color=#E67373>660%</color> 傷害）",
+      "zh_tw": "戰鬥開始30秒後，從天而降的隕石造成攻擊力<654510.VALUE>的傷害，並永久賦予所有敵人＜末日的號角＞狀態。\r\n\r\n之後，阿巴頓每6秒對<color=#FFFFFF>＜末日的號角＞</color>目標降下具所有屬性傷害的劍，造成攻擊力<654416.VALUE>的燒傷／中毒／詛咒／觸電／出血／寒氣各屬性傷害（總共<color=#E67373>660%</color> 傷害）",
       "zh_cn": ""
     },
     {

@@ -152,6 +152,7 @@ es_world_raid_boss = on_command("es世界boss信息", priority=5, block=True)
 # 数据相关
 from .es_data_utils import (
     load_aliases,
+    load_raid_aliases,
     load_json_data,
     load_data_source_config,
     save_data_source_config,

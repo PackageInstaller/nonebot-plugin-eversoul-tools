@@ -35,9 +35,9 @@ commands:
     category: "关卡"
 
   # BOSS相关
-  - name: "es恶灵信息 + 恶灵ID"
+  - name: "es恶灵信息 + 恶灵名称"
     description: "查询恶灵讨伐BOSS的详细信息"
-    example: "es恶灵信息66009"
+    example: "es恶灵信息艾拉"
     category: "BOSS"
 
   - name: "es工会boss信息 + BOSS名称"

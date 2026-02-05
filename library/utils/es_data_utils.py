@@ -580,6 +580,68 @@ async def load_aliases(group_id=None):
     return alias_map
 
 
+async def load_raid_aliases(group_id=None):
+    """加载恶灵/讨伐别名配置
+    
+    Returns:
+        tuple: (alias_map, aliases_data)
+            - alias_map: 名称/别名 -> hero_id列表 的映射（同名恶灵可能有多个id）
+            - aliases_data: 原始yaml数据
+    """
+    config = await get_group_data_source(group_id)
+    data_type = config.get("type", "live")
+    raid_alias_file = CONFIG_DIR / f"{data_type}_raid_aliases.yaml"
+
+    if not raid_alias_file.exists():
+        return {}, {"names": []}
+
+    try:
+        with open(raid_alias_file, "r", encoding="utf-8") as f:
+            aliases_data = yaml.safe_load(f)
+            if not aliases_data or "names" not in aliases_data:
+                return {}, {"names": []}
+    except Exception as e:
+        logger.error(f"加载恶灵别名配置文件出错: {e}")
+        return {}, {"names": []}
+
+    # 创建别名到hero_id列表的映射（同名恶灵可能有多个id）
+    alias_map = {}
+    for raid in aliases_data["names"]:
+        if isinstance(raid, dict) and "hero_id" in raid:
+            hero_id = raid["hero_id"]
+            name_fields = ["zh_tw_name", "zh_cn_name", "kr_name", "en_name", "ja_name"]
+
+            for field in name_fields:
+                name = raid.get(field)
+                if name:
+                    if name not in alias_map:
+                        alias_map[name] = []
+                    if hero_id not in alias_map[name]:
+                        alias_map[name].append(hero_id)
+                    # 英文名添加小写版本
+                    if field == "en_name":
+                        name_lower = name.lower()
+                        if name_lower not in alias_map:
+                            alias_map[name_lower] = []
+                        if hero_id not in alias_map[name_lower]:
+                            alias_map[name_lower].append(hero_id)
+
+            # 添加所有别名
+            for alias in raid.get("aliases", []):
+                if alias not in alias_map:
+                    alias_map[alias] = []
+                if hero_id not in alias_map[alias]:
+                    alias_map[alias].append(hero_id)
+                if alias.isascii():
+                    alias_lower = alias.lower()
+                    if alias_lower not in alias_map:
+                        alias_map[alias_lower] = []
+                    if hero_id not in alias_map[alias_lower]:
+                        alias_map[alias_lower].append(hero_id)
+
+    return alias_map, aliases_data
+
+
 # 加载所需的JSON文件
 async def load_json_data(
     group_id: int = None, tables: list = None, command_name: str = "unknown"
