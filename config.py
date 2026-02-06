@@ -9,32 +9,6 @@ import json
 from typing import Dict
 
 
-def get_object_size(obj) -> int:
-    """
-    递归计算对象的内存占用（字节）
-    """
-    import sys
-
-    size = sys.getsizeof(obj)
-    if isinstance(obj, dict):
-        size += sum(get_object_size(k) + get_object_size(v) for k, v in obj.items())
-    elif isinstance(obj, (list, tuple, set, frozenset)):
-        size += sum(get_object_size(i) for i in obj)
-    return size
-
-
-def format_memory_size(size_bytes: int) -> str:
-    """
-    将字节数格式化为可读的内存大小
-    """
-    if size_bytes < 1024:
-        return f"{size_bytes} B"
-    elif size_bytes < 1024 * 1024:
-        return f"{size_bytes / 1024:.2f} KB"
-    else:
-        return f"{size_bytes / (1024 * 1024):.2f} MB"
-
-
 class LazyJsonData:
     """
     懒加载JSON数据的容器类
@@ -44,7 +18,6 @@ class LazyJsonData:
     def __init__(self, json_path: Path, command_name: str = "unknown"):
         self._json_path = json_path
         self._cache: Dict[str, dict] = {}
-        self._table_sizes: Dict[str, int] = {}  # 记录每个表的内存占用
         self._command_name = command_name  # 记录调用的命令名
 
     def __getitem__(self, key: str) -> dict:
@@ -56,10 +29,6 @@ class LazyJsonData:
     def __contains__(self, key: str) -> bool:
         """检查键是否存在于映射表中"""
         return key in JSON_FILE_MAPPING
-
-    def __del__(self):
-        """析构函数，打印本次执行的统计信息"""
-        self._print_stats()
 
     def get(self, key: str, default=None):
         """获取数据，如果不存在则返回默认值"""
@@ -75,7 +44,6 @@ class LazyJsonData:
         if key not in JSON_FILE_MAPPING:
             logger.warning(f"未知的JSON表: {key}")
             self._cache[key] = {"json": []}
-            self._table_sizes[key] = 0
             return
 
         filename = JSON_FILE_MAPPING[key]
@@ -85,52 +53,18 @@ class LazyJsonData:
             with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 self._cache[key] = data
-                # 计算内存占用
-                size = get_object_size(data)
-                self._table_sizes[key] = size
         except FileNotFoundError:
             logger.warning(f"JSON文件不存在: {filename}")
             self._cache[key] = {"json": []}
-            self._table_sizes[key] = 0
         except Exception as e:
             logger.error(f"加载JSON文件出错: {filename}, 错误: {e}")
             self._cache[key] = {"json": []}
-            self._table_sizes[key] = 0
 
     def preload(self, keys: list):
         """预加载指定的表"""
         for key in keys:
             if key not in self._cache:
                 self._load_table(key)
-
-    def clear_cache(self):
-        """清除缓存"""
-        self._cache.clear()
-        self._table_sizes.clear()
-
-    @property
-    def loaded_tables(self) -> list:
-        """返回已加载的表名列表"""
-        return list(self._cache.keys())
-
-    @property
-    def total_memory(self) -> int:
-        """返回总内存占用（字节）"""
-        return sum(self._table_sizes.values())
-
-    def _print_stats(self):
-        """打印统计信息"""
-        if not self._cache:
-            return
-
-        total_size = self.total_memory
-        table_count = len(self._cache)
-        tables_str = ", ".join(self._cache.keys())
-        logger.warning(
-            f"[{self._command_name}] 数据加载统计: "
-            f"共加载 {table_count} 个表 ({tables_str}), "
-            f"表内存占用: {format_memory_size(total_size)},"
-        )
 
 
 class Config(BaseModel):

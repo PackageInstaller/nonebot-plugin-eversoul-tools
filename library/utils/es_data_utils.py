@@ -10,34 +10,6 @@ from ...config import *
 driver = get_driver()
 
 
-async def on_alias_file_changed(file_path: Path):
-    """当 alias 文件变化时的回调函数"""
-    try:
-        logger.info(f"检测到别名文件变更: {file_path}")
-
-        # 判断是哪个文件变化了
-        if file_path.name == "live_hero_aliases.yaml":
-            target_file = CONFIG_DIR / "review_hero_aliases.yaml"
-            logger.info("同步 live_hero_aliases.yaml -> review_hero_aliases.yaml")
-        elif file_path.name == "live_raid_aliases.yaml":
-            target_file = CONFIG_DIR / "review_raid_aliases.yaml"
-            logger.info("同步 live_raid_aliases.yaml -> review_raid_aliases.yaml")
-        else:
-            return
-
-        # 检查目标文件是否存在
-        if not target_file.exists():
-            logger.warning(f"目标文件不存在: {target_file}")
-            return
-
-        # 执行同步
-        await sync_aliases(file_path, target_file)
-        logger.info(f"别名同步完成: {file_path.name} -> {target_file.name}")
-
-    except Exception as e:
-        logger.error(f"同步别名文件时出错: {e}")
-
-
 @driver.on_startup
 async def init_plugin():
     """插件启动时初始化"""
