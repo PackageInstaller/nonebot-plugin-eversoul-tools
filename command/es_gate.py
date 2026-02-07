@@ -136,11 +136,12 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                         if ult_priority := team.get(f"ultimate_autosetting_{i}"):
                             messages.append(f"・终极技能优先级：{ult_priority}")
 
-                    # 检查遗物信息
-                    if sig_level := team.get("signature_level"):
-                        messages.append(f"・遗物等级：{sig_level}")
-                    if sig_skill_level := team.get("signature_skill_level"):
-                        messages.append(f"・遗物技能等级：{sig_skill_level}")
+                        # 检查遗物信息
+                        if sig_level := team.get("signature_level"):
+                            messages.append(f"・遗物等级：{sig_level}")
+                        if sig_skill_level := team.get("signature_skill_level"):
+                            messages.append(f"・遗物技能等级：{sig_skill_level}")
+
                     messages.append("-" * 25)
 
             if messages:
