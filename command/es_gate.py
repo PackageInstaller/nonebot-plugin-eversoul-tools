@@ -22,14 +22,11 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
         if not barrier_info:
             await es_gate.finish(f"未找到{gate_type}型传送门信息")
 
-        race_restriction = next(
-            (
-                s.get("zh_tw", "")
-                for s in data["string_system"]["json"]
-                if s["no"] == barrier_info.get("restrictions_race_sno")
-            ),
-            "",
-        )
+        race_restriction = (
+            await get_string_by_type(
+                data, "system", barrier_info.get("restrictions_race_sno")
+            )
+        )["zh_tw"]
 
         # 获取开放日期
         open_days = barrier_info.get("open_day", "").split(",")
@@ -48,26 +45,21 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
         if not gate_infos:
             await es_gate.finish(f"未找到编号为 {stage_no} 的{gate_type}传送门")
 
-        # 对每个传送门生成信息
-        all_messages = []
+        # 生成消息列表
+        forward_nodes = []
 
-        # 添加传送门基本信息
-        all_messages.append(f"开放日期：{open_days_str}\n")
+        # 1. 添加头部信息（开放日期、种族限制）
+        header_lines = []
+        header_lines.append(f"开放日期：{open_days_str}")
         if race_restriction:
-            all_messages.append(f"限制种族：{race_restriction}")
+            header_lines.append(f"限制种族：{race_restriction}")
+        
+        if header_lines:
+            forward_nodes.append("\n".join(header_lines))
 
+        # 2. 对每个传送门生成独立的消息
         for gate_info in gate_infos:
             messages = []
-
-            # 获取关卡名称
-            name_sno = gate_info.get("name_sno")
-            stage_name = ""
-            for string in data["string_stage"]["json"]:
-                if string["no"] == name_sno:
-                    stage_name = string.get("zh_tw", "未知")
-                    stage_name = stage_name.format(stage_no)
-                    break
-
             # 获取奖励信息
             rewards = []
             for i in range(1, 3):
@@ -151,10 +143,9 @@ async def handle(bot: Bot, event: Event, matched: Tuple[Any, ...] = RegexGroup()
                         messages.append(f"・遗物技能等级：{sig_skill_level}")
                     messages.append("-" * 25)
 
-            all_messages.extend(messages)
-
-        # 发送合并转发消息（合并成一条）
-        await send_forward_messages(bot, event, ["\n".join(all_messages)])
+            if messages:
+                forward_nodes.append("\n".join(messages).strip())
+        await send_forward_messages(bot, event, forward_nodes)
 
     except Exception as e:
         if not isinstance(e, FinishedException):

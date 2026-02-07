@@ -1,6 +1,6 @@
 matplotlib
-nonebot_plugin_htmlrender
 aiosqlite
 aiohttp
 flatbuffers
 google-play-scraper
+pycryptodome
