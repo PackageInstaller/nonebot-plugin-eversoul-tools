@@ -252,7 +252,7 @@ async def handle(bot: Bot, event: Event):
 
     pic = await html_to_pic(html, viewport={"width": 1000, "height": 10})
 
-    text_info = """【腾讯文档】永恒灵魂(空灵诗篇)攻略推广
+    text_info = """【腾讯文档】永恒灵魂(空灵诗篇)攻略合集在线查询
 https://docs.qq.com/doc/DY2VBTFFZUHVLZ25H
 Powered by 少姜
 欢迎推广，致力于做最好的es攻略机器人（实际上也确实是最好的）

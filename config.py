@@ -15,7 +15,7 @@ class LazyJsonData:
     只有在访问具体表时才会加载对应的JSON文件
     """
 
-    def __init__(self, json_path: Path, command_name: str = "unknown"):
+    def __init__(self, json_path: Path, command_name: str = "不明命令"):
         self._json_path = json_path
         self._cache: Dict[str, dict] = {}
         self._command_name = command_name  # 记录调用的命令名
