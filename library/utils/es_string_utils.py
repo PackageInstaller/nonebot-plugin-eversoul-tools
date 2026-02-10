@@ -2682,6 +2682,7 @@ async def get_character_story(data, hero_id):
 
         for story in data["story_info"]["json"]:
             if "act" in story and story["act"] == hero_id:
+                # 有三种结局
                 if story["episode"] in [8, 9, 10]:
                     ending_episodes.append(story)
                 else:

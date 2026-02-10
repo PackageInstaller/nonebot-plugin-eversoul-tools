@@ -1715,6 +1715,32 @@ async def get_battle_power_percentage(
                 return buff.get("battle_power_per", 0)
 
 
+def get_unique_level(unique_type: int, level: int) -> int:
+    """获取潜能Unique等级
+    HeroOptionInfoExtension_UniqueLevel__Enum Info::HeroOptionInfoExtension::GetUniqueLevel
+    Args:
+        unique_type: 潜能Unique类型
+        level: 潜能等级
+
+    Returns:
+        int: Unique等级 (1-4)
+    """
+    # 废弃了
+    if unique_type == 3:
+        if level >= 1:  # HeroOptionUniqueLevel = 1
+            return 4
+
+    # 现在用的
+    if unique_type == 2:
+        if level >= 16:  # HeroOptionHighLevel4 = 16
+            return 4
+        if level >= 11:  # HeroOptionHighLevel3 = 11
+            return 3
+        if level >= 6:  # HeroOptionHighLevel2 = 6
+            return 2
+    return 1
+
+
 async def generate_potential_html(data: dict) -> str:
     """生成潜能信息HTML"""
     try:
@@ -1733,6 +1759,7 @@ async def generate_potential_html(data: dict) -> str:
                         option.get("effect_type", 0),
                         option.get("effect_no1", 0),
                         option.get("option", 0),
+                        option.get("unique", 0),
                     )
                 )
 
@@ -1796,7 +1823,7 @@ async def generate_potential_html(data: dict) -> str:
         max_level = max(
             level
             for tooltip_sno in potentials
-            for level, _, _, _ in potentials[tooltip_sno]
+            for level, _, _, _, _ in potentials[tooltip_sno]
         )
         for level in range(1, max_level + 1):
             html += f"<th>Lv.{level}</th>"
@@ -1808,21 +1835,31 @@ async def generate_potential_html(data: dict) -> str:
         ):  # 修改排序键为x[0]
             html += f"<tr><td class='potential-name'>{name}</td>"
             level_data = {
-                level: (effect_type, effect_no, option)
-                for level, effect_type, effect_no, option in potentials[tooltip_sno]
+                level: (effect_type, effect_no, option, unique)
+                for level, effect_type, effect_no, option, unique in potentials[tooltip_sno]
             }
             for level in range(1, max_level + 1):
                 if level in level_data:
-                    effect_type, effect_no, option = level_data[level]
+                    effect_type, effect_no, option, unique = level_data[level]
                     value = await get_potential_value(data, effect_type, effect_no)
                     battle_power_per = await get_battle_power_percentage(
                         data, effect_type, effect_no
                     )
 
+                    # 获取颜色样式
+                    unique_level = get_unique_level(unique, level)
+                    color_style = ""
+                    if unique_level == 4:
+                        color_style = "color: #FF8B99;"
+                    elif unique_level == 3:
+                        color_style = "color: #5DA4FF;"
+                    elif unique_level == 2:
+                        color_style = "color: #67CFB6;"
+
                     if battle_power_per:
-                        html += f"<td class='value-cell'>{value}<br><span class='power-value'>+{battle_power_per}</span></td>"
+                        html += f"<td class='value-cell' style='{color_style}'>{value}<br><span class='power-value'>+{battle_power_per}</span></td>"
                     else:
-                        html += f"<td>{value}</td>"
+                        html += f"<td style='{color_style}'>{value}</td>"
                 else:
                     html += "<td>-</td>"
 
