@@ -616,7 +616,7 @@ async def load_raid_aliases(group_id=None):
 
 # 加载所需的JSON文件
 async def load_json_data(
-    group_id: int = None, tables: list = None, command_name: str = "unknown"
+    group_id: int = None, command_name: str = "unknown"
 ) -> LazyJsonData:
     """
     加载JSON数据（懒加载模式）
@@ -657,10 +657,6 @@ async def load_json_data(
 
     # 创建懒加载容器
     lazy_data = LazyJsonData(json_path, command_name)
-
-    # 如果指定了需要预加载的表，则预加载
-    if tables:
-        lazy_data.preload(tables)
 
     return lazy_data
 

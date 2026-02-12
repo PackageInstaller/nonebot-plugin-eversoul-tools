@@ -167,41 +167,48 @@ names:
     ja_name: ''
     aliases: []
     hero_id: 8700
-  - zh_tw_name: ''
+  - zh_tw_name: 願望小偷歐妮絲
     zh_cn_name: ''
     kr_name: 소원 도둑 오닉스
-    en_name: ''
+    en_name: Wish Thief Onyx
     ja_name: ''
     aliases: []
     hero_id: 8710
-  - zh_tw_name: ''
+  - zh_tw_name: 願望小偷歐妮絲
     zh_cn_name: ''
     kr_name: 소원 도둑 오닉스
-    en_name: ''
+    en_name: Wish Thief Onyx
     ja_name: ''
     aliases: []
     hero_id: 8720
-  - zh_tw_name: ''
+  - zh_tw_name: 願望小偷歐妮絲
     zh_cn_name: ''
     kr_name: 소원 도둑 오닉스
-    en_name: ''
+    en_name: Wish Thief Onyx
     ja_name: ''
     aliases: []
     hero_id: 8730
-  - zh_tw_name: ''
+  - zh_tw_name: 願望小偷歐妮絲
     zh_cn_name: ''
     kr_name: 소원 도둑 오닉스
-    en_name: ''
+    en_name: Wish Thief Onyx
     ja_name: ''
     aliases: []
     hero_id: 8740
-  - zh_tw_name: ''
+  - zh_tw_name: 願望小偷歐妮絲
     zh_cn_name: ''
     kr_name: 소원 도둑 오닉스
-    en_name: ''
+    en_name: Wish Thief Onyx
     ja_name: ''
     aliases: []
     hero_id: 8750
+  - zh_tw_name: 末日天使
+    zh_cn_name: ''
+    kr_name: 종말의 천사
+    en_name: Angel of the End
+    ja_name: ''
+    aliases: []
+    hero_id: 8760
   - zh_tw_name: 艾拉
     zh_cn_name: 艾拉
     kr_name: 아이라

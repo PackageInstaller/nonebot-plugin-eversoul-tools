@@ -3,6 +3,12 @@ from ..library.utils import *
 
 @es_hero.handle()
 async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
+    """
+    以上三个属性受品质以及等级加成影响，具体公式为
+    int((math.ceil(品质加成率 * 100) / 100) * (基础属性 + 每级提升属性 * (等级 - 1)) * 等级加成率)
+    下面两个属性则是线性增长，具体公式为
+    int(基础属性 + 每级提升属性 * (等级 - 1))
+    """
     try:
         # 获取输入的文本并提取角色名
         hero_name = args.extract_plain_text().strip()
@@ -107,7 +113,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 break
 
         if not hero_data:
-            await es_hero.finish("未找到该角色信息")
+            await es_hero.finish(
+                f"未找到该角色信息\n当前数据源为：{server}_{data_type}"
+            )
         # 获取角色名称
         if hero_data["name_sno"]:
             name_data = await get_string_character(data, hero_data["name_sno"])
@@ -154,13 +162,13 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         basic_info_msg = []
         basic_info_msg.append("【基础信息】")
-        portrait_paths = await get_character_portrait(
-            data, hero_id
-        )
+        portrait_paths = await get_character_portrait(data, hero_id)
         if portrait_paths:
             for portrait_path in portrait_paths:
                 if os.path.exists(portrait_path):
-                    basic_info_msg.append(MessageSegment.image(f"file:///{portrait_path}"))
+                    basic_info_msg.append(
+                        MessageSegment.image(f"file:///{portrait_path}")
+                    )
 
         # 获取CV信息
         cv_info = await get_character_cv(data, hero_desc)
@@ -199,18 +207,22 @@ CV_KR：{cv_kr}"""
 攻击力：{int(hero_data.get('attack', 0))} + {int(hero_data.get('inc_attack', 0))}/级
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
-以上三个属性受品质以及等级加成影响，具体公式为
-int((math.ceil(品质加成率 * 100) / 100) * (基础属性 + 每级提升属性 * (等级 - 1)) * 等级加成率)
-下面两个属性则是线性增长，具体公式为
-int(基础属性 + 每级提升属性 * (等级 - 1))
 暴击率：{hero_data.get('critical_rate', 0) * 100:.1f}% + {hero_data.get('inc_critical_rate', 0) * 100:.3f}%/级
 暴击威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
-        
+
         # 添加属性排名信息
         basic_info_zh_tw += f"\n同职业基础属性排名："
-        for stat_key in ["attack", "defence", "max_hp", "critical_rate", "critical_power"]:
+        for stat_key in [
+            "attack",
+            "defence",
+            "max_hp",
+            "critical_rate",
+            "critical_power",
+        ]:
             rank_info = stats_ranking[stat_key]
-            basic_info_zh_tw += f"\n{rank_info['name']}：第{rank_info['rank']}/{rank_info['total']}名"
+            basic_info_zh_tw += (
+                f"\n{rank_info['name']}：第{rank_info['rank']}/{rank_info['total']}名"
+            )
         basic_info_msg.append(basic_info_zh_tw)
         messages.append("".join(str(x) for x in basic_info_msg))
 
@@ -221,7 +233,7 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
                 if images:
                     image_msg = []
                     image_msg.append("【立绘】")
-                    
+
                     for img_info in images:
                         display_name = await select_text_by_priority(
                             img_info["display_name_tw"],
@@ -229,7 +241,7 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
                             img_info["display_name_kr"],
                             img_info["display_name_en"],
                             server,
-                            data_type
+                            data_type,
                         )
                         condition_text = await select_text_by_priority(
                             img_info["condition_tw"],
@@ -237,7 +249,7 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
                             img_info["condition_kr"],
                             img_info["condition_en"],
                             server,
-                            data_type
+                            data_type,
                         )
                         desc_text = await select_text_by_priority(
                             img_info["desc_tw"],
@@ -245,14 +257,16 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
                             img_info["desc_kr"],
                             img_info["desc_en"],
                             server,
-                            data_type
+                            data_type,
                         )
                         # 构建显示文本
                         display_text = f"{display_name}\n解锁条件: {condition_text}"
                         if desc_text:
                             display_text += f"\n描述: {desc_text}"
                         image_msg.append(display_text)
-                        image_msg.append(MessageSegment.image(f"file:///{img_info['img_path']}"))
+                        image_msg.append(
+                            MessageSegment.image(f"file:///{img_info['img_path']}")
+                        )
                     messages.append("\n".join(str(x) for x in image_msg))
                 break
 
@@ -303,7 +317,9 @@ int(基础属性 + 每级提升属性 * (等级 - 1))
         # 添加好感故事攻略
         has_story, episode_info, endings = await get_character_story(data, hero_id)
         if has_story:
-            messages.append(await format_character_story(episode_info, endings, server, data_type))
+            messages.append(
+                await format_character_story(episode_info, endings, server, data_type)
+            )
 
         # 好感故事CG
         cg_images = await get_character_affection_cg(data, hero_id, server, data_type)

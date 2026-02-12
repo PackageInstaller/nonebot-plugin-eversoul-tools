@@ -271,7 +271,7 @@ names:
     kr_name: 루테
     en_name: Lute
     ja_name: ルーテ
-    aliases: [羊羊, 綿羊, 佐巴羊]
+    aliases: [羊羊, 綿羊, 佐巴羊, 小羊人]
     hero_id: 2100
   - zh_tw_name: 克拉拉
     zh_cn_name: 克拉拉
@@ -651,6 +651,13 @@ names:
     ja_name: ニア
     aliases: [你呀, 尼亚, 妮娅, 火龙, 尼德, 捏, 贞德是腻鸭, 毒龙]
     hero_id: 6060
+  - zh_tw_name: ''
+    zh_cn_name: ''
+    kr_name: 아야메(츠쿠요미)
+    en_name: Ayame(Tsukuyomi)
+    ja_name: ''
+    aliases: []
+    hero_id: 6070
   - zh_tw_name: 異次元精髓
     zh_cn_name: 异次元精髓
     kr_name: 이차원의 정수
@@ -679,10 +686,10 @@ names:
     ja_name: メフィストフェレス(暁)
     aliases: [菲姬, 牢梅, 黎梅, 飞机, 黎梅菲, 暗梅菲, 界梅菲, 李梅, 大梅妃, 飛機, 界梅妃, 大梅菲, 光梅菲]
     hero_id: 6530
-  - zh_tw_name: ''
+  - zh_tw_name: 尤里婭（阿巴頓）
     zh_cn_name: ''
     kr_name: 유리아(아폴리온)
-    en_name: ''
+    en_name: Yuria (Apollyon)
     ja_name: ''
     aliases: [界女王, 界尤里娅, 大尤里娅, 阿巴顿, 亚巴顿, 哑巴, 黑女王, abd]
     hero_id: 6540
