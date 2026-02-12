@@ -76,7 +76,16 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         # 加载数据
         data = await load_json_data(group_id, command_name="es恶灵讨伐信息")
-        server = config.get("server", "global")
+        # 只保留在 single_raid_boss 中有匹配的 hero_id
+        valid_boss_nos = {
+            boss.get("boss_no")
+            for boss in data["single_raid_boss"]["json"]
+            if boss.get("boss_no") is not None
+        }
+        hero_ids = [hid for hid in hero_ids if hid in valid_boss_nos]
+
+        if not hero_ids:
+            await es_single_raid.finish(f"未找到恶灵「{input_text}」的讨伐信息")
 
         # 在所有匹配的hero_id中，找到single_raid_boss中boss_max_level最大的
         best_boss = None
@@ -153,6 +162,7 @@ async def _show_raid_info(
     data = await load_json_data(group_id, command_name="es恶灵讨伐信息")
     config = await get_group_data_source(group_id)
     server = config.get("server", "global")
+    data_type = config.get("data_type", "live")
 
     # 查找角色数据
     hero_data = None
@@ -398,5 +408,57 @@ async def _show_raid_info(
         basic_info.append(f"\n【讨伐攻略】\n{await clean_rich_text(guide_text)}")
 
     messages.append("\n".join(str(x) for x in basic_info))
+
+    # 获取技能信息（使用通用函数）
+    skill_keys = [
+        "skill_no_1",
+        "skill_no_2",
+        "skill_no_3",
+        "skill_no_4",
+        "ultimate_skill_no",
+    ]
+    
+    skills_data = await get_skills_info(
+        data, hero_data, skill_keys, server, data_type
+    )
+
+    # 技能释放顺序
+    if skills_data["skill_pattern"]:
+        pattern_text = ["【技能释放顺序】"]
+        for i, (skill_name, skill_type) in enumerate(skills_data["skill_pattern"], 1):
+            pattern_text.append(f"{i}. [{skill_type}] {skill_name}")
+        messages.append("\n".join(pattern_text))
+
+    # 技能详情
+    for skill_data in skills_data["skills"]:
+        skill_info = skill_data["skill_info"]
+        skill_text = []
+
+        # 显示技能图标
+        if skill_info["icon_info"]:
+            icon_path = str(ICON_DIR / f"{skill_info['icon_info']['icon']}.png")
+            cache_filename = f"{skill_info['icon_info']['icon']}_{skill_info['icon_info']['color'].replace('#', '')}.png"
+            cache_path = str(ICON_DIR / cache_filename)
+
+            if os.path.exists(cache_path):
+                with open(cache_path, "rb") as f:
+                    colored_icon = f.read()
+            else:
+                colored_icon = await apply_color_to_icon(
+                    icon_path, skill_info["icon_info"]["color"]
+                )
+                with open(cache_path, "wb") as f:
+                    f.write(colored_icon)
+
+            skill_text.append(MessageSegment.image(colored_icon))
+
+        skill_text.append(f"【{skill_data['skill_type']}】{skill_data['skill_name']}")
+
+        # 格式化技能描述
+        descriptions = await format_skill_descriptions(skill_info, server, data_type)
+        for desc in descriptions:
+            skill_text.append(f"\n{desc['text']}{desc['unlock_text']}\n")
+
+        messages.append(skill_text)
 
     await send_forward_messages(bot, event, messages)
