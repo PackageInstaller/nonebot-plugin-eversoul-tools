@@ -2116,7 +2116,7 @@
       "index": 265,
       "schedule_key": "Cashshop_Heropass_Ayame",
       "schedule_type": 1,
-      "start_date": "2026-02-11 00:00:00",
+      "start_date": "2026-02-19 00:00:00",
       "end_date": "2026-03-26 00:00:00",
       "value_date_01": ""
     },
@@ -2124,7 +2124,7 @@
       "index": 266,
       "schedule_key": "Cashshop_Pickup_Ayametsu",
       "schedule_type": 1,
-      "start_date": "2026-02-11 00:00:00",
+      "start_date": "2026-02-19 00:00:00",
       "end_date": "2026-03-19 00:00:00",
       "value_date_01": ""
     },
@@ -2132,7 +2132,7 @@
       "index": 267,
       "schedule_key": "Cashshop_Event_spring3",
       "schedule_type": 1,
-      "start_date": "2026-02-11 00:00:00",
+      "start_date": "2026-02-19 00:00:00",
       "end_date": "2026-03-12 00:00:00",
       "value_date_01": ""
     },
