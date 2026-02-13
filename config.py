@@ -106,6 +106,17 @@ STAT_NAME_MAPPING = {
 # 属性限制映射
 STAT_TYPE_MAPPING = {"智力": 110044, "敏捷": 110043, "力量": 110042, "共用": 110041}
 
+# 世界boss名称与视频映射
+WORLD_RAID_NAME_MAPPING = ["Calender_Behemoth", "Calender_Kayrin", "Calender_Phares"]
+
+# 工会boss名称与视频映射
+GUILD_RAID_NAME_MAPPING = [
+    "Calender_GuildRaid_Charite",
+    "Calender_GuildRaid_Gaia",
+    "Calender_GuildRaid_Ruthra",
+    "Calender_GuildRaid_DarkKnight",
+    "Calender_GuildRaid_Pluto",
+]
 
 # 组合效果映射
 EFFECT_TYPE_MAPPING = {
@@ -313,6 +324,7 @@ JSON_FILE_MAPPING = {
 RESOURCE_DIR = Path(__file__).parent / "resource"
 # 添加数据源配置文件路径
 DATA_DIR = Path(__file__).parent / "data"
+
 CONFIG_DIR = DATA_DIR / "config"
 DATABASE_DIR = DATA_DIR / "database"
 COUPON_DIR = DATA_DIR / "coupon"
@@ -355,6 +367,8 @@ CURRENT_DATA_SOURCE = {
 # 字体路径
 FONT_DIR = RESOURCE_DIR / "font" / "Sarasa-Regular.ttc"
 CUSTOM_FONT = FontProperties(fname=FONT_DIR)
+# 视频路径
+MOVIE_DIR = RESOURCE_DIR / "movie"
 
 CG_DIR = RESOURCE_DIR / "image" / "cg"
 EVERTALK_DIR = RESOURCE_DIR / "image" / "evertalk"
@@ -364,3 +378,5 @@ TIER_DIR = RESOURCE_DIR / "image" / "tier"
 TOWN_DIR = RESOURCE_DIR / "image" / "town"
 BANNER_DIR = RESOURCE_DIR / "image" / "banner"
 STICKER_DIR = RESOURCE_DIR / "image" / "sticker"
+GUILD_RAID_DIR = MOVIE_DIR / "guildraid"
+WORLD_RAID_DIR = MOVIE_DIR / "worldraid"

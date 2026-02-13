@@ -23,6 +23,67 @@ def get_banner_suffix(server: str) -> str:
     return suffix_map.get(server, "ZH_TW")
 
 
+def _resolve_raid_video_path(base_dir: Path, filename: str, dir_name_hint: str) -> Path:
+    """解析 Raid 视频路径，兼容目录名大小写差异（如 guildraid vs GuildRaid）"""
+    path = base_dir / filename
+    if path.exists():
+        return path
+    # 尝试 alternate 目录名（config 可能是 guildraid，实际为 GuildRaid）
+    parent = base_dir.parent
+    candidates = (
+        ["GuildRaid", "guildraid"] if "Guild" in dir_name_hint else ["WorldRaid", "worldraid"]
+    )
+    for dir_name in candidates:
+        if parent / dir_name == base_dir:
+            continue
+        alt_path = parent / dir_name / filename
+        if alt_path.exists():
+            return alt_path
+    return path
+
+
+def _extract_raid_video_banner(video_path: Path, schedule_key: str) -> str:
+    """从 Raid 视频提取首帧并生成 400x200 banner 缩略图
+
+    缩略图保存在视频所在目录，与视频同名的 .png 文件。
+    若已存在该图片则直接使用，否则从视频提取首帧生成。
+
+    Args:
+        video_path: 视频文件路径
+        schedule_key: 活动 key（未使用，保留接口兼容）
+
+    Returns:
+        str: 缩略图绝对路径，失败返回空字符串
+    """
+    if not video_path or not video_path.exists():
+        return ""
+
+    # 缩略图与视频同目录、同名，扩展名为 .png
+    thumb_path = video_path.with_suffix(".png")
+    if thumb_path.exists():
+        return str(thumb_path.resolve())
+
+    try:
+        import cv2
+    except ImportError:
+        return ""
+
+    try:
+        cap = cv2.VideoCapture(str(video_path))
+        if not cap.isOpened():
+            return ""
+        ret, frame = cap.read()
+        cap.release()
+        if not ret or frame is None:
+            return ""
+
+        resized = cv2.resize(frame, (400, 200), interpolation=cv2.INTER_AREA)
+        cv2.imwrite(str(thumb_path), resized)
+        return str(thumb_path.resolve())
+    except Exception:
+        return ""
+
+
 async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
     """对图标应用颜色
 
@@ -753,7 +814,15 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
         server: 服务器类型 ("global", "cn", "jp")
     """
     from .es_string_utils import get_string_by_type
-    from ...config import HERO_NAME_MAPPING, STICKER_DIR, BANNER_DIR
+    from ...config import (
+        HERO_NAME_MAPPING,
+        STICKER_DIR,
+        BANNER_DIR,
+        WORLD_RAID_NAME_MAPPING,
+        GUILD_RAID_NAME_MAPPING,
+        WORLD_RAID_DIR,
+        GUILD_RAID_DIR,
+    )
 
     calendar_events_with_date = []
     now = datetime.now()
@@ -871,7 +940,16 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
                     break
 
         # 处理不同类型活动的banner
-        if schedule_key.startswith("Calender_SingleRaid_"):
+        # World Raid / Guild Raid: 从视频提取首帧作为 banner
+        if schedule_key in WORLD_RAID_NAME_MAPPING:
+            name = schedule_key.replace("Calender_", "")
+            video_path = _resolve_raid_video_path(WORLD_RAID_DIR, f"WorldRaid_{name}.mp4", "WorldRaid")
+            banner_path = _extract_raid_video_banner(video_path, schedule_key)
+        elif schedule_key in GUILD_RAID_NAME_MAPPING:
+            name = schedule_key.split("_")[-1]
+            video_path = _resolve_raid_video_path(GUILD_RAID_DIR, f"GuildeRaid_{name}.mp4", "GuildRaid")
+            banner_path = _extract_raid_video_banner(video_path, schedule_key)
+        elif schedule_key.startswith("Calender_SingleRaid_"):
             # 从schedule_key中提取角色名称：Calender_SingleRaid_HeroName
             parts = schedule_key.split("_")
             if len(parts) > 2:
@@ -1298,6 +1376,7 @@ async def generate_timeline_html(month: int, events: list) -> str:
 
             .section-title {{
                 margin-bottom: 1rem;
+                justify-content: center;
             }}
 
             /* 响应式布局 */
@@ -1322,7 +1401,7 @@ async def generate_timeline_html(month: int, events: list) -> str:
             {f'''
             <div class="mb-8">
                 <div class="flex flex_align_center section-title">
-                    <h2>特殊活动</h2>
+                    <h2 style="text-align: center;">特殊活动</h2>
                     <span class="icon"><i class="fa fa-pagelines"></i></span>
                 </div>
 
@@ -1345,7 +1424,7 @@ async def generate_timeline_html(month: int, events: list) -> str:
             {f'''
             <div class="mb-8">
                 <div class="flex flex_align_center section-title">
-                    <h2>一般活动</h2>
+                    <h2 style="text-align: center;">一般活动</h2>
                     <span class="icon"><i class="fa fa-pagelines"></i></span>
                 </div>
                 <div class="event-grid">
@@ -1412,23 +1491,30 @@ async def get_event_description(event):
 
 
 async def get_event_banner(event):
-    """获取事件banner图片路径"""
+    """获取事件banner图片路径（返回 file:// URL 供 HTML img src 使用）"""
     from ...config import STICKER_DIR, BANNER_DIR
+
+    no_image_path = (BANNER_DIR / "banner_No_Image.png").resolve().as_uri()
 
     lines = event.split("\n")
     for line in lines:
         if line.startswith("banner："):
             banner_path = line.replace("banner：", "").strip()
-            # 检查是否是联合作战的sticker图片或恶灵讨伐或邮箱事件的sticker图片
-            if (
+            # Raid 缩略图：banner_path 为绝对路径
+            if Path(banner_path).is_absolute():
+                full_path = Path(banner_path)
+            elif (
                 banner_path.startswith("sticker_eas_")
                 or banner_path.startswith("sticker_singleraid_")
                 or banner_path.startswith("sticker_love_")
             ):
-                return str(STICKER_DIR / banner_path)
+                full_path = STICKER_DIR / banner_path
             else:
-                return str(BANNER_DIR / banner_path)
-    return str(BANNER_DIR / "banner_No_Image.png")
+                full_path = BANNER_DIR / banner_path
+            if full_path.exists():
+                return full_path.resolve().as_uri()
+            return no_image_path
+    return no_image_path
 
 
 async def generate_ark_level_chart(data: dict, target_level: int) -> MessageSegment:

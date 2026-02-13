@@ -1,5 +1,6 @@
 matplotlib
 aiosqlite
+opencv-python-headless
 aiohttp
 flatbuffers
 google-play-scraper
