@@ -1,13 +1,37 @@
 from ..library.utils import *
 
 
+def _parse_single_raid_args(input_text: str) -> tuple[str, int | None]:
+    """解析恶灵名称和可选的等级参数。等级需 >= 100。
+
+    Returns:
+        (search_name, target_level): target_level 为 None 时使用默认最高等级
+    """
+    input_text = input_text.strip()
+    if not input_text:
+        return "", None
+    # 分离末尾数字
+    m = re.match(r"^(.+?)\s*(\d+)$", input_text)
+    if m:
+        name_part, num_str = m.group(1).strip(), m.group(2)
+        if num_str.isdigit():
+            level = int(num_str)
+            if level >= 100:
+                return name_part or input_text, level
+    return input_text, None
+
+
 @es_single_raid.handle()
 async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
     try:
         # 获取输入参数
         input_text = args.extract_plain_text().strip()
         if not input_text:
-            await es_single_raid.finish("请输入恶灵名称！\n示例：es恶灵信息 艾拉")
+            await es_single_raid.finish("请输入恶灵名称！\n示例：es恶灵信息 艾拉 或 es恶灵信息 艾拉 1500")
+
+        search_name, target_level = _parse_single_raid_args(input_text)
+        if not search_name:
+            await es_single_raid.finish("请输入恶灵名称！\n示例：es恶灵信息 艾拉 或 es恶灵信息 艾拉 1500")
 
         group_id = get_group_id(event)
         # 先从角色别名(hero aliases)中查找，如果找到则用kr名去恶灵别名中查找
@@ -24,9 +48,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         hero_ids = None
         # 先在角色别名中查找
-        matched_hero_id = hero_alias_map.get(input_text)
-        if not matched_hero_id and input_text.isascii():
-            matched_hero_id = hero_alias_map.get(input_text.lower())
+        matched_hero_id = hero_alias_map.get(search_name)
+        if not matched_hero_id and search_name.isascii():
+            matched_hero_id = hero_alias_map.get(search_name.lower())
 
         if matched_hero_id:
             # 找到角色，获取其kr_name
@@ -40,16 +64,16 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 # 用kr_name在恶灵别名中查找
                 hero_ids = raid_alias_map.get(kr_name)
                 if hero_ids:
-                    search_name = kr_name  # 更新搜索名称
                     logger.info(
-                        f"通过角色「{input_text}」的韩文名「{kr_name}」找到恶灵"
+                        f"通过角色「{search_name}」的韩文名「{kr_name}」找到恶灵"
                     )
+                    search_name = kr_name  # 更新搜索名称用于后续
 
         # 直接在恶灵别名中查找
         if not hero_ids:
-            hero_ids = raid_alias_map.get(input_text)
-            if not hero_ids and input_text.isascii():
-                hero_ids = raid_alias_map.get(input_text.lower())
+            hero_ids = raid_alias_map.get(search_name)
+            if not hero_ids and search_name.isascii():
+                hero_ids = raid_alias_map.get(search_name.lower())
 
         # 尝试模糊匹配
         if not hero_ids:
@@ -57,22 +81,22 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             all_names = list(
                 set(list(hero_alias_map.keys()) + list(raid_alias_map.keys()))
             )
-            if input_text.isascii():
+            if search_name.isascii():
                 matches = get_close_matches(
-                    input_text.lower(),
+                    search_name.lower(),
                     [n.lower() if n.isascii() else n for n in all_names],
                     n=3,
                     cutoff=0.6,
                 )
             else:
-                matches = get_close_matches(input_text, all_names, n=3, cutoff=0.6)
+                matches = get_close_matches(search_name, all_names, n=3, cutoff=0.6)
 
             if matches:
                 await es_single_raid.finish(
-                    f"未找到恶灵「{input_text}」\n您是否想查询：{', '.join(matches)}"
+                    f"未找到恶灵「{search_name}」\n您是否想查询：{', '.join(matches)}"
                 )
             else:
-                await es_single_raid.finish(f"未找到恶灵「{input_text}」")
+                await es_single_raid.finish(f"未找到恶灵「{search_name}」")
 
         # 加载数据
         data = await load_json_data(group_id, command_name="es恶灵讨伐信息")
@@ -85,25 +109,43 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         hero_ids = [hid for hid in hero_ids if hid in valid_boss_nos]
 
         if not hero_ids:
-            await es_single_raid.finish(f"未找到恶灵「{input_text}」的讨伐信息")
+            await es_single_raid.finish(f"未找到恶灵「{search_name}」的讨伐信息")
 
-        # 在所有匹配的hero_id中，找到single_raid_boss中boss_max_level最大的
+        # 选取 boss 条目：若指定了 target_level 则匹配该等级所在档位，否则取 boss_max_level 最大的
         best_boss = None
         best_hero_id = None
-        max_level = 0
 
-        for hid in hero_ids:
-            for boss in data["single_raid_boss"]["json"]:
-                if (
-                    boss.get("boss_no") == hid
-                    and boss.get("boss_max_level", 0) > max_level
-                ):
-                    max_level = boss.get("boss_max_level", 0)
-                    best_boss = boss
-                    best_hero_id = hid
+        if target_level is not None:
+            for hid in hero_ids:
+                for boss in data["single_raid_boss"]["json"]:
+                    if boss.get("boss_no") != hid:
+                        continue
+                    min_lv = boss.get("boss_min_level", 0)
+                    max_lv = boss.get("boss_max_level", 0)
+                    if min_lv <= target_level <= max_lv:
+                        best_boss = boss
+                        best_hero_id = hid
+                        break
+                if best_boss:
+                    break
+        else:
+            max_level = 0
+            for hid in hero_ids:
+                for boss in data["single_raid_boss"]["json"]:
+                    if (
+                        boss.get("boss_no") == hid
+                        and boss.get("boss_max_level", 0) > max_level
+                    ):
+                        max_level = boss.get("boss_max_level", 0)
+                        best_boss = boss
+                        best_hero_id = hid
 
         if not best_boss:
-            await es_single_raid.finish(f"未找到恶灵「{input_text}」的讨伐信息")
+            if target_level is not None:
+                await es_single_raid.finish(
+                    f"未找到恶灵「{search_name}」等级 {target_level} 的讨伐信息"
+                )
+            await es_single_raid.finish(f"未找到恶灵「{search_name}」的讨伐信息")
 
         # 获取level_group
         level_group = best_boss.get("level_group")
@@ -128,14 +170,16 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 schedules.append(schedule)
 
         if not schedules:
-            # 没有赛季信息，直接显示
-            await _show_raid_info(bot, event, group_id, best_hero_id, None)
+            await _show_raid_info(
+                bot, event, group_id, best_hero_id, None, target_level
+            )
             return
 
         if len(schedules) == 1:
-            # 只有一个赛季，直接显示
             await _show_raid_info(
-                bot, event, group_id, best_hero_id, schedules[0].get("season_no")
+                bot, event, group_id, best_hero_id,
+                schedules[0].get("season_no"),
+                target_level,
             )
             return
 
@@ -155,9 +199,14 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
 
 async def _show_raid_info(
-    bot: Bot, event: Event, group_id, hero_id: int, season_no: int = None
+    bot: Bot,
+    event: Event,
+    group_id,
+    hero_id: int,
+    season_no: int = None,
+    target_level: int = None,
 ):
-    """显示恶灵讨伐详细信息"""
+    """显示恶灵讨伐详细信息。target_level 指定时显示该等级的属性，否则使用档位最高等级。"""
     # 加载数据
     data = await load_json_data(group_id, command_name="es恶灵讨伐信息")
     config = await get_group_data_source(group_id)
@@ -174,13 +223,23 @@ async def _show_raid_info(
     if not hero_data:
         await es_single_raid.finish(f"未找到ID为{hero_id}的恶灵信息")
 
-    # 查找SingleRaidBoss数据，获取boss_max_level最大的那个
+    # 查找 SingleRaidBoss 数据：指定 target_level 时匹配该等级所在档位，否则取 boss_max_level 最大的
     boss_data = None
-    max_level = 0
-    for boss in data["single_raid_boss"]["json"]:
-        if boss.get("boss_no") == hero_id and boss.get("boss_max_level", 0) > max_level:
-            max_level = boss.get("boss_max_level", 0)
-            boss_data = boss
+    if target_level is not None:
+        for boss in data["single_raid_boss"]["json"]:
+            if boss.get("boss_no") != hero_id:
+                continue
+            min_lv = boss.get("boss_min_level", 0)
+            max_lv = boss.get("boss_max_level", 0)
+            if min_lv <= target_level <= max_lv:
+                boss_data = boss
+                break
+    else:
+        max_level = 0
+        for boss in data["single_raid_boss"]["json"]:
+            if boss.get("boss_no") == hero_id and boss.get("boss_max_level", 0) > max_level:
+                max_level = boss.get("boss_max_level", 0)
+                boss_data = boss
 
     if not boss_data:
         await es_single_raid.finish(f"未找到ID为{hero_id}的恶灵讨伐信息")
@@ -223,17 +282,17 @@ async def _show_raid_info(
         guide_data = await get_string_by_type(data, "ui", raid_data.get("guide_sno"))
         guide_text = guide_data.get("zh_tw", "")
 
+    display_level = target_level if target_level is not None else boss_data.get("boss_max_level", 0)
+
     # 血量倍数
     hp_multiplier = 1.0
     for level_grade in data["single_raid_boss_level_grade"]["json"]:
-        if level_grade.get("level") == boss_data.get("boss_max_level"):
+        if level_grade.get("level") == display_level:
             hp_multiplier = level_grade.get("value", 1.0)
             break
 
     # 最终血量
-    final_hp = int(
-        hero_data.get("max_hp", 0) * hp_multiplier * boss_data.get("boss_max_level", 0)
-    )
+    final_hp = int(hero_data.get("max_hp", 0) * hp_multiplier * display_level)
 
     # 奖励信息
     reward_items = []
@@ -378,7 +437,7 @@ async def _show_raid_info(
     basic_info_text = f"""类型：{race_zh_tw} {hero_class_zh_tw}
 攻击方式：{sub_class_zh_tw}
 属性：{stat_zh_tw}
-等级：{boss_data.get('boss_max_level', 0)}
+等级：{display_level}
 护盾量：{await format_value(boss_data.get('groggy_ratio', 0), True)}
 生命值：{final_hp}
 战斗时长：{battle_time}秒
