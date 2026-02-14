@@ -352,7 +352,7 @@ DEFAULT_CONFIG = {
     "server": "cn",  # 服务器: global(国际服) 或 cn(国服)
     "type": "live",  # 数据类型: live 或 review
     "json_path": str(CN_LIVE_TABLE_DIR),
-    "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
+    "hero_alias_file": CONFIG_DIR / "live_hero_alias.yaml",
 }
 
 CURRENT_DATA_SOURCE = {
@@ -360,7 +360,7 @@ CURRENT_DATA_SOURCE = {
         "server": "cn",
         "type": "live",
         "json_path": str(CN_LIVE_TABLE_DIR),
-        "hero_alias_file": CONFIG_DIR / "live_hero_aliases.yaml",
+        "hero_alias_file": CONFIG_DIR / "live_hero_alias.yaml",
     }
 }
 

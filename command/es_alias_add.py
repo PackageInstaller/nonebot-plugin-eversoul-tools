@@ -46,8 +46,8 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             )
         
         # 读取live别名文件
-        live_alias_file = CONFIG_DIR / "live_hero_aliases.yaml"
-        review_alias_file = CONFIG_DIR / "review_hero_aliases.yaml"
+        live_alias_file = CONFIG_DIR / "live_hero_alias.yaml"
+        review_alias_file = CONFIG_DIR / "review_hero_alias.yaml"
         
         if not live_alias_file.exists():
             await es_alias_add.finish(

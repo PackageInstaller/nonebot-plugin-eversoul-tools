@@ -139,8 +139,8 @@ async def generate_aliases() -> None:
 
     # 生成Live版本别名（国际服+国服+日服）
     try:
-        live_hero_aliases = CONFIG_DIR / "live_hero_aliases.yaml"
-        live_raid_aliases = CONFIG_DIR / "live_raid_aliases.yaml"
+        live_hero_alias = CONFIG_DIR / "live_hero_alias.yaml"
+        live_raid_alias = CONFIG_DIR / "live_raid_alias.yaml"
 
         # 检查国服和日服数据表是否存在
         cn_live_path = (
@@ -156,8 +156,8 @@ async def generate_aliases() -> None:
 
         live_hero_count, live_raid_count = await process_json_files(
             gl_live_json_path,
-            live_hero_aliases,
-            live_raid_aliases,
+            live_hero_alias,
+            live_raid_alias,
             cn_live_path,
             jp_live_path,
         )
@@ -205,8 +205,8 @@ async def generate_aliases() -> None:
 
     # 同步别名
     try:
-        await sync_aliases(live_hero_aliases, review_hero_aliases)
-        await sync_aliases(live_raid_aliases, review_raid_aliases)
+        await sync_aliases(live_hero_alias, review_hero_aliases)
+        await sync_aliases(live_raid_alias, review_raid_aliases)
     except Exception as e:
         logger.error(f"同步别名时出错: {e}")
 
