@@ -524,7 +524,7 @@ async def get_buff_value_text(
         return await concat_color_text(buff_type, value, "buff", False, use_color_text)
 
 
-async def get_buff_value_color_text(buff_type: int, value: float) -> str:
+async def get_buff_value_color_text_old(buff_type: int, value: float) -> str:
     """
     获取buff类型数值颜色文本
     SkillTextUtil::GetBuffValueColorText
@@ -616,6 +616,60 @@ async def get_buff_value_color_text(buff_type: int, value: float) -> str:
     if value >= 0.0:
         return "#B778FF"
     return "#FFDF24"
+
+
+async def get_buff_value_color_text(buff_type: int, value: float) -> str:
+    """
+    获取buff类型数值颜色文本
+    SkillTextUtil::GetBuffValueColorText
+    Args:
+        buff_type: buff effect 类型
+        value: 数值
+    Returns:
+        str: 颜色代码
+    """
+    # 静态颜色
+    if buff_type == 1703:
+        return "#00CC27"
+    if buff_type == 1702 or (301 <= buff_type <= 313 and (0x1E3F & (1 << ((buff_type - 45) % 32)))):
+        return "#E67373"
+    if buff_type == 1501:
+        return "#EDA900"
+    if buff_type == 1502:
+        return "#B778FF"
+    if buff_type == 420:
+        return "#4ABFD3"
+    if buff_type in {501, 502, 503, 511, 512}:
+        return "#368AFF"
+    if buff_type in {801, 802}:
+        return "#B778FF" if value >= 0.0 else "#FFDF24"
+
+    # 动态颜色
+    if (
+        (101 <= buff_type <= 111)
+        or (1901 <= buff_type <= 1906)
+        or (10101 <= buff_type <= 10111)
+        or buff_type
+        in {
+            1001,
+            1002,
+            1101,
+            1202,
+            1401,
+            1402,
+            2301,
+            2302,
+            2304,
+            3401,
+            10201,
+            10202,
+            10301,
+            10302,
+        }
+    ):
+        return "#B778FF" if value < 0.0 else "#EDA900"
+
+    return ""
 
 
 async def get_stat_string_in_hero_option(value: float, buff_type: str) -> str:
@@ -3298,7 +3352,7 @@ async def get_building_tooltip(data: dict, town_buff: dict, amount: float) -> st
         if amount_kind == 1:  # 整数
             display_value = str(int(amount))
         elif amount_kind == 2:  # 百分比
-            display_value = await format_value(amount, False, True, 100.0)
+            display_value = await format_value(amount, False, True)
         elif amount_kind == 3:  # 小数
             display_value = f"{amount:.2f}".rstrip("0").rstrip(".")
         else:
