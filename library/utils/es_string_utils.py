@@ -2858,7 +2858,7 @@ async def format_character_story(
                 normal_end[i + 1 : i + 1] = choices
                 break
 
-    result = ["【好感故事攻略】"]
+    result = ["【好感故事攻略】\n注意：仅收录影响结局走向的选项，如果游戏中出现了这里没有的选项，那么该选项不会影响结局走向"]
     result.extend(good_end)
     result.extend([""] + normal_end)
     result.extend([""] + bad_end)
