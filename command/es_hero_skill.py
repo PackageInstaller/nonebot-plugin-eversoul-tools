@@ -122,7 +122,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         # 技能释放顺序（含持续时间与 CD）
         if skills_data["skill_pattern"]:
-            pattern_text = ["▼ 技能释放顺序"]
+            pattern_text = ["▼ 技能释放顺序(持续，CD)"]
             for i, item in enumerate(skills_data["skill_pattern"], 1):
                 skill_name = item[0]
                 skill_type = item[1]
@@ -130,9 +130,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                 cooldown = item[3] if len(item) > 3 else None
                 extra = []
                 if duration is not None:
-                    extra.append(f"持续{duration}s")
+                    extra.append(f"{duration}s")
                 if cooldown is not None:
-                    extra.append(f"CD{cooldown}s")
+                    extra.append(f"{cooldown}s")
                 extra_str = f" ({', '.join(extra)})" if extra else ""
                 pattern_text.append(f"{i}. 【{skill_type}】{skill_name}{extra_str}")
             messages.append("\n".join(pattern_text))
