@@ -3234,7 +3234,6 @@ async def get_character_skill_pattern(
                 )
                 if timeline_path and anim_type:
                     anim_name = f"{timeline_path}_{anim_type}"
-                    print(anim_name, hero_no)
                     duration = await _get_animation_duration(
                         hero_no, anim_name, data_type, is_hero=is_hero
                     )
