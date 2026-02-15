@@ -15,7 +15,7 @@ async def handle(bot: Bot, event: Event):
         stats_info = []
         unknown_stats = []
         config = await get_group_data_source(group_id)
-        # 读取hero_aliases.yaml获取角色信息
+        # 读取hero_alias.yaml获取角色信息
         with open(config["hero_alias_file"], "r", encoding="utf-8") as f:
             hero_aliases_data = yaml.safe_load(f)
 

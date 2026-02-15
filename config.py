@@ -327,6 +327,11 @@ DATA_DIR = Path(__file__).parent / "data"
 
 CONFIG_DIR = DATA_DIR / "config"
 DATABASE_DIR = DATA_DIR / "database"
+# 角色/恶灵动作动画配置（用于技能释放顺序的持续时间、CD）
+LIVE_HERO_ANIMATION_YAML = CONFIG_DIR / "live_hero_animation.yaml"
+LIVE_RAID_ANIMATION_YAML = CONFIG_DIR / "live_raid_animation.yaml"
+REVIEW_HERO_ANIMATION_YAML = CONFIG_DIR / "review_hero_animation.yaml"
+REVIEW_RAID_ANIMATION_YAML = CONFIG_DIR / "review_raid_animation.yaml"
 COUPON_DIR = DATA_DIR / "coupon"
 COUPON_YAML_PATH = COUPON_DIR / "coupons.yaml"
 DATA_SOURCE_CONFIG = CONFIG_DIR / "data_source_config.yaml"

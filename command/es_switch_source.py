@@ -110,7 +110,7 @@ async def handle(event: Event, args: Message = CommandArg()):
 
     # 使用DATA_DIR中的别名文件
     CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = (
-        CONFIG_DIR / f"{CURRENT_DATA_SOURCE[group_id]['type']}_hero_aliases.yaml"
+        CONFIG_DIR / f"{CURRENT_DATA_SOURCE[group_id]['type']}_hero_alias.yaml"
     )
 
     try:

@@ -168,8 +168,6 @@ from .es_data_utils import (
 # 图片相关
 from .es_image_utils import (
     apply_color_to_icon,
-    format_event_content,
-    generate_event_html,
     get_event_name,
     get_event_type_class,
     generate_ark_level_chart,

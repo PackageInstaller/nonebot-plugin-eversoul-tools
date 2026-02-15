@@ -721,7 +721,6 @@ async def get_schedule_event(
 async def get_mail_event(data, target_month, target_year):
     """获取邮箱事件信息"""
     from .es_string_utils import get_string_character, get_string_item
-    from ...config import STICKER_DIR, HERO_NAME_MAPPING
 
     mail_events = []
     now = datetime.now()
@@ -738,7 +737,6 @@ async def get_mail_event(data, target_month, target_year):
             start_date = datetime.strptime(start_date, "%Y-%m-%d")
             end_date = datetime.strptime(end_date, "%Y-%m-%d")
         except (ValueError, TypeError):
-            # 跳过无法解析的日期
             continue
 
         is_in_month = (
@@ -753,30 +751,34 @@ async def get_mail_event(data, target_month, target_year):
         sender_name_en = "Unknown"
         if sender_sno := mail.get("sender_sno"):
             sender_data = await get_string_character(data, sender_sno, special=True)
-            sender_name_tw = sender_data["zh_tw"]
-            sender_name_en = sender_data["en"]
+            if sender_data:
+                sender_name_tw = sender_data.get("zh_tw", "未知")
+                sender_name_en = sender_data.get("en", "Unknown")
 
-        title_data = (
-            await get_string_character(data, mail.get("title_sno", 0)) or "无标题"
+        title_data = await get_string_character(data, mail.get("title_sno", 0))
+        title_tw = (
+            title_data.get("zh_tw", "无标题")
+            if isinstance(title_data, dict)
+            else "无标题"
         )
-        title_tw = title_data["zh_tw"] if isinstance(title_data, dict) else "无标题"
 
-        desc_data = (
-            await get_string_character(data, mail.get("desc_sno", 0)) or "无描述"
+        desc_data = await get_string_character(data, mail.get("desc_sno", 0))
+        desc_tw = (
+            desc_data.get("zh_tw", "无描述")
+            if isinstance(desc_data, dict)
+            else "无描述"
         )
-        desc_tw = desc_data["zh_tw"] if isinstance(desc_data, dict) else "无描述"
 
-        # 奖励信息
+        # 奖励信息（支持 reward_no_1..10 或 reward_no1..4）
         rewards = []
-        for i in range(1, 5):
-            reward_no_key = f"reward_no{i}"
-            reward_amount_key = f"reward_amount{i}"
-
-            if reward_no := mail.get(reward_no_key):
-                amount = mail.get(reward_amount_key, 0)
-                item_name = await get_string_item(data, reward_no)
-                if item_name and amount:
-                    rewards.append(f"{item_name['zh_tw']}x{amount}")
+        for i in range(1, 11):
+            reward_no = mail.get(f"reward_no_{i}") or mail.get(f"reward_no{i}")
+            if not reward_no:
+                continue
+            amount = mail.get(f"reward_amount_{i}") or mail.get(f"reward_amount{i}", 0)
+            item_name = await get_string_item(data, reward_no)
+            if item_name and amount:
+                rewards.append(f"{item_name.get('zh_tw', '')}x{amount}")
 
         event_info = []
         event_info.append(f"【邮箱事件】")
@@ -787,20 +789,11 @@ async def get_mail_event(data, target_month, target_year):
             f"持续时间：{start_date.strftime('%Y-%m-%d')} 至 {end_date.strftime('%Y-%m-%d')}"
         )
 
-        # 添加贴纸作为banner
-        if sender_name_en and sender_name_en != "Unknown":
-            sender_name_en = HERO_NAME_MAPPING.get(sender_name_en, sender_name_en)
-            sticker_path = f"sticker_love_{sender_name_en}01.png"
-            # 检查文件是否存在
-            if (STICKER_DIR / sticker_path).exists():
-                event_info.append(f"banner：{sticker_path}")
-
         if rewards:
             event_info.append("奖励：")
-            event_info.extend([f"- {reward}" for reward in rewards])
+            event_info.extend([f"- {r}" for r in rewards])
 
         mail_events.append((start_date, "\n".join(event_info)))
-
     return mail_events
 
 
@@ -817,7 +810,6 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
     from ...config import (
         HERO_NAME_MAPPING,
         STICKER_DIR,
-        BANNER_DIR,
         WORLD_RAID_NAME_MAPPING,
         GUILD_RAID_NAME_MAPPING,
         WORLD_RAID_DIR,
@@ -1007,23 +999,6 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
     return [event_info for _, event_info in calendar_events_with_date]
 
 
-async def format_event_content(event_text):
-    """格式化事件内容，提取banner信息"""
-    lines = event_text.split("\n")
-    formatted_lines = []
-    banner_path = None
-
-    for line in lines:
-        if line.startswith("banner："):
-            banner_path = line.replace("banner：", "").strip()
-        else:
-            if not (line.startswith("【") and line.endswith("】")):
-                # 跳过名称行，因为名称已经在event-type标签中显示了
-                if not line.startswith("名称："):
-                    formatted_lines.append(line)
-
-    return {"content": "<br>".join(formatted_lines), "banner": banner_path}
-
 
 async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> str:
     """获取潜能数值
@@ -1054,32 +1029,6 @@ async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> s
                     buff.get("buff_effect", 0), 0
                 )
                 return await get_stat_string_in_hero_option(value, key)
-
-
-async def generate_event_html(event, event_type):
-    """生成事件HTML，包括内容和banner图片"""
-    from ...config import STICKER_DIR, BANNER_DIR
-
-    event_data = format_event_content(event)
-
-    if isinstance(event_data, dict):
-        html = f'<div class="event-content">{event_data["content"]}</div>'
-        if event_data["banner"]:
-            # 检查是否是联合作战的sticker图片或恶灵讨伐或邮箱事件的sticker图片
-            if (
-                event_data["banner"].startswith("sticker_eas_")
-                or event_data["banner"].startswith("sticker_singleraid_")
-                or event_data["banner"].startswith("sticker_love_")
-            ):
-                banner_path = str(STICKER_DIR / event_data["banner"])
-            else:
-                banner_path = str(BANNER_DIR / event_data["banner"])
-            html += f'<img class="event-banner" src="{banner_path}" alt="活动Banner">'
-        else:
-            default_banner_path = str(BANNER_DIR / "banner_No_Image.png")
-            html += f'<img class="event-banner" src="{default_banner_path}" alt="默认Banner">'
-
-    return html
 
 
 async def get_event_name(event):
@@ -1167,7 +1116,7 @@ async def generate_timeline_html(month: int, events: list) -> str:
     special_events_with_date.sort(key=lambda x: x[0])
     mail_events_with_date.sort(key=lambda x: x[0])
     special_events = [event for _, event in special_events_with_date]
-    # mail_events = [event for _, event in mail_events_with_date]
+    mail_events = [event for _, event in mail_events_with_date]
 
     html = f"""
     <!DOCTYPE html>
@@ -1252,14 +1201,10 @@ async def generate_timeline_html(month: int, events: list) -> str:
 
             /* 活动网格样式 */
             .event-grid {{
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-                gap: 1rem;
+                display: flex;
+                flex-wrap: wrap;
+                margin: 0 -0.75rem;
                 margin-bottom: 2rem;
-            }}
-
-            .event-grid-email {{
-                grid-template-columns: repeat(1, 1fr);
             }}
 
             /* 活动卡片样式 */
@@ -1271,7 +1216,11 @@ async def generate_timeline_html(month: int, events: list) -> str:
                 transition: all 0.3s ease;
                 display: flex;
                 flex-direction: column;
-                height: 100%;
+                height: auto;
+                margin: 0.75rem;
+                /* 4 items per row: 25% width minus the margins (1.5rem total for left+right) */
+                width: calc(25% - 1.5rem);
+                box-sizing: border-box;
             }}
 
             .event-card:hover {{
@@ -1280,8 +1229,11 @@ async def generate_timeline_html(month: int, events: list) -> str:
             }}
 
             .event-card-email {{
-                flex-direction: row;
+                flex-direction: column;
                 display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 1.2rem;
             }}
 
             .event-card .content {{
@@ -1293,6 +1245,30 @@ async def generate_timeline_html(month: int, events: list) -> str:
                 flex-direction: column;
                 padding: 1rem;
                 flex: 1;
+                align-items: flex-start;
+            }}
+
+            .mail-event .content-email {{
+                text-align: left;
+            }}
+
+            .mail-event .event-author {{
+                font-size: 1.35rem;
+                margin: 0 0 0.5rem 0;
+            }}
+
+            .mail-event .event-time {{
+                font-size: 1rem;
+                text-align: left;
+            }}
+
+            .mail-event .event-content {{
+                text-align: left;
+                text-indent: 0;
+                font-size: 16px;
+                line-height: 1.6;
+                max-height: none;
+                overflow: visible;
             }}
 
             .event-author {{
@@ -1381,14 +1357,13 @@ async def generate_timeline_html(month: int, events: list) -> str:
 
             /* 响应式布局 */
             @media (max-width: 768px) {{
-                .event-grid {{
-                    grid-template-columns: repeat(2, 1fr);
+                .event-card {{
+                    width: calc(50% - 1.5rem);
                 }}
             }}
-
             @media (max-width: 480px) {{
-                .event-grid {{
-                    grid-template-columns: 1fr;
+                .event-card {{
+                    width: calc(100% - 1.5rem);
                 }}
             }}
         </style>
@@ -1441,6 +1416,27 @@ async def generate_timeline_html(month: int, events: list) -> str:
                 </div>
             </div>
             ''' if normal_events else ''}
+
+            <!-- 邮箱事件部分 -->
+            {f'''
+            <div class="mb-8">
+                <div class="flex flex_align_center section-title">
+                    <h2 style="text-align: center;">邮箱事件</h2>
+                    <span class="icon"><i class="fa fa-envelope"></i></span>
+                </div>
+                <div class="event-grid">
+                    {''.join([f"""
+                    <div class="event-card mail-event event-card-email">
+                        <div class="content content-email">
+                            <div class="event-author">{await get_event_name(event)}</div>
+                            <div class="event-time">{await get_event_time(event)}</div>
+                            <div class="event-content">{await get_event_description(event)}</div>
+                        </div>
+                    </div>
+                    """ for event in mail_events])}
+                </div>
+            </div>
+            ''' if mail_events else ''}
         </div>
     </body>
     </html>
@@ -1454,13 +1450,7 @@ async def get_event_time(event):
     for line in lines:
         if "持续时间：" in line:
             time_str = line.replace("持续时间：", "").strip()
-            try:
-                start_date_str, end_date_str = time_str.split("至")
-                start_date = datetime.strptime(start_date_str.strip(), "%Y-%m-%d")
-                end_date = datetime.strptime(end_date_str.strip(), "%Y-%m-%d")
-                return f"{start_date.month}.{start_date.day}-{end_date.month}.{end_date.day}"
-            except:
-                return time_str
+            return time_str
     return "时间未知"
 
 
@@ -1492,7 +1482,7 @@ async def get_event_description(event):
 
 async def get_event_banner(event):
     """获取事件banner图片路径（返回 file:// URL 供 HTML img src 使用）"""
-    from ...config import STICKER_DIR, BANNER_DIR
+    from ...config import STICKER_DIR, BANNER_DIR, ICON_DIR
 
     no_image_path = (BANNER_DIR / "banner_No_Image.png").resolve().as_uri()
 
@@ -1500,9 +1490,10 @@ async def get_event_banner(event):
     for line in lines:
         if line.startswith("banner："):
             banner_path = line.replace("banner：", "").strip()
-            # Raid 缩略图：banner_path 为绝对路径
             if Path(banner_path).is_absolute():
                 full_path = Path(banner_path)
+            elif banner_path.startswith("icon:"):
+                full_path = ICON_DIR / banner_path.replace("icon:", "")
             elif (
                 banner_path.startswith("sticker_eas_")
                 or banner_path.startswith("sticker_singleraid_")

@@ -478,14 +478,23 @@ async def _show_raid_info(
     ]
     
     skills_data = await get_skills_info(
-        data, hero_data, skill_keys, server, data_type
+        data, hero_data, skill_keys, server, data_type, is_hero=False
     )
 
-    # 技能释放顺序
+    # 技能释放顺序（含持续时间与 CD）
     if skills_data["skill_pattern"]:
         pattern_text = ["【技能释放顺序】"]
-        for i, (skill_name, skill_type) in enumerate(skills_data["skill_pattern"], 1):
-            pattern_text.append(f"{i}. [{skill_type}] {skill_name}")
+        for i, item in enumerate(skills_data["skill_pattern"], 1):
+            skill_name, skill_type = item[0], item[1]
+            duration = item[2] if len(item) > 2 else None
+            cooldown = item[3] if len(item) > 3 else None
+            extra = []
+            if duration is not None:
+                extra.append(f"持续{duration}s")
+            if cooldown is not None:
+                extra.append(f"CD{cooldown}s")
+            extra_str = f" ({', '.join(extra)})" if extra else ""
+            pattern_text.append(f"{i}. [{skill_type}] {skill_name}{extra_str}")
         messages.append("\n".join(pattern_text))
 
     # 技能详情

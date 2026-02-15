@@ -2,6 +2,8 @@ import os
 import re
 import ast
 import asyncio
+import yaml
+from pathlib import Path
 from nonebot.log import logger
 from difflib import get_close_matches
 
@@ -631,7 +633,9 @@ async def get_buff_value_color_text(buff_type: int, value: float) -> str:
     # 静态颜色
     if buff_type == 1703:
         return "#00CC27"
-    if buff_type == 1702 or (301 <= buff_type <= 313 and (0x1E3F & (1 << ((buff_type - 45) % 32)))):
+    if buff_type == 1702 or (
+        301 <= buff_type <= 313 and (0x1E3F & (1 << ((buff_type - 45) % 32)))
+    ):
         return "#E67373"
     if buff_type == 1501:
         return "#EDA900"
@@ -2912,7 +2916,9 @@ async def format_character_story(
                 normal_end[i + 1 : i + 1] = choices
                 break
 
-    result = ["【好感故事攻略】\n注意：仅收录影响结局走向的选项，如果游戏中出现了这里没有的选项，那么该选项不会影响结局走向"]
+    result = [
+        "【好感故事攻略】\n注意：仅收录影响结局走向的选项，如果游戏中出现了这里没有的选项，那么该选项不会影响结局走向"
+    ]
     result.extend(good_end)
     result.extend([""] + normal_end)
     result.extend([""] + bad_end)
@@ -3063,17 +3069,129 @@ async def calculate_battle_power(
     return int(total_power)
 
 
+async def _compute_string_hash(s: str) -> int:
+    """anim_path 映射"""
+    if not s:
+        return 0
+    v3 = 0x811C9DC5
+    for i in range(len(s)):
+        c = ord(s[i])
+        v3 = (0x1000193 * (v3 ^ c)) & 0xFFFFFFFF
+    return v3
+
+
+async def _get_skill_finish_animation_type(anim_path: str, skill_type: int) -> str:
+    """
+    根据 anim_path 和 skill type 返回技能结束动画类型字符串。
+    对应 InitFinishAnimationType 逻辑。
+    """
+    if skill_type == 110500:
+        return "Attack"
+    if skill_type == 110501:
+        return "Active_Skip_Finish"
+    if skill_type == 110504:
+        return "Ultimate_Scene_Finish"
+
+    h = await _compute_string_hash(anim_path)
+    hash_to_anim = {
+        0x4F07BE19: "Skill01_Skip_Finish",
+        0x4C07B960: "Skill02_Skip_Finish",
+        0x4D07BAF3: "Skill03_Skip_Finish",
+        0x5207C2D2: "Skill04_Skip_Finish",
+        0x5307C465: "Skill05_Skip_Finish",
+        0x5007BFAC: "Skill06_Skip_Finish",
+        0x5107C13F: "Skill07_Skip_Finish",
+        0x5607C91E: "Skill08_Skip_Finish",
+    }
+    return hash_to_anim.get(h, "")
+
+
+async def _get_timeline_path_for_hero(data: dict, hero_id: int) -> str:
+    """从 Hero.prefab_path 在 ItemCostume 中查找 timeline_path。"""
+    prefab_path = None
+    for hero in data.get("hero", {}).get("json", []):
+        if hero.get("hero_id") == hero_id:
+            prefab_path = hero.get("prefab_path")
+            break
+    if prefab_path is None:
+        return ""
+
+    for costume in data.get("item_costume", {}).get("json", []):
+        if costume.get("no") == prefab_path:
+            return costume.get("timeline_path", "")
+    return ""
+
+
+# 动画 YAML 缓存：{(data_type, is_hero): {(hero_id, anim_name): duration}}
+_animation_duration_cache: dict = {}
+
+
+async def _get_animation_duration(
+    hero_id: int, anim_name: str, data_type: str = "live", is_hero: bool = True
+) -> float | None:
+    """从动画 YAML 中根据 hero_id 和 anim_name 获取 end_time - start_time。"""
+    cache_key = (data_type, is_hero)
+    if cache_key not in _animation_duration_cache:
+        _animation_duration_cache[cache_key] = await _build_animation_duration_lookup(
+            data_type, is_hero=is_hero
+        )
+    lookup = _animation_duration_cache[cache_key]
+    return lookup.get((hero_id, anim_name))
+
+
+async def _build_animation_duration_lookup(
+    data_type: str, is_hero: bool
+) -> dict[tuple[int, str], float]:
+    """加载 YAML 并构建 (hero_id, anim_name) -> duration 查找表，只执行一次。"""
+    from ...config import (
+        LIVE_HERO_ANIMATION_YAML,
+        LIVE_RAID_ANIMATION_YAML,
+        REVIEW_HERO_ANIMATION_YAML,
+        REVIEW_RAID_ANIMATION_YAML,
+    )
+
+    if data_type == "live" and is_hero:
+        yaml_path = LIVE_HERO_ANIMATION_YAML
+    elif data_type == "live" and not is_hero:
+        yaml_path = LIVE_RAID_ANIMATION_YAML
+    elif data_type == "review" and is_hero:
+        yaml_path = REVIEW_HERO_ANIMATION_YAML
+    else:
+        yaml_path = REVIEW_RAID_ANIMATION_YAML
+
+    lookup = {}
+    if not Path(yaml_path).exists():
+        return lookup
+    try:
+        with open(yaml_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        top_key = "raid_animations" if not is_hero else "hero_animations"
+        hero_anims = data.get(top_key, {})
+        for hid, anims in hero_anims.items():
+            for a in anims:
+                name = a.get("name")
+                if name:
+                    start = a.get("start_time", 0)
+                    end = a.get("end_time", 0)
+                    lookup[(int(hid), name)] = round(end - start, 2)
+    except Exception:
+        pass
+    return lookup
+
+
 async def get_character_skill_pattern(
-    data: dict, hero_no: int, server: str = "global", data_type: str = "live"
+    data: dict,
+    hero_no: int,
+    server: str = "global",
+    data_type: str = "live",
+    is_hero: bool = True,
 ) -> list:
     """
-    获取角色技能释放顺序
-    Args:
-        data: JSON 数据字典
-        hero_no: 角色编号
+    获取角色技能释放顺序，包含技能持续时间与 CD。
 
     Returns:
-        list: 技能释放顺序列表, 每个元素是 (技能名称, 技能类型, 是否为普通攻击)
+        list: 每个元素 (skill_name, skill_type, duration, cooldown)
+        duration/cooldown 为 None 时表示未查到
     """
     try:
         pattern_data = None
@@ -3084,46 +3202,70 @@ async def get_character_skill_pattern(
         if not pattern_data:
             return []
 
+        hero_base_attack = None
         for hero in data["hero"]["json"]:
             if hero.get("hero_id") == hero_no:
                 hero_base_attack = hero.get("base_attack")
                 break
+
+        timeline_path = await _get_timeline_path_for_hero(data, hero_no)
 
         pattern_keys = [key for key in pattern_data.keys() if key.startswith("pattern")]
         pattern_keys.sort(key=lambda x: int(x.replace("pattern", "").replace("_", "")))
         skill_pattern = []
         for key in pattern_keys:
             skill_no = pattern_data.get(key)
+            found_skill = None
+            for skill in data["skill"]["json"]:
+                if skill.get("no") == skill_no:
+                    found_skill = skill
+                    break
+
+            duration = None
+            cooldown = None
+            if found_skill:
+                global_cooltime = found_skill.get("global_cooltime")
+                if global_cooltime is not None:
+                    cooldown = global_cooltime
+                anim_path = found_skill.get("anim_path", "")
+                skill_type_val = found_skill.get("type", 0)
+                anim_type = await _get_skill_finish_animation_type(
+                    anim_path, skill_type_val
+                )
+                if timeline_path and anim_type:
+                    anim_name = f"{timeline_path}_{anim_type}"
+                    print(anim_name)
+                    duration = await _get_animation_duration(
+                        hero_no, anim_name, data_type, is_hero=is_hero
+                    )
+
             if skill_no == hero_base_attack:
-                skill_pattern.append(("普通攻击", "无"))
+                skill_pattern.append(("普通攻击", "无", duration, cooldown))
             else:
                 skill_name = ""
-                for skill in data["skill"]["json"]:
-                    if skill["no"] == skill_no:
-                        if "name_sno" not in skill:
-                            break
-                        skill_name_data = await get_string_by_type(
-                            data, "skill", skill["name_sno"]
-                        )
-                        skill_name_zh_tw = skill_name_data.get("zh_tw", "")
-                        skill_name_zh_cn = skill_name_data.get("zh_cn", "")
-                        skill_name_kr = skill_name_data.get("kr", "")
-                        skill_name_ja = skill_name_data.get("ja", "")
-                        skill_type = (
-                            await get_string_by_type(data, "system", skill["type"])
-                        ).get("zh_tw", "")
+                skill_type = ""
+                if found_skill and "name_sno" in found_skill:
+                    skill_name_data = await get_string_by_type(
+                        data, "skill", found_skill["name_sno"]
+                    )
+                    skill_name_zh_tw = skill_name_data.get("zh_tw", "")
+                    skill_name_zh_cn = skill_name_data.get("zh_cn", "")
+                    skill_name_kr = skill_name_data.get("kr", "")
+                    skill_name_ja = skill_name_data.get("ja", "")
+                    skill_type = (
+                        await get_string_by_type(data, "system", found_skill["type"])
+                    ).get("zh_tw", "")
 
-                        skill_name = await select_text_by_priority(
-                            skill_name_zh_tw,
-                            skill_name_zh_cn,
-                            skill_name_kr,
-                            skill_name_ja,
-                            server,
-                            data_type,
-                        )
-                        if skill_name:
-                            skill_pattern.append((skill_name, skill_type))
-                        break
+                    skill_name = await select_text_by_priority(
+                        skill_name_zh_tw,
+                        skill_name_zh_cn,
+                        skill_name_kr,
+                        skill_name_ja,
+                        server,
+                        data_type,
+                    )
+                if skill_name:
+                    skill_pattern.append((skill_name, skill_type, duration, cooldown))
 
         return skill_pattern
 
@@ -3708,6 +3850,7 @@ async def get_skills_info(
     server: str = "global",
     data_type: str = "live",
     generate_image: bool = False,
+    is_hero: bool = True,
 ) -> dict:
     """
     获取角色技能信息的通用函数
@@ -3723,7 +3866,7 @@ async def get_skills_info(
 
     Returns:
         dict: 包含以下字段:
-            - skill_pattern: 技能释放顺序列表 [(skill_name, skill_type), ...]
+            - skill_pattern: 技能释放顺序 [(skill_name, skill_type, duration, cooldown), ...]
             - skills: 技能信息列表，每个元素包含:
                 - skill_type: 技能类型文本 (根据服务器选择语言)
                 - skill_type_all: 技能类型所有语言 {"zh_tw", "zh_cn", "kr", "en"}
@@ -3741,7 +3884,9 @@ async def get_skills_info(
         return result
 
     # 获取技能释放顺序
-    skill_pattern = await get_character_skill_pattern(data, hero_id, server, data_type)
+    skill_pattern = await get_character_skill_pattern(
+        data, hero_id, server, data_type, is_hero=is_hero
+    )
     result["skill_pattern"] = skill_pattern
 
     # 获取各个技能的详细信息

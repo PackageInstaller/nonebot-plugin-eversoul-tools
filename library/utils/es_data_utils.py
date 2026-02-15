@@ -172,8 +172,8 @@ async def generate_aliases() -> None:
 
     # 生成Review版本别名（国际服+国服+日服）
     try:
-        review_hero_aliases = CONFIG_DIR / "review_hero_aliases.yaml"
-        review_raid_aliases = CONFIG_DIR / "review_raid_aliases.yaml"
+        review_hero_alias = CONFIG_DIR / "review_hero_alias.yaml"
+        review_raid_alias = CONFIG_DIR / "review_raid_alias.yaml"
 
         # 检查国服和日服数据表是否存在
         cn_review_path = (
@@ -189,8 +189,8 @@ async def generate_aliases() -> None:
 
         review_hero_count, review_raid_count = await process_json_files(
             gl_review_json_path,
-            review_hero_aliases,
-            review_raid_aliases,
+            review_hero_alias,
+            review_raid_alias,
             cn_review_path,
             jp_review_path,
         )
@@ -205,8 +205,8 @@ async def generate_aliases() -> None:
 
     # 同步别名
     try:
-        await sync_aliases(live_hero_alias, review_hero_aliases)
-        await sync_aliases(live_raid_alias, review_raid_aliases)
+        await sync_aliases(live_hero_alias, review_hero_alias)
+        await sync_aliases(live_raid_alias, review_raid_alias)
     except Exception as e:
         logger.error(f"同步别名时出错: {e}")
 
@@ -562,7 +562,7 @@ async def load_raid_aliases(group_id=None):
     """
     config = await get_group_data_source(group_id)
     data_type = config.get("type", "live")
-    raid_alias_file = CONFIG_DIR / f"{data_type}_raid_aliases.yaml"
+    raid_alias_file = CONFIG_DIR / f"{data_type}_raid_alias.yaml"
 
     if not raid_alias_file.exists():
         return {}, {"names": []}
@@ -917,7 +917,7 @@ async def load_data_source_config():
 
             alias_type = CURRENT_DATA_SOURCE[group_id]["type"]
             CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = (
-                CONFIG_DIR / f"{alias_type}_hero_aliases.yaml"
+                CONFIG_DIR / f"{alias_type}_hero_alias.yaml"
             )
             if "hero_alias_file" in group_settings:
                 CURRENT_DATA_SOURCE[group_id]["hero_alias_file"] = Path(
@@ -1045,7 +1045,7 @@ async def get_group_data_source(group_id):
     # 确保hero_alias_file有值
     if "hero_alias_file" not in result_config or not result_config["hero_alias_file"]:
         result_config["hero_alias_file"] = (
-            CONFIG_DIR / f"{result_config.get('type', 'live')}_hero_aliases.yaml"
+            CONFIG_DIR / f"{result_config.get('type', 'live')}_hero_alias.yaml"
         )
 
     return result_config
