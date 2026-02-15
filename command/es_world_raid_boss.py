@@ -192,10 +192,11 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             if os.path.exists(portrait_paths[0]):
                 basic_msg.append(MessageSegment.image(f"file:///{portrait_paths[0]}"))
 
-        info_text = f"""类型：{race_zh_tw} {class_zh_tw}
-攻击方式：{sub_class_zh_tw}
-属性：{stat_zh_tw}
-品质：{grade_zh_tw}
+        info_text = f"""种族：{race_zh_tw}
+特性：{stat_zh_tw}
+定位：{sub_class_zh_tw}
+职业：{class_zh_tw}
+品阶：{grade_zh_tw}
 攻击力：{int(hero_data.get('attack', 0))} (+{int(hero_data.get('inc_attack', 0))}/级)
 防御力：{int(hero_data.get('defence', 0))} (+{int(hero_data.get('inc_defence', 0))}/级)
 生命值：{int(hero_data.get('max_hp', 0))} (+{int(hero_data.get('inc_max_hp', 0))}/级)

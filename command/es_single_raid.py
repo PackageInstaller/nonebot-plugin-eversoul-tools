@@ -434,9 +434,11 @@ async def _show_raid_info(
     if portrait_paths:
         basic_info.append(MessageSegment.image(f"file:///{portrait_paths[0]}"))
 
-    basic_info_text = f"""类型：{race_zh_tw} {hero_class_zh_tw}
-攻击方式：{sub_class_zh_tw}
-属性：{stat_zh_tw}
+    basic_info_text = f"""种族：{race_zh_tw}
+特性：{stat_zh_tw}
+定位：{sub_class_zh_tw}
+职业：{hero_class_zh_tw}
+品阶：{grade_zh_tw}
 等级：{display_level}
 护盾量：{await format_value(boss_data.get('groggy_ratio', 0), True)}
 生命值：{final_hp}

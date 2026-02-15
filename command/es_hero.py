@@ -176,16 +176,17 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
         cv_jp = cv_info.get("ja")
 
         basic_info_zh_tw = f"""{nickname_zh_tw if nickname_zh_tw != "" else nickname_kr}・{hero_name_zh_tw if hero_name_zh_tw != "" else hero_name_kr}
-类型：{race_zh_tw} {hero_class_zh_tw}
-攻击方式：{sub_class_zh_tw}
-属性：{stat_zh_tw}
-品质：{grade_zh_tw}
+种族：{race_zh_tw}
+特性：{stat_zh_tw}
+定位：{sub_class_zh_tw}
+职业：{hero_class_zh_tw}
+品阶：{grade_zh_tw}
 隶属：{
     (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") 
     if hero_desc is not None and hero_desc.get("union_sno") is not None and 
         await get_string_character(data, hero_desc.get("union_sno", 0), special=True) is not None and
         (await get_string_character(data, hero_desc.get("union_sno", 0), special=True)).get("zh_tw", "") != ""
-    else ""
+    else "？"
 }
 身高：{hero_desc.get("height", "") if hero_desc else ""}cm
 体重：{hero_desc.get("weight", "") if hero_desc else ""}kg
