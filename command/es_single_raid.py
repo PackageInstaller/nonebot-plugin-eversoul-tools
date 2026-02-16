@@ -483,9 +483,9 @@ async def _show_raid_info(
         data, hero_data, skill_keys, server, data_type, is_hero=False
     )
 
-    # 技能释放顺序（含持续时间与 CD）
+    # 技能释放顺序（含持续时间与 前摇）
     if skills_data["skill_pattern"]:
-        pattern_text = ["【技能释放顺序(持续，CD)】"]
+        pattern_text = ["【技能释放顺序(持续，前摇)】"]
         for i, item in enumerate(skills_data["skill_pattern"], 1):
             skill_name, skill_type = item[0], item[1]
             duration = item[2] if len(item) > 2 else None
