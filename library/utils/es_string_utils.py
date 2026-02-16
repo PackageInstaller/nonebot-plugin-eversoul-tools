@@ -2745,13 +2745,29 @@ async def get_character_story(data, hero_id):
     Args:
         data: JSON 数据字典
         hero_id: 角色编号
+        public enum StoryType
+        {
+            None = 0,
+            Main = 1,
+            Destiny = 2,
+            Dungeon = 3,
+            Event = 4,
+            Tower = 5,
+            TowerDesc = 6,
+            SingleRaid = 7,
+            Alliance = 8,
+            Battle = 9,
+            Soul = 10,
+            Bonus = 11,
+            ContentsSub = 99
+        }
     """
     try:
         story_episodes = []
         ending_episodes = []
 
         for story in data["story_info"]["json"]:
-            if "act" in story and story["act"] == hero_id:
+            if "act" in story and story["act"] == hero_id and story.get("story_type") == 2:
                 # 有三种结局
                 if story["episode"] in [8, 9, 10]:
                     ending_episodes.append(story)
