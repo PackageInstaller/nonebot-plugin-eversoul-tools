@@ -2558,11 +2558,18 @@ async def extract_best_choices_from_groups(grouped_choices):
     best_choices = []
     for talk_index in sorted(grouped_choices.keys()):
         choices = grouped_choices[talk_index]
+        # 按照 choice_group 和 no 排序确保稳定性
+        choices.sort(key=lambda x: (x.get("choice_group", 0), x.get("no", 0)))
+        
         max_affinity = max(c["affinity"] for c in choices)
-        best_choice_texts = [
-            c["text"] for c in choices if c["affinity"] == max_affinity
-        ]
-        best_choices.extend(best_choice_texts)
+
+        if all(c["affinity"] == 0 for c in choices):
+            best_choices.append(choices[0]["text"])
+        else:
+            best_choice_texts = [
+                c["text"] for c in choices if c["affinity"] == max_affinity
+            ]
+            best_choices.extend(best_choice_texts)
     return best_choices
 
 
@@ -2579,9 +2586,14 @@ async def extract_worst_choices_from_groups(grouped_choices):
     worst_choices = []
     for talk_index in sorted(grouped_choices.keys()):
         choices = grouped_choices[talk_index]
+        # 按照 choice_group 和 no 排序确保稳定性
+        choices.sort(key=lambda x: (x.get("choice_group", 0), x.get("no", 0)))
+        
         min_affinity = min(c["affinity"] for c in choices)
 
-        if min_affinity < 0:
+        if all(c["affinity"] == 0 for c in choices):
+            worst_choice_texts = [choices[0]["text"]]
+        elif min_affinity < 0:
             # 优先选择负好感度选择
             worst_choice_texts = [
                 c["text"] for c in choices if c["affinity"] == min_affinity
@@ -2765,19 +2777,35 @@ async def get_character_story(data, hero_id):
         episode_info = []
         for episode in story_episodes:
             choices = {}
-            valid_talk_indexes = set()
-            for talk in data["talk"]["json"]:
-                if (
-                    talk.get("group_no") == episode.get("talk_group")
-                    and "affinity_point" in talk
-                ):
-                    valid_talk_indexes.add(talk.get("talk_index", 0))
+            # 统计每个 talk_index 的选项情况
+            talk_index_stats = {}  # {talk_index: {'count': N, 'total_affinity': S}}
+            
+            talk_group_data = [
+                t for t in data["talk"]["json"] 
+                if t.get("group_no") == episode.get("talk_group")
+            ]
+            
+            for talk in talk_group_data:
+                # 仅统计 Choice 类型或带点数的
+                if talk.get("ui_type") == "Choice" or talk.get("affinity_point", 0) != 0:
+                    t_idx = talk.get("talk_index", 0)
+                    if t_idx not in talk_index_stats:
+                        talk_index_stats[t_idx] = {"count": 0, "total_affinity": 0}
+                    talk_index_stats[t_idx]["count"] += 1
+                    talk_index_stats[t_idx]["total_affinity"] += abs(talk.get("affinity_point", 0))
 
-            for talk in data["talk"]["json"]:
-                if (
-                    talk.get("group_no") == episode.get("talk_group")
-                    and talk.get("talk_index", 0) in valid_talk_indexes
-                ):
+            valid_talk_indexes = set()
+            for t_idx, stat in talk_index_stats.items():
+                # 判断条件：选项多于1个，或者总好感度点数绝对值之和不为0
+                if stat["count"] > 1 or stat["total_affinity"] != 0:
+                    valid_talk_indexes.add(t_idx)
+
+            for talk in talk_group_data:
+                if talk.get("talk_index", 0) in valid_talk_indexes:
+                    # 仅收集 Choice 类型或带点数的行，排除 Normal 背景叙事行
+                    if talk.get("ui_type") != "Choice" and talk.get("affinity_point", 0) == 0:
+                        continue
+                        
                     choice_text_zh_tw = ""
                     choice_text_zh_cn = ""
                     choice_text_kr = ""
