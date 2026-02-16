@@ -147,7 +147,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             await get_string_by_type(data, "system", hero_data["grade_sno"])
         ).get("zh_tw", "")
         # 获取属性排名
-        stats_ranking = await get_character_stats_ranking(data, hero_id, hero_data)
+        stats_ranking = await get_character_stats_ranking(data, hero_id, hero_data["class_sno"])
         atk_range = await get_character_attack_range(data, hero_id)
 
         # 构建消息列表
@@ -193,10 +193,10 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 生日：{await get_character_birthday(data, hero_desc.get("birthday", 0)) if hero_desc else ""}
 星座：{(await get_string_character(data, hero_desc.get("constellation_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
 兴趣：{(await get_string_character(data, hero_desc.get("hobby_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
-特殊特长：{(await get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
+特长：{(await get_string_character(data, hero_desc.get("speciality_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
 喜欢的东西：{(await get_string_character(data, hero_desc.get("like_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
 讨厌的东西：{(await get_string_character(data, hero_desc.get("dislike_sno", 0), special=True)).get("zh_tw", "") if hero_desc else ""}
-喜好礼物：{await get_character_prefer_gift(data, hero_id)}
+喜好的礼物：{await get_character_prefer_gift(data, hero_id)}
 初始打工属性：{(await get_character_arbeit(data, hero_id)).get("initial", "")}
 满级打工属性：{(await get_character_arbeit(data, hero_id)).get("max", "")}
 CV_KR：{cv_kr}"""
@@ -209,7 +209,7 @@ CV_KR：{cv_kr}"""
 防御力：{int(hero_data.get('defence', 0))} + {int(hero_data.get('inc_defence', 0))}/级
 生命值：{int(hero_data.get('max_hp', 0))} + {int(hero_data.get('inc_max_hp', 0))}/级
 暴击率：{hero_data.get('critical_rate', 0) * 100:.1f}% + {hero_data.get('inc_critical_rate', 0) * 100:.3f}%/级
-暴击威力：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
+暴击伤害：{hero_data.get('critical_power', 0) * 100:.1f}% + {hero_data.get('inc_critical_power', 0) * 100:.3f}%/级"""
 
         # 添加属性排名信息
         basic_info_zh_tw += f"\n同职业基础属性排名："

@@ -264,7 +264,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
                     )
                     desc_text = await clean_rich_text(desc_text)
                     unlock_grade = skill.get("unlock_grade", "")
-                    unlock_text = f"（{unlock_grade}解锁）" if unlock_grade else ""
+                    unlock_text = f"(解除品阶：{unlock_grade})" if unlock_grade else ""
 
                     skill_descriptions_text.append(f"\n{desc_text}{unlock_text}")
 

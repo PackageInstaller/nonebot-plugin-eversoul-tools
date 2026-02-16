@@ -3767,7 +3767,7 @@ async def format_love_level_data(data):
 
 
 async def get_character_stats_ranking(
-    data: dict, hero_id: str, hero_data: dict
+    data: dict, hero_id: str, class_sno: int
 ) -> dict:
     """
     计算角色1级基础属性在同职业中的排名
@@ -3775,20 +3775,16 @@ async def get_character_stats_ranking(
     Args:
         data: 游戏数据
         hero_id: 角色ID
-        hero_data: 角色数据
+        class_sno: 角色职业编号
 
     Returns:
         dict: 包含各属性排名信息的字典
     """
     try:
-        # 获取当前角色的职业
-        current_class = hero_data.get("class_sno")
-        if not current_class:
-            return {}
         class_heroes = []
         for hero in data["hero"]["json"]:
             if (
-                hero.get("class_sno") == current_class
+                hero.get("class_sno") == class_sno
                 and hero.get("battle_power_type") == 1
             ):
                 class_heroes.append(
