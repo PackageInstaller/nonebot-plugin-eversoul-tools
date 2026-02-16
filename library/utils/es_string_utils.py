@@ -225,6 +225,89 @@ public enum BuffState // TypeDefIndex: 4307
 		Charm = 4,
 		None = 5
 	}
+    namespace __Battle
+{
+	public enum SkillEffect // TypeDefIndex: 12894
+	{
+		None = 0,
+		AtkPerDmg = 1,
+		IgnoreInvincibleAtkPerDmg = 2,
+		AtkPerHeal = 3,
+		ManaGain = 4,
+		ManaSteal = 5,
+		AbsoulteManaGain = 6,
+		UMPGain = 7,
+		GroggyGain = 8,
+		MaxHpDmg = 9,
+		TargetMaxHpDmg = 10,
+		TargetMaxHpTrueDmg = 11,
+		MaxHpHeal = 12,
+		TargetMaxHpHeal = 13,
+		CurrentHpDmg = 14,
+		TargetCurrentHpDmg = 15,
+		TargetCurrentHpTrueDmg = 16,
+		CurrentHpPerDmg = 17,
+		TargetLoseHpHeal = 18,
+		LoseHpPerDmg = 19,
+		TargetLoseHpPerHeal = 20,
+		RecordedDamagePerDmg = 21,
+		RecordedDamagePerHeal = 22,
+		DeleteBuffNo = 23,
+		DefPerDmg = 24,
+		AreaSkillCode = 25,
+		Dispel = 26,
+		Purify = 27,
+		Aura = 28,
+		Channeling = 29,
+		Buff = 30,
+		DecreaseBuffNo = 31,
+		LifeSteal = 32,
+		ForceCritical = 33,
+		HpChange = 34,
+		HpReverse = 35,
+		PatternChange = 36,
+		MovePosition = 37,
+		Summon = 38,
+		InstantKill = 39,
+		RandomEffect = 40,
+		DisplayUINotify = 41,
+		DecreaseBuffWithMarkerFlag = 42,
+		MovePositionNearTarget = 43,
+		SummonNearTarget = 44,
+		MaterialChange = 45,
+		NoCritical = 46,
+		NoMissAtkPerDmg = 47,
+		BuffIgnoreApplyBuffFlag = 300,
+		AbsoluteDamage = 900,
+		AbsoluteHeal = 901,
+		IgnoreInvincibleAtkValueDmg = 1002,
+		DispelGroup = 1026,
+		PurifyGroup = 1027,
+		AtkPerBurnDmg = 1301,
+		AtkPerPoisonDmg = 1302,
+		AtkPerElectricDmg = 1303,
+		AtkPerBleedDmg = 1304,
+		AtkPerFrostDmg = 1305,
+		AtkPerCurseDmg = 1306
+	}
+    public enum SkillMovePosition // TypeDefIndex: 12764
+	{
+		None = 0,
+		MyLocationFoward = 1,
+		MyLocationBackward = 2,
+		EnemyLocationFoward = 3,
+		EnemyLocationBackward = 4
+	}
+
+	public enum SkillMoveType // TypeDefIndex: 12982
+	{
+		None = 0,
+		Warp = 1,
+		Move = 2,
+		CheckBuff = 3,
+		WarpLookDirection = 4
+	}
+}
 """
 
 
@@ -2771,6 +2854,7 @@ async def get_character_story(data, hero_id):
                 # 有三种结局
                 if story["episode"] in [8, 9, 10]:
                     ending_episodes.append(story)
+                # 混沌，sp角色没有多结局
                 else:
                     story_episodes.append(story)
 
