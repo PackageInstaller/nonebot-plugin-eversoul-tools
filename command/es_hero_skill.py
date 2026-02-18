@@ -120,9 +120,9 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
             is_hero=True,
         )
 
-        # 技能释放顺序（含持续时间与 前摇）
+        # 技能释放顺序（含持续时间与 停顿）
         if skills_data["skill_pattern"]:
-            pattern_text = ["▼ 技能释放顺序(持续，前摇)"]
+            pattern_text = ["▼ 技能释放顺序(持续，停顿)"]
             for i, item in enumerate(skills_data["skill_pattern"], 1):
                 skill_name = item[0]
                 skill_type = item[1]

@@ -267,6 +267,9 @@ async def _show_raid_info(
     stat_zh_tw = (await get_string_by_type(data, "system", hero_data["stat_sno"])).get(
         "zh_tw", ""
     )
+    grade_zh_tw = (await get_string_by_type(data, "system", hero_data["grade_sno"])).get(
+        "zh_tw", ""
+    )
 
     # 战斗时长
     battle_time = 0
@@ -483,9 +486,9 @@ async def _show_raid_info(
         data, hero_data, skill_keys, server, data_type, is_hero=False
     )
 
-    # 技能释放顺序（含持续时间与 前摇）
+    # 技能释放顺序（含持续时间与 停顿）
     if skills_data["skill_pattern"]:
-        pattern_text = ["【技能释放顺序(持续，前摇)】"]
+        pattern_text = ["【技能释放顺序(持续，停顿)】"]
         for i, item in enumerate(skills_data["skill_pattern"], 1):
             skill_name, skill_type = item[0], item[1]
             duration = item[2] if len(item) > 2 else None
