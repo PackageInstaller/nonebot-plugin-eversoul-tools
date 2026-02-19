@@ -635,7 +635,7 @@ names:
     kr_name: 아야메
     en_name: Ayame
     ja_name: アヤメ
-    aliases: [灵芝, 靈芝]
+    aliases: [灵芝, 靈芝, 0z]
     hero_id: 6030
   - zh_tw_name: 夏娃
     zh_cn_name: 伊芙
@@ -656,7 +656,7 @@ names:
     kr_name: 아야메(츠쿠요미)
     en_name: Ayame(Tsukuyomi)
     ja_name: ''
-    aliases: []
+    aliases: [大灵芝, 界绫织, 月度, 阅读, 大0z]
     hero_id: 6070
   - zh_tw_name: 異次元精髓
     zh_cn_name: 异次元精髓
