@@ -651,6 +651,13 @@ names:
     ja_name: ニア
     aliases: [你呀, 尼亚, 妮娅, 火龙, 尼德, 捏, 贞德是腻鸭, 毒龙]
     hero_id: 6060
+  - zh_tw_name: 綾織（月讀）
+    zh_cn_name: ''
+    kr_name: 아야메(츠쿠요미)
+    en_name: Ayame (Tsukuyomi)
+    ja_name: ''
+    aliases: []
+    hero_id: 6070
   - zh_tw_name: 異次元精髓
     zh_cn_name: 异次元精髓
     kr_name: 이차원의 정수
