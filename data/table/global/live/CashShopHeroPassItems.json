@@ -2476,7 +2476,7 @@
       "hero_grade": 110020,
       "basic_item_1_no": 19,
       "basic_item_1_amount": 10,
-      "basic_item_2_no": 6830,
+      "basic_item_2_no": 6831,
       "basic_item_2_amount": 1,
       "shop_item_no": 9494
     },
@@ -2485,7 +2485,7 @@
       "shop_no": 9490,
       "hero_no": 6070,
       "hero_grade": 110021,
-      "basic_item_1_no": 12010,
+      "basic_item_1_no": 12007,
       "basic_item_1_amount": 30,
       "shop_item_no": 9495
     },
@@ -2494,7 +2494,7 @@
       "shop_no": 9490,
       "hero_no": 6070,
       "hero_grade": 110023,
-      "basic_item_1_no": 10084,
+      "basic_item_1_no": 10085,
       "basic_item_1_amount": 150,
       "shop_item_no": 9496
     },
@@ -2503,9 +2503,9 @@
       "shop_no": 9490,
       "hero_no": 6070,
       "hero_grade": 110025,
-      "basic_item_1_no": 12010,
+      "basic_item_1_no": 12007,
       "basic_item_1_amount": 70,
-      "basic_item_2_no": 2421,
+      "basic_item_2_no": 2425,
       "basic_item_2_amount": 1,
       "shop_item_no": 9497
     }

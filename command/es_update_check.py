@@ -274,8 +274,8 @@ async def check_and_push_updates():
         logger.error(f"定时检查更新失败: {e}")
 
 
-@scheduler.scheduled_job("interval", minutes=60, id="eversoul_update_check")
+@scheduler.scheduled_job("interval", minutes=1, id="eversoul_update_check")
 async def scheduled_update_check():
-    """定时任务：每60分钟检查永恒灵魂更新"""
+    """定时任务：每1分钟检查永恒灵魂更新"""
     await check_and_push_updates()
 

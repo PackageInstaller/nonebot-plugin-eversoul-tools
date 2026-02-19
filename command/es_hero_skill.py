@@ -100,7 +100,7 @@ async def handle(bot: Bot, event: Event, args: Message = CommandArg()):
 
         messages = []
 
-        # 获取技能信息（使用通用函数）
+        # 获取技能信息
         skill_keys = [
             "skill_no_1",
             "skill_no_2",

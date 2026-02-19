@@ -6373,7 +6373,7 @@
       "schedule_key": "Gacha_533",
       "schedule_type": 5,
       "start_date": "2026-02-19 00:00:00",
-      "end_date": "2026-02-26 00:00:00",
+      "end_date": "2026-03-05 00:00:00",
       "value_date_01": ""
     },
     {
@@ -9996,7 +9996,7 @@
       "index": 100028,
       "schedule_key": "Shop_MiriamMirage_Sale_Costume_1",
       "schedule_type": 10,
-      "start_date": "2026-02-01 00:00:00",
+      "start_date": "2026-02-26 00:00:00",
       "end_date": "2999-12-31 00:00:00",
       "value_date_01": "2026-03-26 00:00:00"
     },
@@ -10004,7 +10004,7 @@
       "index": 100029,
       "schedule_key": "Shop_MiriamMirage_Sale_Stiker_1",
       "schedule_type": 10,
-      "start_date": "2026-02-01 00:00:00",
+      "start_date": "2026-02-26 00:00:00",
       "end_date": "2999-12-31 00:00:00",
       "value_date_01": "2026-03-26 00:00:00"
     }
