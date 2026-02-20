@@ -2685,17 +2685,15 @@ async def extract_worst_choices_from_groups(grouped_choices):
             # 如果没有负好感度，选择好感度为0的选择
             zero_choices = [c["text"] for c in choices if c["affinity"] == 0]
             if zero_choices:
-                worst_choice_texts = zero_choices
+                worst_choice_texts = [zero_choices[0]]
             else:
                 # 如果没有0好感度，选择最小正好感度
                 worst_choice_texts = [
                     c["text"] for c in choices if c["affinity"] == min_affinity
                 ]
 
-        if len(worst_choice_texts) > 1:
-            worst_choices.append("或者".join(worst_choice_texts))
-        else:
-            worst_choices.extend(worst_choice_texts)
+        if worst_choice_texts:
+            worst_choices.append(worst_choice_texts[0])
 
     return worst_choices
 
