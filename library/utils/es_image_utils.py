@@ -549,6 +549,7 @@ async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path
     from ...config import EVERTALK_DIR
 
     evertalk_illusts = []
+    seen_illusts = set()
 
     # 从EverTalkDesc.json中查找插图
     for talk in data["evertalk_desc"]["json"]:
@@ -565,9 +566,11 @@ async def get_character_evertalk_cg(data: dict, hero_id: int) -> List[Tuple[Path
                         )
                     if illust_match:
                         illust_base = illust_match.group(1)
-                        illust_path = EVERTALK_DIR / f"{illust_base}.png"
-                        if Path(illust_path).exists():
-                            evertalk_illusts.append((illust_path, illust_base))
+                        if illust_base not in seen_illusts:
+                            seen_illusts.add(illust_base)
+                            illust_path = EVERTALK_DIR / f"{illust_base}.png"
+                            if Path(illust_path).exists():
+                                evertalk_illusts.append((illust_path, illust_base))
 
     return evertalk_illusts
 

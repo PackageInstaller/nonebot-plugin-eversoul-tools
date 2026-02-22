@@ -425,7 +425,7 @@ names:
     kr_name: 웨리
     en_name: Wheri
     ja_name: ウェリー
-    aliases: [蜘蛛, 威力]
+    aliases: [蜘蛛, 威力, 威利]
     hero_id: 3150
   - zh_tw_name: 勒內（白銀）
     zh_cn_name: 勒内（白银）
@@ -488,7 +488,7 @@ names:
     kr_name: 프림
     en_name: Prim
     ja_name: プリム
-    aliases: [弗立姆, 不死奶]
+    aliases: [弗立姆, 不死奶, 弗利姆]
     hero_id: 4060
   - zh_tw_name: 潔克琳
     zh_cn_name: 洁克琳
