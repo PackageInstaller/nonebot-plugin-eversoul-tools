@@ -1,0 +1,32 @@
+{
+    "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": -5325114067310479791
+    },
+    "m_Name": "EventDefenseCameraSetting",
+    "SettingList": [
+        {
+            "Index": 1,
+            "ScreenX": 0.5,
+            "ScreenY": 0.699999988079071,
+            "CameraDistance": 10.0
+        },
+        {
+            "Index": 2,
+            "ScreenX": 0.5,
+            "ScreenY": 0.6000000238418579,
+            "CameraDistance": 12.0
+        },
+        {
+            "Index": 3,
+            "ScreenX": 0.5,
+            "ScreenY": 0.8600000143051147,
+            "CameraDistance": 8.0
+        }
+    ]
+}

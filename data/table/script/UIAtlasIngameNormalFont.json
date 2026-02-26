@@ -1,0 +1,91 @@
+{
+    "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 3788832427338727205
+    },
+    "m_Name": "UIAtlasIngameNormalFont",
+    "elements": [
+        {
+            "key": 1,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -440992173174871166
+            }
+        },
+        {
+            "key": 2,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 8298012500759075866
+            }
+        },
+        {
+            "key": 3,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -7478799121500301143
+            }
+        },
+        {
+            "key": 4,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 2587004974806145254
+            }
+        },
+        {
+            "key": 5,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -2963819413654866759
+            }
+        },
+        {
+            "key": 6,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 5254203339930862206
+            }
+        },
+        {
+            "key": 7,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -1541042913365781204
+            }
+        },
+        {
+            "key": 8,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 6014292944404411933
+            }
+        },
+        {
+            "key": 9,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 5716585432422445125
+            }
+        },
+        {
+            "key": 0,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -2677369142588307802
+            }
+        },
+        {
+            "key": 44,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -9039241153079110233
+            }
+        }
+    ]
+}

@@ -1,0 +1,95 @@
+{
+    "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": -6770435424359892164
+    },
+    "m_Name": "UISceneHeaderInfo",
+    "elements": [
+        {
+            "uiScene": {
+                "_classRef": "UI_CASH_SHOP, Assembly-CSharp"
+            },
+            "currencyKind": [
+                42,
+                2,
+                19,
+                28,
+                29,
+                45
+            ],
+            "extendedCurrencyKind": []
+        },
+        {
+            "uiScene": {
+                "_classRef": "UI_FAIRYRESET, Assembly-CSharp"
+            },
+            "currencyKind": [
+                100
+            ],
+            "extendedCurrencyKind": []
+        },
+        {
+            "uiScene": {
+                "_classRef": "UI_GUILD, Assembly-CSharp"
+            },
+            "currencyKind": [
+                11,
+                100
+            ],
+            "extendedCurrencyKind": []
+        },
+        {
+            "uiScene": {
+                "_classRef": "UI_GUILD_LIST, Assembly-CSharp"
+            },
+            "currencyKind": [
+                11,
+                100
+            ],
+            "extendedCurrencyKind": []
+        },
+        {
+            "uiScene": {
+                "_classRef": "UI_SIGNATUREGACHA_RESULT, Assembly-CSharp"
+            },
+            "currencyKind": [
+                42,
+                2,
+                45
+            ],
+            "extendedCurrencyKind": []
+        },
+        {
+            "uiScene": {
+                "_classRef": "UI_ARENA_MAIN, Assembly-CSharp"
+            },
+            "currencyKind": [
+                100
+            ],
+            "extendedCurrencyKind": []
+        },
+        {
+            "uiScene": {
+                "_classRef": "UI_ADVANCED_ARENA_MAIN, Assembly-CSharp"
+            },
+            "currencyKind": [
+                100
+            ],
+            "extendedCurrencyKind": []
+        },
+        {
+            "uiScene": {
+                "_classRef": "UI_SPECIALSHOP, Assembly-CSharp"
+            },
+            "currencyKind": [
+                100
+            ],
+            "extendedCurrencyKind": []
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 4501627563361353523
+    },
+    "m_Name": "EventDefenseItemSpawnSetting",
+    "SettingList": [
+        {
+            "ItemIndex": 9,
+            "Rate": 300
+        },
+        {
+            "ItemIndex": 11,
+            "Rate": 700
+        }
+    ],
+    "ItemSpawnProb": 100000,
+    "ItemSpawnCount": 1,
+    "ItemSpawnStartTime": 2,
+    "ItemSpawnDelay": 2,
+    "ItemRemainTime": 4
+}

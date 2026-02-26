@@ -1,0 +1,119 @@
+{
+    "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 3788832427338727205
+    },
+    "m_Name": "UIAtlasIngameItaricFont",
+    "elements": [
+        {
+            "key": 1,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 3899152004584764985
+            }
+        },
+        {
+            "key": 2,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 8640409525796184048
+            }
+        },
+        {
+            "key": 3,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 6468023569954409231
+            }
+        },
+        {
+            "key": 4,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -5032465922041636199
+            }
+        },
+        {
+            "key": 5,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 5912723738861794044
+            }
+        },
+        {
+            "key": 6,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 4705942597066166802
+            }
+        },
+        {
+            "key": 7,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -2406634000845965197
+            }
+        },
+        {
+            "key": 8,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -3885479105449195969
+            }
+        },
+        {
+            "key": 9,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -2435819566287007435
+            }
+        },
+        {
+            "key": 0,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 781376812276264868
+            }
+        },
+        {
+            "key": 108,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -2186747165634985628
+            }
+        },
+        {
+            "key": 105,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 1088449922106084066
+            }
+        },
+        {
+            "key": 109,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 5293651783688527615
+            }
+        },
+        {
+            "key": 115,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": 6963480275123561225
+            }
+        },
+        {
+            "key": 44,
+            "spr": {
+                "m_FileID": 1,
+                "m_PathID": -6123115380482623963
+            }
+        }
+    ]
+}
