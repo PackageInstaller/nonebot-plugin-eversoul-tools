@@ -3916,6 +3916,7 @@ async def get_character_stats_ranking(
                 class_heroes.append(
                     {
                         "hero_id": hero.get("hero_id"),
+                        "name_sno": hero.get("name_sno"),
                         "attack": int(hero.get("attack", 0)),
                         "defence": int(hero.get("defence", 0)),
                         "max_hp": int(hero.get("max_hp", 0)),
@@ -3955,6 +3956,7 @@ async def get_character_stats_ranking(
                 "name": stat_name,
                 "rank": rank,
                 "total": total_count,
+                "top_name_sno": sorted_heroes[0]["name_sno"] if sorted_heroes else None,
             }
 
         return rankings

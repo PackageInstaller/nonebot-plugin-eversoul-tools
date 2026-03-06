@@ -224,6 +224,11 @@ CV_KR：{cv_kr}"""
             basic_info_zh_tw += (
                 f"\n{rank_info['name']}：第{rank_info['rank']}/{rank_info['total']}名"
             )
+            top_name_sno = rank_info.get("top_name_sno")
+            if top_name_sno:
+                top_name_data = await get_string_character(data, top_name_sno)
+                top_name = top_name_data.get("zh_tw") or top_name_data.get("zh_cn") or top_name_data.get("kr", "未知")
+                basic_info_zh_tw += f"(No.1 {top_name})"
         basic_info_msg.append(basic_info_zh_tw)
         messages.append("".join(str(x) for x in basic_info_msg))
 
