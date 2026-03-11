@@ -49367,7 +49367,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Active01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Active01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Active01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49376,7 +49376,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Active02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Active02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Active02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49385,7 +49385,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Active03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Active03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Active03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49394,7 +49394,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Active01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Active01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Active01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49403,7 +49403,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Active02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Active02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Active02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49412,7 +49412,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Active03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Active03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Active03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49421,7 +49421,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Air_Down_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Air_Down_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Air_Down_JA.wav",
       "volume": 0.8
     },
     {
@@ -49430,7 +49430,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Anniversary_JA.wav",
       "volume": 0.8
     },
     {
@@ -49439,7 +49439,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Anniversary01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49448,7 +49448,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Anniversary02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49457,7 +49457,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Anniversary03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Anniversary03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49466,7 +49466,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Ascend01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Ascend01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Ascend01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49475,7 +49475,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack001_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack001_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Attack001_JA.wav",
       "volume": 0.8
     },
     {
@@ -49484,7 +49484,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack002_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack002_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Attack002_JA.wav",
       "volume": 0.8
     },
     {
@@ -49493,7 +49493,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack003_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack003_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Attack003_JA.wav",
       "volume": 0.8
     },
     {
@@ -49502,7 +49502,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack004_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Attack004_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Attack004_JA.wav",
       "volume": 0.8
     },
     {
@@ -49511,7 +49511,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Bday01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Bday01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Bday01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49520,7 +49520,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Bday02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Bday02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Bday02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49529,7 +49529,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_C_Work01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_C_Work01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_C_Work01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49538,7 +49538,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_C_Work02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_C_Work02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_C_Work02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49547,7 +49547,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Date01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Date01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Date01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49556,7 +49556,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Date02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Date02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Date02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49565,7 +49565,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Date03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Date03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Date03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49574,7 +49574,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Date04_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Date04_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Date04_JA.wav",
       "volume": 0.8
     },
     {
@@ -49583,7 +49583,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Die01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Die01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Die01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49592,7 +49592,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Die02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Die02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Die02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49601,7 +49601,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Entry01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Entry01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Entry01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49610,7 +49610,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Equip01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Equip01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Equip01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49619,7 +49619,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Gift01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49628,7 +49628,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Gift02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49637,7 +49637,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Gift03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49646,7 +49646,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift04_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Gift04_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Gift04_JA.wav",
       "volume": 0.8
     },
     {
@@ -49655,7 +49655,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Greeting_JA.wav",
       "volume": 0.8
     },
     {
@@ -49664,7 +49664,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Greeting02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49673,7 +49673,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Greeting03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49682,7 +49682,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting04_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting04_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Greeting04_JA.wav",
       "volume": 0.8
     },
     {
@@ -49691,7 +49691,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting05_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting05_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Greeting05_JA.wav",
       "volume": 0.8
     },
     {
@@ -49700,7 +49700,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting06_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting06_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Greeting06_JA.wav",
       "volume": 0.8
     },
     {
@@ -49709,7 +49709,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting07_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Greeting07_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Greeting07_JA.wav",
       "volume": 0.8
     },
     {
@@ -49718,7 +49718,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Hit_01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Hit_01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Hit_01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49727,7 +49727,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Level01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Level01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Level01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49736,7 +49736,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49745,7 +49745,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49754,7 +49754,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby04_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby04_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby04_JA.wav",
       "volume": 0.8
     },
     {
@@ -49763,7 +49763,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby05_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby05_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby05_JA.wav",
       "volume": 0.8
     },
     {
@@ -49772,7 +49772,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby06_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby06_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby06_JA.wav",
       "volume": 0.8
     },
     {
@@ -49781,7 +49781,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby07_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby07_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby07_JA.wav",
       "volume": 0.8
     },
     {
@@ -49790,7 +49790,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby08_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby08_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby08_JA.wav",
       "volume": 0.8
     },
     {
@@ -49799,7 +49799,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby09_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby09_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby09_JA.wav",
       "volume": 0.8
     },
     {
@@ -49808,7 +49808,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby10_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby10_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby10_JA.wav",
       "volume": 0.8
     },
     {
@@ -49817,7 +49817,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby11_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Lobby11_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Lobby11_JA.wav",
       "volume": 0.8
     },
     {
@@ -49826,7 +49826,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC1_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC1_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyC1_JA.wav",
       "volume": 0.8
     },
     {
@@ -49835,7 +49835,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC2_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC2_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyC2_JA.wav",
       "volume": 0.8
     },
     {
@@ -49844,7 +49844,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC5_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC5_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyC5_JA.wav",
       "volume": 0.8
     },
     {
@@ -49853,7 +49853,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC6_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC6_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyC6_JA.wav",
       "volume": 0.8
     },
     {
@@ -49862,7 +49862,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC7_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyC7_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyC7_JA.wav",
       "volume": 0.8
     },
     {
@@ -49871,7 +49871,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyH1_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyH1_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyH1_JA.wav",
       "volume": 0.8
     },
     {
@@ -49880,7 +49880,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyH2_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyH2_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyH2_JA.wav",
       "volume": 0.8
     },
     {
@@ -49889,7 +49889,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyH3_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyH3_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyH3_JA.wav",
       "volume": 0.8
     },
     {
@@ -49898,7 +49898,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyIdle01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyIdle01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyIdle01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49907,7 +49907,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyTouch1_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyTouch1_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyTouch1_JA.wav",
       "volume": 0.8
     },
     {
@@ -49916,7 +49916,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyTouchsp_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyTouchsp_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyTouchsp_JA.wav",
       "volume": 0.8
     },
     {
@@ -49925,7 +49925,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyTouchsp2_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_LobbyTouchsp2_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_LobbyTouchsp2_JA.wav",
       "volume": 0.8
     },
     {
@@ -49934,7 +49934,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Manage01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Manage01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Manage01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49943,7 +49943,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Manage02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Manage02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Manage02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49952,7 +49952,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Select01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Select01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Select01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49961,7 +49961,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Summon01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Summon01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Summon01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49970,7 +49970,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Summon02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Summon02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Summon02_JA.wav",
       "volume": 0.8
     },
     {
@@ -49979,7 +49979,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Summon03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Summon03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Summon03_JA.wav",
       "volume": 0.8
     },
     {
@@ -49988,7 +49988,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Title01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Title01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Title01_JA.wav",
       "volume": 0.8
     },
     {
@@ -49997,7 +49997,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Title02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Title02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Title02_JA.wav",
       "volume": 0.8
     },
     {
@@ -50006,7 +50006,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Title03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Title03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Title03_JA.wav",
       "volume": 0.8
     },
     {
@@ -50015,7 +50015,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Ultimate01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Ultimate01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Ultimate01_JA.wav",
       "volume": 0.8
     },
     {
@@ -50024,7 +50024,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Ultimate02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Ultimate02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Ultimate02_JA.wav",
       "volume": 0.8
     },
     {
@@ -50033,7 +50033,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Victory01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Victory01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Victory01_JA.wav",
       "volume": 0.8
     },
     {
@@ -50042,7 +50042,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_Victory02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_Victory02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_Victory02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76682,7 +76682,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Active01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76691,7 +76691,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Active02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76700,7 +76700,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Active03_JA.wav",
       "volume": 0.8
     },
     {
@@ -76709,7 +76709,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Active01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76718,7 +76718,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Active02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76727,7 +76727,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Active03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Active03_JA.wav",
       "volume": 0.8
     },
     {
@@ -76736,7 +76736,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Air_Down_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Air_Down_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Air_Down_JA.wav",
       "volume": 0.8
     },
     {
@@ -76745,7 +76745,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Anniversary_JA.wav",
       "volume": 0.8
     },
     {
@@ -76754,7 +76754,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Anniversary01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76763,7 +76763,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Anniversary02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76772,7 +76772,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Anniversary03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Anniversary03_JA.wav",
       "volume": 0.8
     },
     {
@@ -76781,7 +76781,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Ascend01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Ascend01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Ascend01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76790,7 +76790,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack001_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack001_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Attack001_JA.wav",
       "volume": 0.8
     },
     {
@@ -76799,7 +76799,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack002_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack002_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Attack002_JA.wav",
       "volume": 0.8
     },
     {
@@ -76808,7 +76808,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack003_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack003_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Attack003_JA.wav",
       "volume": 0.8
     },
     {
@@ -76817,7 +76817,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack004_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Attack004_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Attack004_JA.wav",
       "volume": 0.8
     },
     {
@@ -76826,7 +76826,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Bday01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Bday01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Bday01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76835,7 +76835,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Bday02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Bday02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Bday02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76844,7 +76844,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_C_Work01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_C_Work01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_C_Work01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76853,7 +76853,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_C_Work02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_C_Work02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_C_Work02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76862,7 +76862,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Date01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76871,7 +76871,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Date02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76880,7 +76880,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Date03_JA.wav",
       "volume": 0.8
     },
     {
@@ -76889,7 +76889,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date04_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Date04_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Date04_JA.wav",
       "volume": 0.8
     },
     {
@@ -76898,7 +76898,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Die01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Die01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Die01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76907,7 +76907,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Die02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Die02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Die02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76916,7 +76916,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Entry01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Entry01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Entry01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76925,7 +76925,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Equip01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Equip01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Equip01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76934,7 +76934,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Gift01_JA.wav",
       "volume": 0.8
     },
     {
@@ -76943,7 +76943,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Gift02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76952,7 +76952,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Gift03_JA.wav",
       "volume": 0.8
     },
     {
@@ -76961,7 +76961,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift04_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Gift04_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Gift04_JA.wav",
       "volume": 0.8
     },
     {
@@ -76970,7 +76970,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Greeting_JA.wav",
       "volume": 0.8
     },
     {
@@ -76979,7 +76979,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Greeting02_JA.wav",
       "volume": 0.8
     },
     {
@@ -76988,7 +76988,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Greeting03_JA.wav",
       "volume": 0.8
     },
     {
@@ -76997,7 +76997,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting04_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting04_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Greeting04_JA.wav",
       "volume": 0.8
     },
     {
@@ -77006,7 +77006,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting05_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting05_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Greeting05_JA.wav",
       "volume": 0.8
     },
     {
@@ -77015,7 +77015,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting06_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting06_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Greeting06_JA.wav",
       "volume": 0.8
     },
     {
@@ -77024,7 +77024,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting07_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Greeting07_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Greeting07_JA.wav",
       "volume": 0.8
     },
     {
@@ -77033,7 +77033,7 @@
       "sound_type": 1,
       "mixer_group": 12,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Hit_01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Hit_01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Hit_01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77042,7 +77042,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Level01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Level01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Level01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77051,7 +77051,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby02_JA.wav",
       "volume": 0.8
     },
     {
@@ -77060,7 +77060,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby03_JA.wav",
       "volume": 0.8
     },
     {
@@ -77069,7 +77069,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby04_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby04_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby04_JA.wav",
       "volume": 0.8
     },
     {
@@ -77078,7 +77078,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby05_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby05_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby05_JA.wav",
       "volume": 0.8
     },
     {
@@ -77087,7 +77087,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby06_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby06_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby06_JA.wav",
       "volume": 0.8
     },
     {
@@ -77096,7 +77096,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby07_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby07_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby07_JA.wav",
       "volume": 0.8
     },
     {
@@ -77105,7 +77105,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby08_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby08_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby08_JA.wav",
       "volume": 0.8
     },
     {
@@ -77114,7 +77114,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby09_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby09_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby09_JA.wav",
       "volume": 0.8
     },
     {
@@ -77123,7 +77123,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby10_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby10_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby10_JA.wav",
       "volume": 0.8
     },
     {
@@ -77132,7 +77132,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby11_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Lobby11_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Lobby11_JA.wav",
       "volume": 0.8
     },
     {
@@ -77141,7 +77141,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC1_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC1_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyC1_JA.wav",
       "volume": 0.8
     },
     {
@@ -77150,7 +77150,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC2_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC2_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyC2_JA.wav",
       "volume": 0.8
     },
     {
@@ -77159,7 +77159,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC5_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC5_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyC5_JA.wav",
       "volume": 0.8
     },
     {
@@ -77168,7 +77168,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC6_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC6_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyC6_JA.wav",
       "volume": 0.8
     },
     {
@@ -77177,7 +77177,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC7_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyC7_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyC7_JA.wav",
       "volume": 0.8
     },
     {
@@ -77186,7 +77186,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyH1_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyH1_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyH1_JA.wav",
       "volume": 0.8
     },
     {
@@ -77195,7 +77195,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyH2_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyH2_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyH2_JA.wav",
       "volume": 0.8
     },
     {
@@ -77204,7 +77204,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyH3_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyH3_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyH3_JA.wav",
       "volume": 0.8
     },
     {
@@ -77213,7 +77213,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyIdle01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyIdle01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyIdle01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77222,7 +77222,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyTouch1_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyTouch1_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyTouch1_JA.wav",
       "volume": 0.8
     },
     {
@@ -77231,7 +77231,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyTouchsp_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyTouchsp_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyTouchsp_JA.wav",
       "volume": 0.8
     },
     {
@@ -77240,7 +77240,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyTouchsp2_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_LobbyTouchsp2_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_LobbyTouchsp2_JA.wav",
       "volume": 0.8
     },
     {
@@ -77249,7 +77249,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Manage01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Manage01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Manage01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77258,7 +77258,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Manage02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Manage02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Manage02_JA.wav",
       "volume": 0.8
     },
     {
@@ -77267,7 +77267,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Select01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Select01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Select01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77276,7 +77276,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Summon01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Summon01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Summon01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77285,7 +77285,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Summon02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Summon02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Summon02_JA.wav",
       "volume": 0.8
     },
     {
@@ -77294,7 +77294,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Summon03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Summon03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Summon03_JA.wav",
       "volume": 0.8
     },
     {
@@ -77303,7 +77303,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Title01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Title01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Title01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77312,7 +77312,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Title02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Title02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Title02_JA.wav",
       "volume": 0.8
     },
     {
@@ -77321,7 +77321,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Title03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Title03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Title03_JA.wav",
       "volume": 0.8
     },
     {
@@ -77330,7 +77330,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Ultimate01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Ultimate01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Ultimate01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77339,7 +77339,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Ultimate02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Ultimate02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Ultimate02_JA.wav",
       "volume": 0.8
     },
     {
@@ -77348,7 +77348,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Victory01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Victory01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Victory01_JA.wav",
       "volume": 0.8
     },
     {
@@ -77357,7 +77357,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Victory02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_Victory02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_Victory02_JA.wav",
       "volume": 0.8
     },
     {
@@ -78752,7 +78752,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_326020031_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_326020031_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_326020031_JA.wav",
       "volume": 0.8
     },
     {
@@ -78761,7 +78761,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_326020032_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_326020032_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_326020032_JA.wav",
       "volume": 0.8
     },
     {
@@ -78770,7 +78770,7 @@
       "sound_type": 1,
       "mixer_group": 11,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_326020033_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_326020033_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_326020033_JA.wav",
       "volume": 0.8
     },
     {
@@ -100739,7 +100739,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Amazed_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Amazed_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Amazed_JA.wav",
       "volume": 0.8
     },
     {
@@ -100748,7 +100748,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Angry_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Angry_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Angry_JA.wav",
       "volume": 0.8
     },
     {
@@ -100757,7 +100757,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Ask_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Ask_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Ask_JA.wav",
       "volume": 0.8
     },
     {
@@ -100766,7 +100766,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Burst_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Burst_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Burst_JA.wav",
       "volume": 0.8
     },
     {
@@ -100775,7 +100775,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Call_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Call_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Call_JA.wav",
       "volume": 0.8
     },
     {
@@ -100784,7 +100784,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Call02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Call02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Call02_JA.wav",
       "volume": 0.8
     },
     {
@@ -100793,7 +100793,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Chuckle_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Chuckle_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Chuckle_JA.wav",
       "volume": 0.8
     },
     {
@@ -100802,7 +100802,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Grief_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Grief_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Grief_JA.wav",
       "volume": 0.8
     },
     {
@@ -100811,7 +100811,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Humming_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Humming_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Humming_JA.wav",
       "volume": 0.8
     },
     {
@@ -100820,7 +100820,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Irritate_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Irritate_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Irritate_JA.wav",
       "volume": 0.8
     },
     {
@@ -100829,7 +100829,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Laugh_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Laugh_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Laugh_JA.wav",
       "volume": 0.8
     },
     {
@@ -100838,7 +100838,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Negative01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Negative01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Negative01_JA.wav",
       "volume": 0.8
     },
     {
@@ -100847,7 +100847,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Negative02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Negative02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Negative02_JA.wav",
       "volume": 0.8
     },
     {
@@ -100856,7 +100856,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Phrase01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Phrase01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Phrase01_JA.wav",
       "volume": 0.8
     },
     {
@@ -100865,7 +100865,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Phrase02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Phrase02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Phrase02_JA.wav",
       "volume": 0.8
     },
     {
@@ -100874,7 +100874,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Pissed_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Pissed_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Pissed_JA.wav",
       "volume": 0.8
     },
     {
@@ -100883,7 +100883,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Plead_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Plead_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Plead_JA.wav",
       "volume": 0.8
     },
     {
@@ -100892,7 +100892,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Positive01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Positive01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Positive01_JA.wav",
       "volume": 0.8
     },
     {
@@ -100901,7 +100901,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Positive02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Positive02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Positive02_JA.wav",
       "volume": 0.8
     },
     {
@@ -100910,7 +100910,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Question_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Question_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Question_JA.wav",
       "volume": 0.8
     },
     {
@@ -100919,7 +100919,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Sad_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Sad_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Sad_JA.wav",
       "volume": 0.8
     },
     {
@@ -100928,7 +100928,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Scare_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Scare_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Scare_JA.wav",
       "volume": 0.8
     },
     {
@@ -100937,7 +100937,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Sigh01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Sigh01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Sigh01_JA.wav",
       "volume": 0.8
     },
     {
@@ -100946,7 +100946,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Sigh02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Sigh02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Sigh02_JA.wav",
       "volume": 0.8
     },
     {
@@ -100955,7 +100955,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Surprise_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Surprise_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Surprise_JA.wav",
       "volume": 0.8
     },
     {
@@ -100964,7 +100964,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Surprise02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Surprise02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Surprise02_JA.wav",
       "volume": 0.8
     },
     {
@@ -100973,7 +100973,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Thanks_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Thanks_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Thanks_JA.wav",
       "volume": 0.8
     },
     {
@@ -100982,7 +100982,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Think01_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Think01_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Think01_JA.wav",
       "volume": 0.8
     },
     {
@@ -100991,7 +100991,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Think02_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Think02_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Think02_JA.wav",
       "volume": 0.8
     },
     {
@@ -101000,7 +101000,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Think03_KR.wav",
-      "jpn": "%S_CH%Larimar/Voice_KR/V_Larimar_P_Think03_KR.wav",
+      "jpn": "%S_CH%Larimar/Voice_JA/V_Larimar_P_Think03_JA.wav",
       "volume": 0.8
     },
     {
@@ -111134,7 +111134,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Amazed_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Amazed_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Amazed_JA.wav",
       "volume": 0.8
     },
     {
@@ -111143,7 +111143,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Angry_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Angry_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Angry_JA.wav",
       "volume": 0.8
     },
     {
@@ -111152,7 +111152,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Ask_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Ask_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Ask_JA.wav",
       "volume": 0.8
     },
     {
@@ -111161,7 +111161,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Burst_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Burst_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Burst_JA.wav",
       "volume": 0.8
     },
     {
@@ -111170,7 +111170,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Call_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Call_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Call_JA.wav",
       "volume": 0.8
     },
     {
@@ -111179,7 +111179,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Call_01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Call_01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Call_01_JA.wav",
       "volume": 0.8
     },
     {
@@ -111188,7 +111188,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Chuckle_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Chuckle_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Chuckle_JA.wav",
       "volume": 0.8
     },
     {
@@ -111197,7 +111197,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Grief_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Grief_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Grief_JA.wav",
       "volume": 0.8
     },
     {
@@ -111206,7 +111206,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Humming_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Humming_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Humming_JA.wav",
       "volume": 0.8
     },
     {
@@ -111215,7 +111215,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Irritate_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Irritate_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Irritate_JA.wav",
       "volume": 0.8
     },
     {
@@ -111224,7 +111224,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Laugh_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Laugh_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Laugh_JA.wav",
       "volume": 0.8
     },
     {
@@ -111233,7 +111233,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Negative01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Negative01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Negative01_JA.wav",
       "volume": 0.8
     },
     {
@@ -111242,7 +111242,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Negative02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Negative02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Negative02_JA.wav",
       "volume": 0.8
     },
     {
@@ -111251,7 +111251,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Phrase01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Phrase01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Phrase01_JA.wav",
       "volume": 0.8
     },
     {
@@ -111260,7 +111260,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Phrase02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Phrase02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Phrase02_JA.wav",
       "volume": 0.8
     },
     {
@@ -111269,7 +111269,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Pissed_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Pissed_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Pissed_JA.wav",
       "volume": 0.8
     },
     {
@@ -111278,7 +111278,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Plead_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Plead_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Plead_JA.wav",
       "volume": 0.8
     },
     {
@@ -111287,7 +111287,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Positive01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Positive01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Positive01_JA.wav",
       "volume": 0.8
     },
     {
@@ -111296,7 +111296,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Positive02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Positive02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Positive02_JA.wav",
       "volume": 0.8
     },
     {
@@ -111305,7 +111305,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Question_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Question_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Question_JA.wav",
       "volume": 0.8
     },
     {
@@ -111314,7 +111314,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Sad_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Sad_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Sad_JA.wav",
       "volume": 0.8
     },
     {
@@ -111323,7 +111323,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Scare_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Scare_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Scare_JA.wav",
       "volume": 0.8
     },
     {
@@ -111332,7 +111332,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Sigh01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Sigh01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Sigh01_JA.wav",
       "volume": 0.8
     },
     {
@@ -111341,7 +111341,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Sigh02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Sigh02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Sigh02_JA.wav",
       "volume": 0.8
     },
     {
@@ -111350,7 +111350,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Surprise_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Surprise_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Surprise_JA.wav",
       "volume": 0.8
     },
     {
@@ -111359,7 +111359,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Surprise02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Surprise02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Surprise02_JA.wav",
       "volume": 0.8
     },
     {
@@ -111368,7 +111368,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Thanks_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Thanks_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Thanks_JA.wav",
       "volume": 0.8
     },
     {
@@ -111377,7 +111377,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Think01_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Think01_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Think01_JA.wav",
       "volume": 0.8
     },
     {
@@ -111386,7 +111386,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Think02_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Think02_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Think02_JA.wav",
       "volume": 0.8
     },
     {
@@ -111395,7 +111395,7 @@
       "sound_type": 1,
       "mixer_group": 13,
       "kor": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Think03_KR.wav",
-      "jpn": "%S_CH%Sigrid/Voice_KR/V_Sigrid_P_Think03_KR.wav",
+      "jpn": "%S_CH%Sigrid/Voice_JA/V_Sigrid_P_Think03_JA.wav",
       "volume": 0.8
     },
     {
