@@ -1,7 +1,15 @@
 matplotlib
-aiosqlite
+Pillow
 opencv-python-headless
 aiohttp
+requests
+PyYAML
+beautifulsoup4
+aiosqlite
+pycryptodome
 flatbuffers
 google-play-scraper
-pycryptodome
+pydantic
+rich
+nonebot-plugin-htmlrender
+nonebot-plugin-apscheduler
