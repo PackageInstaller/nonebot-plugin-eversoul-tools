@@ -1995,7 +1995,7 @@
       "tab": 30080,
       "shop_no": 30080,
       "type": "event",
-      "schedule_key": "Cashshop_Pickup_Sigrid_CN",
+      "schedule_key": "Cashshop_Pickup_Weiss_CN",
       "check_contents_limit": 1
     },
     {
@@ -2003,7 +2003,7 @@
       "tab": 30090,
       "shop_no": 30090,
       "type": "event",
-      "schedule_key": "Cashshop_Pickup_Larimar_CN",
+      "schedule_key": "Cashshop_Pickup_Carnelian_CN",
       "check_contents_limit": 1
     },
     {
@@ -2011,7 +2011,7 @@
       "tab": 30100,
       "shop_no": 30100,
       "type": "event",
-      "schedule_key": "Cashshop_Pickup_Dominique_CN",
+      "schedule_key": "Cashshop_Pickup_Laura_CN",
       "check_contents_limit": 1
     },
     {
@@ -2067,7 +2067,7 @@
       "tab": 40060,
       "shop_no": 40060,
       "type": "hero_pass",
-      "schedule_key": "Cashshop_Heropass_Sigrid_CN",
+      "schedule_key": "Cashshop_Heropass_Weiss_CN",
       "check_contents_limit": 1
     },
     {
@@ -2075,7 +2075,7 @@
       "tab": 40070,
       "shop_no": 40070,
       "type": "hero_pass",
-      "schedule_key": "Cashshop_Heropass_Larimar_CN",
+      "schedule_key": "Cashshop_Heropass_Carnelian_CN",
       "check_contents_limit": 1
     },
     {
@@ -2083,7 +2083,7 @@
       "tab": 40080,
       "shop_no": 40080,
       "type": "hero_pass",
-      "schedule_key": "Cashshop_Heropass_Dominique_CN",
+      "schedule_key": "Cashshop_Heropass_Laura_CN",
       "check_contents_limit": 1
     },
     {

@@ -2122,7 +2122,7 @@
     },
     {
       "index": 267,
-      "schedule_key": "Cashshop_Pickup_Sigrid_CN",
+      "schedule_key": "Cashshop_Pickup_Weiss_CN",
       "schedule_type": 1,
       "start_date": "2026-03-18 00:00:00",
       "end_date": "2026-04-01 00:00:00",
@@ -2130,15 +2130,15 @@
     },
     {
       "index": 268,
-      "schedule_key": "Cashshop_Pickup_Larimar_CN",
+      "schedule_key": "Cashshop_Pickup_Carnelian_CN",
       "schedule_type": 1,
-      "start_date": "2026-03-25 00:00:00",
+      "start_date": "2026-03-18 00:00:00",
       "end_date": "2026-04-15 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 269,
-      "schedule_key": "Cashshop_Pickup_Dominique_CN",
+      "schedule_key": "Cashshop_Pickup_Laura_CN",
       "schedule_type": 1,
       "start_date": "2026-04-08 00:00:00",
       "end_date": "2026-04-22 00:00:00",
@@ -2154,7 +2154,7 @@
     },
     {
       "index": 271,
-      "schedule_key": "Cashshop_Heropass_Sigrid_CN",
+      "schedule_key": "Cashshop_Heropass_Weiss_CN",
       "schedule_type": 1,
       "start_date": "2026-03-18 00:00:00",
       "end_date": "2026-04-22 00:00:00",
@@ -2162,15 +2162,15 @@
     },
     {
       "index": 272,
-      "schedule_key": "Cashshop_Heropass_Larimar_CN",
+      "schedule_key": "Cashshop_Heropass_Carnelian_CN",
       "schedule_type": 1,
-      "start_date": "2026-03-25 00:00:00",
+      "start_date": "2026-03-18 00:00:00",
       "end_date": "2026-04-29 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 273,
-      "schedule_key": "Cashshop_Heropass_Dominique_CN",
+      "schedule_key": "Cashshop_Heropass_Laura_CN",
       "schedule_type": 1,
       "start_date": "2026-04-08 00:00:00",
       "end_date": "2026-05-13 00:00:00",
@@ -2556,7 +2556,7 @@
       "index": 30044,
       "schedule_key": "Calender_PickUp_Carnelian",
       "schedule_type": 3,
-      "start_date": "2026-03-25 00:00:00",
+      "start_date": "2026-03-18 00:00:00",
       "end_date": "2026-04-15 00:00:00",
       "value_date_01": ""
     },
@@ -2596,8 +2596,8 @@
       "index": 30049,
       "schedule_key": "Calender_Rotation_Trip",
       "schedule_type": 3,
-      "start_date": "2026-03-18 00:00:00",
-      "end_date": "2026-04-01 00:00:00",
+      "start_date": "2999-12-31 00:00:00",
+      "end_date": "2999-12-31 00:00:00",
       "value_date_01": ""
     },
     {
@@ -3020,9 +3020,9 @@
       "index": 40048,
       "schedule_key": "EventInfo_Rotation_Trip",
       "schedule_type": 4,
-      "start_date": "2026-03-18 00:00:00",
-      "end_date": "2026-04-01 00:00:00",
-      "value_date_01": "2026-04-01 00:00:00"
+      "start_date": "2999-12-31 00:00:00",
+      "end_date": "2999-12-31 00:00:00",
+      "value_date_01": "2999-12-31 00:00:00"
     },
     {
       "index": 40049,
@@ -3788,7 +3788,7 @@
       "index": 50085,
       "schedule_key": "Gacha_578",
       "schedule_type": 5,
-      "start_date": "2026-03-25 00:00:00",
+      "start_date": "2026-03-18 00:00:00",
       "end_date": "2026-04-15 00:00:00",
       "value_date_01": ""
     },

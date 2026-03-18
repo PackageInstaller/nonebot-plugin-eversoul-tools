@@ -1702,7 +1702,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 1,
-      "open_date": "2026-04-01 00:00;00"
+      "open_date": "2026-04-01 00:00:00"
     },
     {
       "no": 3152,
@@ -1710,7 +1710,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 2,
-      "open_date": "2026-04-01 00:00;00"
+      "open_date": "2026-04-01 00:00:00"
     },
     {
       "no": 3153,
@@ -1718,7 +1718,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 3,
-      "open_date": "2026-04-01 00:00;00"
+      "open_date": "2026-04-01 00:00:00"
     },
     {
       "no": 3154,
@@ -1726,7 +1726,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 4,
-      "open_date": "2026-04-01 00:00;00"
+      "open_date": "2026-04-01 00:00:00"
     },
     {
       "no": 3161,
@@ -1798,7 +1798,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 1,
-      "open_date": "2026-05-13 00:00;00"
+      "open_date": "2026-05-13 00:00:00"
     },
     {
       "no": 3182,
@@ -1806,7 +1806,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 2,
-      "open_date": "2026-05-13 00:00;00"
+      "open_date": "2026-05-13 00:00:00"
     },
     {
       "no": 3183,
@@ -1814,7 +1814,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 3,
-      "open_date": "2026-05-13 00:00;00"
+      "open_date": "2026-05-13 00:00:00"
     },
     {
       "no": 3184,
@@ -1822,7 +1822,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 4,
-      "open_date": "2026-05-13 00:00;00"
+      "open_date": "2026-05-13 00:00:00"
     },
     {
       "no": 4011,
@@ -2278,7 +2278,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 1,
-      "open_date": "2026-04-22 00:00;00"
+      "open_date": "2026-04-22 00:00:00"
     },
     {
       "no": 4152,
@@ -2286,7 +2286,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 2,
-      "open_date": "2026-04-22 00:00;00"
+      "open_date": "2026-04-22 00:00:00"
     },
     {
       "no": 4153,
@@ -2294,7 +2294,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 3,
-      "open_date": "2026-04-22 00:00;00"
+      "open_date": "2026-04-22 00:00:00"
     },
     {
       "no": 4154,
@@ -2302,7 +2302,7 @@
       "wishlist_tier": 2,
       "view_type": 1,
       "server_check": 4,
-      "open_date": "2026-04-22 00:00;00"
+      "open_date": "2026-04-22 00:00:00"
     },
     {
       "no": 5011,

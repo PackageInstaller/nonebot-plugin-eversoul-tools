@@ -38,8 +38,8 @@
     {
       "no": 6,
       "movie_path": "GachaNewCharacterLilith",
-      "start_date": "2026-03-11 00:00",
-      "end_date": "2026-03-25 00:00",
+      "start_date": "2099-01-01 00:00",
+      "end_date": "2099-01-01 00:00",
       "hero_check": 1080
     },
     {
@@ -122,8 +122,8 @@
     {
       "no": 18,
       "movie_path": "GachaNewCharacterCarnelian",
-      "start_date": "2026-03-25 00:00",
-      "end_date": "2026-04-15 00:00",
+      "start_date": "2099-01-01 00:00",
+      "end_date": "2099-01-01 00:00",
       "hero_check": 5060
     },
     {
