@@ -2140,9 +2140,9 @@
       "index": 20001,
       "schedule_key": "EdenUnion_fayren",
       "schedule_type": 2,
-      "start_date": "2025-11-06 00:00:00",
-      "end_date": "2025-11-20 00:00:00",
-      "value_date_01": "2025-12-04 00:00:00"
+      "start_date": "2026-05-21 00:00:00",
+      "end_date": "2026-06-04 00:00:00",
+      "value_date_01": "2026-06-18 00:00:00"
     },
     {
       "index": 20002,
@@ -2182,23 +2182,23 @@
       "schedule_type": 2,
       "start_date": "2026-02-26 00:00:00",
       "end_date": "2026-03-12 00:00:00",
-      "value_date_01": "2026-04-23 00:00:00"
+      "value_date_01": "2026-03-26 00:00:00"
     },
     {
       "index": 20007,
       "schedule_key": "EdenUnion_aurelia",
       "schedule_type": 2,
-      "start_date": "2025-09-11 00:00:00",
-      "end_date": "2025-09-25 00:00:00",
-      "value_date_01": "2025-10-09 00:00:00"
+      "start_date": "2026-03-26 00:00:00",
+      "end_date": "2026-04-09 00:00:00",
+      "value_date_01": "2026-04-23 00:00:00"
     },
     {
       "index": 20008,
       "schedule_key": "EdenUnion_tabria",
       "schedule_type": 2,
-      "start_date": "2025-10-09 00:00:00",
-      "end_date": "2025-10-23 00:00:00",
-      "value_date_01": "2025-11-06 00:00:00"
+      "start_date": "2026-04-23 00:00:00",
+      "end_date": "2026-05-07 00:00:00",
+      "value_date_01": "2026-05-21 00:00:00"
     },
     {
       "index": 30001,
@@ -3020,8 +3020,8 @@
       "index": 30103,
       "schedule_key": "Calender_EverMatch",
       "schedule_type": 3,
-      "start_date": "2026-01-01 00:00:00",
-      "end_date": "2026-01-08 00:00:00",
+      "start_date": "2026-04-02 00:00:00",
+      "end_date": "2026-04-09 00:00:00",
       "value_date_01": ""
     },
     {
@@ -3084,8 +3084,8 @@
       "index": 30111,
       "schedule_key": "Calender_Kayrin",
       "schedule_type": 3,
-      "start_date": "2026-01-29 00:00:00",
-      "end_date": "2026-02-05 00:00:00",
+      "start_date": "2026-04-02 00:00:00",
+      "end_date": "2026-04-09 00:00:00",
       "value_date_01": ""
     },
     {
@@ -3132,8 +3132,8 @@
       "index": 30117,
       "schedule_key": "Calender_GuildRaid_DarkKnight",
       "schedule_type": 3,
-      "start_date": "2025-08-21 00:00:00",
-      "end_date": "2025-08-28 00:00:00",
+      "start_date": "2026-03-26 00:00:00",
+      "end_date": "2026-04-02 00:00:00",
       "value_date_01": ""
     },
     {
@@ -3164,8 +3164,8 @@
       "index": 30121,
       "schedule_key": "Calender_SingleRaid_Naiah",
       "schedule_type": 3,
-      "start_date": "2025-11-13 00:00:00",
-      "end_date": "2025-11-20 00:00:00",
+      "start_date": "2026-04-09 00:00:00",
+      "end_date": "2026-04-16 00:00:00",
       "value_date_01": ""
     },
     {
@@ -3276,8 +3276,8 @@
       "index": 30135,
       "schedule_key": "Calender_EdenAlliance_Aurelia",
       "schedule_type": 3,
-      "start_date": "2025-09-11 00:00:00",
-      "end_date": "2025-09-25 00:00:00",
+      "start_date": "2026-03-26 00:00:00",
+      "end_date": "2026-04-09 00:00:00",
       "value_date_01": ""
     },
     {
@@ -5802,6 +5802,14 @@
     },
     {
       "index": 40273,
+      "schedule_key": "EventInfo_QuestGuildRaid_49",
+      "schedule_type": 4,
+      "start_date": "2026-03-26 00:00:00",
+      "end_date": "2026-04-02 00:00:00",
+      "value_date_01": "2026-04-09 00:00:00"
+    },
+    {
+      "index": 40274,
       "schedule_key": "EventInfo_QuestGuildRaid_45",
       "schedule_type": 4,
       "start_date": "2026-01-01 00:00:00",
@@ -5809,7 +5817,7 @@
       "value_date_01": "2026-01-15 00:00:00"
     },
     {
-      "index": 40274,
+      "index": 40275,
       "schedule_key": "EventInfo_EverLive_1",
       "schedule_type": 4,
       "start_date": "2025-10-02 00:00:00",
@@ -5817,7 +5825,7 @@
       "value_date_01": "2025-10-23 00:00:00"
     },
     {
-      "index": 40275,
+      "index": 40276,
       "schedule_key": "EventInfo_DJsoul_NewSong",
       "schedule_type": 4,
       "start_date": "2025-04-10 00:00:00",
@@ -5825,15 +5833,15 @@
       "value_date_01": "2025-04-17 00:00:00"
     },
     {
-      "index": 40276,
+      "index": 40277,
       "schedule_key": "EventInfo_EverMatch_8",
       "schedule_type": 4,
-      "start_date": "2026-01-01 00:00:00",
-      "end_date": "2026-01-08 00:00:00",
-      "value_date_01": "2026-01-08 00:00:00"
+      "start_date": "2026-04-02 00:00:00",
+      "end_date": "2026-04-09 00:00:00",
+      "value_date_01": "2026-04-09 00:00:00"
     },
     {
-      "index": 40277,
+      "index": 40278,
       "schedule_key": "EventInfo_DefenseGame_Sakuyo",
       "schedule_type": 4,
       "start_date": "2025-07-10 00:00:00",
@@ -5841,7 +5849,7 @@
       "value_date_01": "2025-07-31 00:00:00"
     },
     {
-      "index": 40278,
+      "index": 40279,
       "schedule_key": "EventInfo_DefenseGame_Dominique",
       "schedule_type": 4,
       "start_date": "2024-06-27 01:00:00",
@@ -5849,7 +5857,7 @@
       "value_date_01": "2024-07-11 00:00:00"
     },
     {
-      "index": 40279,
+      "index": 40280,
       "schedule_key": "EventInfo_DefenseGame_15",
       "schedule_type": 4,
       "start_date": "2026-03-12 00:00:00",
@@ -5857,7 +5865,7 @@
       "value_date_01": "2026-03-26 00:00:00"
     },
     {
-      "index": 40280,
+      "index": 40281,
       "schedule_key": "EventInfo_DefenseGame_14",
       "schedule_type": 4,
       "start_date": "2026-01-29 00:00:00",
@@ -5865,7 +5873,7 @@
       "value_date_01": "2026-02-12 00:00:00"
     },
     {
-      "index": 40281,
+      "index": 40282,
       "schedule_key": "EventInfo_FairyVote_2",
       "schedule_type": 4,
       "start_date": "2024-07-11 00:00:00",
@@ -5873,7 +5881,7 @@
       "value_date_01": "2024-08-08 00:00:00"
     },
     {
-      "index": 40282,
+      "index": 40283,
       "schedule_key": "EventInfo_EGT_Movie_1",
       "schedule_type": 4,
       "start_date": "2024-01-04 01:00:00",
@@ -5881,7 +5889,7 @@
       "value_date_01": "2024-01-18 00:00:00"
     },
     {
-      "index": 40283,
+      "index": 40284,
       "schedule_key": "EventInfo_FairyVote_1",
       "schedule_type": 4,
       "start_date": "2023-06-22 00:00:00",
@@ -5889,7 +5897,7 @@
       "value_date_01": "2023-07-20 00:00:00"
     },
     {
-      "index": 40284,
+      "index": 40285,
       "schedule_key": "EventInfo_Newbie_DailyPass",
       "schedule_type": 4,
       "start_date": "2024-11-21 00:00:00",
@@ -5897,7 +5905,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40285,
+      "index": 40286,
       "schedule_key": "EventInfo_Launching_Quest",
       "schedule_type": 4,
       "start_date": "2022-10-26 00:00:00",
@@ -5905,7 +5913,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40286,
+      "index": 40287,
       "schedule_key": "EventInfo_FariyCollect_Quest",
       "schedule_type": 4,
       "start_date": "2022-10-26 00:00:00",
@@ -5913,7 +5921,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40287,
+      "index": 40288,
       "schedule_key": "EventInfo_SelectPickup_Season2",
       "schedule_type": 4,
       "start_date": "2024-04-18 01:00:00",
@@ -5921,7 +5929,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40288,
+      "index": 40289,
       "schedule_key": "EventInfo_SelectPickup_Season1",
       "schedule_type": 4,
       "start_date": "2023-06-29 01:00:00",
@@ -5929,7 +5937,7 @@
       "value_date_01": "2024-04-17 23:59:59"
     },
     {
-      "index": 40289,
+      "index": 40290,
       "schedule_key": "EventInfo_Comeback_Attend",
       "schedule_type": 4,
       "start_date": "2023-06-15 00:00:00",
@@ -5937,7 +5945,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40290,
+      "index": 40291,
       "schedule_key": "EventInfo_Comeback_Quest",
       "schedule_type": 4,
       "start_date": "2023-06-15 00:00:00",
@@ -5945,7 +5953,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40291,
+      "index": 40292,
       "schedule_key": "EventInfo_Rotation_Trip",
       "schedule_type": 4,
       "start_date": "2024-02-15 01:00:00",
@@ -5953,7 +5961,7 @@
       "value_date_01": "2024-02-29 00:00:00"
     },
     {
-      "index": 40292,
+      "index": 40293,
       "schedule_key": "EventInfo_Rotation_Heart",
       "schedule_type": 4,
       "start_date": "2024-03-28 01:00:00",
@@ -5961,15 +5969,15 @@
       "value_date_01": "2024-04-11 00:00:00"
     },
     {
-      "index": 40293,
+      "index": 40294,
       "schedule_key": "EventInfo_Rotation_Arena",
       "schedule_type": 4,
-      "start_date": "2026-01-07 00:00:00",
-      "end_date": "2026-01-21 00:00:00",
-      "value_date_01": "2026-01-21 00:00:00"
+      "start_date": "2026-04-15 00:00:00",
+      "end_date": "2026-04-30 00:00:00",
+      "value_date_01": "2026-04-30 00:00:00"
     },
     {
-      "index": 40294,
+      "index": 40295,
       "schedule_key": "EventInfo_Rotation_Labyrinth",
       "schedule_type": 4,
       "start_date": "2026-03-18 00:00:00",
@@ -5977,7 +5985,7 @@
       "value_date_01": "2026-04-01 00:00:00"
     },
     {
-      "index": 40295,
+      "index": 40296,
       "schedule_key": "EventInfo_Rotation_Champions",
       "schedule_type": 4,
       "start_date": "2026-03-04 00:00:00",
@@ -5985,15 +5993,15 @@
       "value_date_01": "2026-03-18 00:00:00"
     },
     {
-      "index": 40296,
+      "index": 40297,
       "schedule_key": "EventInfo_Rotation_DualGate",
       "schedule_type": 4,
-      "start_date": "2025-12-24 00:00:00",
-      "end_date": "2026-01-07 00:00:00",
-      "value_date_01": "2026-01-07 00:00:00"
+      "start_date": "2026-04-01 00:00:00",
+      "end_date": "2026-04-15 00:00:00",
+      "value_date_01": "2026-04-15 00:00:00"
     },
     {
-      "index": 40297,
+      "index": 40298,
       "schedule_key": "EventInfo_Rotation_AutoArbeit",
       "schedule_type": 4,
       "start_date": "2026-02-18 00:00:00",
@@ -6001,7 +6009,7 @@
       "value_date_01": "2026-03-04 00:00:00"
     },
     {
-      "index": 40298,
+      "index": 40299,
       "schedule_key": "EventInfo_Rotation_Arena2",
       "schedule_type": 4,
       "start_date": "2026-01-28 00:00:00",
@@ -6009,7 +6017,7 @@
       "value_date_01": "2026-02-04 00:00:00"
     },
     {
-      "index": 40299,
+      "index": 40300,
       "schedule_key": "EventInfo_Rotation_Labyrinth2",
       "schedule_type": 4,
       "start_date": "2026-02-04 00:00:00",
@@ -6017,7 +6025,7 @@
       "value_date_01": "2026-02-11 00:00:00"
     },
     {
-      "index": 40300,
+      "index": 40301,
       "schedule_key": "EventInfo_Rotation_Champions2",
       "schedule_type": 4,
       "start_date": "2026-01-28 00:00:00",
@@ -6025,7 +6033,7 @@
       "value_date_01": "2026-02-04 00:00:00"
     },
     {
-      "index": 40301,
+      "index": 40302,
       "schedule_key": "EventInfo_Rotation_DualGate2",
       "schedule_type": 4,
       "start_date": "2026-02-11 00:00:00",
@@ -6033,7 +6041,7 @@
       "value_date_01": "2026-02-18 00:00:00"
     },
     {
-      "index": 40302,
+      "index": 40303,
       "schedule_key": "EventInfo_Rotation_AutoArbeit2",
       "schedule_type": 4,
       "start_date": "2026-01-21 00:00:00",
@@ -6041,7 +6049,7 @@
       "value_date_01": "2026-01-28 00:00:00"
     },
     {
-      "index": 40303,
+      "index": 40304,
       "schedule_key": "EventInfo_GaonFestival_Attend2",
       "schedule_type": 4,
       "start_date": "2025-07-31 00:00:00",
@@ -6049,7 +6057,7 @@
       "value_date_01": "2025-08-14 00:00:00"
     },
     {
-      "index": 40304,
+      "index": 40305,
       "schedule_key": "EventInfo_GaonFestival_Main2",
       "schedule_type": 4,
       "start_date": "2025-07-31 00:00:00",
@@ -6588,8 +6596,8 @@
       "index": 50067,
       "schedule_key": "Gacha_560",
       "schedule_type": 5,
-      "start_date": "2024-10-31 01:00:00",
-      "end_date": "2024-11-21 00:00:00",
+      "start_date": "2026-03-19 00:00:00",
+      "end_date": "2026-04-16 00:00:00",
       "value_date_01": ""
     },
     {
@@ -6660,8 +6668,8 @@
       "index": 50076,
       "schedule_key": "Gacha_569",
       "schedule_type": 5,
-      "start_date": "2025-03-06 00:00:00",
-      "end_date": "2025-03-27 00:00:00",
+      "start_date": "2026-03-19 00:00:00",
+      "end_date": "2026-04-09 00:00:00",
       "value_date_01": ""
     },
     {
@@ -7652,8 +7660,8 @@
       "index": 55067,
       "schedule_key": "Gate_560",
       "schedule_type": 5,
-      "start_date": "2024-10-31 01:00:00",
-      "end_date": "2024-11-01 00:00:00",
+      "start_date": "2026-03-19 00:00:00",
+      "end_date": "2026-03-20 00:00:00",
       "value_date_01": ""
     },
     {
@@ -7724,8 +7732,8 @@
       "index": 55076,
       "schedule_key": "Gate_569",
       "schedule_type": 5,
-      "start_date": "2025-03-06 00:00:00",
-      "end_date": "2025-03-07 00:00:00",
+      "start_date": "2026-03-19 00:00:00",
+      "end_date": "2026-03-20 00:00:00",
       "value_date_01": ""
     },
     {
@@ -8234,6 +8242,30 @@
     },
     {
       "index": 60007,
+      "schedule_key": "GuildRaid_1_55",
+      "schedule_type": 6,
+      "start_date": "2026-03-26 00:00:00",
+      "end_date": "2026-04-02 00:00:00",
+      "value_date_01": "2026-04-16 00:00:00"
+    },
+    {
+      "index": 60008,
+      "schedule_key": "GuildRaid_1_56",
+      "schedule_type": 6,
+      "start_date": "2026-04-16 00:00:00",
+      "end_date": "2026-04-23 00:00:00",
+      "value_date_01": "2026-05-07 00:00:00"
+    },
+    {
+      "index": 60009,
+      "schedule_key": "GuildRaid_1_57",
+      "schedule_type": 6,
+      "start_date": "2026-05-07 00:00:00",
+      "end_date": "2026-05-14 00:00:00",
+      "value_date_01": "2026-06-04 00:00:00"
+    },
+    {
+      "index": 60010,
       "schedule_key": "GuildRaid_2_49",
       "schedule_type": 6,
       "start_date": "2025-11-20 00:00:00",
@@ -8241,7 +8273,7 @@
       "value_date_01": "2025-12-11 00:00:00"
     },
     {
-      "index": 60008,
+      "index": 60011,
       "schedule_key": "GuildRaid_2_50",
       "schedule_type": 6,
       "start_date": "2025-12-11 00:00:00",
@@ -8249,7 +8281,7 @@
       "value_date_01": "2026-01-01 00:00:00"
     },
     {
-      "index": 60009,
+      "index": 60012,
       "schedule_key": "GuildRaid_2_51",
       "schedule_type": 6,
       "start_date": "2026-01-01 00:00:00",
@@ -8257,7 +8289,7 @@
       "value_date_01": "2026-01-22 00:00:00"
     },
     {
-      "index": 60010,
+      "index": 60013,
       "schedule_key": "GuildRaid_2_52",
       "schedule_type": 6,
       "start_date": "2026-01-22 00:00:00",
@@ -8265,7 +8297,7 @@
       "value_date_01": "2026-01-22 00:00:00"
     },
     {
-      "index": 60011,
+      "index": 60014,
       "schedule_key": "GuildRaid_2_53",
       "schedule_type": 6,
       "start_date": "2026-02-12 00:00:00",
@@ -8273,7 +8305,7 @@
       "value_date_01": "2026-03-05 00:00:00"
     },
     {
-      "index": 60012,
+      "index": 60015,
       "schedule_key": "GuildRaid_2_54",
       "schedule_type": 6,
       "start_date": "2026-03-05 00:00:00",
@@ -8281,7 +8313,7 @@
       "value_date_01": "2026-03-26 00:00:00"
     },
     {
-      "index": 60013,
+      "index": 60016,
       "schedule_key": "GuildRaid_4_125",
       "schedule_type": 6,
       "start_date": "2025-11-20 00:00:00",
@@ -8289,7 +8321,7 @@
       "value_date_01": "2025-12-11 00:00:00"
     },
     {
-      "index": 60014,
+      "index": 60017,
       "schedule_key": "GuildRaid_4_126",
       "schedule_type": 6,
       "start_date": "2025-12-11 00:00:00",
@@ -8297,7 +8329,7 @@
       "value_date_01": "2026-01-01 00:00:00"
     },
     {
-      "index": 60015,
+      "index": 60018,
       "schedule_key": "GuildRaid_4_127",
       "schedule_type": 6,
       "start_date": "2026-01-01 00:00:00",
@@ -8305,7 +8337,7 @@
       "value_date_01": "2026-01-22 00:00:00"
     },
     {
-      "index": 60016,
+      "index": 60019,
       "schedule_key": "GuildRaid_4_128",
       "schedule_type": 6,
       "start_date": "2026-01-22 00:00:00",
@@ -8313,7 +8345,7 @@
       "value_date_01": "2026-01-22 00:00:00"
     },
     {
-      "index": 60017,
+      "index": 60020,
       "schedule_key": "GuildRaid_4_129",
       "schedule_type": 6,
       "start_date": "2026-02-12 00:00:00",
@@ -8321,7 +8353,7 @@
       "value_date_01": "2026-03-05 00:00:00"
     },
     {
-      "index": 60018,
+      "index": 60021,
       "schedule_key": "GuildRaid_4_130",
       "schedule_type": 6,
       "start_date": "2026-03-05 00:00:00",
@@ -8329,7 +8361,7 @@
       "value_date_01": "2026-03-26 00:00:00"
     },
     {
-      "index": 60019,
+      "index": 60022,
       "schedule_key": "GuildRaid_3_69",
       "schedule_type": 6,
       "start_date": "2025-11-20 00:00:00",
@@ -8337,7 +8369,7 @@
       "value_date_01": "2025-12-11 00:00:00"
     },
     {
-      "index": 60020,
+      "index": 60023,
       "schedule_key": "GuildRaid_3_70",
       "schedule_type": 6,
       "start_date": "2025-12-11 00:00:00",
@@ -8345,7 +8377,7 @@
       "value_date_01": "2025-12-15 00:00:00"
     },
     {
-      "index": 60021,
+      "index": 60024,
       "schedule_key": "GuildRaid_3_71",
       "schedule_type": 6,
       "start_date": "2025-12-15 00:00:00",
@@ -8353,7 +8385,7 @@
       "value_date_01": "2026-01-22 00:00:00"
     },
     {
-      "index": 60022,
+      "index": 60025,
       "schedule_key": "GuildRaid_3_72",
       "schedule_type": 6,
       "start_date": "2026-01-22 00:00:00",
@@ -8361,7 +8393,7 @@
       "value_date_01": "2026-01-22 00:00:00"
     },
     {
-      "index": 60023,
+      "index": 60026,
       "schedule_key": "GuildRaid_3_73",
       "schedule_type": 6,
       "start_date": "2026-02-12 00:00:00",
@@ -8369,12 +8401,36 @@
       "value_date_01": "2026-03-05 00:00:00"
     },
     {
-      "index": 60024,
+      "index": 60027,
       "schedule_key": "GuildRaid_3_74",
       "schedule_type": 6,
-      "start_date": "2026-03-05 00:00:00",
-      "end_date": "2026-03-12 00:00:00",
-      "value_date_01": "2026-03-26 00:00:00"
+      "start_date": "2026-01-22 00:00:00",
+      "end_date": "2026-01-29 00:00:00",
+      "value_date_01": "2026-01-22 00:00:00"
+    },
+    {
+      "index": 60028,
+      "schedule_key": "GuildRaid_3_75",
+      "schedule_type": 6,
+      "start_date": "2026-03-26 00:00:00",
+      "end_date": "2026-04-02 00:00:00",
+      "value_date_01": "2026-04-16 00:00:00"
+    },
+    {
+      "index": 60029,
+      "schedule_key": "GuildRaid_3_76",
+      "schedule_type": 6,
+      "start_date": "2026-04-16 00:00:00",
+      "end_date": "2026-04-23 00:00:00",
+      "value_date_01": "2026-05-07 00:00:00"
+    },
+    {
+      "index": 60030,
+      "schedule_key": "GuildRaid_3_77",
+      "schedule_type": 6,
+      "start_date": "2026-05-07 00:00:00",
+      "end_date": "2026-05-14 00:00:00",
+      "value_date_01": "2026-06-04 00:00:00"
     },
     {
       "index": 70001,
@@ -8410,6 +8466,14 @@
     },
     {
       "index": 70005,
+      "schedule_key": "SingleRaid_1_52",
+      "schedule_type": 7,
+      "start_date": "2026-04-09 00:00:00",
+      "end_date": "2026-04-16 00:00:00",
+      "value_date_01": "2026-04-30 00:00:00"
+    },
+    {
+      "index": 70006,
       "schedule_key": "SingleRaid_2_48",
       "schedule_type": 7,
       "start_date": "2026-01-15 00:00:00",
@@ -8417,7 +8481,7 @@
       "value_date_01": "2026-02-05 00:00:00"
     },
     {
-      "index": 70006,
+      "index": 70007,
       "schedule_key": "SingleRaid_2_49",
       "schedule_type": 7,
       "start_date": "2026-02-05 00:00:00",
@@ -8425,7 +8489,7 @@
       "value_date_01": "2026-02-26 00:00:00"
     },
     {
-      "index": 70007,
+      "index": 70008,
       "schedule_key": "SingleRaid_2_50",
       "schedule_type": 7,
       "start_date": "2026-02-26 00:00:00",
@@ -8433,7 +8497,7 @@
       "value_date_01": "2026-03-19 00:00:00"
     },
     {
-      "index": 70008,
+      "index": 70009,
       "schedule_key": "SingleRaid_2_51",
       "schedule_type": 7,
       "start_date": "2026-03-19 00:00:00",
@@ -8441,7 +8505,7 @@
       "value_date_01": "2026-04-09 00:00:00"
     },
     {
-      "index": 70009,
+      "index": 70010,
       "schedule_key": "SingleRaid_3_59",
       "schedule_type": 7,
       "start_date": "2026-01-15 00:00:00",
@@ -8449,7 +8513,7 @@
       "value_date_01": "2026-02-05 00:00:00"
     },
     {
-      "index": 70010,
+      "index": 70011,
       "schedule_key": "SingleRaid_3_60",
       "schedule_type": 7,
       "start_date": "2026-02-05 00:00:00",
@@ -8457,7 +8521,7 @@
       "value_date_01": "2026-02-26 00:00:00"
     },
     {
-      "index": 70011,
+      "index": 70012,
       "schedule_key": "SingleRaid_3_61",
       "schedule_type": 7,
       "start_date": "2026-02-26 00:00:00",
@@ -8465,7 +8529,7 @@
       "value_date_01": "2026-03-19 00:00:00"
     },
     {
-      "index": 70012,
+      "index": 70013,
       "schedule_key": "SingleRaid_3_62",
       "schedule_type": 7,
       "start_date": "2026-03-19 00:00:00",
@@ -8473,7 +8537,7 @@
       "value_date_01": "2026-04-09 00:00:00"
     },
     {
-      "index": 70013,
+      "index": 70014,
       "schedule_key": "SingleRaid_4_112",
       "schedule_type": 7,
       "start_date": "2025-08-21 00:00:00",
@@ -8481,7 +8545,7 @@
       "value_date_01": "2025-09-19 00:00:00"
     },
     {
-      "index": 70014,
+      "index": 70015,
       "schedule_key": "SingleRaid_4_113",
       "schedule_type": 7,
       "start_date": "2025-09-19 00:00:00",
@@ -8489,7 +8553,7 @@
       "value_date_01": "2025-10-23 00:00:00"
     },
     {
-      "index": 70015,
+      "index": 70016,
       "schedule_key": "SingleRaid_4_114",
       "schedule_type": 7,
       "start_date": "2025-10-23 00:00:00",
@@ -8497,7 +8561,7 @@
       "value_date_01": "2025-11-13 00:00:00"
     },
     {
-      "index": 70016,
+      "index": 70017,
       "schedule_key": "SingleRaid_4_115",
       "schedule_type": 7,
       "start_date": "2025-11-13 00:00:00",
@@ -8505,7 +8569,7 @@
       "value_date_01": "2025-12-04 00:00:00"
     },
     {
-      "index": 70017,
+      "index": 70018,
       "schedule_key": "SingleRaid_4_116",
       "schedule_type": 7,
       "start_date": "2025-12-04 00:00:00",
@@ -8513,7 +8577,7 @@
       "value_date_01": "2025-12-25 00:00:00"
     },
     {
-      "index": 70018,
+      "index": 70019,
       "schedule_key": "SingleRaid_4_117",
       "schedule_type": 7,
       "start_date": "2025-12-25 00:00:00",
@@ -8521,7 +8585,7 @@
       "value_date_01": "2026-01-15 00:00:00"
     },
     {
-      "index": 70019,
+      "index": 70020,
       "schedule_key": "SingleRaid_4_118",
       "schedule_type": 7,
       "start_date": "2026-01-15 00:00:00",
@@ -8529,7 +8593,7 @@
       "value_date_01": "2026-02-05 00:00:00"
     },
     {
-      "index": 70020,
+      "index": 70021,
       "schedule_key": "SingleRaid_4_119",
       "schedule_type": 7,
       "start_date": "2026-02-05 00:00:00",
@@ -8537,7 +8601,7 @@
       "value_date_01": "2026-02-26 00:00:00"
     },
     {
-      "index": 70021,
+      "index": 70022,
       "schedule_key": "SingleRaid_4_120",
       "schedule_type": 7,
       "start_date": "2026-02-26 00:00:00",
@@ -8545,7 +8609,7 @@
       "value_date_01": "2026-03-19 00:00:00"
     },
     {
-      "index": 70022,
+      "index": 70023,
       "schedule_key": "SingleRaid_4_121",
       "schedule_type": 7,
       "start_date": "2026-03-19 00:00:00",
@@ -8602,6 +8666,14 @@
     },
     {
       "index": 80007,
+      "schedule_key": "WorldRaid_1_32",
+      "schedule_type": 8,
+      "start_date": "2026-04-02 00:00:00",
+      "end_date": "2026-04-09 00:00:00",
+      "value_date_01": "2026-04-23 00:00:00"
+    },
+    {
+      "index": 80008,
       "schedule_key": "WorldRaid_2_50026",
       "schedule_type": 8,
       "start_date": "2025-11-27 00:00:00",
@@ -8609,7 +8681,7 @@
       "value_date_01": "2025-12-18 00:00:00"
     },
     {
-      "index": 80008,
+      "index": 80009,
       "schedule_key": "WorldRaid_2_50027",
       "schedule_type": 8,
       "start_date": "2025-12-18 00:00:00",
@@ -8617,7 +8689,7 @@
       "value_date_01": "2026-01-08 00:00:00"
     },
     {
-      "index": 80009,
+      "index": 80010,
       "schedule_key": "WorldRaid_2_50028",
       "schedule_type": 8,
       "start_date": "2026-01-08 00:00:00",
@@ -8625,7 +8697,7 @@
       "value_date_01": "2026-01-29 00:00:00"
     },
     {
-      "index": 80010,
+      "index": 80011,
       "schedule_key": "WorldRaid_2_50029",
       "schedule_type": 8,
       "start_date": "2026-01-29 00:00:00",
@@ -8633,7 +8705,7 @@
       "value_date_01": "2026-02-19 00:00:00"
     },
     {
-      "index": 80011,
+      "index": 80012,
       "schedule_key": "WorldRaid_2_50030",
       "schedule_type": 8,
       "start_date": "2026-02-19 00:00:00",
@@ -8641,7 +8713,7 @@
       "value_date_01": "2026-03-12 00:00:00"
     },
     {
-      "index": 80012,
+      "index": 80013,
       "schedule_key": "WorldRaid_2_50031",
       "schedule_type": 8,
       "start_date": "2026-03-12 00:00:00",
@@ -8649,7 +8721,7 @@
       "value_date_01": "2026-04-02 00:00:00"
     },
     {
-      "index": 80013,
+      "index": 80014,
       "schedule_key": "WorldRaid_3_90116",
       "schedule_type": 8,
       "start_date": "2025-11-27 00:00:00",
@@ -8657,7 +8729,7 @@
       "value_date_01": "2025-12-18 00:00:00"
     },
     {
-      "index": 80014,
+      "index": 80015,
       "schedule_key": "WorldRaid_3_90117",
       "schedule_type": 8,
       "start_date": "2025-12-18 00:00:00",
@@ -8665,7 +8737,7 @@
       "value_date_01": "2026-01-08 00:00:00"
     },
     {
-      "index": 80015,
+      "index": 80016,
       "schedule_key": "WorldRaid_3_90118",
       "schedule_type": 8,
       "start_date": "2025-12-17 00:00:00",
@@ -8673,7 +8745,7 @@
       "value_date_01": "2026-01-29 00:00:00"
     },
     {
-      "index": 80016,
+      "index": 80017,
       "schedule_key": "WorldRaid_3_90119",
       "schedule_type": 8,
       "start_date": "2026-01-29 00:00:00",
@@ -8681,7 +8753,7 @@
       "value_date_01": "2026-02-19 00:00:00"
     },
     {
-      "index": 80017,
+      "index": 80018,
       "schedule_key": "WorldRaid_3_90120",
       "schedule_type": 8,
       "start_date": "2026-02-19 00:00:00",
@@ -8689,15 +8761,23 @@
       "value_date_01": "2026-03-12 00:00:00"
     },
     {
-      "index": 80018,
+      "index": 80019,
       "schedule_key": "WorldRaid_3_90121",
+      "schedule_type": 8,
+      "start_date": "2026-02-19 00:00:00",
+      "end_date": "2026-02-26 00:00:00",
+      "value_date_01": "2026-03-12 00:00:00"
+    },
+    {
+      "index": 80020,
+      "schedule_key": "WorldRaid_3_90122",
       "schedule_type": 8,
       "start_date": "2026-03-12 00:00:00",
       "end_date": "2026-03-19 00:00:00",
       "value_date_01": "2026-04-02 00:00:00"
     },
     {
-      "index": 80019,
+      "index": 80021,
       "schedule_key": "WorldRaid_4_100026",
       "schedule_type": 8,
       "start_date": "2026-01-29 00:00:00",
@@ -8705,7 +8785,7 @@
       "value_date_01": "2026-02-19 00:00:00"
     },
     {
-      "index": 80020,
+      "index": 80022,
       "schedule_key": "WorldRaid_4_100027",
       "schedule_type": 8,
       "start_date": "2026-02-19 00:00:00",
@@ -8713,7 +8793,7 @@
       "value_date_01": "2026-03-12 00:00:00"
     },
     {
-      "index": 80021,
+      "index": 80023,
       "schedule_key": "WorldRaid_4_100028",
       "schedule_type": 8,
       "start_date": "2026-03-12 00:00:00",

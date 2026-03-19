@@ -29,6 +29,13 @@
       "schedule_key": "SingleRaid_1_51"
     },
     {
+      "no": 52,
+      "season_no": 4,
+      "raid_no": 19,
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_52"
+    },
+    {
       "no": 500048,
       "season_no": 4,
       "raid_no": 7,
@@ -83,6 +90,13 @@
       "raid_no": 9,
       "server_check": 3,
       "schedule_key": "SingleRaid_3_62"
+    },
+    {
+      "no": 900063,
+      "season_no": 4,
+      "raid_no": 19,
+      "server_check": 3,
+      "schedule_key": "SingleRaid_3_63"
     },
     {
       "no": 1000112,
