@@ -31,7 +31,9 @@ def _resolve_raid_video_path(base_dir: Path, filename: str, dir_name_hint: str) 
     # 尝试 alternate 目录名（config 可能是 guildraid，实际为 GuildRaid）
     parent = base_dir.parent
     candidates = (
-        ["GuildRaid", "guildraid"] if "Guild" in dir_name_hint else ["WorldRaid", "worldraid"]
+        ["GuildRaid", "guildraid"]
+        if "Guild" in dir_name_hint
+        else ["WorldRaid", "worldraid"]
     )
     for dir_name in candidates:
         if parent / dir_name == base_dir:
@@ -119,7 +121,7 @@ async def apply_color_to_icon(icon_path: str, color: str) -> bytes:
 
 async def get_character_portrait(data, hero_id):
     """获取角色头像（包括基础头像和所有皮肤头像）。
-    
+
     逻辑：
     1. 在Hero表中查找hero_id对应的角色，获取prefab_path
     2. 使用prefab_path作为no在ItemCostume表中查找对应时装（基础时装）
@@ -144,10 +146,10 @@ async def get_character_portrait(data, hero_id):
         if hero.get("hero_id") == hero_id:
             hero_data = hero
             break
-    
+
     if not hero_data:
         return []
-        
+
     prefab_key = hero_data.get("prefab_path")
     if not prefab_key:
         return []
@@ -165,7 +167,7 @@ async def get_character_portrait(data, hero_id):
             if costume.get("no") == target_no:
                 base_costume = costume
                 break
-    
+
     # 基础时装和皮肤
     if base_costume:
         base_path = base_costume.get("portrait_path") or base_costume.get("prefab_path")
@@ -173,7 +175,7 @@ async def get_character_portrait(data, hero_id):
             full_path = SOUL_DIR / f"{base_path}_512.png"
             if full_path.exists():
                 portraits.append(str(full_path))
-        
+
         hero_id = base_costume.get("hero_no")
         if hero_id:
             skin_costumes = []
@@ -181,24 +183,24 @@ async def get_character_portrait(data, hero_id):
                 # 找同一个组的，且不是基础时装的
                 if costume.get("hero_no") == hero_id and costume.get("no") != target_no:
                     skin_costumes.append(costume)
-            
+
             # no排序
             skin_costumes.sort(key=lambda x: x.get("no", 0))
-            
+
             for skin in skin_costumes:
                 skin_path = skin.get("portrait_path") or skin.get("prefab_path")
                 if skin_path:
                     # 检查重复
                     full_path = SOUL_DIR / f"{skin_path}_512.png"
                     if full_path.exists() and str(full_path) not in portraits:
-                         portraits.append(str(full_path))
+                        portraits.append(str(full_path))
 
         else:
             # 没找到hero_id，直接使用 prefab_key 构建
             full_path = SOUL_DIR / f"{prefab_key}_512.png"
             if full_path.exists():
                 portraits.append(str(full_path))
-            
+
     return portraits
 
 
@@ -300,8 +302,6 @@ async def get_character_illustration(data, hero_id):
     images = []
     result_dict = {}
     old_design_suffix = " (1)"  # 旧设立绘的后缀
-    censored_suffix = " (2)"  # 和谐后立绘的后缀
-
     # 列出所有可能的立绘文件
     all_files = list(Path(image_path).glob("*_2048*.*"))
 
@@ -310,7 +310,7 @@ async def get_character_illustration(data, hero_id):
         file_stem = file.stem
 
         # 跳过旧设文件和和谐后文件，稍后处理
-        if " (1)" in file_stem or " (2)" in file_stem:
+        if " (1)" in file_stem:
             continue
 
         # 提取基础名称，移除_2048后缀
@@ -369,37 +369,12 @@ async def get_character_illustration(data, hero_id):
                         }
                     )
 
-                # 检查是否存在对应的和谐后立绘 (格式: 基础名称_2048 (2).后缀)
-                censored_file = (
-                    file.parent / f"{base_name}_2048{censored_suffix}{file.suffix}"
-                )
-
-                if censored_file.exists():
-                    # 将和谐后立绘添加到结果列表中（在旧设立绘后面）
-                    result_dict[base_name].append(
-                        {
-                            "img_path": censored_file,
-                            "display_name_tw": f"{info['name_tw']}_和谐后",
-                            "display_name_cn": f"{info['name_cn']}_和谐后",
-                            "display_name_kr": f"{info['name_kr']}_조화 후",
-                            "display_name_en": f"{info['name_en']}_censored",
-                            "condition_tw": "IsEnableReview",
-                            "condition_cn": "IsEnableReview",
-                            "condition_kr": "IsEnableReview",
-                            "condition_en": "IsEnableReview",
-                            "desc_tw": info["desc_tw"],
-                            "desc_cn": info["desc_cn"],
-                            "desc_kr": info["desc_kr"],
-                            "desc_en": info["desc_en"],
-                        }
-                    )
-
     # 处理独立的旧设立绘文件和和谐后立绘文件（没有对应的常规立绘）
     for file in all_files:
         file_stem = file.stem
 
         # 检查是否是旧设立绘或和谐后立绘
-        if ("(1)" in file_stem or "(2)" in file_stem) and "_2048" in file_stem:
+        if "(1)" in file_stem and "_2048" in file_stem:
             # 提取原始基础名称，要去掉_2048和 (1)或(2)
             original_base_name = file_stem.split("_2048")[0]
 
@@ -415,45 +390,24 @@ async def get_character_illustration(data, hero_id):
                 if original_base_name not in result_dict:
                     result_dict[original_base_name] = []
 
-                # 判断是旧设还是和谐后
-                if "(1)" in file_stem:
-                    # 添加旧设立绘
-                    result_dict[original_base_name].append(
-                        {
-                            "img_path": file,
-                            "display_name_tw": f"{info['name_tw']}_旧设",
-                            "display_name_cn": f"{info['name_cn']}_旧设",
-                            "display_name_kr": f"{info['name_kr']}_旧设",
-                            "display_name_en": f"{info['name_en']}_old",
-                            "condition_tw": "敬請期待",
-                            "condition_cn": "敬请期待",
-                            "condition_kr": "기대해 주세요",
-                            "condition_en": "Stay tuned",
-                            "desc_tw": info["desc_tw"],
-                            "desc_cn": info["desc_cn"],
-                            "desc_kr": info["desc_kr"],
-                            "desc_en": info["desc_en"],
-                        }
-                    )
-                elif "(2)" in file_stem:
-                    # 添加和谐后立绘
-                    result_dict[original_base_name].append(
-                        {
-                            "img_path": file,
-                            "display_name_tw": f"{info['name_tw']}_和谐后",
-                            "display_name_cn": f"{info['name_cn']}_和谐后",
-                            "display_name_kr": f"{info['name_kr']}_조화 후",
-                            "display_name_en": f"{info['name_en']}_censored",
-                            "condition_tw": "IsEnableReview",
-                            "condition_cn": "IsEnableReview",
-                            "condition_kr": "IsEnableReview",
-                            "condition_en": "IsEnableReview",
-                            "desc_tw": info["desc_tw"],
-                            "desc_cn": info["desc_cn"],
-                            "desc_kr": info["desc_kr"],
-                            "desc_en": info["desc_en"],
-                        }
-                    )
+                # 添加旧设立绘
+                result_dict[original_base_name].append(
+                    {
+                        "img_path": file,
+                        "display_name_tw": f"{info['name_tw']}_旧设",
+                        "display_name_cn": f"{info['name_cn']}_旧设",
+                        "display_name_kr": f"{info['name_kr']}_旧设",
+                        "display_name_en": f"{info['name_en']}_old",
+                        "condition_tw": "敬請期待",
+                        "condition_cn": "敬请期待",
+                        "condition_kr": "기대해 주세요",
+                        "condition_en": "Stay tuned",
+                        "desc_tw": info["desc_tw"],
+                        "desc_cn": info["desc_cn"],
+                        "desc_kr": info["desc_kr"],
+                        "desc_en": info["desc_en"],
+                    }
+                )
 
     result_dict_sorted = dict(sorted(result_dict.items()))
     for base_name, entries in result_dict_sorted.items():
@@ -666,30 +620,34 @@ async def get_schedule_event(
         if schedule_key.startswith("Calender_PickUp_") and "gacha" in data:
             # 从schedule_key中提取角色名: Calender_PickUp_HeroName -> HeroName
             hero_name = schedule_key.replace("Calender_PickUp_", "")
-            
+
             # 遍历所有Gacha，找到正确的那个
             for gacha in data["gacha"]["json"]:
                 gacha_schedule_key_1 = gacha.get("schedule_key_1", "")
                 if not gacha_schedule_key_1:
                     continue
-                
+
                 # 检查banner_path是否包含角色名（不区分大小写）
                 banner_raw = gacha.get("banner_path", "")
                 if not banner_raw or hero_name.lower() not in banner_raw.lower():
                     continue
-                
+
                 # 在LocalizationSchedule中查找对应的时间信息
                 for schedule_item in data["localization_schedule"]["json"]:
                     if schedule_item.get("schedule_key") == gacha_schedule_key_1:
                         gacha_start_date = schedule_item.get("start_date")
                         gacha_end_date = schedule_item.get("end_date")
-                        
+
                         # 检查当前Pickup的开始时间是否在Gacha的schedule_key_1时间范围内
                         if gacha_start_date and gacha_end_date:
                             try:
-                                gacha_start = datetime.strptime(gacha_start_date, "%Y-%m-%d %H:%M:%S")
-                                gacha_end = datetime.strptime(gacha_end_date, "%Y-%m-%d %H:%M:%S")
-                                
+                                gacha_start = datetime.strptime(
+                                    gacha_start_date, "%Y-%m-%d %H:%M:%S"
+                                )
+                                gacha_end = datetime.strptime(
+                                    gacha_end_date, "%Y-%m-%d %H:%M:%S"
+                                )
+
                                 # 如果Pickup的开始时间在Gacha的时间范围内，且banner匹配
                                 if gacha_start <= start_date <= gacha_end:
                                     banner_path = f"{banner_raw}_{banner_suffix}.png"
@@ -697,7 +655,7 @@ async def get_schedule_event(
                             except (ValueError, TypeError):
                                 continue
                         break
-                
+
                 if banner_path:
                     break
         # 从EventInfo中获取banner路径
@@ -938,11 +896,15 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
         # World Raid / Guild Raid: 从视频提取首帧作为 banner
         if schedule_key in WORLD_RAID_NAME_MAPPING:
             name = schedule_key.replace("Calender_", "")
-            video_path = _resolve_raid_video_path(WORLD_RAID_DIR, f"WorldRaid_{name}.mp4", "WorldRaid")
+            video_path = _resolve_raid_video_path(
+                WORLD_RAID_DIR, f"WorldRaid_{name}.mp4", "WorldRaid"
+            )
             banner_path = _extract_raid_video_banner(video_path, schedule_key)
         elif schedule_key in GUILD_RAID_NAME_MAPPING:
             name = schedule_key.split("_")[-1]
-            video_path = _resolve_raid_video_path(GUILD_RAID_DIR, f"GuildeRaid_{name}.mp4", "GuildRaid")
+            video_path = _resolve_raid_video_path(
+                GUILD_RAID_DIR, f"GuildeRaid_{name}.mp4", "GuildRaid"
+            )
             banner_path = _extract_raid_video_banner(video_path, schedule_key)
         elif schedule_key.startswith("Calender_SingleRaid_"):
             # 从schedule_key中提取角色名称：Calender_SingleRaid_HeroName
@@ -1000,7 +962,6 @@ async def get_calendar_event(data, target_month, target_year, server="global"):
 
     calendar_events_with_date.sort(key=lambda x: x[0])
     return [event_info for _, event_info in calendar_events_with_date]
-
 
 
 async def get_potential_value(data: dict, effect_type: int, effect_no: int) -> str:
@@ -1916,7 +1877,9 @@ async def generate_potential_html(data: dict) -> str:
             html += f"<tr><td class='potential-name'>{name}</td>"
             level_data = {
                 level: (effect_type, effect_no, option, unique)
-                for level, effect_type, effect_no, option, unique in potentials[tooltip_sno]
+                for level, effect_type, effect_no, option, unique in potentials[
+                    tooltip_sno
+                ]
             }
             for level in range(1, max_level + 1):
                 if level in level_data:
