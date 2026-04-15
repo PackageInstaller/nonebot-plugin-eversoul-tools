@@ -310,7 +310,7 @@ async def get_character_illustration(data, hero_id):
         file_stem = file.stem
 
         # 跳过旧设文件和和谐后文件，稍后处理
-        if " (1)" in file_stem:
+        if " (1)" in file_stem or " (2)" in file_stem:
             continue
 
         # 提取基础名称，移除_2048后缀
@@ -368,7 +368,6 @@ async def get_character_illustration(data, hero_id):
                             "desc_en": info["desc_en"],
                         }
                     )
-
     # 处理独立的旧设立绘文件和和谐后立绘文件（没有对应的常规立绘）
     for file in all_files:
         file_stem = file.stem
@@ -390,24 +389,26 @@ async def get_character_illustration(data, hero_id):
                 if original_base_name not in result_dict:
                     result_dict[original_base_name] = []
 
-                # 添加旧设立绘
-                result_dict[original_base_name].append(
-                    {
-                        "img_path": file,
-                        "display_name_tw": f"{info['name_tw']}_旧设",
-                        "display_name_cn": f"{info['name_cn']}_旧设",
-                        "display_name_kr": f"{info['name_kr']}_旧设",
-                        "display_name_en": f"{info['name_en']}_old",
-                        "condition_tw": "敬請期待",
-                        "condition_cn": "敬请期待",
-                        "condition_kr": "기대해 주세요",
-                        "condition_en": "Stay tuned",
-                        "desc_tw": info["desc_tw"],
-                        "desc_cn": info["desc_cn"],
-                        "desc_kr": info["desc_kr"],
-                        "desc_en": info["desc_en"],
-                    }
-                )
+                # 判断是旧设还是和谐后
+                if "(1)" in file_stem:
+                    # 添加旧设立绘
+                    result_dict[original_base_name].append(
+                        {
+                            "img_path": file,
+                            "display_name_tw": f"{info['name_tw']}_旧设",
+                            "display_name_cn": f"{info['name_cn']}_旧设",
+                            "display_name_kr": f"{info['name_kr']}_旧设",
+                            "display_name_en": f"{info['name_en']}_old",
+                            "condition_tw": "敬請期待",
+                            "condition_cn": "敬请期待",
+                            "condition_kr": "기대해 주세요",
+                            "condition_en": "Stay tuned",
+                            "desc_tw": info["desc_tw"],
+                            "desc_cn": info["desc_cn"],
+                            "desc_kr": info["desc_kr"],
+                            "desc_en": info["desc_en"],
+                        }
+                    )
 
     result_dict_sorted = dict(sorted(result_dict.items()))
     for base_name, entries in result_dict_sorted.items():
