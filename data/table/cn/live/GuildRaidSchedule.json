@@ -31,6 +31,12 @@
       "schedule_key": "GuildRaid_1_1005"
     },
     {
+      "no": 1006,
+      "raid_no": 1,
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_1006"
+    },
+    {
       "no": 51001,
       "raid_no": 1,
       "server_check": 2,
@@ -85,6 +91,12 @@
       "schedule_key": "GuildRaid_4_1005"
     },
     {
+      "no": 91006,
+      "raid_no": 1,
+      "server_check": 4,
+      "schedule_key": "GuildRaid_4_1006"
+    },
+    {
       "no": 110001,
       "raid_no": 1,
       "server_check": 3,
@@ -113,6 +125,12 @@
       "raid_no": 5,
       "server_check": 3,
       "schedule_key": "GuildRaid_3_10005"
+    },
+    {
+      "no": 110006,
+      "raid_no": 1,
+      "server_check": 3,
+      "schedule_key": "GuildRaid_3_10006"
     }
   ]
 }

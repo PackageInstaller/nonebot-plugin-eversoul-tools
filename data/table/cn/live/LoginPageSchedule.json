@@ -32,8 +32,26 @@
     },
     {
       "no": 6,
-      "login_path": "UI_LOGIN_CN",
+      "login_path": "UI_LOGIN_EVERSCHOOL2",
       "start_date": "2026-04-15 00:00",
+      "end_date": "2026-04-29 00:00"
+    },
+    {
+      "no": 7,
+      "login_path": "UI_LOGIN_WEDDING",
+      "start_date": "2026-04-29 00:00",
+      "end_date": "2026-05-06 00:00"
+    },
+    {
+      "no": 8,
+      "login_path": "UI_LOGIN_ROSE",
+      "start_date": "2026-05-06 00:00",
+      "end_date": "2026-05-13 00:00"
+    },
+    {
+      "no": 9,
+      "login_path": "UI_LOGIN_CN",
+      "start_date": "2026-05-13 00:00",
       "end_date": "2030-03-25 00:00"
     }
   ]

@@ -1401,9 +1401,9 @@
       "gacha_type": 1,
       "gacha_prob_group": 6530,
       "get_mileage": 653,
-      "category_path": "ToggleEventMephistoDawnSummer04",
-      "ui_path": "EventPickupPanelMephistoDawnSummer04",
-      "banner_path": "banner_event_pickup_MephistoDawn_Summer04",
+      "category_path": "ToggleMephistoDawnGacha",
+      "ui_path": "GachaListPanelPickupMephistoDawn",
+      "banner_path": "banner_pickup_MephistoDawn",
       "pickup": 6530,
       "schedule_key_1": "Gacha_566",
       "schedule_key_2": "Gate_566"

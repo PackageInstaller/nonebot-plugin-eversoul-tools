@@ -18879,6 +18879,20 @@
       "set_group": 203541
     },
     {
+      "no": 1930,
+      "category_sno": 110078,
+      "grade_sno": 110020,
+      "name_sno": 211930,
+      "desc_sno": 221930,
+      "slot_limit_sno": 110034,
+      "stat_limit_sno": 110041,
+      "set_effect_no": 1,
+      "icon_path": "Icon_Tier100_all_1",
+      "atlas_type": 4,
+      "item_sort_no": 10119,
+      "set_group": 203441
+    },
+    {
       "no": 1999,
       "category_sno": 110002,
       "grade_sno": 110011,
@@ -28913,6 +28927,54 @@
       "item_sort_no": 60000
     },
     {
+      "no": 6117,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216117,
+      "desc_sno": 226117,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_aurelia_tier_7",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
+      "no": 6118,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216118,
+      "desc_sno": 226118,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_aurelia_tier_7_3",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
+      "no": 6119,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216119,
+      "desc_sno": 226119,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_aurelia_tier_7_2",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
+      "no": 6120,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216120,
+      "desc_sno": 226120,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_aurelia_tier_7_1",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
       "no": 6121,
       "category_sno": 110077,
       "grade_sno": 110011,
@@ -28981,6 +29043,54 @@
       "slot_limit_sno": 110031,
       "stat_limit_sno": 110041,
       "icon_path": "sticker_eas_tabria_tier_6",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
+      "no": 6127,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216127,
+      "desc_sno": 226127,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_tabria_tier_7",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
+      "no": 6128,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216128,
+      "desc_sno": 226128,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_tabria_tier_7_3",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
+      "no": 6129,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216129,
+      "desc_sno": 226129,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_tabria_tier_7_2",
+      "atlas_type": 6,
+      "item_sort_no": 60000
+    },
+    {
+      "no": 6130,
+      "category_sno": 110077,
+      "grade_sno": 110020,
+      "name_sno": 216130,
+      "desc_sno": 226130,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "sticker_eas_tabria_tier_7_1",
       "atlas_type": 6,
       "item_sort_no": 60000
     },

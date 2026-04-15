@@ -137,211 +137,301 @@
     },
     {
       "no": 56101,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_1",
       "item_no": 6101
     },
     {
       "no": 56102,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_2",
       "item_no": 6102
     },
     {
       "no": 56103,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_3",
       "item_no": 6103
     },
     {
       "no": 56104,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_4",
       "item_no": 6104
     },
     {
       "no": 56105,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_5",
       "item_no": 6105
     },
     {
       "no": 56106,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_6",
       "item_no": 6106
     },
     {
       "no": 56107,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_7",
       "item_no": 6107
     },
     {
       "no": 56108,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_7_3",
       "item_no": 6108
     },
     {
       "no": 56109,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_7_2",
       "item_no": 6109
     },
     {
       "no": 56110,
+      "group_no": 17,
       "img_path": "sticker_eas_troyca_tier_7_1",
       "item_no": 6110
     },
     {
       "no": 56111,
+      "group_no": 17,
       "img_path": "sticker_eas_aurelia_tier_1",
       "item_no": 6111
     },
     {
       "no": 56112,
+      "group_no": 17,
       "img_path": "sticker_eas_aurelia_tier_2",
       "item_no": 6112
     },
     {
       "no": 56113,
+      "group_no": 17,
       "img_path": "sticker_eas_aurelia_tier_3",
       "item_no": 6113
     },
     {
       "no": 56114,
+      "group_no": 17,
       "img_path": "sticker_eas_aurelia_tier_4",
       "item_no": 6114
     },
     {
       "no": 56115,
+      "group_no": 17,
       "img_path": "sticker_eas_aurelia_tier_5",
       "item_no": 6115
     },
     {
       "no": 56116,
+      "group_no": 17,
       "img_path": "sticker_eas_aurelia_tier_6",
       "item_no": 6116
     },
     {
+      "no": 56117,
+      "group_no": 17,
+      "img_path": "sticker_eas_aurelia_tier_7",
+      "item_no": 6117
+    },
+    {
+      "no": 56118,
+      "group_no": 17,
+      "img_path": "sticker_eas_aurelia_tier_7_3",
+      "item_no": 6118
+    },
+    {
+      "no": 56119,
+      "group_no": 17,
+      "img_path": "sticker_eas_aurelia_tier_7_2",
+      "item_no": 6119
+    },
+    {
+      "no": 56120,
+      "group_no": 17,
+      "img_path": "sticker_eas_aurelia_tier_7_1",
+      "item_no": 6120
+    },
+    {
       "no": 56121,
+      "group_no": 17,
       "img_path": "sticker_eas_tabria_tier_1",
       "item_no": 6121
     },
     {
       "no": 56122,
+      "group_no": 17,
       "img_path": "sticker_eas_tabria_tier_2",
       "item_no": 6122
     },
     {
       "no": 56123,
+      "group_no": 17,
       "img_path": "sticker_eas_tabria_tier_3",
       "item_no": 6123
     },
     {
       "no": 56124,
+      "group_no": 17,
       "img_path": "sticker_eas_tabria_tier_4",
       "item_no": 6124
     },
     {
       "no": 56125,
+      "group_no": 17,
       "img_path": "sticker_eas_tabria_tier_5",
       "item_no": 6125
     },
     {
       "no": 56126,
+      "group_no": 17,
       "img_path": "sticker_eas_tabria_tier_6",
       "item_no": 6126
     },
     {
+      "no": 56127,
+      "group_no": 17,
+      "img_path": "sticker_eas_tabria_tier_7",
+      "item_no": 6127
+    },
+    {
+      "no": 56128,
+      "group_no": 17,
+      "img_path": "sticker_eas_tabria_tier_7_3",
+      "item_no": 6128
+    },
+    {
+      "no": 56129,
+      "group_no": 17,
+      "img_path": "sticker_eas_tabria_tier_7_2",
+      "item_no": 6129
+    },
+    {
+      "no": 56130,
+      "group_no": 17,
+      "img_path": "sticker_eas_tabria_tier_7_1",
+      "item_no": 6130
+    },
+    {
       "no": 56131,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_1",
       "item_no": 6131
     },
     {
       "no": 56132,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_2",
       "item_no": 6132
     },
     {
       "no": 56133,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_3",
       "item_no": 6133
     },
     {
       "no": 56134,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_4",
       "item_no": 6134
     },
     {
       "no": 56135,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_5",
       "item_no": 6135
     },
     {
       "no": 56136,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_6",
       "item_no": 6136
     },
     {
       "no": 56137,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_7",
       "item_no": 6137
     },
     {
       "no": 56138,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_7_3",
       "item_no": 6138
     },
     {
       "no": 56139,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_7_2",
       "item_no": 6139
     },
     {
       "no": 56140,
+      "group_no": 17,
       "img_path": "sticker_eas_fayren_tier_7_1",
       "item_no": 6140
     },
     {
       "no": 56141,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_1",
       "item_no": 6141
     },
     {
       "no": 56142,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_2",
       "item_no": 6142
     },
     {
       "no": 56143,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_3",
       "item_no": 6143
     },
     {
       "no": 56144,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_4",
       "item_no": 6144
     },
     {
       "no": 56145,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_5",
       "item_no": 6145
     },
     {
       "no": 56146,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_6",
       "item_no": 6146
     },
     {
       "no": 56147,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_7",
       "item_no": 6147
     },
     {
       "no": 56148,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_7_3",
       "item_no": 6148
     },
     {
       "no": 56149,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_7_2",
       "item_no": 6149
     },
     {
       "no": 56150,
+      "group_no": 17,
       "img_path": "sticker_eas_chalar_tier_7_1",
       "item_no": 6150
     },

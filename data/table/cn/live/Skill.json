@@ -91543,6 +91543,22 @@
       "range": 20.0,
       "anim_path": "Attack",
       "icon_prefab": 4
+    },
+    {
+      "index": 4853,
+      "no": 140097,
+      "type": 110503,
+      "is_ally": 1,
+      "hero_level": 1,
+      "level": 1,
+      "code_1": 1400971,
+      "code_2": 1400972,
+      "code_extend": "0",
+      "target": 110607,
+      "cool_time": 999.0,
+      "range": 20.0,
+      "anim_path": "None",
+      "icon_prefab": 2
     }
   ]
 }
