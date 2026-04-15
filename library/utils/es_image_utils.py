@@ -211,210 +211,98 @@ async def get_character_illustration(data, hero_id):
         data: JSON数据字典
         hero_id: 角色ID
     Returns:
-        list: [dict] 字典列表，每个字典包含:
-            - img_path: 图片路径
-            - display_name_tw/cn/kr/en: 显示名称
-            - condition_tw/cn/kr/en: 解锁条件
-            - desc_tw/cn/kr/en: 描述
+        list: [dict] 字典列表
     """
     from .es_string_utils import get_string_by_type
     from ...config import SOUL_DIR
 
-    image_path = str(SOUL_DIR)
-    if not Path(image_path).exists():
-        return []
+    image_path = Path(SOUL_DIR)
+    if not image_path.exists():
+        return[]
+    
+    item_desc_map = {
+        item.get("no"): item.get("desc_sno") 
+        for item in data.get("item", {}).get("json",[])
+    }
 
-    # 获取所有该角色的立绘信息
     costume_info = {}
-    for costume in data["item_costume"]["json"]:
-        if costume.get("hero_no") == hero_id:
-            portrait_path = costume.get("portrait_path", "")
-            costume_no = costume.get("no")  # 获取costume的no
-            name_sno = costume.get("name_sno")
-            type_sno = costume.get("type_sno")  # 获取时装的type_sno
+    for costume in data.get("item_costume", {}).get("json",[]):
+        if costume.get("hero_no") != hero_id:
+            continue
+            
+        portrait_path = costume.get("portrait_path", "")
+        costume_no = costume.get("no")
+        name_sno = costume.get("name_sno")
+        type_sno = costume.get("type_sno")
 
-            if portrait_path and name_sno and type_sno and costume_no:
-                # 通过costume的no去item中查找desc_sno
-                desc_sno = None
-                for item in data["item"]["json"]:
-                    if item.get("no") == costume_no:
-                        desc_sno = item.get("desc_sno")
-                        break
-
-                costume_name_zh_tw = (
-                    await get_string_by_type(data, "item", name_sno)
-                ).get("zh_tw", "")
-                costume_name_zh_cn = (
-                    await get_string_by_type(data, "item", name_sno)
-                ).get("zh_cn", "")
-                costume_name_kr = (
-                    await get_string_by_type(data, "item", name_sno)
-                ).get("kr", "")
-                costume_name_en = (
-                    await get_string_by_type(data, "item", name_sno)
-                ).get("en", "")
-                condition_tw = (await get_string_by_type(data, "ui", type_sno)).get(
-                    "zh_tw", ""
-                )
-                condition_cn = (await get_string_by_type(data, "ui", type_sno)).get(
-                    "zh_cn", ""
-                )
-                condition_kr = (await get_string_by_type(data, "ui", type_sno)).get(
-                    "kr", ""
-                )
-                condition_en = (await get_string_by_type(data, "ui", type_sno)).get(
-                    "en", ""
-                )
-                # 获取描述信息
-                desc_tw = ""
-                desc_cn = ""
-                desc_kr = ""
-                desc_en = ""
-                if desc_sno:
-                    desc_tw = (await get_string_by_type(data, "item", desc_sno)).get(
-                        "zh_tw", ""
-                    )
-                    desc_cn = (await get_string_by_type(data, "item", desc_sno)).get(
-                        "zh_cn", ""
-                    )
-                    desc_kr = (await get_string_by_type(data, "item", desc_sno)).get(
-                        "kr", ""
-                    )
-                    desc_en = (await get_string_by_type(data, "item", desc_sno)).get(
-                        "en", ""
-                    )
-                costume_info[portrait_path] = {
-                    "name_tw": costume_name_zh_tw,
-                    "name_cn": costume_name_zh_cn,
-                    "name_kr": costume_name_kr,
-                    "name_en": costume_name_en,
-                    "condition_tw": condition_tw,
-                    "condition_cn": condition_cn,
-                    "condition_kr": condition_kr,
-                    "condition_en": condition_en,
-                    "desc_tw": desc_tw,
-                    "desc_cn": desc_cn,
-                    "desc_kr": desc_kr,
-                    "desc_en": desc_en,
-                }
-
-    # 查找匹配的图片
-    images = []
-    result_dict = {}
-    old_design_suffix = " (1)"  # 旧设立绘的后缀
-    # 列出所有可能的立绘文件
-    all_files = list(Path(image_path).glob("*_2048*.*"))
-
-    # 先处理常规立绘
-    for file in all_files:
-        file_stem = file.stem
-
-        # 跳过旧设文件和和谐后文件，稍后处理
-        if " (1)" in file_stem or " (2)" in file_stem:
+        if not all([portrait_path, name_sno, type_sno, costume_no]):
             continue
 
-        # 提取基础名称，移除_2048后缀
-        if "_2048" in file_stem:
-            base_name = file_stem.split("_2048")[0]
+        desc_sno = item_desc_map.get(costume_no)
+        name_data = (await get_string_by_type(data, "item", name_sno)) or {}
+        cond_data = (await get_string_by_type(data, "ui", type_sno)) or {}
+        desc_data = (await get_string_by_type(data, "item", desc_sno)) or {} if desc_sno else {}
 
-            # 处理常规立绘
-            if base_name in costume_info:
-                info = costume_info[base_name]
+        costume_info[portrait_path] = {
+            "name": name_data,
+            "cond": cond_data,
+            "desc": desc_data
+        }
 
-                # 添加到结果字典，键为立绘基础名称
-                if base_name not in result_dict:
-                    result_dict[base_name] = []
-
-                # 添加原始立绘
-                result_dict[base_name].append(
-                    {
-                        "img_path": file,
-                        "display_name_tw": info["name_tw"],
-                        "display_name_cn": info["name_cn"],
-                        "display_name_kr": info["name_kr"],
-                        "display_name_en": info["name_en"],
-                        "condition_tw": info["condition_tw"],
-                        "condition_cn": info["condition_cn"],
-                        "condition_kr": info["condition_kr"],
-                        "condition_en": info["condition_en"],
-                        "desc_tw": info["desc_tw"],
-                        "desc_cn": info["desc_cn"],
-                        "desc_kr": info["desc_kr"],
-                        "desc_en": info["desc_en"],
-                    }
-                )
-
-                # 检查是否存在对应的旧设立绘 (格式: 基础名称_2048 (1).后缀)
-                old_design_file = (
-                    file.parent / f"{base_name}_2048{old_design_suffix}{file.suffix}"
-                )
-
-                if old_design_file.exists():
-                    # 将旧设立绘添加到结果列表中（在原始立绘后面）
-                    result_dict[base_name].append(
-                        {
-                            "img_path": old_design_file,
-                            "display_name_tw": f"{info['name_tw']}_旧设",
-                            "display_name_cn": f"{info['name_cn']}_旧设",
-                            "display_name_kr": f"{info['name_kr']}_旧设",
-                            "display_name_en": f"{info['name_en']}_old",
-                            "condition_tw": "敬請期待",
-                            "condition_cn": "敬请期待",
-                            "condition_kr": "기대해 주세요",
-                            "condition_en": "Stay tuned",
-                            "desc_tw": info["desc_tw"],
-                            "desc_cn": info["desc_cn"],
-                            "desc_kr": info["desc_kr"],
-                            "desc_en": info["desc_en"],
-                        }
-                    )
-    # 处理独立的旧设立绘文件和和谐后立绘文件（没有对应的常规立绘）
-    for file in all_files:
+    file_map = {}
+    for file in image_path.glob("*_2048*.*"):
         file_stem = file.stem
+        
+        if "_2048" not in file_stem or "(2)" in file_stem:
+            continue
 
-        # 检查是否是旧设立绘或和谐后立绘
-        if "(1)" in file_stem and "_2048" in file_stem:
-            # 提取原始基础名称，要去掉_2048和 (1)或(2)
-            original_base_name = file_stem.split("_2048")[0]
+        base_name = file_stem.split("_2048")[0]
+        
+        if base_name not in costume_info:
+            continue
 
-            # 如果这个基础名称已经处理过，跳过
-            if original_base_name in result_dict:
-                continue
+        if base_name not in file_map:
+            file_map[base_name] = {}
 
-            # 查找原始立绘的信息
-            if original_base_name in costume_info:
-                info = costume_info[original_base_name]
+        # 分类存储常规立绘和旧设立绘
+        if "(1)" in file_stem:
+            file_map[base_name]["old"] = file
+        else:
+            file_map[base_name]["normal"] = file
 
-                # 创建新的结果条目
-                if original_base_name not in result_dict:
-                    result_dict[original_base_name] = []
+    result_dict = {}
+    for base_name, files in file_map.items():
+        info = costume_info[base_name]
+        result_dict[base_name] =[]
 
-                # 判断是旧设还是和谐后
-                if "(1)" in file_stem:
-                    # 添加旧设立绘
-                    result_dict[original_base_name].append(
-                        {
-                            "img_path": file,
-                            "display_name_tw": f"{info['name_tw']}_旧设",
-                            "display_name_cn": f"{info['name_cn']}_旧设",
-                            "display_name_kr": f"{info['name_kr']}_旧设",
-                            "display_name_en": f"{info['name_en']}_old",
-                            "condition_tw": "敬請期待",
-                            "condition_cn": "敬请期待",
-                            "condition_kr": "기대해 주세요",
-                            "condition_en": "Stay tuned",
-                            "desc_tw": info["desc_tw"],
-                            "desc_cn": info["desc_cn"],
-                            "desc_kr": info["desc_kr"],
-                            "desc_en": info["desc_en"],
-                        }
-                    )
+        def build_entry(img_path, is_old=False):
+            name_d, cond_d, desc_d = info["name"], info["cond"], info["desc"]
+            return {
+                "img_path": img_path,
+                "display_name_tw": f"{name_d.get('zh_tw', '')}_旧设" if is_old else name_d.get('zh_tw', ''),
+                "display_name_cn": f"{name_d.get('zh_cn', '')}_旧设" if is_old else name_d.get('zh_cn', ''),
+                "display_name_kr": f"{name_d.get('kr', '')}_旧设" if is_old else name_d.get('kr', ''),
+                "display_name_en": f"{name_d.get('en', '')}_old" if is_old else name_d.get('en', ''),
+                "condition_tw": "敬請期待" if is_old else cond_d.get("zh_tw", ""),
+                "condition_cn": "敬请期待" if is_old else cond_d.get("zh_cn", ""),
+                "condition_kr": "기대해 주세요" if is_old else cond_d.get("kr", ""),
+                "condition_en": "Stay tuned" if is_old else cond_d.get("en", ""),
+                "desc_tw": desc_d.get("zh_tw", ""),
+                "desc_cn": desc_d.get("zh_cn", ""),
+                "desc_kr": desc_d.get("kr", ""),
+                "desc_en": desc_d.get("en", ""),
+            }
 
-    result_dict_sorted = dict(sorted(result_dict.items()))
-    for base_name, entries in result_dict_sorted.items():
-        images.extend(entries)
+        if "normal" in files:
+            result_dict[base_name].append(build_entry(files["normal"], is_old=False))
+        if "old" in files:
+            result_dict[base_name].append(build_entry(files["old"], is_old=True))
 
-    return images  # 原始立绘在前，旧设立绘在后
+    images =[]
+    for base_name in sorted(result_dict.keys()):
+        images.extend(result_dict[base_name])
+
+    return images
 
 
 async def get_character_affection_cg(data, hero_id, server, data_type):
