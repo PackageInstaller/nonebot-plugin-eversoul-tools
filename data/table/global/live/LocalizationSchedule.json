@@ -3412,8 +3412,8 @@
       "index": 30152,
       "schedule_key": "Calender_PickUp_GarnetRapture",
       "schedule_type": 3,
-      "start_date": "2025-10-30 00:00:00",
-      "end_date": "2025-11-27 00:00:00",
+      "start_date": "2026-04-16 00:00:00",
+      "end_date": "2026-05-14 00:00:00",
       "value_date_01": ""
     },
     {
@@ -3436,8 +3436,8 @@
       "index": 30155,
       "schedule_key": "Calender_PickUp_CherrieRoman",
       "schedule_type": 3,
-      "start_date": "2025-11-27 00:00:00",
-      "end_date": "2025-12-25 00:00:00",
+      "start_date": "2026-04-16 00:00:00",
+      "end_date": "2026-05-07 00:00:00",
       "value_date_01": ""
     },
     {
@@ -5810,6 +5810,14 @@
     },
     {
       "index": 40274,
+      "schedule_key": "EventInfo_QuestGuildRaid_50",
+      "schedule_type": 4,
+      "start_date": "2026-04-17 00:00:00",
+      "end_date": "2026-04-23 00:00:00",
+      "value_date_01": "2026-04-30 00:00:00"
+    },
+    {
+      "index": 40275,
       "schedule_key": "EventInfo_QuestGuildRaid_45",
       "schedule_type": 4,
       "start_date": "2026-01-01 00:00:00",
@@ -5817,7 +5825,7 @@
       "value_date_01": "2026-01-15 00:00:00"
     },
     {
-      "index": 40275,
+      "index": 40276,
       "schedule_key": "EventInfo_EverLive_1",
       "schedule_type": 4,
       "start_date": "2025-10-02 00:00:00",
@@ -5825,7 +5833,7 @@
       "value_date_01": "2025-10-23 00:00:00"
     },
     {
-      "index": 40276,
+      "index": 40277,
       "schedule_key": "EventInfo_DJsoul_NewSong",
       "schedule_type": 4,
       "start_date": "2025-04-10 00:00:00",
@@ -5833,7 +5841,7 @@
       "value_date_01": "2025-04-17 00:00:00"
     },
     {
-      "index": 40277,
+      "index": 40278,
       "schedule_key": "EventInfo_EverMatch_8",
       "schedule_type": 4,
       "start_date": "2026-04-02 00:00:00",
@@ -5841,7 +5849,7 @@
       "value_date_01": "2026-04-09 00:00:00"
     },
     {
-      "index": 40278,
+      "index": 40279,
       "schedule_key": "EventInfo_DefenseGame_Sakuyo",
       "schedule_type": 4,
       "start_date": "2025-07-10 00:00:00",
@@ -5849,7 +5857,7 @@
       "value_date_01": "2025-07-31 00:00:00"
     },
     {
-      "index": 40279,
+      "index": 40280,
       "schedule_key": "EventInfo_DefenseGame_Dominique",
       "schedule_type": 4,
       "start_date": "2024-06-27 01:00:00",
@@ -5857,7 +5865,7 @@
       "value_date_01": "2024-07-11 00:00:00"
     },
     {
-      "index": 40280,
+      "index": 40281,
       "schedule_key": "EventInfo_DefenseGame_15",
       "schedule_type": 4,
       "start_date": "2026-03-12 00:00:00",
@@ -5865,7 +5873,7 @@
       "value_date_01": "2026-03-26 00:00:00"
     },
     {
-      "index": 40281,
+      "index": 40282,
       "schedule_key": "EventInfo_DefenseGame_14",
       "schedule_type": 4,
       "start_date": "2026-01-29 00:00:00",
@@ -5873,7 +5881,7 @@
       "value_date_01": "2026-02-12 00:00:00"
     },
     {
-      "index": 40282,
+      "index": 40283,
       "schedule_key": "EventInfo_FairyVote_2",
       "schedule_type": 4,
       "start_date": "2024-07-11 00:00:00",
@@ -5881,7 +5889,7 @@
       "value_date_01": "2024-08-08 00:00:00"
     },
     {
-      "index": 40283,
+      "index": 40284,
       "schedule_key": "EventInfo_EGT_Movie_1",
       "schedule_type": 4,
       "start_date": "2024-01-04 01:00:00",
@@ -5889,7 +5897,7 @@
       "value_date_01": "2024-01-18 00:00:00"
     },
     {
-      "index": 40284,
+      "index": 40285,
       "schedule_key": "EventInfo_FairyVote_1",
       "schedule_type": 4,
       "start_date": "2023-06-22 00:00:00",
@@ -5897,7 +5905,7 @@
       "value_date_01": "2023-07-20 00:00:00"
     },
     {
-      "index": 40285,
+      "index": 40286,
       "schedule_key": "EventInfo_Newbie_DailyPass",
       "schedule_type": 4,
       "start_date": "2024-11-21 00:00:00",
@@ -5905,7 +5913,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40286,
+      "index": 40287,
       "schedule_key": "EventInfo_Launching_Quest",
       "schedule_type": 4,
       "start_date": "2022-10-26 00:00:00",
@@ -5913,7 +5921,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40287,
+      "index": 40288,
       "schedule_key": "EventInfo_FariyCollect_Quest",
       "schedule_type": 4,
       "start_date": "2022-10-26 00:00:00",
@@ -5921,7 +5929,15 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40288,
+      "index": 40289,
+      "schedule_key": "EventInfo_SelectPickup_Limit2",
+      "schedule_type": 4,
+      "start_date": "2026-04-29 01:00:00",
+      "end_date": "2999-12-31 23:59:59",
+      "value_date_01": "2999-12-31 23:59:59"
+    },
+    {
+      "index": 40290,
       "schedule_key": "EventInfo_SelectPickup_Season2",
       "schedule_type": 4,
       "start_date": "2024-04-18 01:00:00",
@@ -5929,7 +5945,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40289,
+      "index": 40291,
       "schedule_key": "EventInfo_SelectPickup_Season1",
       "schedule_type": 4,
       "start_date": "2023-06-29 01:00:00",
@@ -5937,7 +5953,7 @@
       "value_date_01": "2024-04-17 23:59:59"
     },
     {
-      "index": 40290,
+      "index": 40292,
       "schedule_key": "EventInfo_Comeback_Attend",
       "schedule_type": 4,
       "start_date": "2023-06-15 00:00:00",
@@ -5945,7 +5961,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40291,
+      "index": 40293,
       "schedule_key": "EventInfo_Comeback_Quest",
       "schedule_type": 4,
       "start_date": "2023-06-15 00:00:00",
@@ -5953,7 +5969,7 @@
       "value_date_01": "2999-12-31 23:59:59"
     },
     {
-      "index": 40292,
+      "index": 40294,
       "schedule_key": "EventInfo_Rotation_Trip",
       "schedule_type": 4,
       "start_date": "2024-02-15 01:00:00",
@@ -5961,7 +5977,7 @@
       "value_date_01": "2024-02-29 00:00:00"
     },
     {
-      "index": 40293,
+      "index": 40295,
       "schedule_key": "EventInfo_Rotation_Heart",
       "schedule_type": 4,
       "start_date": "2024-03-28 01:00:00",
@@ -5969,7 +5985,7 @@
       "value_date_01": "2024-04-11 00:00:00"
     },
     {
-      "index": 40294,
+      "index": 40296,
       "schedule_key": "EventInfo_Rotation_Arena",
       "schedule_type": 4,
       "start_date": "2026-04-15 00:00:00",
@@ -5977,7 +5993,7 @@
       "value_date_01": "2026-04-30 00:00:00"
     },
     {
-      "index": 40295,
+      "index": 40297,
       "schedule_key": "EventInfo_Rotation_Labyrinth",
       "schedule_type": 4,
       "start_date": "2026-03-18 00:00:00",
@@ -5985,7 +6001,7 @@
       "value_date_01": "2026-04-01 00:00:00"
     },
     {
-      "index": 40296,
+      "index": 40298,
       "schedule_key": "EventInfo_Rotation_Champions",
       "schedule_type": 4,
       "start_date": "2026-03-04 00:00:00",
@@ -5993,7 +6009,7 @@
       "value_date_01": "2026-03-18 00:00:00"
     },
     {
-      "index": 40297,
+      "index": 40299,
       "schedule_key": "EventInfo_Rotation_DualGate",
       "schedule_type": 4,
       "start_date": "2026-04-01 00:00:00",
@@ -6001,7 +6017,7 @@
       "value_date_01": "2026-04-15 00:00:00"
     },
     {
-      "index": 40298,
+      "index": 40300,
       "schedule_key": "EventInfo_Rotation_AutoArbeit",
       "schedule_type": 4,
       "start_date": "2026-02-18 00:00:00",
@@ -6009,7 +6025,7 @@
       "value_date_01": "2026-03-04 00:00:00"
     },
     {
-      "index": 40299,
+      "index": 40301,
       "schedule_key": "EventInfo_Rotation_Arena2",
       "schedule_type": 4,
       "start_date": "2026-01-28 00:00:00",
@@ -6017,7 +6033,7 @@
       "value_date_01": "2026-02-04 00:00:00"
     },
     {
-      "index": 40300,
+      "index": 40302,
       "schedule_key": "EventInfo_Rotation_Labyrinth2",
       "schedule_type": 4,
       "start_date": "2026-02-04 00:00:00",
@@ -6025,7 +6041,7 @@
       "value_date_01": "2026-02-11 00:00:00"
     },
     {
-      "index": 40301,
+      "index": 40303,
       "schedule_key": "EventInfo_Rotation_Champions2",
       "schedule_type": 4,
       "start_date": "2026-01-28 00:00:00",
@@ -6033,7 +6049,7 @@
       "value_date_01": "2026-02-04 00:00:00"
     },
     {
-      "index": 40302,
+      "index": 40304,
       "schedule_key": "EventInfo_Rotation_DualGate2",
       "schedule_type": 4,
       "start_date": "2026-02-11 00:00:00",
@@ -6041,7 +6057,7 @@
       "value_date_01": "2026-02-18 00:00:00"
     },
     {
-      "index": 40303,
+      "index": 40305,
       "schedule_key": "EventInfo_Rotation_AutoArbeit2",
       "schedule_type": 4,
       "start_date": "2026-01-21 00:00:00",
@@ -6049,7 +6065,7 @@
       "value_date_01": "2026-01-28 00:00:00"
     },
     {
-      "index": 40304,
+      "index": 40306,
       "schedule_key": "EventInfo_GaonFestival_Attend2",
       "schedule_type": 4,
       "start_date": "2025-07-31 00:00:00",
@@ -6057,7 +6073,7 @@
       "value_date_01": "2025-08-14 00:00:00"
     },
     {
-      "index": 40305,
+      "index": 40307,
       "schedule_key": "EventInfo_GaonFestival_Main2",
       "schedule_type": 4,
       "start_date": "2025-07-31 00:00:00",
@@ -6748,16 +6764,16 @@
       "index": 50086,
       "schedule_key": "Gacha_579",
       "schedule_type": 5,
-      "start_date": "2025-10-30 00:00:00",
-      "end_date": "2025-11-27 00:00:00",
+      "start_date": "2026-04-16 00:00:00",
+      "end_date": "2026-05-14 00:00:00",
       "value_date_01": ""
     },
     {
       "index": 50087,
       "schedule_key": "Gacha_580",
       "schedule_type": 5,
-      "start_date": "2025-11-27 00:00:00",
-      "end_date": "2025-12-25 00:00:00",
+      "start_date": "2026-04-16 00:00:00",
+      "end_date": "2026-05-07 00:00:00",
       "value_date_01": ""
     },
     {
@@ -7106,6 +7122,150 @@
     },
     {
       "index": 50131,
+      "schedule_key": "Gacha_5401",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50132,
+      "schedule_key": "Gacha_5402",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50133,
+      "schedule_key": "Gacha_5403",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50134,
+      "schedule_key": "Gacha_5404",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50135,
+      "schedule_key": "Gacha_5405",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50136,
+      "schedule_key": "Gacha_5406",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50137,
+      "schedule_key": "Gacha_5407",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50138,
+      "schedule_key": "Gacha_5408",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50139,
+      "schedule_key": "Gacha_5409",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50140,
+      "schedule_key": "Gacha_5410",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50141,
+      "schedule_key": "Gacha_5411",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50142,
+      "schedule_key": "Gacha_5412",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50143,
+      "schedule_key": "Gacha_5413",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50144,
+      "schedule_key": "Gacha_5414",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50145,
+      "schedule_key": "Gacha_5415",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50146,
+      "schedule_key": "Gacha_5416",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50147,
+      "schedule_key": "Gacha_5417",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50148,
+      "schedule_key": "Gacha_5418",
+      "schedule_type": 5,
+      "start_date": "2999-12-31 01:00:00",
+      "end_date": "2999-12-31 01:00:00",
+      "value_date_01": ""
+    },
+    {
+      "index": 50149,
       "schedule_key": "Gacha_10001",
       "schedule_type": 5,
       "start_date": "0",
@@ -7113,7 +7273,7 @@
       "value_date_01": ""
     },
     {
-      "index": 50132,
+      "index": 50150,
       "schedule_key": "Gacha_15001",
       "schedule_type": 5,
       "start_date": "0",
@@ -7121,7 +7281,7 @@
       "value_date_01": ""
     },
     {
-      "index": 50133,
+      "index": 50151,
       "schedule_key": "Gacha_20001",
       "schedule_type": 5,
       "start_date": "0",
@@ -8170,7 +8330,7 @@
     },
     {
       "index": 55131,
-      "schedule_key": "Gate_10001",
+      "schedule_key": "Gate_5401",
       "schedule_type": 5,
       "start_date": "0",
       "end_date": "0",
@@ -8178,7 +8338,7 @@
     },
     {
       "index": 55132,
-      "schedule_key": "Gate_15001",
+      "schedule_key": "Gate_5402",
       "schedule_type": 5,
       "start_date": "0",
       "end_date": "0",
@@ -8186,6 +8346,150 @@
     },
     {
       "index": 55133,
+      "schedule_key": "Gate_5403",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55134,
+      "schedule_key": "Gate_5404",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55135,
+      "schedule_key": "Gate_5405",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55136,
+      "schedule_key": "Gate_5406",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55137,
+      "schedule_key": "Gate_5407",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55138,
+      "schedule_key": "Gate_5408",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55139,
+      "schedule_key": "Gate_5409",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55140,
+      "schedule_key": "Gate_5410",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55141,
+      "schedule_key": "Gate_5411",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55142,
+      "schedule_key": "Gate_5412",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55143,
+      "schedule_key": "Gate_5413",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55144,
+      "schedule_key": "Gate_5414",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55145,
+      "schedule_key": "Gate_5415",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55146,
+      "schedule_key": "Gate_5416",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55147,
+      "schedule_key": "Gate_5417",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55148,
+      "schedule_key": "Gate_5418",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55149,
+      "schedule_key": "Gate_10001",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55150,
+      "schedule_key": "Gate_15001",
+      "schedule_type": 5,
+      "start_date": "0",
+      "end_date": "0",
+      "value_date_01": ""
+    },
+    {
+      "index": 55151,
       "schedule_key": "Gate_20001",
       "schedule_type": 5,
       "start_date": "0",
