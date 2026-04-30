@@ -30,10 +30,31 @@
     },
     {
       "no": 52,
-      "season_no": 4,
+      "season_no": 5,
       "raid_no": 19,
       "server_check": 1,
       "schedule_key": "SingleRaid_1_52"
+    },
+    {
+      "no": 53,
+      "season_no": 5,
+      "raid_no": 17,
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_53"
+    },
+    {
+      "no": 54,
+      "season_no": 5,
+      "raid_no": 7,
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_54"
+    },
+    {
+      "no": 55,
+      "season_no": 5,
+      "raid_no": 4,
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_55"
     },
     {
       "no": 500048,

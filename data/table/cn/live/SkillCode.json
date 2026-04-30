@@ -112660,6 +112660,225 @@
       "penetration": 1
     },
     {
+      "no": 964000,
+      "function_key": 1,
+      "target_key": 2100,
+      "value": 1.2,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964110,
+      "function_key": 1304,
+      "target_key": 2100,
+      "value": 2.4,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964111,
+      "function_key": 30,
+      "target_key": 2100,
+      "value": 964111.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964210,
+      "function_key": 1304,
+      "target_key": 2100,
+      "value": 2.6,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964211,
+      "function_key": 30,
+      "target_key": 2100,
+      "value": 964211.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964212,
+      "function_key": 1304,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 2.0,
+      "condition_type": 1,
+      "fx_path": "Fx_AkiRaid_Skill06_Hit_00",
+      "penetration": 1
+    },
+    {
+      "no": 964310,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 964310.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964311,
+      "function_key": 1304,
+      "target_key": 2100,
+      "value": 3.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964312,
+      "function_key": 30,
+      "target_key": 2100,
+      "value": 964312.0,
+      "condition_type": 1,
+      "condition_id_1": 43304201,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964411,
+      "function_key": 30,
+      "target_key": 2100,
+      "value": 964411.0,
+      "condition_type": 1,
+      "fx_path": "Fx_AkiRaid_Skill04_Hit",
+      "penetration": 1
+    },
+    {
+      "no": 964412,
+      "function_key": 30,
+      "target_key": 2100,
+      "value": 964412.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964413,
+      "function_key": 1304,
+      "target_key": 1208,
+      "value": 9.0,
+      "condition_type": 1,
+      "condition_id_1": 9644111,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964414,
+      "function_key": 1304,
+      "target_key": 1208,
+      "value": 9.0,
+      "condition_type": 1,
+      "condition_id_1": 9644112,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964415,
+      "function_key": 31,
+      "target_key": 1208,
+      "value": 964412.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964416,
+      "function_key": 1304,
+      "target_key": 1208,
+      "value": 9.0,
+      "condition_type": 1,
+      "condition_id_1": 9644113,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964417,
+      "function_key": 1304,
+      "target_key": 1208,
+      "value": 9.0,
+      "condition_type": 1,
+      "condition_id_1": 9644114,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964418,
+      "function_key": 1304,
+      "target_key": 1208,
+      "value": 9.0,
+      "condition_type": 1,
+      "condition_id_1": 9644115,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964419,
+      "function_key": 31,
+      "target_key": 1208,
+      "value": 964411.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964420,
+      "function_key": 30,
+      "target_key": 1208,
+      "value": 964420.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964510,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 964510.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964511,
+      "function_key": 30,
+      "target_key": 1208,
+      "value": 964511.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964512,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 964512.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 964513,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 964513.0,
+      "condition_type": 1,
+      "condition_id_1": 964513,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
       "no": 990000,
       "function_key": 30,
       "is_ally": 1,

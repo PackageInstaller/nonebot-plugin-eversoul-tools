@@ -5440,6 +5440,25 @@
       "show_list": 1,
       "event_type": 8,
       "group": 2,
+      "event_number": 16,
+      "user_type": 3,
+      "name_sno": 12182,
+      "desc_sno": 12182,
+      "stage_limit": 3,
+      "battle_ticket_item": 8014,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelPreviewMiniGameDefense",
+      "banner_path": "banner_MiniGameEvent",
+      "title_path": "MiniGame/Title_MiniGameEvent",
+      "schedule_key": "EventInfo_DefenseGame_16"
+    },
+    {
+      "no": 282,
+      "show_list": 1,
+      "event_type": 8,
+      "group": 2,
       "event_number": 15,
       "user_type": 3,
       "name_sno": 12182,
@@ -5455,7 +5474,7 @@
       "schedule_key": "EventInfo_DefenseGame_15"
     },
     {
-      "no": 282,
+      "no": 283,
       "show_list": 1,
       "event_type": 8,
       "group": 2,
@@ -5474,7 +5493,7 @@
       "schedule_key": "EventInfo_DefenseGame_14"
     },
     {
-      "no": 283,
+      "no": 284,
       "show_list": 1,
       "event_type": 12,
       "group": 2,
@@ -5492,7 +5511,7 @@
       "schedule_key": "EventInfo_FairyVote_2"
     },
     {
-      "no": 284,
+      "no": 285,
       "show_list": 1,
       "event_type": 17,
       "group": 1,
@@ -5510,7 +5529,7 @@
       "schedule_key": "EventInfo_EGT_Movie_1"
     },
     {
-      "no": 285,
+      "no": 286,
       "show_list": 1,
       "event_type": 12,
       "group": 1,
@@ -5528,7 +5547,7 @@
       "schedule_key": "EventInfo_FairyVote_1"
     },
     {
-      "no": 286,
+      "no": 287,
       "show_list": 1,
       "event_type": 22,
       "group": 1,
@@ -5547,7 +5566,7 @@
       "schedule_key": "EventInfo_Newbie_DailyPass"
     },
     {
-      "no": 287,
+      "no": 288,
       "show_list": 1,
       "event_type": 3,
       "group": 1,
@@ -5566,7 +5585,7 @@
       "schedule_key": "EventInfo_Launching_Quest"
     },
     {
-      "no": 288,
+      "no": 289,
       "show_list": 1,
       "event_type": 3,
       "group": 2,
@@ -5585,7 +5604,7 @@
       "schedule_key": "EventInfo_FariyCollect_Quest"
     },
     {
-      "no": 289,
+      "no": 290,
       "show_list": 1,
       "event_type": 15,
       "group": 4,
@@ -5604,7 +5623,7 @@
       "schedule_key": "EventInfo_SelectPickup_Limit2"
     },
     {
-      "no": 290,
+      "no": 291,
       "show_list": 1,
       "event_type": 15,
       "group": 2,
@@ -5623,7 +5642,7 @@
       "schedule_key": "EventInfo_SelectPickup_Season2"
     },
     {
-      "no": 291,
+      "no": 292,
       "show_list": 1,
       "event_type": 15,
       "group": 1,
@@ -5642,7 +5661,7 @@
       "schedule_key": "EventInfo_SelectPickup_Season1"
     },
     {
-      "no": 292,
+      "no": 293,
       "show_list": 1,
       "event_type": 1,
       "group": 1000,
@@ -5660,7 +5679,7 @@
       "schedule_key": "EventInfo_Comeback_Attend"
     },
     {
-      "no": 293,
+      "no": 294,
       "show_list": 1,
       "event_type": 3,
       "group": 1000,
@@ -5678,7 +5697,7 @@
       "schedule_key": "EventInfo_Comeback_Quest"
     },
     {
-      "no": 294,
+      "no": 295,
       "show_list": 1,
       "event_type": 2,
       "group": 9,
@@ -5696,7 +5715,7 @@
       "schedule_key": "EventInfo_Rotation_Trip"
     },
     {
-      "no": 295,
+      "no": 296,
       "show_list": 1,
       "event_type": 2,
       "group": 8,
@@ -5714,7 +5733,7 @@
       "schedule_key": "EventInfo_Rotation_Heart"
     },
     {
-      "no": 296,
+      "no": 297,
       "show_list": 1,
       "event_type": 2,
       "group": 6,
@@ -5732,7 +5751,7 @@
       "schedule_key": "EventInfo_Rotation_Arena"
     },
     {
-      "no": 297,
+      "no": 298,
       "show_list": 1,
       "event_type": 2,
       "group": 3,
@@ -5750,7 +5769,7 @@
       "schedule_key": "EventInfo_Rotation_Labyrinth"
     },
     {
-      "no": 298,
+      "no": 299,
       "show_list": 1,
       "event_type": 2,
       "group": 7,
@@ -5768,7 +5787,7 @@
       "schedule_key": "EventInfo_Rotation_Champions"
     },
     {
-      "no": 299,
+      "no": 300,
       "show_list": 1,
       "event_type": 2,
       "group": 5,
@@ -5786,7 +5805,7 @@
       "schedule_key": "EventInfo_Rotation_DualGate"
     },
     {
-      "no": 300,
+      "no": 301,
       "show_list": 1,
       "event_type": 2,
       "group": 2,
@@ -5804,7 +5823,7 @@
       "schedule_key": "EventInfo_Rotation_AutoArbeit"
     },
     {
-      "no": 301,
+      "no": 302,
       "show_list": 1,
       "event_type": 2,
       "group": 6,
@@ -5822,7 +5841,7 @@
       "schedule_key": "EventInfo_Rotation_Arena2"
     },
     {
-      "no": 302,
+      "no": 303,
       "show_list": 1,
       "event_type": 2,
       "group": 3,
@@ -5840,7 +5859,7 @@
       "schedule_key": "EventInfo_Rotation_Labyrinth2"
     },
     {
-      "no": 303,
+      "no": 304,
       "show_list": 1,
       "event_type": 2,
       "group": 7,
@@ -5858,7 +5877,7 @@
       "schedule_key": "EventInfo_Rotation_Champions2"
     },
     {
-      "no": 304,
+      "no": 305,
       "show_list": 1,
       "event_type": 2,
       "group": 5,
@@ -5876,7 +5895,7 @@
       "schedule_key": "EventInfo_Rotation_DualGate2"
     },
     {
-      "no": 305,
+      "no": 306,
       "show_list": 1,
       "event_type": 2,
       "group": 2,
@@ -5894,7 +5913,7 @@
       "schedule_key": "EventInfo_Rotation_AutoArbeit2"
     },
     {
-      "no": 306,
+      "no": 307,
       "category_type": 1,
       "show_list": 1,
       "event_type": 1,
@@ -5914,7 +5933,7 @@
       "schedule_key": "EventInfo_GaonFestival_Attend2"
     },
     {
-      "no": 307,
+      "no": 308,
       "category_type": 1,
       "show_list": 1,
       "event_type": 6,

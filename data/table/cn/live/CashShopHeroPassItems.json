@@ -2984,7 +2984,9 @@
       "hero_no": 2140,
       "hero_grade": 110020,
       "basic_item_1_no": 19,
-      "basic_item_1_amount": 50,
+      "basic_item_1_amount": 10,
+      "basic_item_2_no": 6828,
+      "basic_item_2_amount": 1,
       "shop_item_no": 40105
     },
     {

@@ -43,6 +43,30 @@
       "step_value": 1
     },
     {
+      "no": 33,
+      "raid_no": 1,
+      "step": 8,
+      "step_value": 1
+    },
+    {
+      "no": 34,
+      "raid_no": 2,
+      "step": 8,
+      "step_value": 1
+    },
+    {
+      "no": 35,
+      "raid_no": 3,
+      "step": 8,
+      "step_value": 1
+    },
+    {
+      "no": 36,
+      "raid_no": 1,
+      "step": 8,
+      "step_value": 1
+    },
+    {
       "no": 50026,
       "raid_no": 3,
       "step": 8,

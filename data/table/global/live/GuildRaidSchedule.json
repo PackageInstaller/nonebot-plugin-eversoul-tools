@@ -55,6 +55,18 @@
       "schedule_key": "GuildRaid_1_57"
     },
     {
+      "no": 58,
+      "raid_no": 3,
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_58"
+    },
+    {
+      "no": 59,
+      "raid_no": 1,
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_59"
+    },
+    {
       "no": 50049,
       "raid_no": 1,
       "server_check": 2,

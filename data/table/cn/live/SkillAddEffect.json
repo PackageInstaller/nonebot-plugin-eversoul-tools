@@ -6122,6 +6122,20 @@
       "skill_code_1": 963313
     },
     {
+      "effect_no": 964211,
+      "skill_code_1": 964212
+    },
+    {
+      "effect_no": 964510,
+      "skill_code_1": 964511,
+      "skill_code_2": 964510
+    },
+    {
+      "effect_no": 964511,
+      "skill_code_1": 964512,
+      "skill_code_2": 964513
+    },
+    {
       "effect_no": 991261,
       "skill_code_1": 9912612,
       "skill_code_2": 9912613,
