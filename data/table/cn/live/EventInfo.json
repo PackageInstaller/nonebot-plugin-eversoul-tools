@@ -248,6 +248,168 @@
     },
     {
       "no": 13,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 1,
+      "group": 42,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 12470,
+      "desc_sno": 12473,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "date_type": 14,
+      "magic_value": "0",
+      "ui_path": "PanelAttendWedding2",
+      "banner_path": "banner_AttendWedding2",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Wedding2_Return_Attend"
+    },
+    {
+      "no": 14,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 6,
+      "group": 15,
+      "event_number": 2,
+      "user_type": 3,
+      "name_sno": 12475,
+      "desc_sno": 12475,
+      "stage_limit": 3,
+      "content_unlock_storyno": 7,
+      "battle_ticket_item": 8145,
+      "item_infos": "[[8142,1]]",
+      "event_shop_no": "10028",
+      "magic_value": "0",
+      "ui_path": "PanelPreviewWedding2",
+      "banner_path": "banner_Wedding2Event",
+      "title_path": "Wedding2/Title_Wedding2Event",
+      "schedule_key": "EventInfo_Wedding2_Return_Main"
+    },
+    {
+      "no": 15,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 9,
+      "group": 11,
+      "event_number": 2,
+      "user_type": 3,
+      "name_sno": 12476,
+      "desc_sno": 12476,
+      "stage_limit": 3,
+      "content_unlock_storyno": 4,
+      "battle_ticket_item": 8010,
+      "item_infos": "[[8143,1],[8144,1]]",
+      "event_shop_no": "1079,1080",
+      "magic_value": "0",
+      "ui_path": "PanelEventStageWedding2",
+      "banner_path": "banner_StageWedding2",
+      "title_path": "Wedding2/Title_Wedding2Event",
+      "schedule_key": "EventInfo_Wedding2_Return_Stage"
+    },
+    {
+      "no": 16,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 13,
+      "group": 26,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 12481,
+      "desc_sno": 12474,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelEventPass_Wedding2",
+      "banner_path": "banner_Wedding2Pass",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Wedding2_Return_Pass"
+    },
+    {
+      "no": 17,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 1,
+      "group": 22,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 12202,
+      "desc_sno": 12179,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "date_type": 14,
+      "magic_value": "0",
+      "ui_path": "PanelAttendSummer01",
+      "banner_path": "banner_AttendSummer01",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Summer01_Return_Attend"
+    },
+    {
+      "no": 18,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 6,
+      "group": 4,
+      "event_number": 2,
+      "user_type": 3,
+      "name_sno": 12201,
+      "desc_sno": 12201,
+      "stage_limit": 3,
+      "content_unlock_storyno": 6,
+      "battle_ticket_item": 8069,
+      "item_infos": "[[8065,1]]",
+      "event_shop_no": "10014",
+      "magic_value": "0",
+      "ui_path": "PanelPreviewSummer01",
+      "banner_path": "banner_Summer01Event",
+      "title_path": "Summer01/Title_Summer01Event",
+      "schedule_key": "EventInfo_Summer01_Return_Main"
+    },
+    {
+      "no": 19,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 9,
+      "group": 3,
+      "event_number": 2,
+      "user_type": 3,
+      "name_sno": 12204,
+      "desc_sno": 12204,
+      "stage_limit": 3,
+      "content_unlock_storyno": 4,
+      "battle_ticket_item": 8010,
+      "item_infos": "[[8066,1],[8067,1]]",
+      "event_shop_no": "1036,1037",
+      "magic_value": "0",
+      "ui_path": "PanelEventStageSummer01",
+      "banner_path": "banner_StageSummer01",
+      "title_path": "Summer01/Title_Summer01Event",
+      "schedule_key": "EventInfo_Summer01_Return_Stage"
+    },
+    {
+      "no": 20,
+      "category_type": 1,
+      "show_list": 1,
+      "event_type": 13,
+      "group": 9,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 12223,
+      "desc_sno": 12224,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelEventPass_Summer01",
+      "banner_path": "banner_Summer01Pass",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Summer01_Return_Pass"
+    },
+    {
+      "no": 21,
       "category_type": 2,
       "show_list": 1,
       "event_type": 1,
@@ -267,7 +429,7 @@
       "schedule_key": "EventInfo_Side_Rose_Attend"
     },
     {
-      "no": 14,
+      "no": 22,
       "category_type": 2,
       "show_list": 1,
       "event_type": 24,
@@ -286,7 +448,7 @@
       "schedule_key": "EventInfo_Side_Rose_Main"
     },
     {
-      "no": 15,
+      "no": 23,
       "category_type": 2,
       "event_type": 3,
       "group": 5001,
@@ -304,7 +466,7 @@
       "schedule_key": "EventInfo_Side_Rose_Quest"
     },
     {
-      "no": 16,
+      "no": 24,
       "category_type": 2,
       "event_type": 21,
       "group": 3,
@@ -322,7 +484,7 @@
       "schedule_key": "EventInfo_Side_Rose_Infinity"
     },
     {
-      "no": 17,
+      "no": 25,
       "category_type": 2,
       "event_type": 8,
       "group": 4,
@@ -341,7 +503,7 @@
       "schedule_key": "EventInfo_Side_Rose_Minigame"
     },
     {
-      "no": 18,
+      "no": 26,
       "category_type": 2,
       "event_type": 23,
       "group": 1,
@@ -359,7 +521,7 @@
       "schedule_key": "EventInfo_Side_Rose_Rewardgame"
     },
     {
-      "no": 19,
+      "no": 27,
       "category_type": 2,
       "show_list": 1,
       "event_type": 13,
@@ -378,7 +540,138 @@
       "schedule_key": "EventInfo_RoseSideEvent_Pass"
     },
     {
-      "no": 20,
+      "no": 28,
+      "category_type": 2,
+      "show_list": 1,
+      "event_type": 1,
+      "group": 35,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 21133,
+      "desc_sno": 10400,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "date_type": 14,
+      "magic_value": "0",
+      "ui_path": "PanelAttendSideEventHonglan",
+      "banner_path": "banner_AttendHonglanSideEvent",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Side_Honglan_Attend"
+    },
+    {
+      "no": 29,
+      "category_type": 2,
+      "show_list": 1,
+      "event_type": 24,
+      "group": 2,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 21126,
+      "desc_sno": 21126,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelPreviewSideEventHonglan",
+      "banner_path": "banner_HonglanSideEvent",
+      "title_path": "HonglanSideEvent/Title_HonglanSideEvent",
+      "schedule_key": "EventInfo_Side_Honglan_Main"
+    },
+    {
+      "no": 30,
+      "category_type": 2,
+      "event_type": 3,
+      "group": 5002,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 21108,
+      "desc_sno": 21129,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelQuestHonglan",
+      "banner_path": "0",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Side_Honglan_Quest"
+    },
+    {
+      "no": 31,
+      "category_type": 2,
+      "event_type": 21,
+      "group": 4,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 21109,
+      "desc_sno": 21109,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "0",
+      "banner_path": "0",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Side_Honglan_Infinity"
+    },
+    {
+      "no": 32,
+      "category_type": 2,
+      "event_type": 6,
+      "group": 21,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 21135,
+      "desc_sno": 21135,
+      "stage_limit": 3,
+      "battle_ticket_item": 8122,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "0",
+      "banner_path": "0",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Side_Honglan_Minigame"
+    },
+    {
+      "no": 33,
+      "category_type": 2,
+      "event_type": 23,
+      "group": 2,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 21111,
+      "desc_sno": 21111,
+      "stage_limit": 3,
+      "item_infos": "[[8121,100]]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "0",
+      "banner_path": "0",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Side_Honglan_Rewardgame"
+    },
+    {
+      "no": 34,
+      "category_type": 2,
+      "show_list": 1,
+      "event_type": 13,
+      "group": 20,
+      "event_number": 1,
+      "user_type": 3,
+      "name_sno": 21134,
+      "desc_sno": 21134,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelEventPass_HonglanSideEvent",
+      "banner_path": "banner_HonglanSideEventPass",
+      "title_path": "0",
+      "schedule_key": "EventInfo_Side_Honglan_Pass"
+    },
+    {
+      "no": 35,
       "show_list": 1,
       "event_type": 1,
       "group": 47,
@@ -397,7 +690,7 @@
       "schedule_key": "EventInfo_Newyear_CN"
     },
     {
-      "no": 21,
+      "no": 36,
       "show_list": 1,
       "event_type": 14,
       "group": 6,
@@ -415,7 +708,7 @@
       "schedule_key": "EventInfo_Bingo_Newyear_CN"
     },
     {
-      "no": 22,
+      "no": 37,
       "category_type": 1,
       "show_list": 1,
       "event_type": 1,
@@ -435,7 +728,7 @@
       "schedule_key": "EventInfo_Valentine3_Attend"
     },
     {
-      "no": 23,
+      "no": 38,
       "category_type": 1,
       "show_list": 1,
       "event_type": 6,
@@ -456,7 +749,7 @@
       "schedule_key": "EventInfo_Valentine3_Main"
     },
     {
-      "no": 24,
+      "no": 39,
       "category_type": 1,
       "show_list": 1,
       "event_type": 9,
@@ -477,7 +770,7 @@
       "schedule_key": "EventInfo_Valentine3_Stage"
     },
     {
-      "no": 25,
+      "no": 40,
       "category_type": 1,
       "show_list": 1,
       "event_type": 21,
@@ -496,7 +789,7 @@
       "schedule_key": "EventInfo_Valentine3_Infinity"
     },
     {
-      "no": 26,
+      "no": 41,
       "category_type": 1,
       "show_list": 1,
       "event_type": 13,
@@ -515,7 +808,7 @@
       "schedule_key": "EventInfo_Valentine3_Pass"
     },
     {
-      "no": 27,
+      "no": 42,
       "category_type": 1,
       "show_list": 1,
       "event_type": 1,
@@ -535,7 +828,7 @@
       "schedule_key": "EventInfo_MaidPlan_Attend"
     },
     {
-      "no": 28,
+      "no": 43,
       "category_type": 1,
       "show_list": 1,
       "event_type": 6,
@@ -556,7 +849,7 @@
       "schedule_key": "EventInfo_MaidPlan_Main"
     },
     {
-      "no": 29,
+      "no": 44,
       "category_type": 1,
       "show_list": 1,
       "event_type": 9,
@@ -577,7 +870,7 @@
       "schedule_key": "EventInfo_MaidPlan_Stage"
     },
     {
-      "no": 30,
+      "no": 45,
       "category_type": 1,
       "show_list": 1,
       "event_type": 13,
@@ -596,7 +889,7 @@
       "schedule_key": "EventInfo_MaidPlan_Pass"
     },
     {
-      "no": 31,
+      "no": 46,
       "category_type": 1,
       "show_list": 1,
       "event_type": 6,
@@ -617,7 +910,7 @@
       "schedule_key": "EventInfo_Valentine_Return_Main"
     },
     {
-      "no": 32,
+      "no": 47,
       "category_type": 1,
       "show_list": 1,
       "event_type": 3,
@@ -636,7 +929,7 @@
       "schedule_key": "EventInfo_Valentine_Quest"
     },
     {
-      "no": 33,
+      "no": 48,
       "category_type": 1,
       "show_list": 1,
       "event_type": 1,
@@ -656,7 +949,7 @@
       "schedule_key": "EventInfo_Valentine_Attend"
     },
     {
-      "no": 34,
+      "no": 49,
       "category_type": 1,
       "show_list": 1,
       "event_type": 6,
@@ -677,7 +970,7 @@
       "schedule_key": "EventInfo_NewYear_Main"
     },
     {
-      "no": 35,
+      "no": 50,
       "category_type": 1,
       "show_list": 1,
       "event_type": 6,
@@ -698,7 +991,7 @@
       "schedule_key": "EventInfo_NewYear_Main1"
     },
     {
-      "no": 36,
+      "no": 51,
       "category_type": 1,
       "show_list": 1,
       "event_type": 3,
@@ -717,7 +1010,7 @@
       "schedule_key": "EventInfo_NewYear_Quest"
     },
     {
-      "no": 37,
+      "no": 52,
       "category_type": 1,
       "show_list": 1,
       "event_type": 1,
@@ -737,7 +1030,7 @@
       "schedule_key": "EventInfo_NewYear_Attend"
     },
     {
-      "no": 38,
+      "no": 53,
       "category_type": 1,
       "show_list": 1,
       "event_type": 1,
@@ -757,7 +1050,7 @@
       "schedule_key": "EventInfo_NewYear2_Attend"
     },
     {
-      "no": 39,
+      "no": 54,
       "category_type": 1,
       "show_list": 1,
       "event_type": 6,
@@ -778,7 +1071,7 @@
       "schedule_key": "EventInfo_NewYear2_Main"
     },
     {
-      "no": 40,
+      "no": 55,
       "category_type": 1,
       "show_list": 1,
       "event_type": 9,
@@ -799,7 +1092,7 @@
       "schedule_key": "EventInfo_NewYear2_Stage"
     },
     {
-      "no": 41,
+      "no": 56,
       "category_type": 1,
       "show_list": 1,
       "event_type": 21,
@@ -818,7 +1111,7 @@
       "schedule_key": "EventInfo_NewYear2_Infinity"
     },
     {
-      "no": 42,
+      "no": 57,
       "category_type": 1,
       "show_list": 1,
       "event_type": 13,
@@ -837,7 +1130,43 @@
       "schedule_key": "EventInfo_NewYear2_Pass"
     },
     {
-      "no": 43,
+      "no": 58,
+      "show_list": 1,
+      "event_type": 3,
+      "group": 2000,
+      "event_number": 8,
+      "user_type": 3,
+      "name_sno": 12215,
+      "desc_sno": 12216,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelQuestGuildRaid",
+      "banner_path": "banner_QuesteventGuildRaid",
+      "title_path": "0",
+      "schedule_key": "EventInfo_QuestGuildRaid_8"
+    },
+    {
+      "no": 59,
+      "show_list": 1,
+      "event_type": 3,
+      "group": 2000,
+      "event_number": 7,
+      "user_type": 3,
+      "name_sno": 12215,
+      "desc_sno": 12216,
+      "stage_limit": 3,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelQuestGuildRaid",
+      "banner_path": "banner_QuesteventGuildRaid",
+      "title_path": "0",
+      "schedule_key": "EventInfo_QuestGuildRaid_7"
+    },
+    {
+      "no": 60,
       "show_list": 1,
       "event_type": 3,
       "group": 2000,
@@ -855,7 +1184,7 @@
       "schedule_key": "EventInfo_QuestGuildRaid_6"
     },
     {
-      "no": 44,
+      "no": 61,
       "show_list": 1,
       "event_type": 3,
       "group": 2000,
@@ -873,7 +1202,7 @@
       "schedule_key": "EventInfo_QuestGuildRaid_5"
     },
     {
-      "no": 45,
+      "no": 62,
       "show_list": 1,
       "event_type": 3,
       "group": 2000,
@@ -891,7 +1220,7 @@
       "schedule_key": "EventInfo_QuestGuildRaid_4"
     },
     {
-      "no": 46,
+      "no": 63,
       "show_list": 1,
       "event_type": 3,
       "group": 2000,
@@ -909,7 +1238,7 @@
       "schedule_key": "EventInfo_QuestGuildRaid_3"
     },
     {
-      "no": 47,
+      "no": 64,
       "show_list": 1,
       "event_type": 3,
       "group": 2000,
@@ -927,7 +1256,7 @@
       "schedule_key": "EventInfo_QuestGuildRaid_2"
     },
     {
-      "no": 48,
+      "no": 65,
       "show_list": 1,
       "event_type": 3,
       "group": 2000,
@@ -945,7 +1274,7 @@
       "schedule_key": "EventInfo_QuestGuildRaid_1"
     },
     {
-      "no": 49,
+      "no": 66,
       "show_list": 1,
       "event_type": 19,
       "group": 1,
@@ -963,7 +1292,7 @@
       "schedule_key": "EventInfo_DJsoul_NewSong"
     },
     {
-      "no": 50,
+      "no": 67,
       "show_list": 1,
       "event_type": 18,
       "group": 1,
@@ -981,7 +1310,7 @@
       "schedule_key": "EventInfo_EverMatch_2"
     },
     {
-      "no": 51,
+      "no": 68,
       "show_list": 1,
       "event_type": 18,
       "group": 1,
@@ -999,7 +1328,26 @@
       "schedule_key": "EventInfo_EverMatch_1"
     },
     {
-      "no": 52,
+      "no": 69,
+      "show_list": 1,
+      "event_type": 8,
+      "group": 2,
+      "event_number": 3,
+      "user_type": 3,
+      "name_sno": 12182,
+      "desc_sno": 12182,
+      "stage_limit": 3,
+      "battle_ticket_item": 8014,
+      "item_infos": "[]",
+      "event_shop_no": "0",
+      "magic_value": "0",
+      "ui_path": "PanelPreviewMiniGameDefense",
+      "banner_path": "banner_MiniGameEvent",
+      "title_path": "MiniGame/Title_MiniGameEvent",
+      "schedule_key": "EventInfo_DefenseGame_3"
+    },
+    {
+      "no": 70,
       "show_list": 1,
       "event_type": 8,
       "group": 2,
@@ -1018,7 +1366,7 @@
       "schedule_key": "EventInfo_DefenseGame_2"
     },
     {
-      "no": 53,
+      "no": 71,
       "show_list": 1,
       "event_type": 8,
       "group": 2,
@@ -1037,7 +1385,7 @@
       "schedule_key": "EventInfo_DefenseGame_1"
     },
     {
-      "no": 54,
+      "no": 72,
       "category_type": 2,
       "show_list": 1,
       "event_type": 27,
@@ -1057,7 +1405,7 @@
       "schedule_key": "EventInfo_honglan_spine"
     },
     {
-      "no": 55,
+      "no": 73,
       "show_list": 1,
       "event_type": 1,
       "group": 1,
@@ -1076,7 +1424,7 @@
       "schedule_key": "EventInfo_Launching_Attend"
     },
     {
-      "no": 56,
+      "no": 74,
       "show_list": 1,
       "event_type": 5,
       "group": 931,
@@ -1095,7 +1443,7 @@
       "schedule_key": "EventInfo_FreeGacha_Open"
     },
     {
-      "no": 57,
+      "no": 75,
       "show_list": 1,
       "event_type": 5,
       "group": 931,
@@ -1114,7 +1462,7 @@
       "schedule_key": "EventInfo_FreeGacha_100DAY"
     },
     {
-      "no": 58,
+      "no": 76,
       "show_list": 1,
       "event_type": 3,
       "group": 1,
@@ -1133,7 +1481,7 @@
       "schedule_key": "EventInfo_Launching_Quest"
     },
     {
-      "no": 59,
+      "no": 77,
       "show_list": 1,
       "event_type": 3,
       "group": 2,
@@ -1152,7 +1500,7 @@
       "schedule_key": "EventInfo_FariyCollect_Quest"
     },
     {
-      "no": 60,
+      "no": 78,
       "show_list": 1,
       "event_type": 1,
       "group": 1000,
@@ -1169,7 +1517,7 @@
       "schedule_key": "EventInfo_Comeback_Attend"
     },
     {
-      "no": 61,
+      "no": 79,
       "show_list": 1,
       "event_type": 3,
       "group": 1000,
@@ -1186,7 +1534,7 @@
       "schedule_key": "EventInfo_Comeback_Quest"
     },
     {
-      "no": 62,
+      "no": 80,
       "show_list": 1,
       "event_type": 15,
       "group": 2,
@@ -1205,7 +1553,7 @@
       "schedule_key": "EventInfo_SelectPickup_Season_cn"
     },
     {
-      "no": 63,
+      "no": 81,
       "show_list": 1,
       "event_type": 2,
       "group": 9,
@@ -1223,7 +1571,7 @@
       "schedule_key": "EventInfo_Rotation_Trip"
     },
     {
-      "no": 64,
+      "no": 82,
       "show_list": 1,
       "event_type": 2,
       "group": 8,
@@ -1241,7 +1589,7 @@
       "schedule_key": "EventInfo_Rotation_Heart"
     },
     {
-      "no": 65,
+      "no": 83,
       "show_list": 1,
       "event_type": 2,
       "group": 7,
@@ -1259,7 +1607,7 @@
       "schedule_key": "EventInfo_Rotation_Champions"
     },
     {
-      "no": 66,
+      "no": 84,
       "show_list": 1,
       "event_type": 2,
       "group": 2,
@@ -1277,7 +1625,7 @@
       "schedule_key": "EventInfo_Rotation_AutoArbeit"
     },
     {
-      "no": 67,
+      "no": 85,
       "show_list": 1,
       "event_type": 2,
       "group": 3,
@@ -1295,7 +1643,7 @@
       "schedule_key": "EventInfo_Rotation_Labyrinth"
     },
     {
-      "no": 68,
+      "no": 86,
       "show_list": 1,
       "event_type": 2,
       "group": 6,
@@ -1313,7 +1661,7 @@
       "schedule_key": "EventInfo_Rotation_Arena"
     },
     {
-      "no": 69,
+      "no": 87,
       "show_list": 1,
       "event_type": 2,
       "group": 5,
@@ -1331,7 +1679,7 @@
       "schedule_key": "EventInfo_Rotation_DualGate"
     },
     {
-      "no": 70,
+      "no": 88,
       "show_list": 1,
       "event_type": 2,
       "group": 3,
@@ -1349,7 +1697,7 @@
       "schedule_key": "EventInfo_Rotation_Labyrinth2"
     },
     {
-      "no": 71,
+      "no": 89,
       "show_list": 1,
       "event_type": 2,
       "group": 7,
@@ -1367,7 +1715,7 @@
       "schedule_key": "EventInfo_Rotation_Champions2"
     },
     {
-      "no": 72,
+      "no": 90,
       "show_list": 1,
       "event_type": 2,
       "group": 2,
@@ -1385,7 +1733,7 @@
       "schedule_key": "EventInfo_Rotation_AutoArbeit2"
     },
     {
-      "no": 73,
+      "no": 91,
       "event_type": 20,
       "group": 4001,
       "event_number": 4,
@@ -1402,7 +1750,7 @@
       "schedule_key": "EventInfo_SpecialShop_NewYear2Event"
     },
     {
-      "no": 74,
+      "no": 92,
       "event_type": 3,
       "group": 4001,
       "event_number": 4,
@@ -1419,7 +1767,7 @@
       "schedule_key": "EventInfo_SpecialShop_NewYear2EventM"
     },
     {
-      "no": 75,
+      "no": 93,
       "event_type": 20,
       "group": 4001,
       "event_number": 3,
@@ -1436,7 +1784,7 @@
       "schedule_key": "EventInfo_SpecialShop_CNEvent01"
     },
     {
-      "no": 76,
+      "no": 94,
       "event_type": 3,
       "group": 4001,
       "event_number": 3,
@@ -1453,7 +1801,7 @@
       "schedule_key": "EventInfo_SpecialShop_CNEvent01M"
     },
     {
-      "no": 77,
+      "no": 95,
       "event_type": 20,
       "group": 4001,
       "event_number": 2,
@@ -1470,7 +1818,7 @@
       "schedule_key": "EventInfo_SpecialShop_CNEvent02"
     },
     {
-      "no": 78,
+      "no": 96,
       "event_type": 3,
       "group": 4001,
       "event_number": 2,
@@ -1487,7 +1835,7 @@
       "schedule_key": "EventInfo_SpecialShop_CNEvent02M"
     },
     {
-      "no": 79,
+      "no": 97,
       "show_list": 1,
       "event_type": 22,
       "group": 2,

@@ -126,7 +126,7 @@
       "tower_name": 233110,
       "req_hero": 3110,
       "bg_path": "Nyah",
-      "open_date": "2099-01-01 00:00:00"
+      "open_date": "2026-05-20 00:00:00"
     },
     {
       "no": 216,
@@ -134,7 +134,7 @@
       "tower_name": 232050,
       "req_hero": 2050,
       "bg_path": "Mica",
-      "open_date": "2099-01-01 00:00:00"
+      "open_date": "2026-05-20 00:00:00"
     },
     {
       "no": 217,
@@ -142,7 +142,7 @@
       "tower_name": 232040,
       "req_hero": 2040,
       "bg_path": "Seeha",
-      "open_date": "2099-01-01 00:00:00"
+      "open_date": "2026-05-20 00:00:00"
     },
     {
       "no": 218,
@@ -174,7 +174,7 @@
       "tower_name": 231030,
       "req_hero": 1030,
       "bg_path": "Beatrice",
-      "open_date": "2099-01-01 00:00:00"
+      "open_date": "2026-01-28 00:00:00"
     }
   ]
 }

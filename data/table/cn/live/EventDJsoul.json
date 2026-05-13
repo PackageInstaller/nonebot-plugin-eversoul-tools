@@ -189,6 +189,87 @@
       "note_easy": "BGM_DjSoulCut_09_Easy",
       "note_normal": "0",
       "note_hard": "BGM_DjSoulCut_09_Hard"
+    },
+    {
+      "no": 14,
+      "title_sno": 30082,
+      "img_path": "djsoul_cover_img_23.png",
+      "bg_path": "BG_djsoul_cover_img_23.png",
+      "preview_path": "BGM_DjSoulCut_23_Prv.wav",
+      "bgm_path": "BGM_DjSoulCut_23.wav",
+      "difficulty_easy": 2,
+      "difficulty_normal": 6,
+      "note_easy": "BGM_DjSoulCut_23_Easy",
+      "note_normal": "BGM_DjSoulCut_23_Normal",
+      "note_hard": "0"
+    },
+    {
+      "no": 15,
+      "title_sno": 30144,
+      "img_path": "djsoul_cover_img_14.png",
+      "bg_path": "BG_djsoul_cover_img_14.png",
+      "preview_path": "BGM_DjSoulCut_14_Prv.wav",
+      "bgm_path": "BGM_DjSoulCut_14.wav",
+      "difficulty_normal": 5,
+      "note_easy": "BGM_DjSoulCut_14_Easy",
+      "note_normal": "BGM_DjSoulCut_14_Normal",
+      "note_hard": "0"
+    },
+    {
+      "no": 16,
+      "title_sno": 30145,
+      "img_path": "djsoul_cover_img_27.png",
+      "bg_path": "BG_djsoul_cover_img_27.png",
+      "preview_path": "BGM_DjSoulCut_27_Prv.wav",
+      "bgm_path": "BGM_DjSoulCut_27.wav",
+      "difficulty_easy": 3,
+      "difficulty_normal": 7,
+      "difficulty_hard": 10,
+      "note_easy": "BGM_DjSoulCut_27_Easy",
+      "note_normal": "BGM_DjSoulCut_27_Normal",
+      "note_hard": "BGM_DjSoulCut_27_Hard"
+    },
+    {
+      "no": 17,
+      "title_sno": 30079,
+      "img_path": "djsoul_cover_img_17.png",
+      "bg_path": "BG_djsoul_cover_img_17.png",
+      "preview_path": "BGM_DjSoulCut_17_Prv.wav",
+      "bgm_path": "BGM_DjSoulCut_17.wav",
+      "difficulty_easy": 1,
+      "difficulty_normal": 5,
+      "difficulty_hard": 7,
+      "note_easy": "BGM_DjSoulCut_17_Easy",
+      "note_normal": "BGM_DjSoulCut_17_Normal",
+      "note_hard": "BGM_DjSoulCut_17_Hard"
+    },
+    {
+      "no": 18,
+      "title_sno": 30039,
+      "img_path": "djsoul_cover_img_19.png",
+      "bg_path": "BG_djsoul_cover_img_19.png",
+      "preview_path": "BGM_DjSoulCut_19_Prv.wav",
+      "bgm_path": "BGM_DjSoulCut_19.wav",
+      "difficulty_easy": 2,
+      "difficulty_normal": 5,
+      "difficulty_hard": 8,
+      "note_easy": "BGM_DjSoulCut_19_Easy",
+      "note_normal": "BGM_DjSoulCut_19_Normal",
+      "note_hard": "BGM_DjSoulCut_19_Hard"
+    },
+    {
+      "no": 19,
+      "title_sno": 30105,
+      "img_path": "djsoul_cover_img_13.png",
+      "bg_path": "BG_djsoul_cover_img_13.png",
+      "preview_path": "BGM_DjSoulCut_13_Prv.wav",
+      "bgm_path": "BGM_DjSoulCut_13.wav",
+      "difficulty_easy": 1,
+      "difficulty_normal": 6,
+      "difficulty_hard": 10,
+      "note_easy": "BGM_DjSoulCut_13_Easy",
+      "note_normal": "BGM_DjSoulCut_13_Normal",
+      "note_hard": "BGM_DjSoulCut_13_Hard"
     }
   ]
 }

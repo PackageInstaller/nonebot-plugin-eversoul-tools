@@ -181,7 +181,7 @@ async def generate_help_html(config: dict) -> str:
     <body>
         <div class="container">
             <div class="header">
-                <h1>🎮 EverSoul 命令列表</h1>
+                <h1>EverSoul 命令列表</h1>
                 <p>所有可用命令的完整指南</p>
             </div>
             

@@ -893,26 +893,31 @@
     },
     {
       "no": 56416,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Adrianne_01",
       "item_no": 6416
     },
     {
       "no": 56417,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Adrianne_02",
       "item_no": 6417
     },
     {
       "no": 56418,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Adrianne_03",
       "item_no": 6418
     },
     {
       "no": 56419,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Adrianne_04",
       "item_no": 6419
     },
     {
       "no": 56420,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Adrianne_05",
       "item_no": 6420
     },
@@ -1183,6 +1188,7 @@
     },
     {
       "no": 56807,
+      "group_no": 17,
       "img_path": "sticker_special_HonglanCombat01",
       "item_no": 6807
     },
@@ -1280,6 +1286,7 @@
     },
     {
       "no": 56826,
+      "group_no": 17,
       "img_path": "sticker_special_Sigrid01",
       "item_no": 6826
     },
@@ -1296,6 +1303,7 @@
     },
     {
       "no": 56829,
+      "group_no": 17,
       "img_path": "sticker_special_Dominique01",
       "item_no": 6829
     },
@@ -1499,46 +1507,55 @@
     },
     {
       "no": 56937,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_01",
       "item_no": 6937
     },
     {
       "no": 56938,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_02",
       "item_no": 6938
     },
     {
       "no": 56939,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_03",
       "item_no": 6939
     },
     {
       "no": 56940,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_04",
       "item_no": 6940
     },
     {
       "no": 56941,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_05",
       "item_no": 6941
     },
     {
       "no": 56942,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_06",
       "item_no": 6942
     },
     {
       "no": 56943,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_07",
       "item_no": 6943
     },
     {
       "no": 56944,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_08",
       "item_no": 6944
     },
     {
       "no": 56945,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side2_09",
       "item_no": 6945
     },
@@ -1910,6 +1927,7 @@
     },
     {
       "no": 5521601,
+      "group_no": 17,
       "img_path": "sticker_love_HonglanCombat01",
       "item_no": 521601
     },
@@ -1992,6 +2010,7 @@
     },
     {
       "no": 5531401,
+      "group_no": 17,
       "img_path": "sticker_love_Dominique01",
       "item_no": 531401
     },
@@ -2097,6 +2116,7 @@
     },
     {
       "no": 5541401,
+      "group_no": 17,
       "img_path": "sticker_love_Sigrid01",
       "item_no": 541401
     },

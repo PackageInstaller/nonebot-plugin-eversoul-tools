@@ -37,6 +37,12 @@
       "schedule_key": "SingleRaid_1_1006"
     },
     {
+      "no": 1007,
+      "raid_no": 7,
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_1007"
+    },
+    {
       "no": 501001,
       "raid_no": 1,
       "server_check": 2,

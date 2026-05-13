@@ -45,8 +45,8 @@
     {
       "no": 7,
       "movie_path": "GachaNewCharacterSigrid",
-      "start_date": "2099-01-01 00:00",
-      "end_date": "2099-01-01 00:00",
+      "start_date": "2026-06-10 00:00",
+      "end_date": "2026-06-24 00:00",
       "hero_check": 4140
     },
     {
@@ -59,22 +59,22 @@
     {
       "no": 9,
       "movie_path": "GachaNewCharacterDominique",
-      "start_date": "2099-01-01 00:00",
-      "end_date": "2099-01-01 00:00",
+      "start_date": "2026-05-20 00:00",
+      "end_date": "2026-06-03 00:00",
       "hero_check": 3140
     },
     {
       "no": 10,
       "movie_path": "GachaNewCharacterMephistoDawn",
-      "start_date": "2026-04-15 00:00",
-      "end_date": "2026-05-06 00:00",
+      "start_date": "2099-01-01 00:00",
+      "end_date": "2099-01-01 00:00",
       "hero_check": 6530
     },
     {
       "no": 11,
       "movie_path": "GachaNewCharacterOnyx",
-      "start_date": "2026-04-29 00:00",
-      "end_date": "2026-05-13 00:00",
+      "start_date": "2099-01-01 00:00",
+      "end_date": "2099-01-01 00:00",
       "hero_check": 2140
     },
     {
@@ -94,8 +94,8 @@
     {
       "no": 14,
       "movie_path": "GachaNewCharacterHonglanCombat",
-      "start_date": "2099-01-01 00:00",
-      "end_date": "2099-01-01 00:00",
+      "start_date": "2026-05-27 00:00",
+      "end_date": "2026-06-17 00:00",
       "hero_check": 2160
     },
     {
@@ -129,8 +129,8 @@
     {
       "no": 19,
       "movie_path": "GachaNewCharacterRoseCrimson",
-      "start_date": "2026-05-06 00:00",
-      "end_date": "2026-05-27 00:00",
+      "start_date": "2099-01-01 00:00",
+      "end_date": "2099-01-01 00:00",
       "hero_check": 1150
     },
     {

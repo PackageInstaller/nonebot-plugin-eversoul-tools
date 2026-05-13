@@ -31,6 +31,18 @@
       "step_value": 1
     },
     {
+      "no": 1006,
+      "raid_no": 2,
+      "step": 8,
+      "step_value": 1
+    },
+    {
+      "no": 1007,
+      "raid_no": 1,
+      "step": 8,
+      "step_value": 1
+    },
+    {
       "no": 51001,
       "raid_no": 1,
       "step": 8,
@@ -57,6 +69,12 @@
     {
       "no": 51005,
       "raid_no": 1,
+      "step": 8,
+      "step_value": 2
+    },
+    {
+      "no": 51006,
+      "raid_no": 2,
       "step": 8,
       "step_value": 2
     },
@@ -91,6 +109,12 @@
       "step_value": 3
     },
     {
+      "no": 91006,
+      "raid_no": 2,
+      "step": 8,
+      "step_value": 3
+    },
+    {
       "no": 101001,
       "raid_no": 1,
       "step": 8,
@@ -117,6 +141,12 @@
     {
       "no": 101005,
       "raid_no": 1,
+      "step": 8,
+      "step_value": 4
+    },
+    {
+      "no": 101006,
+      "raid_no": 2,
       "step": 8,
       "step_value": 4
     }

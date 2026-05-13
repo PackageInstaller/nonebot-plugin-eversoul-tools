@@ -257,6 +257,24 @@
       "shop_no": 40110,
       "hero_no": 1150,
       "hero_image_position": "[29,-500,0]"
+    },
+    {
+      "no": 44,
+      "shop_no": 40120,
+      "hero_no": 3140,
+      "hero_image_position": "[29,-360,0]"
+    },
+    {
+      "no": 45,
+      "shop_no": 40130,
+      "hero_no": 2160,
+      "hero_image_position": "[29,-500,0]"
+    },
+    {
+      "no": 46,
+      "shop_no": 40140,
+      "hero_no": 4140,
+      "hero_image_position": "[29,-295,0]"
     }
   ]
 }

@@ -37,6 +37,18 @@
       "schedule_key": "GuildRaid_1_1006"
     },
     {
+      "no": 1007,
+      "raid_no": 2,
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_1007"
+    },
+    {
+      "no": 1008,
+      "raid_no": 3,
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_1008"
+    },
+    {
       "no": 51001,
       "raid_no": 1,
       "server_check": 2,
@@ -97,6 +109,18 @@
       "schedule_key": "GuildRaid_4_1006"
     },
     {
+      "no": 91007,
+      "raid_no": 2,
+      "server_check": 4,
+      "schedule_key": "GuildRaid_4_1007"
+    },
+    {
+      "no": 91008,
+      "raid_no": 3,
+      "server_check": 4,
+      "schedule_key": "GuildRaid_4_1008"
+    },
+    {
       "no": 110001,
       "raid_no": 1,
       "server_check": 3,
@@ -131,6 +155,18 @@
       "raid_no": 1,
       "server_check": 3,
       "schedule_key": "GuildRaid_3_10006"
+    },
+    {
+      "no": 110007,
+      "raid_no": 2,
+      "server_check": 3,
+      "schedule_key": "GuildRaid_3_10007"
+    },
+    {
+      "no": 110008,
+      "raid_no": 3,
+      "server_check": 3,
+      "schedule_key": "GuildRaid_3_10008"
     }
   ]
 }
