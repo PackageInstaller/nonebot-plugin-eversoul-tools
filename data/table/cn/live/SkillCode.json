@@ -40106,6 +40106,373 @@
       "penetration": 1
     },
     {
+      "no": 254010,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 254010.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 254011,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 254011.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 254012,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 254012.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 254013,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 254013.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 254014,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 254014.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 254020,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 254020.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 254021,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 254021.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 255010,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 255010.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 255011,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 255011.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 255012,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 255012.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 255013,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 255013.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 255014,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 255014.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 255020,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 255020.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 255021,
+      "function_key": 9,
+      "target_key": 1216,
+      "value": 0.5,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 256010,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1208,
+      "value": 256010.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 256011,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 256011.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 256012,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 256012.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 256013,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 256013.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 256014,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 256014.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 256020,
+      "function_key": 28,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 256021.0,
+      "duration": 999.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 256021,
+      "function_key": 30,
+      "target_key": 1208,
+      "value": 256021.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257010,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 257010.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257011,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 257011.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257012,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 257012.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257013,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 257013.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257014,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 257014.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257015,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 257015.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257016,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1208,
+      "value": 257016.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 257017,
+      "function_key": 30,
+      "target_key": 1208,
+      "value": 257017.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259010,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 259010.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259011,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 259011.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259012,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 259012.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259013,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 259013.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259014,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 259014.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259015,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1100,
+      "value": 259015.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259016,
+      "function_key": 30,
+      "is_ally": 1,
+      "target_key": 1208,
+      "value": 259016.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
+      "no": 259017,
+      "function_key": 30,
+      "target_key": 1208,
+      "value": 259017.0,
+      "condition_type": 1,
+      "fx_path": "none",
+      "penetration": 1
+    },
+    {
       "no": 301001,
       "function_key": 40,
       "is_ally": 1,

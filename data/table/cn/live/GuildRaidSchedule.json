@@ -49,76 +49,22 @@
       "schedule_key": "GuildRaid_1_1008"
     },
     {
-      "no": 51001,
-      "raid_no": 1,
-      "server_check": 2,
-      "schedule_key": "GuildRaid_2_1001"
-    },
-    {
-      "no": 51002,
-      "raid_no": 2,
-      "server_check": 2,
-      "schedule_key": "GuildRaid_2_1002"
-    },
-    {
-      "no": 51003,
-      "raid_no": 3,
-      "server_check": 2,
-      "schedule_key": "GuildRaid_2_1003"
-    },
-    {
-      "no": 51004,
+      "no": 1009,
       "raid_no": 4,
-      "server_check": 2,
-      "schedule_key": "GuildRaid_2_1004"
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_1009"
     },
     {
-      "no": 91001,
-      "raid_no": 1,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1001"
-    },
-    {
-      "no": 91002,
-      "raid_no": 2,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1002"
-    },
-    {
-      "no": 91003,
-      "raid_no": 3,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1003"
-    },
-    {
-      "no": 91004,
-      "raid_no": 4,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1004"
-    },
-    {
-      "no": 91005,
+      "no": 1010,
       "raid_no": 5,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1005"
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_1010"
     },
     {
-      "no": 91006,
+      "no": 1011,
       "raid_no": 1,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1006"
-    },
-    {
-      "no": 91007,
-      "raid_no": 2,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1007"
-    },
-    {
-      "no": 91008,
-      "raid_no": 3,
-      "server_check": 4,
-      "schedule_key": "GuildRaid_4_1008"
+      "server_check": 1,
+      "schedule_key": "GuildRaid_1_1011"
     },
     {
       "no": 110001,
@@ -167,6 +113,24 @@
       "raid_no": 3,
       "server_check": 3,
       "schedule_key": "GuildRaid_3_10008"
+    },
+    {
+      "no": 110009,
+      "raid_no": 4,
+      "server_check": 3,
+      "schedule_key": "GuildRaid_3_10009"
+    },
+    {
+      "no": 110010,
+      "raid_no": 5,
+      "server_check": 3,
+      "schedule_key": "GuildRaid_3_10010"
+    },
+    {
+      "no": 110011,
+      "raid_no": 1,
+      "server_check": 3,
+      "schedule_key": "GuildRaid_3_10011"
     }
   ]
 }

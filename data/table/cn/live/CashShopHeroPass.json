@@ -275,6 +275,36 @@
       "shop_no": 40140,
       "hero_no": 4140,
       "hero_image_position": "[29,-295,0]"
+    },
+    {
+      "no": 47,
+      "shop_no": 40150,
+      "hero_no": 3160,
+      "hero_image_position": "[29,-500,0]"
+    },
+    {
+      "no": 48,
+      "shop_no": 40160,
+      "hero_no": 1130,
+      "hero_image_position": "[29,-360,0]"
+    },
+    {
+      "no": 49,
+      "shop_no": 40170,
+      "hero_no": 6050,
+      "hero_image_position": "[29,-360,0]"
+    },
+    {
+      "no": 50,
+      "shop_no": 40180,
+      "hero_no": 6010,
+      "hero_image_position": "[29,-360,0]"
+    },
+    {
+      "no": 51,
+      "shop_no": 40190,
+      "hero_no": 2150,
+      "hero_image_position": "[29,-550,0]"
     }
   ]
 }

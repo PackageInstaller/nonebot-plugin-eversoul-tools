@@ -68,8 +68,44 @@
     },
     {
       "no": 12,
-      "login_path": "UI_LOGIN_CN",
+      "login_path": "UI_LOGIN_RENEE",
       "start_date": "2026-06-17 00:00",
+      "end_date": "2026-06-24 00:00"
+    },
+    {
+      "no": 13,
+      "login_path": "UI_LOGIN_SUMMER2",
+      "start_date": "2026-06-24 00:00",
+      "end_date": "2026-07-15 00:00"
+    },
+    {
+      "no": 14,
+      "login_path": "UI_LOGIN_SUMMER3",
+      "start_date": "2026-07-15 00:00",
+      "end_date": "2026-07-22 00:00"
+    },
+    {
+      "no": 15,
+      "login_path": "UI_LOGIN_SUMMERGAON",
+      "start_date": "2026-07-22 00:00",
+      "end_date": "2026-07-29 00:00"
+    },
+    {
+      "no": 16,
+      "login_path": "UI_LOGIN_SUMMER3",
+      "start_date": "2026-07-29 00:00",
+      "end_date": "2026-08-05 00:00"
+    },
+    {
+      "no": 17,
+      "login_path": "UI_LOGIN_SUMMER4",
+      "start_date": "2026-08-05 00:00",
+      "end_date": "2026-08-26 00:00"
+    },
+    {
+      "no": 18,
+      "login_path": "UI_LOGIN_CN",
+      "start_date": "2026-08-26 00:00",
       "end_date": "2030-03-25 00:00"
     }
   ]

@@ -34459,6 +34459,17 @@
       "item_sort_no": 10
     },
     {
+      "no": 8188,
+      "category_sno": 110075,
+      "grade_sno": 110012,
+      "name_sno": 218019,
+      "desc_sno": 218019,
+      "slot_limit_sno": 110031,
+      "stat_limit_sno": 110041,
+      "icon_path": "UI/Textures/Item/Event/Icon_Ticket_Bingo",
+      "item_sort_no": 10
+    },
+    {
       "no": 8901,
       "category_sno": 110008,
       "grade_sno": 110014,
@@ -43542,6 +43553,17 @@
       "slot_limit_sno": 553001,
       "stat_limit_sno": 110041,
       "icon_path": "UI/Textures/Town/PE_TOWN_B_Tower_Beatrice",
+      "item_sort_no": 50000
+    },
+    {
+      "no": 47024,
+      "category_sno": 110005,
+      "grade_sno": 110018,
+      "name_sno": 2147024,
+      "desc_sno": 2247024,
+      "slot_limit_sno": 553001,
+      "stat_limit_sno": 110041,
+      "icon_path": "UI/Textures/Town/PE_TOWN_B_Tower_Clara",
       "item_sort_no": 50000
     },
     {

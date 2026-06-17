@@ -1193,7 +1193,7 @@
     {
       "no": 171,
       "category_no": 6,
-      "shop_no": "100:101:102:103:104:105:106:107:108:109:112:119:120:121:122:123:50150:50210:50230:50250",
+      "shop_no": "100:101:102:103:104:105:106:107:108:109:112:119:120:121:122:123:50150:50210:50230:50250:124:125:126",
       "name_sno": 910001,
       "tip_sno": 580001,
       "penel_type": "PanelPeriodPack"
@@ -1440,6 +1440,41 @@
       "penel_type": "PanelSpecialPack"
     },
     {
+      "no": 30170,
+      "category_no": 2,
+      "shop_no": "30170",
+      "name_sno": 910419,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 30180,
+      "category_no": 2,
+      "shop_no": "30180",
+      "name_sno": 910070,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 30190,
+      "category_no": 2,
+      "shop_no": "30190",
+      "name_sno": 910039,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 30200,
+      "category_no": 2,
+      "shop_no": "30200",
+      "name_sno": 910095,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 30210,
+      "category_no": 2,
+      "shop_no": "30210",
+      "name_sno": 910369,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
       "no": 40000,
       "category_no": 3,
       "shop_no": "40000",
@@ -1542,6 +1577,41 @@
       "category_no": 3,
       "shop_no": "40140",
       "name_sno": 910334,
+      "penel_type": "PanelHeroUpgradePass"
+    },
+    {
+      "no": 40150,
+      "category_no": 3,
+      "shop_no": "40150",
+      "name_sno": 910396,
+      "penel_type": "PanelHeroUpgradePass"
+    },
+    {
+      "no": 40160,
+      "category_no": 3,
+      "shop_no": "40160",
+      "name_sno": 910071,
+      "penel_type": "PanelHeroUpgradePass"
+    },
+    {
+      "no": 40170,
+      "category_no": 3,
+      "shop_no": "40170",
+      "name_sno": 910040,
+      "penel_type": "PanelHeroUpgradePass"
+    },
+    {
+      "no": 40180,
+      "category_no": 3,
+      "shop_no": "40180",
+      "name_sno": 910096,
+      "penel_type": "PanelHeroUpgradePass"
+    },
+    {
+      "no": 40190,
+      "category_no": 3,
+      "shop_no": "40190",
+      "name_sno": 910370,
       "penel_type": "PanelHeroUpgradePass"
     },
     {
@@ -1661,6 +1731,48 @@
       "category_no": 1,
       "shop_no": "50270",
       "name_sno": 9250270,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 50280,
+      "category_no": 4,
+      "shop_no": "50280",
+      "name_sno": 910020,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 50300,
+      "category_no": 4,
+      "shop_no": "50300",
+      "name_sno": 910337,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 50320,
+      "category_no": 4,
+      "shop_no": "50320",
+      "name_sno": 910433,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 50340,
+      "category_no": 4,
+      "shop_no": "50340",
+      "name_sno": 9250340,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 50350,
+      "category_no": 4,
+      "shop_no": "50350",
+      "name_sno": 9250350,
+      "penel_type": "PanelSpecialPack"
+    },
+    {
+      "no": 50360,
+      "category_no": 4,
+      "shop_no": "50360",
+      "name_sno": 9250360,
       "penel_type": "PanelSpecialPack"
     }
   ]

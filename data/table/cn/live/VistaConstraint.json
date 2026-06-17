@@ -2999,6 +2999,2006 @@
       "content_string_no": 359030,
       "icon_path": "icon_eas_burn",
       "value_1": 9030
+    },
+    {
+      "no": 3110001,
+      "constraint_group": 31100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 3110002,
+      "constraint_group": 31100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 3110003,
+      "constraint_group": 31100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 3110004,
+      "constraint_group": 31100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 3110005,
+      "constraint_group": 31100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349002,
+      "content_string_no": 359002,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9002
+    },
+    {
+      "no": 3120001,
+      "constraint_group": 31200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3120002,
+      "constraint_group": 31200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 3120003,
+      "constraint_group": 31200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3120004,
+      "constraint_group": 31200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3120005,
+      "constraint_group": 31200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349010,
+      "content_string_no": 359010,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9010
+    },
+    {
+      "no": 3210001,
+      "constraint_group": 32100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 3210002,
+      "constraint_group": 32100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349002,
+      "content_string_no": 359002,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9002
+    },
+    {
+      "no": 3210003,
+      "constraint_group": 32100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 3210004,
+      "constraint_group": 32100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 3210005,
+      "constraint_group": 32100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 3220001,
+      "constraint_group": 32200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3220002,
+      "constraint_group": 32200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3220003,
+      "constraint_group": 32200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3220004,
+      "constraint_group": 32200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 3220005,
+      "constraint_group": 32200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349015,
+      "content_string_no": 359015,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9015
+    },
+    {
+      "no": 3310001,
+      "constraint_group": 33100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 3310002,
+      "constraint_group": 33100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349062,
+      "content_string_no": 359062,
+      "icon_path": "Icon_eas_Sub_Nuke",
+      "value_1": 9062
+    },
+    {
+      "no": 3310003,
+      "constraint_group": 33100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349063,
+      "content_string_no": 359063,
+      "icon_path": "icon_eas_race_5",
+      "value_1": 9063
+    },
+    {
+      "no": 3310004,
+      "constraint_group": 33100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 3310005,
+      "constraint_group": 33100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 3320001,
+      "constraint_group": 33200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3320002,
+      "constraint_group": 33200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 3320003,
+      "constraint_group": 33200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3320004,
+      "constraint_group": 33200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3320005,
+      "constraint_group": 33200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349021,
+      "content_string_no": 359021,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9021
+    },
+    {
+      "no": 3410001,
+      "constraint_group": 34100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 3410002,
+      "constraint_group": 34100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 3410003,
+      "constraint_group": 34100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349062,
+      "content_string_no": 359062,
+      "icon_path": "Icon_eas_Sub_Nuke",
+      "value_1": 9062
+    },
+    {
+      "no": 3410004,
+      "constraint_group": 34100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 3410005,
+      "constraint_group": 34100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 3420001,
+      "constraint_group": 34200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3420002,
+      "constraint_group": 34200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3420003,
+      "constraint_group": 34200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3420004,
+      "constraint_group": 34200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 3420005,
+      "constraint_group": 34200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349030,
+      "content_string_no": 359030,
+      "icon_path": "icon_eas_burn",
+      "value_1": 9030
+    },
+    {
+      "no": 3510001,
+      "constraint_group": 35100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 3510002,
+      "constraint_group": 35100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349063,
+      "content_string_no": 359063,
+      "icon_path": "icon_eas_race_5",
+      "value_1": 9063
+    },
+    {
+      "no": 3510003,
+      "constraint_group": 35100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 3510004,
+      "constraint_group": 35100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 3510005,
+      "constraint_group": 35100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349018,
+      "content_string_no": 359018,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9018
+    },
+    {
+      "no": 3520001,
+      "constraint_group": 35200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3520002,
+      "constraint_group": 35200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 3520003,
+      "constraint_group": 35200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3520004,
+      "constraint_group": 35200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3520005,
+      "constraint_group": 35200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349042,
+      "content_string_no": 359042,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9042
+    },
+    {
+      "no": 3610001,
+      "constraint_group": 36100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 3610002,
+      "constraint_group": 36100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 3610003,
+      "constraint_group": 36100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 3610004,
+      "constraint_group": 36100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 3610005,
+      "constraint_group": 36100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 3620001,
+      "constraint_group": 36200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3620002,
+      "constraint_group": 36200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3620003,
+      "constraint_group": 36200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3620004,
+      "constraint_group": 36200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 3620005,
+      "constraint_group": 36200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349010,
+      "content_string_no": 359010,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9010
+    },
+    {
+      "no": 3710001,
+      "constraint_group": 37100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 3710002,
+      "constraint_group": 37100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 3710003,
+      "constraint_group": 37100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 3710004,
+      "constraint_group": 37100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 3710005,
+      "constraint_group": 37100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 3720001,
+      "constraint_group": 37200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3720002,
+      "constraint_group": 37200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 3720003,
+      "constraint_group": 37200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3720004,
+      "constraint_group": 37200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3720005,
+      "constraint_group": 37200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349015,
+      "content_string_no": 359015,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9015
+    },
+    {
+      "no": 3810001,
+      "constraint_group": 38100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 3810002,
+      "constraint_group": 38100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 3810003,
+      "constraint_group": 38100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 3810004,
+      "constraint_group": 38100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349003,
+      "content_string_no": 359003,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9003
+    },
+    {
+      "no": 3810005,
+      "constraint_group": 38100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 3820001,
+      "constraint_group": 38200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3820002,
+      "constraint_group": 38200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3820003,
+      "constraint_group": 38200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3820004,
+      "constraint_group": 38200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 3820005,
+      "constraint_group": 38200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349021,
+      "content_string_no": 359021,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9021
+    },
+    {
+      "no": 3910001,
+      "constraint_group": 39100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 3910002,
+      "constraint_group": 39100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 3910003,
+      "constraint_group": 39100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 3910004,
+      "constraint_group": 39100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 3910005,
+      "constraint_group": 39100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 3920001,
+      "constraint_group": 39200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 3920002,
+      "constraint_group": 39200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 3920003,
+      "constraint_group": 39200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 3920004,
+      "constraint_group": 39200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 3920005,
+      "constraint_group": 39200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349030,
+      "content_string_no": 359030,
+      "icon_path": "icon_eas_burn",
+      "value_1": 9030
+    },
+    {
+      "no": 4010001,
+      "constraint_group": 40100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 4010002,
+      "constraint_group": 40100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 4010003,
+      "constraint_group": 40100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349018,
+      "content_string_no": 359018,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9018
+    },
+    {
+      "no": 4010004,
+      "constraint_group": 40100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349003,
+      "content_string_no": 359003,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9003
+    },
+    {
+      "no": 4010005,
+      "constraint_group": 40100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 4020001,
+      "constraint_group": 40200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4020002,
+      "constraint_group": 40200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4020003,
+      "constraint_group": 40200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4020004,
+      "constraint_group": 40200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 4020005,
+      "constraint_group": 40200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349042,
+      "content_string_no": 359042,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9042
+    },
+    {
+      "no": 4110001,
+      "constraint_group": 41100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 4110002,
+      "constraint_group": 41100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 4110003,
+      "constraint_group": 41100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 4110004,
+      "constraint_group": 41100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 4110005,
+      "constraint_group": 41100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349002,
+      "content_string_no": 359002,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9002
+    },
+    {
+      "no": 4120001,
+      "constraint_group": 41200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4120002,
+      "constraint_group": 41200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 4120003,
+      "constraint_group": 41200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4120004,
+      "constraint_group": 41200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4120005,
+      "constraint_group": 41200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349010,
+      "content_string_no": 359010,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9010
+    },
+    {
+      "no": 4210001,
+      "constraint_group": 42100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 4210002,
+      "constraint_group": 42100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349002,
+      "content_string_no": 359002,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9002
+    },
+    {
+      "no": 4210003,
+      "constraint_group": 42100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 4210004,
+      "constraint_group": 42100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 4210005,
+      "constraint_group": 42100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 4220001,
+      "constraint_group": 42200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4220002,
+      "constraint_group": 42200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4220003,
+      "constraint_group": 42200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4220004,
+      "constraint_group": 42200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 4220005,
+      "constraint_group": 42200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349015,
+      "content_string_no": 359015,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9015
+    },
+    {
+      "no": 4310001,
+      "constraint_group": 43100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 4310002,
+      "constraint_group": 43100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349062,
+      "content_string_no": 359062,
+      "icon_path": "Icon_eas_Sub_Nuke",
+      "value_1": 9062
+    },
+    {
+      "no": 4310003,
+      "constraint_group": 43100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349063,
+      "content_string_no": 359063,
+      "icon_path": "icon_eas_race_5",
+      "value_1": 9063
+    },
+    {
+      "no": 4310004,
+      "constraint_group": 43100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 4310005,
+      "constraint_group": 43100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 4320001,
+      "constraint_group": 43200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4320002,
+      "constraint_group": 43200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 4320003,
+      "constraint_group": 43200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4320004,
+      "constraint_group": 43200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4320005,
+      "constraint_group": 43200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349021,
+      "content_string_no": 359021,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9021
+    },
+    {
+      "no": 4410001,
+      "constraint_group": 44100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 4410002,
+      "constraint_group": 44100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 4410003,
+      "constraint_group": 44100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349062,
+      "content_string_no": 359062,
+      "icon_path": "Icon_eas_Sub_Nuke",
+      "value_1": 9062
+    },
+    {
+      "no": 4410004,
+      "constraint_group": 44100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 4410005,
+      "constraint_group": 44100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 4420001,
+      "constraint_group": 44200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4420002,
+      "constraint_group": 44200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4420003,
+      "constraint_group": 44200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4420004,
+      "constraint_group": 44200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 4420005,
+      "constraint_group": 44200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349030,
+      "content_string_no": 359030,
+      "icon_path": "icon_eas_burn",
+      "value_1": 9030
+    },
+    {
+      "no": 4510001,
+      "constraint_group": 45100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 4510002,
+      "constraint_group": 45100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349063,
+      "content_string_no": 359063,
+      "icon_path": "icon_eas_race_5",
+      "value_1": 9063
+    },
+    {
+      "no": 4510003,
+      "constraint_group": 45100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 4510004,
+      "constraint_group": 45100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 4510005,
+      "constraint_group": 45100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349018,
+      "content_string_no": 359018,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9018
+    },
+    {
+      "no": 4520001,
+      "constraint_group": 45200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4520002,
+      "constraint_group": 45200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 4520003,
+      "constraint_group": 45200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4520004,
+      "constraint_group": 45200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4520005,
+      "constraint_group": 45200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349042,
+      "content_string_no": 359042,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9042
+    },
+    {
+      "no": 4610001,
+      "constraint_group": 46100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 4610002,
+      "constraint_group": 46100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 4610003,
+      "constraint_group": 46100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 4610004,
+      "constraint_group": 46100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 4610005,
+      "constraint_group": 46100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 4620001,
+      "constraint_group": 46200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4620002,
+      "constraint_group": 46200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4620003,
+      "constraint_group": 46200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4620004,
+      "constraint_group": 46200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 4620005,
+      "constraint_group": 46200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349010,
+      "content_string_no": 359010,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9010
+    },
+    {
+      "no": 4710001,
+      "constraint_group": 47100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 4710002,
+      "constraint_group": 47100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 4710003,
+      "constraint_group": 47100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 4710004,
+      "constraint_group": 47100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 4710005,
+      "constraint_group": 47100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 4720001,
+      "constraint_group": 47200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4720002,
+      "constraint_group": 47200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 4720003,
+      "constraint_group": 47200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4720004,
+      "constraint_group": 47200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4720005,
+      "constraint_group": 47200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349015,
+      "content_string_no": 359015,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9015
+    },
+    {
+      "no": 4810001,
+      "constraint_group": 48100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 4810002,
+      "constraint_group": 48100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 4810003,
+      "constraint_group": 48100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 4810004,
+      "constraint_group": 48100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349003,
+      "content_string_no": 359003,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9003
+    },
+    {
+      "no": 4810005,
+      "constraint_group": 48100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 4820001,
+      "constraint_group": 48200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4820002,
+      "constraint_group": 48200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4820003,
+      "constraint_group": 48200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4820004,
+      "constraint_group": 48200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 4820005,
+      "constraint_group": 48200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349021,
+      "content_string_no": 359021,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9021
+    },
+    {
+      "no": 4910001,
+      "constraint_group": 49100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349001,
+      "content_string_no": 359001,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9001
+    },
+    {
+      "no": 4910002,
+      "constraint_group": 49100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349019,
+      "content_string_no": 359019,
+      "icon_path": "icon_eas_attack_up",
+      "value_1": 9019
+    },
+    {
+      "no": 4910003,
+      "constraint_group": 49100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349005,
+      "content_string_no": 359005,
+      "icon_path": "icon_eas_position_2",
+      "value_1": 9005
+    },
+    {
+      "no": 4910004,
+      "constraint_group": 49100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349047,
+      "content_string_no": 359047,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9047
+    },
+    {
+      "no": 4910005,
+      "constraint_group": 49100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349024,
+      "content_string_no": 359024,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9024
+    },
+    {
+      "no": 4920001,
+      "constraint_group": 49200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 4920002,
+      "constraint_group": 49200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349006,
+      "content_string_no": 359006,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9006
+    },
+    {
+      "no": 4920003,
+      "constraint_group": 49200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 4920004,
+      "constraint_group": 49200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 4920005,
+      "constraint_group": 49200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349030,
+      "content_string_no": 359030,
+      "icon_path": "icon_eas_burn",
+      "value_1": 9030
+    },
+    {
+      "no": 5010001,
+      "constraint_group": 50100,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349017,
+      "content_string_no": 359017,
+      "icon_path": "icon_eas_leech",
+      "value_1": 9017
+    },
+    {
+      "no": 5010002,
+      "constraint_group": 50100,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349026,
+      "content_string_no": 359026,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9026
+    },
+    {
+      "no": 5010003,
+      "constraint_group": 50100,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349018,
+      "content_string_no": 359018,
+      "icon_path": "icon_eas_defence_up",
+      "value_1": 9018
+    },
+    {
+      "no": 5010004,
+      "constraint_group": 50100,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349003,
+      "content_string_no": 359003,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9003
+    },
+    {
+      "no": 5010005,
+      "constraint_group": 50100,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349013,
+      "content_string_no": 359013,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9013
+    },
+    {
+      "no": 5020001,
+      "constraint_group": 50200,
+      "constraint_no": 1,
+      "constraint_type": 1,
+      "title_string_no": 349020,
+      "content_string_no": 359020,
+      "icon_path": "icon_eas_qionqi",
+      "value_1": 9020
+    },
+    {
+      "no": 5020002,
+      "constraint_group": 50200,
+      "constraint_no": 2,
+      "constraint_type": 1,
+      "title_string_no": 349035,
+      "content_string_no": 359035,
+      "icon_path": "icon_eas_speed",
+      "value_1": 9035
+    },
+    {
+      "no": 5020003,
+      "constraint_group": 50200,
+      "constraint_no": 3,
+      "constraint_type": 1,
+      "title_string_no": 349028,
+      "content_string_no": 359028,
+      "icon_path": "icon_eas_attack_up_2",
+      "value_1": 9028
+    },
+    {
+      "no": 5020004,
+      "constraint_group": 50200,
+      "constraint_no": 4,
+      "constraint_type": 1,
+      "title_string_no": 349046,
+      "content_string_no": 359046,
+      "icon_path": "icon_eas_heal_down",
+      "value_1": 9046
+    },
+    {
+      "no": 5020005,
+      "constraint_group": 50200,
+      "constraint_no": 5,
+      "constraint_type": 1,
+      "title_string_no": 349042,
+      "content_string_no": 359042,
+      "icon_path": "icon_eas_mana_up",
+      "value_1": 9042
     }
   ]
 }

@@ -557,21 +557,25 @@
     },
     {
       "no": 56171,
+      "group_no": 17,
       "img_path": "sticker_eas_event01_tier_7",
       "item_no": 6171
     },
     {
       "no": 56172,
+      "group_no": 17,
       "img_path": "sticker_eas_event01_tier_7_3",
       "item_no": 6172
     },
     {
       "no": 56173,
+      "group_no": 17,
       "img_path": "sticker_eas_event01_tier_7_2",
       "item_no": 6173
     },
     {
       "no": 56174,
+      "group_no": 17,
       "img_path": "sticker_eas_event01_tier_7_1",
       "item_no": 6174
     },
@@ -1013,51 +1017,61 @@
     },
     {
       "no": 56436,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Lizelotte_01",
       "item_no": 6436
     },
     {
       "no": 56437,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Lizelotte_02",
       "item_no": 6437
     },
     {
       "no": 56438,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Lizelotte_03",
       "item_no": 6438
     },
     {
       "no": 56439,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Lizelotte_04",
       "item_no": 6439
     },
     {
       "no": 56440,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Lizelotte_05",
       "item_no": 6440
     },
     {
       "no": 56441,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Nyah_01",
       "item_no": 6441
     },
     {
       "no": 56442,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Nyah_02",
       "item_no": 6442
     },
     {
       "no": 56443,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Nyah_03",
       "item_no": 6443
     },
     {
       "no": 56444,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Nyah_04",
       "item_no": 6444
     },
     {
       "no": 56445,
+      "group_no": 17,
       "img_path": "sticker_singleraid_Nyah_05",
       "item_no": 6445
     },
@@ -1165,6 +1179,7 @@
     },
     {
       "no": 56803,
+      "group_no": 17,
       "img_path": "sticker_special_SakuyoShin01",
       "item_no": 6803
     },
@@ -1205,6 +1220,7 @@
     },
     {
       "no": 56810,
+      "group_no": 17,
       "img_path": "sticker_special_ReneeSilver01",
       "item_no": 6810
     },
@@ -1276,11 +1292,13 @@
     },
     {
       "no": 56824,
+      "group_no": 17,
       "img_path": "sticker_special_Hazel01",
       "item_no": 6824
     },
     {
       "no": 56825,
+      "group_no": 17,
       "img_path": "sticker_special_Eve01",
       "item_no": 6825
     },
@@ -1292,6 +1310,7 @@
     },
     {
       "no": 56827,
+      "group_no": 17,
       "img_path": "sticker_special_Larimar01",
       "item_no": 6827
     },
@@ -1606,46 +1625,55 @@
     },
     {
       "no": 56955,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_01",
       "item_no": 6955
     },
     {
       "no": 56956,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_02",
       "item_no": 6956
     },
     {
       "no": 56957,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_03",
       "item_no": 6957
     },
     {
       "no": 56958,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_04",
       "item_no": 6958
     },
     {
       "no": 56959,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_05",
       "item_no": 6959
     },
     {
       "no": 56960,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_06",
       "item_no": 6960
     },
     {
       "no": 56961,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_07",
       "item_no": 6961
     },
     {
       "no": 56962,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_08",
       "item_no": 6962
     },
     {
       "no": 56963,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_side4_09",
       "item_no": 6963
     },
@@ -1705,46 +1733,55 @@
     },
     {
       "no": 56973,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_01",
       "item_no": 6973
     },
     {
       "no": 56974,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_02",
       "item_no": 6974
     },
     {
       "no": 56975,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_03",
       "item_no": 6975
     },
     {
       "no": 56976,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_04",
       "item_no": 6976
     },
     {
       "no": 56977,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_05",
       "item_no": 6977
     },
     {
       "no": 56978,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_06",
       "item_no": 6978
     },
     {
       "no": 56979,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_07",
       "item_no": 6979
     },
     {
       "no": 56980,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_08",
       "item_no": 6980
     },
     {
       "no": 56981,
+      "group_no": 17,
       "img_path": "sticker_infinityraid_summer04_09",
       "item_no": 6981
     },
@@ -1822,6 +1859,7 @@
     },
     {
       "no": 5511301,
+      "group_no": 17,
       "img_path": "sticker_love_Hazel01",
       "item_no": 511301
     },
@@ -1922,6 +1960,7 @@
     },
     {
       "no": 5521501,
+      "group_no": 17,
       "img_path": "sticker_love_SakuyoShin01",
       "item_no": 521501
     },
@@ -2022,6 +2061,7 @@
     },
     {
       "no": 5531601,
+      "group_no": 17,
       "img_path": "sticker_love_ReneeSilver01",
       "item_no": 531601
     },
@@ -2158,6 +2198,7 @@
     },
     {
       "no": 5560101,
+      "group_no": 17,
       "img_path": "sticker_love_Larimar01",
       "item_no": 560101
     },
@@ -2175,6 +2216,7 @@
     },
     {
       "no": 5560501,
+      "group_no": 17,
       "img_path": "sticker_love_Eve01",
       "item_no": 560501
     },

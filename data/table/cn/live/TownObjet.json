@@ -5229,6 +5229,19 @@
       "far_motion": "0"
     },
     {
+      "no": 47024,
+      "path": "TownObjet_Tower",
+      "prefab": "PE_TOWN_B_Tower_Clara",
+      "list_tab": 1,
+      "original_slot": 111,
+      "develop_point": 2500,
+      "place_limit": 1,
+      "castle": 1,
+      "animal_prefab": "0",
+      "close_motion": "0",
+      "far_motion": "0"
+    },
+    {
       "no": 47100,
       "path": "TownObjet_1Stanniv",
       "prefab": "PE_TOWN_B_1StAnniversary",

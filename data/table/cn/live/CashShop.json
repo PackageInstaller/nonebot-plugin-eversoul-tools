@@ -2064,6 +2064,46 @@
     },
     {
       "no": 259,
+      "tab": 30170,
+      "shop_no": 30170,
+      "type": "event",
+      "schedule_key": "Cashshop_Pickup_ReneeSilver_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 260,
+      "tab": 30180,
+      "shop_no": 30180,
+      "type": "event",
+      "schedule_key": "Cashshop_Pickup_Hazel_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 261,
+      "tab": 30190,
+      "shop_no": 30190,
+      "type": "event",
+      "schedule_key": "Cashshop_Pickup_Eve_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 262,
+      "tab": 30200,
+      "shop_no": 30200,
+      "type": "event",
+      "schedule_key": "Cashshop_Pickup_Larimar_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 263,
+      "tab": 30210,
+      "shop_no": 30210,
+      "type": "event",
+      "schedule_key": "Cashshop_Pickup_SakuyoShin_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 264,
       "tab": 40000,
       "shop_no": 40000,
       "type": "hero_pass",
@@ -2071,7 +2111,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 260,
+      "no": 265,
       "tab": 40010,
       "shop_no": 40010,
       "type": "hero_pass",
@@ -2079,7 +2119,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 261,
+      "no": 266,
       "tab": 40020,
       "shop_no": 40020,
       "type": "hero_pass",
@@ -2087,7 +2127,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 262,
+      "no": 267,
       "tab": 40030,
       "shop_no": 40030,
       "type": "hero_pass",
@@ -2095,7 +2135,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 263,
+      "no": 268,
       "tab": 40040,
       "shop_no": 40040,
       "type": "hero_pass",
@@ -2103,7 +2143,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 264,
+      "no": 269,
       "tab": 40050,
       "shop_no": 40050,
       "type": "hero_pass",
@@ -2111,7 +2151,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 265,
+      "no": 270,
       "tab": 40060,
       "shop_no": 40060,
       "type": "hero_pass",
@@ -2119,7 +2159,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 266,
+      "no": 271,
       "tab": 40070,
       "shop_no": 40070,
       "type": "hero_pass",
@@ -2127,7 +2167,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 267,
+      "no": 272,
       "tab": 40080,
       "shop_no": 40080,
       "type": "hero_pass",
@@ -2135,7 +2175,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 268,
+      "no": 273,
       "tab": 40090,
       "shop_no": 40090,
       "type": "hero_pass",
@@ -2143,7 +2183,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 269,
+      "no": 274,
       "tab": 40100,
       "shop_no": 40100,
       "type": "hero_pass",
@@ -2151,7 +2191,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 270,
+      "no": 275,
       "tab": 40110,
       "shop_no": 40110,
       "type": "hero_pass",
@@ -2159,7 +2199,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 271,
+      "no": 276,
       "tab": 40120,
       "shop_no": 40120,
       "type": "hero_pass",
@@ -2167,7 +2207,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 272,
+      "no": 277,
       "tab": 40130,
       "shop_no": 40130,
       "type": "hero_pass",
@@ -2175,7 +2215,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 273,
+      "no": 278,
       "tab": 40140,
       "shop_no": 40140,
       "type": "hero_pass",
@@ -2183,7 +2223,47 @@
       "check_contents_limit": 1
     },
     {
-      "no": 274,
+      "no": 279,
+      "tab": 40150,
+      "shop_no": 40150,
+      "type": "hero_pass",
+      "schedule_key": "Cashshop_Heropass_ReneeSilver_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 280,
+      "tab": 40160,
+      "shop_no": 40160,
+      "type": "hero_pass",
+      "schedule_key": "Cashshop_Heropass_Hazel_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 281,
+      "tab": 40170,
+      "shop_no": 40170,
+      "type": "hero_pass",
+      "schedule_key": "Cashshop_Heropass_Eve_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 282,
+      "tab": 40180,
+      "shop_no": 40180,
+      "type": "hero_pass",
+      "schedule_key": "Cashshop_Heropass_Larimar_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 283,
+      "tab": 40190,
+      "shop_no": 40190,
+      "type": "hero_pass",
+      "schedule_key": "Cashshop_Heropass_SakuyoShin_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 284,
       "tab": 50000,
       "shop_no": 50000,
       "type": "period",
@@ -2191,7 +2271,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 275,
+      "no": 285,
       "tab": 171,
       "shop_no": 50010,
       "type": "period",
@@ -2199,7 +2279,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 276,
+      "no": 286,
       "tab": 50020,
       "shop_no": 50020,
       "type": "period",
@@ -2207,7 +2287,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 277,
+      "no": 287,
       "tab": 50040,
       "shop_no": 50040,
       "type": "period",
@@ -2215,7 +2295,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 278,
+      "no": 288,
       "tab": 50060,
       "shop_no": 50060,
       "type": "period",
@@ -2223,7 +2303,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 279,
+      "no": 289,
       "tab": 171,
       "shop_no": 50070,
       "type": "period",
@@ -2231,7 +2311,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 280,
+      "no": 290,
       "tab": 171,
       "shop_no": 50080,
       "type": "period",
@@ -2239,7 +2319,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 281,
+      "no": 291,
       "tab": 50090,
       "shop_no": 50090,
       "type": "period",
@@ -2247,7 +2327,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 282,
+      "no": 292,
       "tab": 50100,
       "shop_no": 50100,
       "type": "period",
@@ -2255,7 +2335,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 283,
+      "no": 293,
       "tab": 171,
       "shop_no": 50110,
       "type": "period",
@@ -2263,7 +2343,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 284,
+      "no": 294,
       "tab": 50120,
       "shop_no": 50120,
       "type": "period",
@@ -2271,7 +2351,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 285,
+      "no": 295,
       "tab": 171,
       "shop_no": 50130,
       "type": "period",
@@ -2279,7 +2359,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 286,
+      "no": 296,
       "tab": 50140,
       "shop_no": 50140,
       "type": "period",
@@ -2287,7 +2367,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 287,
+      "no": 297,
       "tab": 171,
       "shop_no": 50150,
       "type": "period",
@@ -2295,7 +2375,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 288,
+      "no": 298,
       "tab": 50160,
       "shop_no": 50160,
       "type": "bundle",
@@ -2303,7 +2383,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 289,
+      "no": 299,
       "tab": 50170,
       "shop_no": 50170,
       "type": "event",
@@ -2311,7 +2391,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 290,
+      "no": 300,
       "tab": 50180,
       "shop_no": 50180,
       "type": "event",
@@ -2319,7 +2399,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 291,
+      "no": 301,
       "tab": 50190,
       "shop_no": 50190,
       "type": "event",
@@ -2327,7 +2407,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 292,
+      "no": 302,
       "tab": 171,
       "shop_no": 50210,
       "type": "period",
@@ -2335,7 +2415,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 293,
+      "no": 303,
       "tab": 50200,
       "shop_no": 50200,
       "type": "period",
@@ -2343,7 +2423,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 294,
+      "no": 304,
       "tab": 50220,
       "shop_no": 50220,
       "type": "period",
@@ -2351,7 +2431,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 295,
+      "no": 305,
       "tab": 171,
       "shop_no": 50230,
       "type": "period",
@@ -2359,7 +2439,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 296,
+      "no": 306,
       "tab": 50240,
       "shop_no": 50240,
       "type": "period",
@@ -2367,7 +2447,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 297,
+      "no": 307,
       "tab": 171,
       "shop_no": 50250,
       "type": "period",
@@ -2375,7 +2455,7 @@
       "check_contents_limit": 1
     },
     {
-      "no": 298,
+      "no": 308,
       "tab": 50260,
       "shop_no": 50260,
       "type": "period",
@@ -2383,11 +2463,83 @@
       "check_contents_limit": 1
     },
     {
-      "no": 299,
+      "no": 309,
       "tab": 50270,
       "shop_no": 50270,
       "type": "period",
       "schedule_key": "Cashshop_SummerPack2_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 310,
+      "tab": 50280,
+      "shop_no": 50280,
+      "type": "period",
+      "schedule_key": "Cashshop_SummerEvent2_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 311,
+      "tab": 171,
+      "shop_no": 124,
+      "type": "period",
+      "schedule_key": "Cashshop_Daily_SummerEvent2_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 312,
+      "tab": 50300,
+      "shop_no": 50300,
+      "type": "period",
+      "schedule_key": "Cashshop_SummerEvent3_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 313,
+      "tab": 171,
+      "shop_no": 125,
+      "type": "period",
+      "schedule_key": "Cashshop_Daily_SummerEvent3_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 314,
+      "tab": 50320,
+      "shop_no": 50320,
+      "type": "period",
+      "schedule_key": "Cashshop_SummerEvent4_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 315,
+      "tab": 171,
+      "shop_no": 126,
+      "type": "period",
+      "schedule_key": "Cashshop_Daily_SummerEvent4_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 316,
+      "tab": 50340,
+      "shop_no": 50340,
+      "type": "event",
+      "schedule_key": "Cashshop_EventPeriod1_half_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 317,
+      "tab": 50350,
+      "shop_no": 50350,
+      "type": "event",
+      "schedule_key": "Cashshop_EventPeriod2_half_CN",
+      "check_contents_limit": 1
+    },
+    {
+      "no": 318,
+      "tab": 50360,
+      "shop_no": 50360,
+      "type": "event",
+      "schedule_key": "Cashshop_EventPeriod3_half_CN",
       "check_contents_limit": 1
     }
   ]

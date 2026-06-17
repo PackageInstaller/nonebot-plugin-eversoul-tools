@@ -43,22 +43,28 @@
       "schedule_key": "SingleRaid_1_1007"
     },
     {
-      "no": 501001,
+      "no": 1008,
+      "raid_no": 19,
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_1008"
+    },
+    {
+      "no": 1009,
+      "raid_no": 17,
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_1009"
+    },
+    {
+      "no": 1010,
       "raid_no": 1,
-      "server_check": 2,
-      "schedule_key": "SingleRaid_2_1001"
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_1010"
     },
     {
-      "no": 501002,
+      "no": 1011,
       "raid_no": 2,
-      "server_check": 2,
-      "schedule_key": "SingleRaid_2_1002"
-    },
-    {
-      "no": 501003,
-      "raid_no": 4,
-      "server_check": 2,
-      "schedule_key": "SingleRaid_2_1003"
+      "server_check": 1,
+      "schedule_key": "SingleRaid_1_1011"
     },
     {
       "no": 901001,
@@ -115,58 +121,16 @@
       "schedule_key": "SingleRaid_3_1009"
     },
     {
-      "no": 1001001,
+      "no": 901010,
       "raid_no": 1,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1001"
+      "server_check": 3,
+      "schedule_key": "SingleRaid_3_1010"
     },
     {
-      "no": 1001002,
+      "no": 901011,
       "raid_no": 2,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1002"
-    },
-    {
-      "no": 1001003,
-      "raid_no": 4,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1003"
-    },
-    {
-      "no": 1001004,
-      "raid_no": 3,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1004"
-    },
-    {
-      "no": 1001005,
-      "raid_no": 5,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1005"
-    },
-    {
-      "no": 1001006,
-      "raid_no": 9,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1006"
-    },
-    {
-      "no": 1001007,
-      "raid_no": 7,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1007"
-    },
-    {
-      "no": 1001008,
-      "raid_no": 19,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1008"
-    },
-    {
-      "no": 1001009,
-      "raid_no": 17,
-      "server_check": 4,
-      "schedule_key": "SingleRaid_4_1009"
+      "server_check": 3,
+      "schedule_key": "SingleRaid_3_1011"
     }
   ]
 }

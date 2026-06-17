@@ -111,6 +111,16 @@
       "prefab": "Lobby/PMap_Lobby_Beach2_Sunset_01"
     },
     {
+      "no": 5152,
+      "icon_path": "bg_summer_Beach2_Night_01",
+      "prefab": "Lobby/PMap_Lobby_Beach2_Night_01"
+    },
+    {
+      "no": 5153,
+      "icon_path": "bg_summer_Beach_Restaurant_01",
+      "prefab": "Lobby/PMap_Lobby_Beach_Restaurant_01"
+    },
+    {
       "no": 5201,
       "icon_path": "bg_MaidCafe_01",
       "prefab": "Lobby/PMap_Lobby_MaidCafe_01"
@@ -131,6 +141,11 @@
       "prefab": "Lobby/PMap_Lobby_SchoolPassage_Night_01"
     },
     {
+      "no": 5221,
+      "icon_path": "bg_GaonFestival_Night_01",
+      "prefab": "Lobby/PMap_Lobby_GaonFestival_Night_01"
+    },
+    {
       "no": 5231,
       "icon_path": "bg_Wedding_SnowCrevasse_01",
       "prefab": "Lobby/PMap_Lobby_Wedding_SnowCrevasse_01"
@@ -139,6 +154,11 @@
       "no": 5232,
       "icon_path": "bg_Wedding_Town_01",
       "prefab": "Lobby/PMap_Lobby_Wedding_Town_01"
+    },
+    {
+      "no": 5241,
+      "icon_path": "bg_Summer03_TreeMaze_01",
+      "prefab": "Lobby/PMap_Lobby_Summer03_TreeMaze_01"
     },
     {
       "no": 5271,
